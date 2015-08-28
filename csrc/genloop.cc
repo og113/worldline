@@ -103,7 +103,7 @@ Point<Dim> operator-(const Point<Dim>& lhs,const Point<Dim>& rhs) {
 
 // operator<<
 template <uint Dim>
-ostream& operator<<(ostream& os,const Point<Dim>& p) {
+ostream& operator<<(ostream& os,const Point<Dim>& p) const {
 	os << left;
 	for (uint j=0; j<Dim; j++)
 		os << setw(15) << p[j];
@@ -112,7 +112,7 @@ ostream& operator<<(ostream& os,const Point<Dim>& p) {
 
 // operator==
 template <uint Dim>
-bool operator==(const Point<Dim>& lhs, const Point<Dim>& rhs) {
+bool operator==(const Point<Dim>& lhs, const Point<Dim>& rhs) const {
 	bool equal = true;
 	for (uint j=0; j<Dim; j++) {
 		if (abs(lhs[j]-rhs[j])>MIN_NUMBER) {
@@ -125,7 +125,7 @@ bool operator==(const Point<Dim>& lhs, const Point<Dim>& rhs) {
 
 // operator^=
 template <uint Dim>
-bool operator^=(const Point<Dim>& lhs, const Point<Dim>& rhs) {
+bool operator^=(const Point<Dim>& lhs, const Point<Dim>& rhs) const {
 	double closeness = MIN_NUMBER*1.0e4;
 	bool equal = true;
 	for (uint j=0; j<Dim; j++) {
@@ -156,7 +156,50 @@ number Distance(const Point<Dim>& p1, const Point<Dim>& p2) {
 
 /*----------------------------------------------------------------------------------------------------------------------------
 	3 - Loop class
+		- initialisers and destructor
+		- grow
+		- save
+		- <<
 ----------------------------------------------------------------------------------------------------------------------------*/
+
+// minimal initialiser
+template <uint Dim>
+Loop<Dim>::Loop(const uint& k, const uint& seed) {
+	Length = pow(2,k);
+	Points(Length);
+	Generator = gsl_rng_alloc(gsl_rng_taus);
+	gsl_rng_set(Generator,seed);
+}
+
+// load initialiser
+template <uint Dim>
+Loop<Dim>::Loop(const string& file) {
+	
+}
+
+// destructor
+template <uint Dim>
+Loop<Dim>::~Loop{
+	delete[] Generator;
+}	
+
+// grow
+template <uint Dim>
+void Loop<Dim>::grow() {
+
+}
+
+// save
+template <uint Dim>
+void Loop<Dim>::save(const string& file) const {
+
+}
+
+// stream <<
+template <uint Dim>
+ostream& operator<< (ostream&,const Loop<Dim>&) const {
+
+}
 
 /*----------------------------------------------------------------------------------------------------------------------------
 	4 - explicit template instantiation

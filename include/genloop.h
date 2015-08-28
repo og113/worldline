@@ -5,6 +5,7 @@
 #ifndef __GENLOOP_H_INCLUDED__
 #define __GENLOOP_H_INCLUDED__
 
+#include <string>
 #include <vector>
 #include <gsl/gsl_randist.h> 	// Distributions of random numbers
 #include <gsl/gsl_sf_exp.h> 	// Exponential functions
@@ -75,11 +76,11 @@ public:
 	friend Point operator- <Dim>(const Point&,const Point&);
 	
 	// boolean checks
-	friend bool operator== <Dim>(const Point& lhs, const Point& rhs);
-	friend bool operator^= <Dim>(const Point& lhs, const Point& rhs);
+	friend bool operator== <Dim>(const Point& lhs, const Point& rhs) const;
+	friend bool operator^= <Dim>(const Point& lhs, const Point& rhs) const;
 	
 	// stream <<
-	friend ostream& operator<< <Dim>(ostream&,const Point<Dim>&);
+	friend ostream& operator<< <Dim>(ostream&,const Point&) const;
 	
 private:
 	void copy(const Point&);
@@ -89,20 +90,42 @@ private:
 /*----------------------------------------------------------------------------------------------------------------------------
 	functions acting on Points
 ----------------------------------------------------------------------------------------------------------------------------*/
+// Distance
 template <uint Dim>
 number Distance(const Point<Dim>&, const Point<Dim>&);
-
 
 /*----------------------------------------------------------------------------------------------------------------------------
 	Loop class
 ----------------------------------------------------------------------------------------------------------------------------*/
+template <uint Dim>
+class Loop;
 
-/*class Loop {
+// stream <<
+template <uint Dim>
+friend ostream& operator<< (ostream&,const Loop<Dim>&);
+
+// Loop class
+template <uint Dim>
+class Loop {
 public:
-	Loop(const uint& k,
+	// initialization and destruction
+	Loop(const uint& k, const uint& seed);
+	Loop(const string& file);
+	~Loop();
+	
+	// grow loop
+	void grow();
+	
+	// save
+	void save(const string& file) const;
+	
+	// stream <<
+	friend ostream& operator<< <Dim>(ostream&,const Loop&) const;
+	
 private:
-	uint			Dim;
+	uint					Length;
 	vector< Point<Dim> >	Points;
-};*/
+  	gsl_rng * 				Generator;
+};
 
 #endif // __GENLOOP_H_INCLUDED__
