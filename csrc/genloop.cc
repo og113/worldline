@@ -55,6 +55,12 @@ void Point<Dim>::operator()(const Point& p) {
 	copy(p);
 }
 
+// set to zero
+template<uint Dim>
+void Point<Dim>::zero() {
+	fill(Coords.begin(), Coords.end(), 0.0);
+}
+
 // indexing
 template <uint Dim>
 const number& Point<Dim>::operator[](const uint& loc) const {
@@ -82,6 +88,22 @@ Point<Dim>& Point<Dim>::operator-=(const Point<Dim>& rhs) {
 	return *this;
 }
 
+// *=
+template <uint Dim>
+Point<Dim>& Point<Dim>::operator*=(const number& rhs) {
+	for (uint j=0; j<Dim; j++)
+		Coords[j] *= rhs;
+	return *this;
+}
+
+// /=
+template <uint Dim>
+Point<Dim>& Point<Dim>::operator/=(const number& rhs) {
+	for (uint j=0; j<Dim; j++)
+		Coords[j] /= rhs;
+	return *this;
+}
+
 // operator +
 template <uint Dim>
 Point<Dim> operator+(const Point<Dim>& lhs,const Point<Dim>& rhs) {
@@ -100,10 +122,28 @@ Point<Dim> operator-(const Point<Dim>& lhs,const Point<Dim>& rhs) {
 	return p;
 }
 
+// operator *
+template <uint Dim>
+Point<Dim> operator*(const number& lhs,const Point<Dim>& rhs) {
+	Point<Dim> p(rhs);
+	for (uint j=0; j<Dim; j++)
+		p.Coords[j] *= lhs;
+	return p;
+}
+
+// operator /
+template <uint Dim>
+Point<Dim> operator/(const Point<Dim>& lhs,const number& rhs) {
+	Point<Dim> p(lhs);
+	for (uint j=0; j<Dim; j++)
+		p.Coords[j] /= rhs;
+	return p;
+}
+
 
 // operator<<
 template <uint Dim>
-ostream& operator<<(ostream& os,const Point<Dim>& p) const {
+ostream& operator<<(ostream& os,const Point<Dim>& p) {
 	os << left;
 	for (uint j=0; j<Dim; j++)
 		os << setw(15) << p[j];
@@ -112,7 +152,7 @@ ostream& operator<<(ostream& os,const Point<Dim>& p) const {
 
 // operator==
 template <uint Dim>
-bool operator==(const Point<Dim>& lhs, const Point<Dim>& rhs) const {
+bool operator==(const Point<Dim>& lhs, const Point<Dim>& rhs) {
 	bool equal = true;
 	for (uint j=0; j<Dim; j++) {
 		if (abs(lhs[j]-rhs[j])>MIN_NUMBER) {
@@ -125,7 +165,7 @@ bool operator==(const Point<Dim>& lhs, const Point<Dim>& rhs) const {
 
 // operator^=
 template <uint Dim>
-bool operator^=(const Point<Dim>& lhs, const Point<Dim>& rhs) const {
+bool operator^=(const Point<Dim>& lhs, const Point<Dim>& rhs) {
 	double closeness = MIN_NUMBER*1.0e4;
 	bool equal = true;
 	for (uint j=0; j<Dim; j++) {
@@ -157,16 +197,17 @@ number Distance(const Point<Dim>& p1, const Point<Dim>& p2) {
 /*----------------------------------------------------------------------------------------------------------------------------
 	3 - Loop class
 		- initialisers and destructor
-		- grow
+		- steps
 		- save
 		- <<
 ----------------------------------------------------------------------------------------------------------------------------*/
 
 // minimal initialiser
 template <uint Dim>
-Loop<Dim>::Loop(const uint& k, const uint& seed) {
-	Length = pow(2,k);
+Loop<Dim>::Loop(const uint& k, const uint& seed): K(k) {
+	Length = pow(2,K);
 	Points(Length);
+	(Points[0]).zero();
 	Generator = gsl_rng_alloc(gsl_rng_taus);
 	gsl_rng_set(Generator,seed);
 }
@@ -179,14 +220,45 @@ Loop<Dim>::Loop(const string& file) {
 
 // destructor
 template <uint Dim>
-Loop<Dim>::~Loop{
+Loop<Dim>::~Loop() {
 	delete[] Generator;
 }	
 
+// first step
+template <uint Dim>
+void Loop<Dim>::firstStep() {
+	double sigma = 1.0/SQRT2;
+	Points[Length/2] = Points[0];
+	for (uint j=0; j<Dim; j++)
+		(Points[Length/2])[j] += gsl_ran_gaussian_ziggurat (Generator, sigma);
+}
+
 // grow
 template <uint Dim>
-void Loop<Dim>::grow() {
+void Loop<Dim>::followingSteps() {
+	double sigma = 1.0/2.0;
+	uint stepSize = 4;
+	
+	for (uint l=1; l<K; l++) {
+		for (uint m=0; m<pow(2,l); m++) {
+			Points[(2*m+1)*Length/stepSize] = (Points[(2*m+2)*Length/stepSize]+Points[(2*m)*Length/stepSize])/2.0;
+			for (uint n=0; n<Dim; n++) {
+				(Points[(2*m+1)*Length/stepSize])[n] += gsl_ran_gaussian_ziggurat (Generator, sigma);
+			}
+		}
+		sigma /= SQRT2;
+		stepSize *= 2;
+	}
+}
 
+// normalise
+template <uint Dim>
+void Loop<Dim>::normalise() {
+	double L = Distance(Points[Length-1],Points[0]);
+	for (uint j=0; j<(Length-1); j++)
+		L += Distance(Points[j+1],Points[j]);
+	for (uint l=0; l<Length; l++)
+		Points[l] /= L;
 }
 
 // save
@@ -195,10 +267,22 @@ void Loop<Dim>::save(const string& file) const {
 
 }
 
+// grow
+template <uint Dim>
+void Loop<Dim>::grow() {
+	firstStep();
+	followingSteps();
+	normalise();
+	
+	gsl_rng_free(Generator);
+}
+
 // stream <<
 template <uint Dim>
-ostream& operator<< (ostream&,const Loop<Dim>&) const {
-
+ostream& operator<< (ostream& os,const Loop<Dim>& l) {
+	for (uint j=0; j<l.Length; j++)
+		os << l.Points[j] << endl;
+	return os;
 }
 
 /*----------------------------------------------------------------------------------------------------------------------------
@@ -209,6 +293,8 @@ template class Point<4>;
 template ostream& operator<< <4>(ostream& os,const Point<4>& p);
 template Point<4> operator+ <4>(const Point<4>& lhs,const Point<4>& rhs);
 template Point<4> operator- <4>(const Point<4>& lhs,const Point<4>& rhs);
+template Point<4> operator* <4>(const number& lhs,const Point<4>& rhs);
+template Point<4> operator/ <4>(const Point<4>& lhs,const number& rhs);
 template bool operator== <4>(const Point<4>& lhs, const Point<4>& rhs);
 template bool operator^= <4>(const Point<4>& lhs, const Point<4>& rhs);
 template number Distance(const Point<4>&, const Point<4>&);

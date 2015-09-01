@@ -38,6 +38,14 @@ Point<Dim> operator+(const Point<Dim>&,const Point<Dim>&);
 template <uint Dim>
 Point<Dim> operator-(const Point<Dim>&,const Point<Dim>&);
 
+// operator*
+template <uint Dim>
+Point<Dim> operator*(const number&,const Point<Dim>&);
+
+// operator/
+template <uint Dim>
+Point<Dim> operator/(const Point<Dim>&,const number&);
+
 // operator<<
 template <uint Dim>
 ostream& operator<<(ostream&,const Point<Dim>&);
@@ -65,6 +73,9 @@ public:
 	Point& operator=(const Point&);
 	void operator()(const Point&);
 	
+	// set to zero
+	void zero();
+	
 	// indexing
 	const number& operator[](const uint&) const;
 	number& operator[](const uint&);
@@ -72,15 +83,19 @@ public:
 	// algebraic operations
 	Point& operator+=(const Point& rhs);
 	Point& operator-=(const Point& rhs);
+	Point& operator*=(const number& rhs);
+	Point& operator/=(const number& rhs);
 	friend Point operator+ <Dim>(const Point&,const Point&);
 	friend Point operator- <Dim>(const Point&,const Point&);
+	friend Point operator* <Dim>(const number&,const Point&);
+	friend Point operator/ <Dim>(const Point&,const number&);
 	
 	// boolean checks
-	friend bool operator== <Dim>(const Point& lhs, const Point& rhs) const;
-	friend bool operator^= <Dim>(const Point& lhs, const Point& rhs) const;
+	friend bool operator== <Dim>(const Point& lhs, const Point& rhs);
+	friend bool operator^= <Dim>(const Point& lhs, const Point& rhs);
 	
 	// stream <<
-	friend ostream& operator<< <Dim>(ostream&,const Point&) const;
+	friend ostream& operator<< <Dim>(ostream&,const Point&);
 	
 private:
 	void copy(const Point&);
@@ -102,7 +117,7 @@ class Loop;
 
 // stream <<
 template <uint Dim>
-friend ostream& operator<< (ostream&,const Loop<Dim>&);
+ostream& operator<< (ostream&,const Loop<Dim>&);
 
 // Loop class
 template <uint Dim>
@@ -120,12 +135,16 @@ public:
 	void save(const string& file) const;
 	
 	// stream <<
-	friend ostream& operator<< <Dim>(ostream&,const Loop&) const;
+	friend ostream& operator<< <Dim>(ostream&,const Loop&);
 	
 private:
+	uint					K;
 	uint					Length;
 	vector< Point<Dim> >	Points;
   	gsl_rng * 				Generator;
+  	void					firstStep();
+	void 					followingSteps();
+	void					normalise();
 };
 
 #endif // __GENLOOP_H_INCLUDED__

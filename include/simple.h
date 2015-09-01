@@ -13,7 +13,10 @@ declarations of some very simple functions and classes
 using namespace std;
 
 #ifndef pi
-#define pi 3.14159265359
+#define pi 3.1415926535897932
+#endif
+#ifndef SQRT2
+#define SQRT2 1.4142135623730950
 #endif
 #ifndef MIN_NUMBER
 #define MIN_NUMBER 1.0e-16
