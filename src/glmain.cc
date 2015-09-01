@@ -24,7 +24,7 @@ int main(int argc, char** argv) {
 
 #define dim 4
 uint Loops = 1e2; // number of loops
-uint K = 15; // size of loops=2^k
+uint K = 13; // size of loops=2^k
 uint Length = pow(2,K);
 
 /*-------------------------------------------------------------------------------------------------------------------------
