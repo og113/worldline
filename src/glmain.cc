@@ -20,21 +20,23 @@
 int main(int argc, char** argv) {
 /*-------------------------------------------------------------------------------------------------------------------------
 	1 - defining basic quantities
-		loops = 2^k
 -------------------------------------------------------------------------------------------------------------------------*/
 
 #define dim 4
-uint k = 0;
+uint Loops = 1e2; // number of loops
+uint K = 15; // size of loops=2^k
+uint Length = pow(2,K);
 
 /*-------------------------------------------------------------------------------------------------------------------------
 	2 - getting inputs from argv
 -------------------------------------------------------------------------------------------------------------------------*/
-if (argc == 2) k = stringToNumber<uint>(argv[1]);
+if (argc == 2) K = stringToNumber<uint>(argv[1]);
 else if (argc % 2 && argc>1) {
 for (unsigned int j=0; j<(int)(argc/2); j++) {
 		string id = argv[2*j+1];
 		if (id[0]=='-') id = id.substr(1);
-		if (id.compare("k")==0) k = stringToNumber<uint>(argv[2*j+2]);
+		if (id.compare("k")==0 || id.compare("K")==0) K = stringToNumber<uint>(argv[2*j+2]);
+		if (id.compare("l")==0 || id.compare("loops")==0) K = stringToNumber<uint>(argv[2*j+2]);
 		else {
 			cerr << "input " << id << " unrecognized" << endl;
 			return 1;
@@ -42,34 +44,24 @@ for (unsigned int j=0; j<(int)(argc/2); j++) {
 	}
 }
 
-uint loops = pow(2,k);
-cout << "generating " << loops << " unit loops in " << dim << " dimensions" << endl;
+cout << "generating " << Loops << " unit loops each of " << Length << " points in " << dim << " dimensions" << endl;
 
 /*-------------------------------------------------------------------------------------------------------------------------
-	3 - initialising loops
+	3 - making and saving loops
 -------------------------------------------------------------------------------------------------------------------------*/
-Point<dim> p;
-p[0] += 1.0;
-cout << "p:" << endl << p << endl;
+string file;
+uint Seed = 1;
+Loop<dim> loop(K,Seed);
 
-uint K = 2;
-uint Seed = 0;
-/*cout << "K: ";
-cin >> K;
-cout << "Seed: ";
-cin >> Seed;*/
-
-Loop<dim> l(K,Seed), m(K,Seed);
-l.grow();
-
-string file = "data/temp/loop.dat";
-l.save(file);
-m.load(file);
-
-cout << "l:" << endl << l << endl;
-cout << "length = " << l.checkLength() << endl;
-cout << "m:" << endl << m << endl;
-cout << "length = " << m.checkLength() << endl;
+for (uint j=0; j<Loops; j++) {
+file = "data/temp/loop_dim_"+nts<uint>(dim)+"_K_"+nts<uint>(K)+"_run_"+nts<uint>(j)+".dat";
+Seed += j;
+loop.grow();
+loop.save(file);
+//if (abs(loop.checkLength()-1.0)>MIN_NUMBER*Length)
+//	cerr << "loop error: length = " << loop.checkLength() << endl;
+loop.clear();
+}
 
 return 0;
 }

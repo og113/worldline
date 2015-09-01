@@ -39,21 +39,35 @@ CONTENTS
 
 //to convert number to string, usage is string str = NumberToString<number type>(x);
 template <class T>
-string numberToString ( const T& Number )
-	{
+string numberToString ( const T& Number ) {
 	stringstream ss;
 	ss << Number;
 	return ss.str();
-	}
+}
+	
+//shorthand version;
+template <class T>
+string nts ( const T& Number ) {
+	stringstream ss;
+	ss << Number;
+	return ss.str();
+}
 
 //to convert string to number, usage is (number type) x = StringToNumber<number type>(str);
 template <class T>
-T stringToNumber ( const string& Text )
-	{
+T stringToNumber ( const string& Text ) {
 	stringstream ss(Text);
 	T result;
 	return ss >> result ? result : 0;
-	}
+}
+	
+//shorthand version;
+template <class T>
+T stn ( const string& Text ) {
+	stringstream ss(Text);
+	T result;
+	return ss >> result ? result : 0;
+}
 	
 /*-------------------------------------------------------------------------------------------------------------------------
 	2. absDiff
@@ -286,12 +300,26 @@ template string numberToString<long long unsigned>(const long long unsigned&);
 template string numberToString<double>(const double&);
 template string numberToString<comp>(const comp&);
 
+template string nts<int>(const int&);
+template string nts<uint>(const uint&);
+template string nts<lint>(const lint&);
+template string nts<long long unsigned>(const long long unsigned&);
+template string nts<double>(const double&);
+template string nts<comp>(const comp&);
+
 template int stringToNumber<int>(const string&);
 template uint stringToNumber<uint>(const string&);
 template lint stringToNumber<lint>(const string&);
 template long long unsigned stringToNumber<long long unsigned>(const string&);
 template double stringToNumber<double>(const string&);
 template comp stringToNumber<comp>(const string&);
+
+template int stn<int>(const string&);
+template uint stn<uint>(const string&);
+template lint stn<lint>(const string&);
+template long long unsigned stn<long long unsigned>(const string&);
+template double stn<double>(const string&);
+template comp stn<comp>(const string&);
 
 template uint smallestLoc<int>(const vector<int>&);
 template uint smallestLoc<double>(const vector<double>&);

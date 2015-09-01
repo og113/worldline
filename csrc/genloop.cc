@@ -274,6 +274,13 @@ void Loop<Dim>::normalise() {
 		Points[l] /= L;
 }
 
+// clear
+template <uint Dim>
+void Loop<Dim>::clear() {
+	for (uint j=0; j<(Length-1); j++)
+		Points[j].zero();
+}
+
 // save
 template <uint Dim>
 void Loop<Dim>::save(const string& f) const {
@@ -320,7 +327,7 @@ void Loop<Dim>::grow() {
 	followingSteps();
 	normalise();
 	
-	gsl_rng_free(Generator);
+	//gsl_rng_free(Generator);
 }
 
 // checkLength

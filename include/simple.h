@@ -51,7 +51,13 @@ template <class T>
 string numberToString ( const T& Number );
 
 template <class T>
+string nts ( const T& Number );
+
+template <class T>
 T stringToNumber ( const string& Text );
+
+template <class T>
+T stn ( const string& Text );
 
 /*-------------------------------------------------------------------------------------------------------------------------
 	2. absDiff

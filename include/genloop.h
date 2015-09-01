@@ -135,6 +135,9 @@ public:
 	// grow loop
 	void grow();
 	
+	// clear
+	void clear();
+	
 	// save
 	void save(const string& file) const;
 	
