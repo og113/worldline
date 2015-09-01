@@ -7,6 +7,7 @@
 
 #include <string>
 #include <vector>
+#include <iostream>
 #include <gsl/gsl_randist.h> 	// Distributions of random numbers
 #include <gsl/gsl_sf_exp.h> 	// Exponential functions
 
@@ -97,6 +98,10 @@ public:
 	// stream <<
 	friend ostream& operator<< <Dim>(ostream&,const Point&);
 	
+	// read and write binary
+	ostream& writeBinary(ostream& os) const;
+	istream& readBinary(istream& is);	
+	
 private:
 	void copy(const Point&);
 	vector<number>		Coords;
@@ -125,7 +130,6 @@ class Loop {
 public:
 	// initialization and destruction
 	Loop(const uint& k, const uint& seed);
-	Loop(const string& file);
 	~Loop();
 	
 	// grow loop
@@ -134,11 +138,18 @@ public:
 	// save
 	void save(const string& file) const;
 	
+	// load
+	void load(const string& file);
+	
 	// stream <<
 	friend ostream& operator<< <Dim>(ostream&,const Loop&);
 	
+	// check length
+	double					checkLength() const;
+	
 private:
 	uint					K;
+	uint					Seed;
 	uint					Length;
 	vector< Point<Dim> >	Points;
   	gsl_rng * 				Generator;

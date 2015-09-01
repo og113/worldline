@@ -3,7 +3,8 @@
 */
 
 #include <iostream>
-#include <cmath>
+#include <iomanip>
+#include <fstream>
 #include "simple.h"
 #include "genloop.h"
 
@@ -47,9 +48,28 @@ cout << "generating " << loops << " unit loops in " << dim << " dimensions" << e
 /*-------------------------------------------------------------------------------------------------------------------------
 	3 - initialising loops
 -------------------------------------------------------------------------------------------------------------------------*/
-Point<dim> p = {0,1,2,3};
+Point<dim> p;
 p[0] += 1.0;
 cout << "p:" << endl << p << endl;
+
+uint K = 2;
+uint Seed = 0;
+/*cout << "K: ";
+cin >> K;
+cout << "Seed: ";
+cin >> Seed;*/
+
+Loop<dim> l(K,Seed), m(K,Seed);
+l.grow();
+
+string file = "data/temp/loop.dat";
+l.save(file);
+m.load(file);
+
+cout << "l:" << endl << l << endl;
+cout << "length = " << l.checkLength() << endl;
+cout << "m:" << endl << m << endl;
+cout << "length = " << m.checkLength() << endl;
 
 return 0;
 }

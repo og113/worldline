@@ -4,6 +4,8 @@
 
 #include <iostream>
 #include <iomanip>
+#include <fstream>
+#include <cmath>
 #include "simple.h"
 #include "genloop.h"
 
@@ -150,6 +152,22 @@ ostream& operator<<(ostream& os,const Point<Dim>& p) {
 	return os;
 }
 
+// writeBinary
+template <uint Dim>
+ostream& Point<Dim>::writeBinary(ostream& os) const {
+	for (uint j=0; j<Dim; j++)
+		os.write(reinterpret_cast<const char*>(&(Coords[j])),sizeof(number));
+	return os;
+}
+
+// readBinary
+template <uint Dim>
+istream& Point<Dim>::readBinary(istream& is) {
+	for (uint j=0; j<Dim; j++)
+		is.read(reinterpret_cast<char*>(&(Coords[j])),sizeof(number));
+	return is;
+}	
+
 // operator==
 template <uint Dim>
 bool operator==(const Point<Dim>& lhs, const Point<Dim>& rhs) {
@@ -204,23 +222,17 @@ number Distance(const Point<Dim>& p1, const Point<Dim>& p2) {
 
 // minimal initialiser
 template <uint Dim>
-Loop<Dim>::Loop(const uint& k, const uint& seed): K(k) {
-	Length = pow(2,K);
-	Points(Length);
+Loop<Dim>::Loop(const uint& k, const uint& seed): 
+		K(k), Seed(seed), Length(pow(2,k)) {
+	Points.resize(Length);
 	(Points[0]).zero();
 	Generator = gsl_rng_alloc(gsl_rng_taus);
-	gsl_rng_set(Generator,seed);
-}
-
-// load initialiser
-template <uint Dim>
-Loop<Dim>::Loop(const string& file) {
-	
 }
 
 // destructor
 template <uint Dim>
 Loop<Dim>::~Loop() {
+	//gsl_rng_free(Generator);
 	delete[] Generator;
 }	
 
@@ -233,7 +245,7 @@ void Loop<Dim>::firstStep() {
 		(Points[Length/2])[j] += gsl_ran_gaussian_ziggurat (Generator, sigma);
 }
 
-// grow
+// following steps - problem when loc=N, instead of 0.
 template <uint Dim>
 void Loop<Dim>::followingSteps() {
 	double sigma = 1.0/2.0;
@@ -241,9 +253,10 @@ void Loop<Dim>::followingSteps() {
 	
 	for (uint l=1; l<K; l++) {
 		for (uint m=0; m<pow(2,l); m++) {
-			Points[(2*m+1)*Length/stepSize] = (Points[(2*m+2)*Length/stepSize]+Points[(2*m)*Length/stepSize])/2.0;
+			uint locU = ((2*m+2)*Length/stepSize==Length? 0: (2*m+2)*Length/stepSize);
+			Points[(2*m+1)*Length/stepSize] = (Points[locU]+Points[(2*m)*Length/stepSize])/2.0;
 			for (uint n=0; n<Dim; n++) {
-				(Points[(2*m+1)*Length/stepSize])[n] += gsl_ran_gaussian_ziggurat (Generator, sigma);
+				(Points[(2*m+1)*Length/stepSize])[n] += gsl_ran_gaussian_ziggurat(Generator, sigma);
 			}
 		}
 		sigma /= SQRT2;
@@ -263,18 +276,60 @@ void Loop<Dim>::normalise() {
 
 // save
 template <uint Dim>
-void Loop<Dim>::save(const string& file) const {
+void Loop<Dim>::save(const string& f) const {
+	ofstream os;
+	os.open(f.c_str(),ios::binary);
+	if (os.good()) {
+		for (uint j=0; j<Length; j++) {
+			(Points[j]).writeBinary(os);
+		}
+		os.close();
+	}
+	else {
+		cerr << "save error: cannot write to " << f << endl;
+		os.close();
+		return;
+	}
+}
 
+// load - should add functionality to check length of file is correct
+template <uint Dim>
+void Loop<Dim>::load(const string& f) {
+	ifstream is;
+	is.open(f.c_str(),ios::binary);
+	if (is.good()) {
+		for (uint j=0; j<Length; j++) {
+			(Points[j]).readBinary(is);
+		}
+		is.close();
+	}
+	else {
+		cerr << "load error: cannot read from " << f << endl;
+		is.close();
+		return;
+	}
 }
 
 // grow
 template <uint Dim>
 void Loop<Dim>::grow() {
+	Generator = gsl_rng_alloc(gsl_rng_taus);
+	gsl_rng_set(Generator,Seed);
+	
 	firstStep();
 	followingSteps();
 	normalise();
 	
 	gsl_rng_free(Generator);
+}
+
+// checkLength
+template <uint Dim>
+double Loop<Dim>::checkLength() const {
+	double L = Distance(Points[Length-1],Points[0]);
+	for (uint j=0; j<(Length-1); j++)
+		L += Distance(Points[j+1],Points[j]);
+	return L;
 }
 
 // stream <<
@@ -298,4 +353,5 @@ template Point<4> operator/ <4>(const Point<4>& lhs,const number& rhs);
 template bool operator== <4>(const Point<4>& lhs, const Point<4>& rhs);
 template bool operator^= <4>(const Point<4>& lhs, const Point<4>& rhs);
 template number Distance(const Point<4>&, const Point<4>&);
-
+template class Loop<4>;
+template ostream& operator<< <4>(ostream& os,const Loop<4>& l);
