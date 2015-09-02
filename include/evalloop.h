@@ -8,6 +8,7 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include <cmath>
 #include <gsl/gsl_sf_exp.h> // exponential function
 #include "genloop.h"
 
@@ -29,6 +30,7 @@ template <uint Dim>
 number S0 (const Loop<Dim>& l);
 
 // V
+template <uint Dim>
 number V (const Loop<Dim>& l);
 
 

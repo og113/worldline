@@ -51,8 +51,7 @@ number V (const Loop<Dim>& l) {
 template number S0<4> (const Loop<4>& l);
 
 // V, Dim=4
-template <4>
-number V <4>(const Loop<4>& l) {
+template <> number V <4>(const Loop<4>& l) {
 	number result = 0.0;
 	for (uint j=0; j<(l.size()-1); j++) {
 		for (uint k=0; k<(l.size()-1); k++) {

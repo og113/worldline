@@ -31,10 +31,10 @@ LIBS 			= -lm -lgsl -lgslcblas
 MPILIBS			= $(LIBS)
 MPILIBS			+= -lmpi++ -lmpi
 
-_HEADERS 		= check.h error.h folder.h genloop.h simple.h 
+_HEADERS 		= check.h error.h evalloop.h folder.h genloop.h simple.h
 HEADERS 		= $(patsubst %,$(HDIR)/%,$(_HEADERS))
 
-_COMMONSRC		= check.cc error.cc folder.cc genloop.cc simple.cc 
+_COMMONSRC		= check.cc error.cc evalloop.cc folder.cc genloop.cc simple.cc 
 _COMMONOBJS		= $(_COMMONSRC:.cc=.o)
 COMMONSRC		= $(patsubst %,$(CSDIR)/%,$(_COMMONSRC))
 COMMONOBJS 		= $(patsubst %,$(CODIR)/%,$(_COMMONOBJS))

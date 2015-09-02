@@ -148,6 +148,9 @@ public:
 	// load
 	void load(const string& file);
 	
+	// indexing
+	const Point<Dim>& operator[](const uint&) const;
+	
 	// stream <<
 	friend ostream& operator<< <Dim>(ostream&,const Loop&);
 	

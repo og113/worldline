@@ -246,7 +246,7 @@ Loop<Dim>::~Loop() {
 
 // size
 template <uint Dim>
-uint Loop<Dim>::size() {
+uint Loop<Dim>::size() const {
 	return Length;
 }	
 
@@ -293,6 +293,12 @@ template <uint Dim>
 void Loop<Dim>::clear() {
 	for (uint j=0; j<(Length-1); j++)
 		Points[j].zero();
+}
+
+// indexing
+template <uint Dim>
+const Point<Dim>& Loop<Dim>::operator[](const uint& loc) const {
+	return Points.at(loc);
 }
 
 // save
