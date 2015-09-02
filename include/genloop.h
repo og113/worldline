@@ -110,6 +110,10 @@ private:
 /*----------------------------------------------------------------------------------------------------------------------------
 	functions acting on Points
 ----------------------------------------------------------------------------------------------------------------------------*/
+// Distance squared
+template <uint Dim>
+number DistanceSquared(const Point<Dim>&, const Point<Dim>&);
+
 // Distance
 template <uint Dim>
 number Distance(const Point<Dim>&, const Point<Dim>&);
@@ -147,8 +151,11 @@ public:
 	// stream <<
 	friend ostream& operator<< <Dim>(ostream&,const Loop&);
 	
+	// size
+	uint size() const;
+	
 	// check length
-	double					checkLength() const;
+	number					checkLength() const;
 	
 private:
 	uint					K;

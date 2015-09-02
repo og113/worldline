@@ -184,7 +184,7 @@ bool operator==(const Point<Dim>& lhs, const Point<Dim>& rhs) {
 // operator^=
 template <uint Dim>
 bool operator^=(const Point<Dim>& lhs, const Point<Dim>& rhs) {
-	double closeness = MIN_NUMBER*1.0e4;
+	number closeness = MIN_NUMBER*1.0e4;
 	bool equal = true;
 	for (uint j=0; j<Dim; j++) {
 		if (abs(lhs[j]-rhs[j])>closeness) {
@@ -198,17 +198,25 @@ bool operator^=(const Point<Dim>& lhs, const Point<Dim>& rhs) {
 
 /*----------------------------------------------------------------------------------------------------------------------------
 	2 - functions acting on Points
+		- DistanceSquared
 		- Distance
 ----------------------------------------------------------------------------------------------------------------------------*/
 
-//distance
+//distance squared
 template <uint Dim>
-number Distance(const Point<Dim>& p1, const Point<Dim>& p2) {
+number DistanceSquared(const Point<Dim>& p1, const Point<Dim>& p2) {
 	number d = 0.0;
 	for (uint j=0; j<Dim; j++) {
 		d += pow(p1[j]-p2[j],2);
 	}
-	return sqrt(d);
+	return d;
+}
+
+
+//distance
+template <uint Dim>
+number Distance(const Point<Dim>& p1, const Point<Dim>& p2) {
+	return sqrt(DistanceSquared(p1,p2));
 }
 
 
@@ -234,12 +242,18 @@ template <uint Dim>
 Loop<Dim>::~Loop() {
 	//gsl_rng_free(Generator);
 	delete[] Generator;
+}
+
+// size
+template <uint Dim>
+uint Loop<Dim>::size() {
+	return Length;
 }	
 
 // first step
 template <uint Dim>
 void Loop<Dim>::firstStep() {
-	double sigma = 1.0/SQRT2;
+	number sigma = 1.0/SQRT2;
 	Points[Length/2] = Points[0];
 	for (uint j=0; j<Dim; j++)
 		(Points[Length/2])[j] += gsl_ran_gaussian_ziggurat (Generator, sigma);
@@ -248,7 +262,7 @@ void Loop<Dim>::firstStep() {
 // following steps - problem when loc=N, instead of 0.
 template <uint Dim>
 void Loop<Dim>::followingSteps() {
-	double sigma = 1.0/2.0;
+	number sigma = 1.0/2.0;
 	uint stepSize = 4;
 	
 	for (uint l=1; l<K; l++) {
@@ -267,7 +281,7 @@ void Loop<Dim>::followingSteps() {
 // normalise
 template <uint Dim>
 void Loop<Dim>::normalise() {
-	double L = Distance(Points[Length-1],Points[0]);
+	number L = Distance(Points[Length-1],Points[0]);
 	for (uint j=0; j<(Length-1); j++)
 		L += Distance(Points[j+1],Points[j]);
 	for (uint l=0; l<Length; l++)
@@ -332,8 +346,8 @@ void Loop<Dim>::grow() {
 
 // checkLength
 template <uint Dim>
-double Loop<Dim>::checkLength() const {
-	double L = Distance(Points[Length-1],Points[0]);
+number Loop<Dim>::checkLength() const {
+	number L = Distance(Points[Length-1],Points[0]);
 	for (uint j=0; j<(Length-1); j++)
 		L += Distance(Points[j+1],Points[j]);
 	return L;
