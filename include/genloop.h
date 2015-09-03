@@ -51,6 +51,10 @@ Point<Dim> operator/(const Point<Dim>&,const number&);
 template <uint Dim>
 ostream& operator<<(ostream&,const Point<Dim>&);
 
+// operator>>
+template <uint Dim>
+istream& operator>>(istream&,Point<Dim>&);
+
 // operator==
 template <uint Dim>
 bool operator==(const Point<Dim>& lhs, const Point<Dim>& rhs);
@@ -97,6 +101,7 @@ public:
 	
 	// stream <<
 	friend ostream& operator<< <Dim>(ostream&,const Point&);
+	friend istream& operator>> <Dim>(istream&,Point&);
 	
 	// read and write binary
 	ostream& writeBinary(ostream& os) const;
@@ -128,6 +133,10 @@ class Loop;
 template <uint Dim>
 ostream& operator<< (ostream&,const Loop<Dim>&);
 
+// stream>>
+template <uint Dim>
+istream& operator>>(istream&,Loop<Dim>&);
+
 // Loop class
 template <uint Dim>
 class Loop {
@@ -144,15 +153,18 @@ public:
 	
 	// save
 	void save(const string& file) const;
+	void saveAscii(const string& file) const;
 	
 	// load
 	void load(const string& file);
+	void loadAscii(const string& file);
 	
 	// indexing
 	const Point<Dim>& operator[](const uint&) const;
 	
-	// stream <<
+	// stream <<, >>
 	friend ostream& operator<< <Dim>(ostream&,const Loop&);
+	friend istream& operator>> <Dim>(istream&, Loop&);
 	
 	// size
 	uint size() const;

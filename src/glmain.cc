@@ -22,9 +22,9 @@ int main(int argc, char** argv) {
 	1 - defining basic quantities
 -------------------------------------------------------------------------------------------------------------------------*/
 
-#define dim 4
-uint Loops = 1e2; // number of loops
-uint K = 13; // size of loops=2^k
+#define dim 2
+uint Loops = 1e1; // number of loops
+uint K = 5; // size of loops=2^k
 uint Length = pow(2,K);
 
 /*-------------------------------------------------------------------------------------------------------------------------
@@ -49,9 +49,9 @@ cout << "generating " << Loops << " unit loops each of " << Length << " points i
 /*-------------------------------------------------------------------------------------------------------------------------
 	3 - making and saving loops
 -------------------------------------------------------------------------------------------------------------------------*/
-string file;
+string file, asciiFile;
 uint Seed = 1;
-Loop<dim> loop(K,Seed);
+Loop<dim> loop(K,Seed), loop2(K,Seed);
 
 for (uint j=0; j<Loops; j++) {
 file = "data/temp/loop_dim_"+nts<uint>(dim)+"_K_"+nts<uint>(K)+"_run_"+nts<uint>(j)+".dat";
@@ -62,6 +62,13 @@ loop.save(file);
 //	cerr << "loop error: length = " << loop.checkLength() << endl;
 loop.clear();
 }
+
+asciiFile = "data/temp/loopAscii.dat";
+loop.grow();
+cout << loop << endl;
+loop.saveAscii(asciiFile);
+//loop2.loadAscii(asciiFile);
+//loop2.saveAscii(asciiFile);
 
 return 0;
 }

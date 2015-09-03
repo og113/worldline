@@ -16,9 +16,9 @@
 /*----------------------------------------------------------------------------------------------------------------------------
 	1 - loop functions
 		- S0
-		- V
+		- V0
 		
-n.b. functions are defined for unit loops. for other loops the result must be multiplied by appropriate factors of T, the length of the loop.
+n.b. functions are defined for unit loops. for other loops the result must be multiplied by appropriate factors (depending on Dim) of T, the length of the loop.
 ----------------------------------------------------------------------------------------------------------------------------*/
 
 // S0
@@ -30,9 +30,9 @@ number S0 (const Loop<Dim>& l) {
 	return result*l.size()/4.0;
 }
 
-// V
+// V0
 template <uint Dim>
-number V (const Loop<Dim>& l) {
+number V0 (const Loop<Dim>& l) {
 	number result = 0.0;
 	for (uint j=0; j<(l.size()-1); j++) {
 		for (uint k=0; k<(l.size()-1); k++) {
@@ -50,8 +50,8 @@ number V (const Loop<Dim>& l) {
 // Dim=4
 template number S0<4> (const Loop<4>& l);
 
-// V, Dim=4
-template <> number V <4>(const Loop<4>& l) {
+// V0, Dim=4, slightly changed for speed
+template <> number V0 <4>(const Loop<4>& l) {
 	number result = 0.0;
 	for (uint j=0; j<(l.size()-1); j++) {
 		for (uint k=0; k<(l.size()-1); k++) {

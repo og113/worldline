@@ -152,6 +152,14 @@ ostream& operator<<(ostream& os,const Point<Dim>& p) {
 	return os;
 }
 
+// operator>>
+template <uint Dim>
+istream& operator>>(istream& is,Point<Dim>& p) {
+	for (uint j=0; j<Dim; j++)
+		is >> p[j];
+	return is;
+}
+
 // writeBinary
 template <uint Dim>
 ostream& Point<Dim>::writeBinary(ostream& os) const {
@@ -291,7 +299,7 @@ void Loop<Dim>::normalise() {
 // clear
 template <uint Dim>
 void Loop<Dim>::clear() {
-	for (uint j=0; j<(Length-1); j++)
+	for (uint j=0; j<Length; j++)
 		Points[j].zero();
 }
 
@@ -319,21 +327,72 @@ void Loop<Dim>::save(const string& f) const {
 	}
 }
 
-// load - should add functionality to check length of file is correct
+// saveAscii
 template <uint Dim>
-void Loop<Dim>::load(const string& f) {
-	ifstream is;
-	is.open(f.c_str(),ios::binary);
-	if (is.good()) {
-		for (uint j=0; j<Length; j++) {
-			(Points[j]).readBinary(is);
-		}
-		is.close();
+void Loop<Dim>::saveAscii(const string& f) const {
+	ofstream os;
+	os.open(f.c_str());
+	if (os.good()) {
+		os << *this;
+		os.close();
 	}
 	else {
-		cerr << "load error: cannot read from " << f << endl;
-		is.close();
+		cerr << "save error: cannot write to " << f << endl;
+		os.close();
 		return;
+	}
+}
+
+// load
+template <uint Dim>
+void Loop<Dim>::load(const string& f) {
+	uint fd = countDoubles(f);
+	if (fd!=Dim*Length) {
+		cerr << "load error: " << f << " contains " << fd << " doubles, loop requires " << Length*Dim << endl;
+		return;
+	}
+	else {	
+		ifstream is;
+		is.open(f.c_str(),ios::binary);
+		if (is.good()) {
+			for (uint j=0; j<Length; j++) {
+				(Points[j]).readBinary(is);
+			}
+			is.close();
+		}
+		else {
+			cerr << "load error: cannot read from " << f << endl;
+			is.close();
+			return;
+		}
+	}
+}
+
+// loadAscii - should add functionality to check length of file is correct
+template <uint Dim>
+void Loop<Dim>::loadAscii(const string& f) {
+	uint fl = countLines(f);
+	uint fc = countColumns(f);
+	if (fl!=Length) {
+		cerr << "load error: " << f << " contains " << fl << " lines, loop requires " << Length << endl;
+		return;
+	}
+	else if (fc!=Dim) {
+		cerr << "load error: " << f << " contains " << fc << " columns, loop requires " << Dim << endl;
+		return;
+	}
+	else {	
+		ifstream is;
+		is.open(f.c_str());
+		if (is.good()) {
+			is >> *this;
+			is.close();
+		}
+		else {
+			cerr << "load error: cannot read from " << f << endl;
+			is.close();
+			return;
+		}
 	}
 }
 
@@ -367,6 +426,14 @@ ostream& operator<< (ostream& os,const Loop<Dim>& l) {
 	return os;
 }
 
+// stream >>
+template <uint Dim>
+istream& operator>> (istream& is, Loop<Dim>& l) {
+	for (uint j=0; j<l.Length; j++)
+		is >> l.Points[j];
+	return is;
+}
+
 /*----------------------------------------------------------------------------------------------------------------------------
 	4 - explicit template instantiation
 ----------------------------------------------------------------------------------------------------------------------------*/
@@ -382,3 +449,16 @@ template bool operator^= <4>(const Point<4>& lhs, const Point<4>& rhs);
 template number Distance(const Point<4>&, const Point<4>&);
 template class Loop<4>;
 template ostream& operator<< <4>(ostream& os,const Loop<4>& l);
+
+// Dim=2
+template class Point<2>;
+template ostream& operator<< <2>(ostream& os,const Point<2>& p);
+template Point<2> operator+ <2>(const Point<2>& lhs,const Point<2>& rhs);
+template Point<2> operator- <2>(const Point<2>& lhs,const Point<2>& rhs);
+template Point<2> operator* <2>(const number& lhs,const Point<2>& rhs);
+template Point<2> operator/ <2>(const Point<2>& lhs,const number& rhs);
+template bool operator== <2>(const Point<2>& lhs, const Point<2>& rhs);
+template bool operator^= <2>(const Point<2>& lhs, const Point<2>& rhs);
+template number Distance(const Point<2>&, const Point<2>&);
+template class Loop<2>;
+template ostream& operator<< <2>(ostream& os,const Loop<2>& l);
