@@ -259,8 +259,9 @@ double randDouble(const double& min, const double& max) {
 -------------------------------------------------------------------------------------------------------------------------*/
 
 // mod
-double mod(const double& x, const double& min, const double& max) {
-	double Min, Max;
+template <class T>
+T mod(const T& x, const T& min, const T& max) {
+	T Min, Max;
 	if (min<max) {
 		Min = min;
 		Max = max;
@@ -278,11 +279,11 @@ double mod(const double& x, const double& min, const double& max) {
 		return x;
 	else if (x>Max) {
 		int ranges = (int)((x-Min)/(Max-Min));
-		return x-(double)ranges*(Max-Min);
+		return x-(T)ranges*(Max-Min);
 	}
 	else {
 		int ranges = (int)((Max-x)/(Max-Min));
-		return x+(double)ranges*(Max-Min);
+		return x+(T)ranges*(Max-Min);
 	}
 }
 
@@ -325,8 +326,10 @@ template uint smallestLoc<int>(const vector<int>&);
 template uint smallestLoc<double>(const vector<double>&);
 template uint smallestLoc<comp>(const vector<comp>&);
 
-template uint countType(const string&,const int&);
-template uint countType(const string&,const uint&);
-template uint countType(const string&,const double&);
-template uint countType(const string&,const comp&);
+template uint countType<int>(const string&,const int&);
+template uint countType<uint>(const string&,const uint&);
+template uint countType<double>(const string&,const double&);
+template uint countType<comp>(const string&,const comp&);
 
+template double mod<double>(const double& x, const double& min, const double& max);
+template int mod<int>(const int& x, const int& min, const int& max);

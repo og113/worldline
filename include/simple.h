@@ -142,7 +142,10 @@ double randDouble(const double& min, const double& max);
 	9. mod
 -------------------------------------------------------------------------------------------------------------------------*/
 
-// mod
+// mod double
 double mod(const double& x, const double& min, const double& max);
+
+// mod int
+int mod(const int& x, const int& min, const int& max);
 
 #endif // __SIMPLE_H_INCLUDED__

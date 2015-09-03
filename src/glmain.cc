@@ -58,17 +58,14 @@ file = "data/temp/loop_dim_"+nts<uint>(dim)+"_K_"+nts<uint>(K)+"_run_"+nts<uint>
 Seed += j;
 loop.grow();
 loop.save(file);
-//if (abs(loop.checkLength()-1.0)>MIN_NUMBER*Length)
-//	cerr << "loop error: length = " << loop.checkLength() << endl;
+/*if (abs(loop.checkLength()-1.0)>MIN_NUMBER*Length)
+	cerr << "loop error: length = " << loop.checkLength() << endl;*/
 loop.clear();
 }
 
-asciiFile = "data/temp/loopAscii.dat";
+/*asciiFile = "data/temp/loopAscii.dat";
 loop.grow();
-cout << loop << endl;
-loop.saveAscii(asciiFile);
-//loop2.loadAscii(asciiFile);
-//loop2.saveAscii(asciiFile);
+loop.saveAscii(asciiFile);*/
 
 return 0;
 }
