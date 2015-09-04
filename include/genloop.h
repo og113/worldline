@@ -10,11 +10,9 @@
 #include <iostream>
 #include <gsl/gsl_randist.h> 	// Distributions of random numbers
 #include <gsl/gsl_sf_exp.h> 	// Exponential functions
+#include "simple.h"
 
 using namespace std;
-
-typedef double number;
-typedef unsigned int uint;
 
 /*----------------------------------------------------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------------------------------------------------

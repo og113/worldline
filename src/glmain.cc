@@ -6,6 +6,7 @@
 #include <iomanip>
 #include <fstream>
 #include "simple.h"
+#include "parameters.h"
 #include "genloop.h"
 
 /*-------------------------------------------------------------------------------------------------------------------------
@@ -26,6 +27,13 @@ int main(int argc, char** argv) {
 uint Loops = 1e1; // number of loops
 uint K = 5; // size of loops=2^k
 uint Length = pow(2,K);
+number g = 0.0;
+
+Parameters p;
+p.Loops = Loops;
+p.K = K;
+p.g = g;
+p.save("inputs");
 
 /*-------------------------------------------------------------------------------------------------------------------------
 	2 - getting inputs from argv

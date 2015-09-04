@@ -22,6 +22,7 @@ using namespace std;
 #define MIN_NUMBER 1.0e-16
 #endif
 
+typedef double number;
 typedef unsigned int uint;
 typedef unsigned long int lint;
 typedef complex<double> comp;
