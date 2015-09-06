@@ -47,6 +47,7 @@ if (p.empty()) {
 uint Length = pow(2,p.K);
 
 vector<double> dataSum(p.Ng,0.0), dataSumS0(p.Ng,0.0), dataSumS02(p.Ng,0.0);
+double aprxS0 = 0.0, aprxS02 = 0.0, error = 0.0;
 
 /*----------------------------------------------------------------------------------------------------------------------------
 	2. defining required nodes
@@ -110,7 +111,7 @@ if (rank==0) {
 		MPI::COMM_WORLD.Send(&loopMin, 1, MPI::UNSIGNED, k+1, 0);		
 		MPI::COMM_WORLD.Send(&loopMax, 1, MPI::UNSIGNED, k+1, 1);
 		
-		cout << "process " << 0 << " sent " << loopMin << " and " << loopMax << " to process " << k << endl;
+		//cout << "process " << 0 << " sent " << loopMin << " and " << loopMax << " to process " << k << endl;
 		
 	}
 }
@@ -121,7 +122,7 @@ else {
 	MPI::COMM_WORLD.Probe(0, 1, status);
 	MPI::COMM_WORLD.Recv(&loopMax, 1, MPI::UNSIGNED, 0, 1, status);
 	
-	cout << "process " << rank << " recieved " << loopMin << " and " << loopMax << " from process 0" << endl;
+	//cout << "process " << rank << " recieved " << loopMin << " and " << loopMax << " from process 0" << endl;
 }
 
 /*----------------------------------------------------------------------------------------------------------------------------
@@ -185,16 +186,38 @@ else { // rank==0
 		dataSumS02[status.Get_tag()] = buf[2];
 		//cout << "process " << rank << " recieved message " << status.Get_tag() << " from " << status.Get_source() << endl;
 		count++;
+		aprxS0 += buf[1]/buf[0];
+		aprxS02 += buf[2]/buf[0];
 	}
+	aprxS0 /= (double)Nl;
+	aprxS02 /= (double)Nl;
+	// better to do immediate probing 'iprobe' so that the 0 processor can do other tasks while waiting, like computing errors
 }
 
 /*----------------------------------------------------------------------------------------------------------------------------
 	5. evaluating errors
 ----------------------------------------------------------------------------------------------------------------------------*/
 
+if (rank==0) {
+	double aprxS0_g;
+	for (uint j=0; j<p.Ng; j++) {
+		aprxS0_g = dataSumS0[j]/dataSum[j]/(double)p.Ng;
+		error += pow(aprxS0_g-aprxS0,2.0)/(double)(p.Ng*(p.Ng-1.0));
+	}
+	error = sqrt(error);
+
 /*----------------------------------------------------------------------------------------------------------------------------
 	6. printing results
 ----------------------------------------------------------------------------------------------------------------------------*/
+	for (uint j=0; j<p.Ng; j++) {
+		cout << "Z[" << j << "] = " << dataSum[j]/(double)p.Ng << endl;
+		cout << "S0[" << j << "] = " << dataSumS0[j]/(double)p.Ng << endl;
+		cout << "S02[" << j << "] = " << dataSumS02[j]/(double)p.Ng << endl;
+		// obvious error, all loops are the same
+	}
+	cout << "aprxS0 = " << aprxS0 << endl;
+	cout << "error = " << error << endl;
+}
 
 MPI::Finalize();
 
