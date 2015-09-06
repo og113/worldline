@@ -209,12 +209,7 @@ if (rank==0) {
 /*----------------------------------------------------------------------------------------------------------------------------
 	6. printing results
 ----------------------------------------------------------------------------------------------------------------------------*/
-	for (uint j=0; j<p.Ng; j++) {
-		cout << "Z[" << j << "] = " << dataSum[j]/(double)p.Ng << endl;
-		cout << "S0[" << j << "] = " << dataSumS0[j]/(double)p.Ng << endl;
-		cout << "S02[" << j << "] = " << dataSumS02[j]/(double)p.Ng << endl;
-		// obvious error, all loops are the same
-	}
+
 	cout << "aprxS0 = " << aprxS0 << endl;
 	cout << "error = " << error << endl;
 }

@@ -149,6 +149,9 @@ public:
 	// clear
 	void clear();
 	
+	// set seed
+	void setSeed(const uint&);
+	
 	// save
 	void save(const string& file) const;
 	void saveAscii(const string& file) const;

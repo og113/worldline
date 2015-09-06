@@ -63,16 +63,17 @@ cout << "generating " << Loops << " unit loops each of " << Length << " points i
 -------------------------------------------------------------------------------------------------------------------------*/
 string file, asciiFile;
 uint Seed = time(NULL);
-Loop<dim> loop(K,Seed), loop2(K,Seed);
+Loop<dim> loop(K,Seed);
 
 for (uint j=1; j<=Loops; j++) {
 file = "data/temp/loop_dim_"+nts<uint>(dim)+"_K_"+nts<uint>(K)+"_run_"+nts<uint>(j)+".dat";
-Seed += j;
 loop.grow();
 loop.save(file);
 /*if (abs(loop.checkLength()-1.0)>MIN_NUMBER*Length)
 	cerr << "loop error: length = " << loop.checkLength() << endl;*/
 loop.clear();
+Seed = time(NULL)+j;
+loop.setSeed(Seed);
 }
 
 /*asciiFile = "data/temp/loopAscii.dat";

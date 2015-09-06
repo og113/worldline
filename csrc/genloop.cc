@@ -303,6 +303,12 @@ void Loop<Dim>::clear() {
 		Points[j].zero();
 }
 
+// set seed
+template <uint Dim>
+void Loop<Dim>::setSeed(const uint& s) {
+	Seed = s;
+}
+
 // indexing
 template <uint Dim>
 const Point<Dim>& Loop<Dim>::operator[](const uint& loc) const {
