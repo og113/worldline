@@ -3,16 +3,18 @@
 		program to give simple mpi wrapper for main
 ----------------------------------------------------------------------------------------------------------------------------*/
 
-#include <cstdlib>
+#include <ctime>
 #include <iostream>
 #include <fstream>
 #include <iomanip>
 #include <string>
 #include <vector>
 #include <mpi.h>
+#include <gsl/gsl_sf_exp.h>
+#include "evalloop.h"
 #include "folder.h"
 #include "genloop.h"
-#include "evalloop.h"
+#include "parameters.h"
 #include "simple.h"
 
 using namespace std;
@@ -33,26 +35,46 @@ int main(int argc, char** argv) {
 /*----------------------------------------------------------------------------------------------------------------------------
 	1. defining loop quantitites
 	
-	n.b. these should be put together into a parameters struct that can be saved and loaded
 ----------------------------------------------------------------------------------------------------------------------------*/
 
 #define dim 2
 Parameters p;
 p.load("inputs");
 if (p.empty()) {
-	cerr << "Parameters empty, nothing in inputs file" << endl;
+	cerr << "Parameters empty: nothing in inputs file" << endl;
 	return 1;
 }
 uint Length = pow(2,p.K);
 
+vector<double> dataSum(p.Ng,0.0), dataSumS0(p.Ng,0.0), dataSumS02(p.Ng,0.0);
+
 /*----------------------------------------------------------------------------------------------------------------------------
 	2. defining required nodes
+		- checking all the ratios are integers
 		- initializing mpi
 ----------------------------------------------------------------------------------------------------------------------------*/
 
-int nodesCoord = 1;
-int nodesWorker = 10;
-int nodesTot = nodesCoord + nodesWorker;
+int Nw = 1;
+int nodesTot = 1 + Nw;
+uint Nl, Npg, Npw;
+
+if ((p.LoopMax-p.LoopMin)<=0) {
+	cerr << "Parameters error: LoopMax<=LoopMin" << endl;
+	return 1;
+}
+else {
+	Nl = p.LoopMax-p.LoopMin+1;
+}
+
+if (Nl%p.Ng!=0 || Nl%Nw!=0 || p.Ng%Nw!=0) {
+	cerr << "Ratios are not all integers:" << endl;
+	cerr << "Nl = " << Nl << ", Ng = " << p.Ng << ", Nw = " << Nw << endl;
+	return 1;
+}
+else {
+	Npg = (uint)Nl/p.Ng;
+	Npw = (uint)Nl/Nw;
+}
 
 int nodes, rank;
 int returnValue = 0;
@@ -78,13 +100,93 @@ else {
 	3. coordinating files
 ----------------------------------------------------------------------------------------------------------------------------*/
 
-if (rank<nodesCoord) {
+uint loopMin, loopMax;
 
+if (rank==0) {
+	for (int k=0; k<Nw; k++) {
+		loopMin = k*Npw;
+		loopMax = (k+1)*Npw-1;
+		
+		MPI::COMM_WORLD.Send(&loopMin, 1, MPI::UNSIGNED, k+1, 0);		
+		MPI::COMM_WORLD.Send(&loopMax, 1, MPI::UNSIGNED, k+1, 1);
+		
+		cout << "process " << 0 << " sent " << loopMin << " and " << loopMax << " to process " << k << endl;
+		
+	}
+}
+else {
+	MPI::Status status;
+	MPI::COMM_WORLD.Probe(0, 0, status);
+	MPI::COMM_WORLD.Recv(&loopMin, 1, MPI::UNSIGNED, 0, 0, status);	
+	MPI::COMM_WORLD.Probe(0, 1, status);
+	MPI::COMM_WORLD.Recv(&loopMax, 1, MPI::UNSIGNED, 0, 1, status);
+	
+	cout << "process " << rank << " recieved " << loopMin << " and " << loopMax << " from process 0" << endl;
 }
 
 /*----------------------------------------------------------------------------------------------------------------------------
 	4. evaluating loop quantitites
 ----------------------------------------------------------------------------------------------------------------------------*/
+
+if (rank>0) {
+	FilenameAttributes faMin, faMax;
+
+	faMin.Directory = "data/temp";
+	faMin.Timenumber = "";
+	(faMin.Extras).push_back(StringPair("dim",nts<uint>(dim)));
+	(faMin.Extras).push_back(StringPair("K",nts<uint>(p.K)));
+	faMax = faMin;
+	(faMin.Extras).push_back(StringPair("run",nts<uint>(loopMin)));
+	(faMax.Extras).push_back(StringPair("run",nts<uint>(loopMax)));
+
+	Folder folder(faMin,faMax);
+	if (folder.size()!=(loopMax-loopMin+1)) {
+		cerr << "error for processor " << rank << ":" << endl;
+		cerr << "folder.size() =" << folder.size() << ", loopMax-loopMin+1 = " << loopMax-loopMin+1 << endl;
+		return 1;
+	}
+	
+	uint Seed = time(NULL)+rank+1;
+	Loop<dim> l(p.K,Seed);
+	uint counter = 0;
+	uint id;
+	double s0;
+	double e_s0;
+	double sums[3];
+
+	for (uint j=loopMin; j<=loopMax; j++) {
+		counter++;
+		l.load(folder[j]);
+	
+		s0 = S0(l);
+		e_s0 = gsl_sf_exp(s0);
+		sums[0] += e_s0;
+		sums[1] += s0*e_s0;
+		sums[2] += s0*s0*e_s0;
+		
+		if (counter==Npg) {
+			id = (rank-1)*(p.Ng/Nw) + ((j+1)/Npg-1);		
+			MPI::COMM_WORLD.Send(&sums, 3, MPI::DOUBLE, 0, id);
+			//cout << "process " << rank << " sent message " << id << " to " << 0 << endl;
+			memset(sums,0,sizeof(sums));
+			counter = 0;
+		}
+	}
+}
+else { // rank==0
+	double buf[3];
+	MPI::Status status;
+	uint count=0;
+	while (count<p.Ng) {
+		MPI::COMM_WORLD.Probe(MPI_ANY_SOURCE, MPI_ANY_TAG, status);
+		MPI::COMM_WORLD.Recv(buf, 3, MPI::DOUBLE, status.Get_source(), status.Get_tag(), status);
+		dataSum[status.Get_tag()] = buf[0];
+		dataSumS0[status.Get_tag()] = buf[1];
+		dataSumS02[status.Get_tag()] = buf[2];
+		//cout << "process " << rank << " recieved message " << status.Get_tag() << " from " << status.Get_source() << endl;
+		count++;
+	}
+}
 
 /*----------------------------------------------------------------------------------------------------------------------------
 	5. evaluating errors

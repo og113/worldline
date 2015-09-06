@@ -27,7 +27,9 @@ CONTENTS
 
 // Parameters
 struct Parameters {
-	uint Loops;
+	uint LoopMin;
+	uint LoopMax;
+	uint Ng;
 	uint K;
 	number g;
 	void save(const string& filename) const;

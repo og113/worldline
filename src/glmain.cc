@@ -2,6 +2,7 @@
 	definitions for program to generate unit loops in D dimensions for use in worldline programs.
 */
 
+#include <ctime>
 #include <iostream>
 #include <iomanip>
 #include <fstream>
@@ -24,15 +25,18 @@ int main(int argc, char** argv) {
 -------------------------------------------------------------------------------------------------------------------------*/
 
 #define dim 2
-uint Loops = 1e1; // number of loops
-uint K = 5; // size of loops=2^k
+uint Loops = 1e2; // number of loops
+uint K = 8; // size of loops=2^k
 uint Length = pow(2,K);
 number g = 0.0;
+uint Ng = 10;
 
 Parameters p;
-p.Loops = Loops;
+p.LoopMin = 1;
+p.LoopMax = Loops;
 p.K = K;
 p.g = g;
+p.Ng = Ng;
 p.save("inputs");
 
 /*-------------------------------------------------------------------------------------------------------------------------
@@ -58,10 +62,10 @@ cout << "generating " << Loops << " unit loops each of " << Length << " points i
 	3 - making and saving loops
 -------------------------------------------------------------------------------------------------------------------------*/
 string file, asciiFile;
-uint Seed = 1;
+uint Seed = time(NULL);
 Loop<dim> loop(K,Seed), loop2(K,Seed);
 
-for (uint j=0; j<Loops; j++) {
+for (uint j=1; j<=Loops; j++) {
 file = "data/temp/loop_dim_"+nts<uint>(dim)+"_K_"+nts<uint>(K)+"_run_"+nts<uint>(j)+".dat";
 Seed += j;
 loop.grow();

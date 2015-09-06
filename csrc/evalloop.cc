@@ -34,8 +34,8 @@ number S0 (const Loop<Dim>& l) {
 template <uint Dim>
 number V0 (const Loop<Dim>& l) {
 	number result = 0.0;
-	for (uint j=0; j<(l.size()-1); j++) {
-		for (uint k=0; k<(l.size()-1); k++) {
+	for (uint j=0; j<l.size(); j++) {
+		for (uint k=0; k<l.size(); k++) {
 			if (j!=k)
 				result += pow(DistanceSquared(l[j],l[k]),(2.0-Dim)/2.0);
 		}
@@ -53,11 +53,15 @@ template number S0<4> (const Loop<4>& l);
 // V0, Dim=4, slightly changed for speed
 template <> number V0 <4>(const Loop<4>& l) {
 	number result = 0.0;
-	for (uint j=0; j<(l.size()-1); j++) {
-		for (uint k=0; k<(l.size()-1); k++) {
+	for (uint j=0; j<l.size(); j++) {
+		for (uint k=0; k<l.size(); k++) {
 			if (j!=k)
 				result += 1.0/DistanceSquared(l[j],l[k]);
 		}
 	}
 	return result/pow(l.size(),2);
 }
+
+// Dim=2
+template number S0<2> (const Loop<2>& l);
+template number V0<2> (const Loop<2>& l);

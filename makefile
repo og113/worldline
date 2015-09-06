@@ -50,6 +50,10 @@ glmain: $(ODIR)/glmain.o $(COMMONOBJS)
 	$(CC) -o $@ $^ $(CFLAGS) $(INCLUDES) $(LIBS)
 	@echo Simple compiler named glmain has been compiled
 	
+loop: $(MPIODIR)/loop.o $(COMMONOBJS) $(FNSOBJS) 
+	$(MPICC) -o $@ $^ $(MPICFLAGS) $(INCLUDES) $(MPILIBS)
+	@echo Simple compiler named loop has been compiled
+	
 #------------------------------------------------------------------------------------------------------------------------
 	
 $(MPIODIR)/%.o: $(MPISDIR)/%.cc
