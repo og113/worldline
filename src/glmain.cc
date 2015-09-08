@@ -25,30 +25,22 @@ int main(int argc, char** argv) {
 -------------------------------------------------------------------------------------------------------------------------*/
 
 #define dim 2
-uint Loops = 1e2; // number of loops
-uint K = 8; // size of loops=2^k
-uint Length = pow(2,K);
-number g = 0.0;
-uint Ng = 10;
 
 Parameters p;
-p.LoopMin = 1;
-p.LoopMax = Loops;
-p.K = K;
-p.g = g;
-p.Ng = Ng;
-p.save("inputs");
+p.load("inputs");
+uint Loops = p.LoopMax-p.LoopMin+1; // number of loops
+uint Length = pow(2,p.K);
 
 /*-------------------------------------------------------------------------------------------------------------------------
 	2 - getting inputs from argv
 -------------------------------------------------------------------------------------------------------------------------*/
-if (argc == 2) K = stringToNumber<uint>(argv[1]);
+if (argc == 2) p.K = stringToNumber<uint>(argv[1]);
 else if (argc % 2 && argc>1) {
 for (unsigned int j=0; j<(int)(argc/2); j++) {
 		string id = argv[2*j+1];
 		if (id[0]=='-') id = id.substr(1);
-		if (id.compare("k")==0 || id.compare("K")==0) K = stringToNumber<uint>(argv[2*j+2]);
-		if (id.compare("l")==0 || id.compare("loops")==0) K = stringToNumber<uint>(argv[2*j+2]);
+		if (id.compare("k")==0 || id.compare("K")==0) p.K = stringToNumber<uint>(argv[2*j+2]);
+		if (id.compare("l")==0 || id.compare("loops")==0) p.K = stringToNumber<uint>(argv[2*j+2]);
 		else {
 			cerr << "input " << id << " unrecognized" << endl;
 			return 1;
@@ -63,10 +55,10 @@ cout << "generating " << Loops << " unit loops each of " << Length << " points i
 -------------------------------------------------------------------------------------------------------------------------*/
 string file, asciiFile;
 uint Seed = time(NULL);
-Loop<dim> loop(K,Seed);
+Loop<dim> loop(p.K,Seed);
 
 for (uint j=1; j<=Loops; j++) {
-file = "data/temp/loop_dim_"+nts<uint>(dim)+"_K_"+nts<uint>(K)+"_run_"+nts<uint>(j)+".dat";
+file = "data/temp/loop_dim_"+nts<uint>(dim)+"_K_"+nts<uint>(p.K)+"_run_"+nts<uint>(j)+".dat";
 loop.grow();
 loop.save(file);
 /*if (abs(loop.checkLength()-1.0)>MIN_NUMBER*Length)

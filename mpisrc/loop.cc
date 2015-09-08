@@ -199,16 +199,37 @@ else { // rank==0
 ----------------------------------------------------------------------------------------------------------------------------*/
 
 if (rank==0) {
-	double aprxS0_g;
+	double aprxS0_g[p.Ng];
+	double denom = (double)p.Ng*((double)p.Ng-1.0);
 	for (uint j=0; j<p.Ng; j++) {
-		aprxS0_g = dataSumS0[j]/dataSum[j]/(double)p.Ng;
-		error += pow(aprxS0_g-aprxS0,2.0)/(double)(p.Ng*(p.Ng-1.0));
+		aprxS0_g[j] = dataSumS0[j]/dataSum[j]/(double)Npg;
+		error += pow(aprxS0_g[j]-aprxS0,2.0)/denom;
 	}
 	error = sqrt(error);
 
 /*----------------------------------------------------------------------------------------------------------------------------
 	6. printing results
 ----------------------------------------------------------------------------------------------------------------------------*/
+
+	string timenumber = currentDateTime();	
+	
+	Filename rf = "results/"+timenumber+"loopGroups_dim_"+nts<uint>(dim)+"_K_"+nts<uint>(p.K)+".dat";
+	FILE * ros;
+	ros = fopen(((string)rf).c_str(),"w");
+	for (uint j=0; j<p.Ng; j++) {
+		fprintf(ros,"%12s%5i%5i%5i%5i%5i%13.5g%13.5g%13.5g\n",\
+				timenumber.c_str(),dim,p.K,Nl,p.Ng,j,aprxS0_g[j],aprxS0,error);
+	}
+	fclose(ros);	
+	cout << "results printed to " << rf << endl;
+	
+	rf.Timenumber = "";
+	rf.ID = "loop";
+	ros = fopen(((string)rf).c_str(),"a");
+		fprintf(ros,"%12s%5i%5i%5i%5i%13.5g%13.5g\n",\
+				timenumber.c_str(),dim,p.K,Nl,p.Ng,aprxS0,error);
+	fclose(ros);	
+	cout << "results printed to " << rf << endl;
 
 	cout << "aprxS0 = " << aprxS0 << endl;
 	cout << "error = " << error << endl;
