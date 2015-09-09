@@ -57,7 +57,7 @@ string file, asciiFile;
 uint Seed = time(NULL);
 Loop<dim> loop(p.K,Seed);
 
-for (uint j=1; j<=Loops; j++) {
+for (uint j=0; j<Loops; j++) {
 file = "data/temp/loop_dim_"+nts<uint>(dim)+"_K_"+nts<uint>(p.K)+"_run_"+nts<uint>(j)+".dat";
 loop.grow();
 loop.save(file);
