@@ -2,6 +2,7 @@
 definitions of some very simple functions and classes
 -------------------------------------------------------------------------------------------------------------------------*/
 
+#include <cstring>
 #include <cstdlib> //for rand, srand
 #include <string>
 #include <sstream>
@@ -35,6 +36,7 @@ CONTENTS
 	1. number to string and string to number
 		- number to string
 		- string to number
+		- isNumber
 -------------------------------------------------------------------------------------------------------------------------*/
 
 //to convert number to string, usage is string str = NumberToString<number type>(x);
@@ -67,6 +69,11 @@ T stn ( const string& Text ) {
 	stringstream ss(Text);
 	T result;
 	return ss >> result ? result : 0;
+}
+
+// is number?
+bool isNumber( const string& Text ) {
+	return( strspn( Text.c_str(), "0123456789" ) == Text.size() );
 }
 	
 /*-------------------------------------------------------------------------------------------------------------------------

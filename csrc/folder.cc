@@ -426,7 +426,12 @@ bool FilenameComparator::operator()(const Filename& f) const{
 			ExtraOK = false;
 			for (uint m=0; m<fExtras; m++) {
 				if (((Lower.Extras[n]).first).compare(((f.Extras[m]).first))==0) {
-					if (((f.Extras[m]).second)>=((Lower.Extras[n]).second) && ((f.Extras[m]).second)<=((Upper.Extras[n]).second))
+					if (isNumber((f.Extras[m]).second) && isNumber((Lower.Extras[n]).second) && isNumber((Upper.Extras[n]).second)) {
+						if (stn<uint>((f.Extras[m]).second)>=stn<uint>((Lower.Extras[n]).second) \
+							&& stn<uint>((f.Extras[m]).second)<=stn<uint>((Upper.Extras[n]).second))
+								ExtraOK = true; 
+					}
+					else if (((f.Extras[m]).second)>=((Lower.Extras[n]).second) && ((f.Extras[m]).second)<=((Upper.Extras[n]).second))
 						ExtraOK = true;
 				}
 			}

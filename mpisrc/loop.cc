@@ -58,6 +58,7 @@ double aprxS0 = 0.0, aprxS02 = 0.0, error = 0.0;
 int Nw = 1;
 int nodesTot = 1 + Nw;
 uint Nl, Npg, Npw;
+double T = 0.25;
 
 if ((p.LoopMax-p.LoopMin)<=0) {
 	cerr << "Parameters error: LoopMax<=LoopMin" << endl;
@@ -111,7 +112,7 @@ if (rank==0) {
 		MPI::COMM_WORLD.Send(&loopMin, 1, MPI::UNSIGNED, k+1, 0);		
 		MPI::COMM_WORLD.Send(&loopMax, 1, MPI::UNSIGNED, k+1, 1);
 		
-		//cout << "process " << 0 << " sent " << loopMin << " and " << loopMax << " to process " << k << endl;
+		cout << "process " << 0 << " sent " << loopMin << " and " << loopMax << " to process " << k+1 << endl;
 		
 	}
 }
@@ -122,7 +123,7 @@ else {
 	MPI::COMM_WORLD.Probe(0, 1, status);
 	MPI::COMM_WORLD.Recv(&loopMax, 1, MPI::UNSIGNED, 0, 1, status);
 	
-	//cout << "process " << rank << " recieved " << loopMin << " and " << loopMax << " from process 0" << endl;
+	cout << "process " << rank << " recieved " << loopMin << " and " << loopMax << " from process 0" << endl;
 }
 
 /*----------------------------------------------------------------------------------------------------------------------------
@@ -143,7 +144,7 @@ if (rank>0) {
 	Folder folder(faMin,faMax);
 	if (folder.size()!=(loopMax-loopMin+1)) {
 		cerr << "error for processor " << rank << ":" << endl;
-		cerr << "folder.size() =" << folder.size() << ", loopMax-loopMin+1 = " << loopMax-loopMin+1 << endl;
+		cerr << "folder.size() = " << folder.size() << ", loopMax-loopMin+1 = " << loopMax-loopMin+1 << endl;
 		return 1;
 	}
 	
@@ -159,7 +160,7 @@ if (rank>0) {
 		counter++;
 		l.load(folder[j]);
 	
-		s0 = S0(l);
+		s0 = S0(l)/T;
 		e_s0 = gsl_sf_exp(s0);
 		sums[0] += e_s0;
 		sums[1] += s0*e_s0;
@@ -184,7 +185,7 @@ else { // rank==0
 		dataSum[status.Get_tag()] = buf[0];
 		dataSumS0[status.Get_tag()] = buf[1];
 		dataSumS02[status.Get_tag()] = buf[2];
-		//cout << "process " << rank << " recieved message " << status.Get_tag() << " from " << status.Get_source() << endl;
+		cout << "process " << rank << " recieved message " << status.Get_tag() << " from " << status.Get_source() << endl;
 		count++;
 		aprxS0 += buf[1]/buf[0];
 		aprxS02 += buf[2]/buf[0];

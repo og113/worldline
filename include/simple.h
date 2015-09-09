@@ -46,6 +46,7 @@ CONTENTS
 	1. number to string and string to number
 		- number to string
 		- string to number
+		- isNumber
 -------------------------------------------------------------------------------------------------------------------------*/
 
 template <class T>
@@ -59,6 +60,8 @@ T stringToNumber ( const string& Text );
 
 template <class T>
 T stn ( const string& Text );
+
+bool isNumber( const string& Text );
 
 /*-------------------------------------------------------------------------------------------------------------------------
 	2. absDiff
