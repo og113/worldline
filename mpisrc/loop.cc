@@ -37,7 +37,7 @@ int main(int argc, char** argv) {
 	
 ----------------------------------------------------------------------------------------------------------------------------*/
 
-#define dim 2
+#define dim 4
 Parameters p;
 p.load("inputs");
 if (p.empty()) {
@@ -46,8 +46,8 @@ if (p.empty()) {
 }
 uint Length = pow(2,p.K);
 
-vector<double> dataSum(p.Ng,0.0), dataSumS0(p.Ng,0.0), dataSumS02(p.Ng,0.0);
-double aprxS0 = 0.0, aprxS02 = 0.0, error = 0.0;
+vector<number> dataS0(p.Ng,0.0), dataS02(p.Ng,0.0); // dataZ(p.Ng,0.0)
+number aprxS0 = 0.0, aprxS02 = 0.0, error = 0.0; // aprxZ = 0.0
 
 /*----------------------------------------------------------------------------------------------------------------------------
 	2. defining required nodes
@@ -58,7 +58,7 @@ double aprxS0 = 0.0, aprxS02 = 0.0, error = 0.0;
 int Nw = 1;
 int nodesTot = 1 + Nw;
 uint Nl, Npg, Npw;
-double T = 0.25;
+//number T = 0.25;
 
 if ((p.LoopMax-p.LoopMin)<=0) {
 	cerr << "Parameters error: LoopMax<=LoopMin" << endl;
@@ -152,23 +152,23 @@ if (rank>0) {
 	Loop<dim> l(p.K,Seed);
 	uint counter = 0;
 	uint id;
-	double s0;
-	double e_s0;
-	double sums[3];
+	number s0;
+	//number e_s0;
+	number sums[2];
 
 	for (uint j=loopMin; j<=loopMax; j++) {
 		counter++;
 		l.load(folder[j]);
 	
-		s0 = S0(l)/T;
-		e_s0 = gsl_sf_exp(s0);
-		sums[0] += e_s0;
-		sums[1] += s0*e_s0;
-		sums[2] += s0*s0*e_s0;
+		s0 = S0(l);
+		//e_s0 = gsl_sf_exp(-s0);
+		sums[0] += s0;
+		sums[1] += s0*s0;
+		//sums[2] += s0*s0*e_s0;
 		
 		if (counter==Npg) {
 			id = (rank-1)*(p.Ng/Nw) + ((j+1)/Npg-1);		
-			MPI::COMM_WORLD.Send(&sums, 3, MPI::DOUBLE, 0, id);
+			MPI::COMM_WORLD.Send(&sums, 2, MPI::DOUBLE, 0, id);
 			//cout << "process " << rank << " sent message " << id << " to " << 0 << endl;
 			memset(sums,0,sizeof(sums));
 			counter = 0;
@@ -176,19 +176,20 @@ if (rank>0) {
 	}
 }
 else { // rank==0
-	double buf[3];
+	number buf[2];
 	MPI::Status status;
 	uint count=0;
 	while (count<p.Ng) {
 		MPI::COMM_WORLD.Probe(MPI_ANY_SOURCE, MPI_ANY_TAG, status);
 		MPI::COMM_WORLD.Recv(buf, 3, MPI::DOUBLE, status.Get_source(), status.Get_tag(), status);
-		dataSum[status.Get_tag()] = buf[0];
-		dataSumS0[status.Get_tag()] = buf[1];
-		dataSumS02[status.Get_tag()] = buf[2];
+		dataS0[status.Get_tag()] = buf[0];
+		dataS02[status.Get_tag()] = buf[1];
+		//dataZ[status.Get_tag()] = buf[2];
 		//cout << "process " << rank << " recieved message " << status.Get_tag() << " from " << status.Get_source() << endl;
 		count++;
-		aprxS0 += buf[1]/buf[0];
-		aprxS02 += buf[2]/buf[0];
+		aprxS0 += buf[0];
+		aprxS02 += buf[1];
+		//aprxZ += buf[2];
 	}
 	aprxS0 /= (double)Nl;
 	aprxS02 /= (double)Nl;
@@ -200,10 +201,10 @@ else { // rank==0
 ----------------------------------------------------------------------------------------------------------------------------*/
 
 if (rank==0) {
-	double aprxS0_g[p.Ng];
-	double denom = (double)p.Ng*((double)p.Ng-1.0);
+	number aprxS0_g[p.Ng];
+	number denom = (number)p.Ng*((number)p.Ng-1.0);
 	for (uint j=0; j<p.Ng; j++) {
-		aprxS0_g[j] = dataSumS0[j]/dataSum[j]/(double)Npg;
+		aprxS0_g[j] = dataS0[j]/(number)Npg;
 		error += pow(aprxS0_g[j]-aprxS0,2.0)/denom;
 	}
 	error = sqrt(error);

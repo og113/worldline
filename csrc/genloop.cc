@@ -242,7 +242,7 @@ Loop<Dim>::Loop(const uint& k, const uint& seed):
 		K(k), Seed(seed), Length(pow(2,k)) {
 	Points.resize(Length);
 	(Points[0]).zero();
-	Generator = gsl_rng_alloc(gsl_rng_taus);
+	Generator = gsl_rng_alloc(gsl_rng_taus); // could also use gsl_rng_mt19937 (mersener twist)
 }
 
 // destructor
@@ -294,6 +294,16 @@ void Loop<Dim>::normalise() {
 		L += Distance(Points[j+1],Points[j]);
 	for (uint l=0; l<Length; l++)
 		Points[l] /= L;
+}
+
+// centre
+template <uint Dim>
+void Loop<Dim>::centre() {
+	Point<Dim> Xcm(Points[0]);
+	for (uint j=1; j<Length; j++)
+		Xcm += Points[j];
+	for (uint l=0; l<Length; l++)
+		Points[l] -= Xcm;
 }
 
 // clear
@@ -411,6 +421,7 @@ void Loop<Dim>::grow() {
 	firstStep();
 	followingSteps();
 	normalise();
+	centre();
 	
 	//gsl_rng_free(Generator);
 }

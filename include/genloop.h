@@ -182,6 +182,7 @@ private:
   	void					firstStep();
 	void 					followingSteps();
 	void					normalise();
+	void 					centre();
 };
 
 #endif // __GENLOOP_H_INCLUDED__

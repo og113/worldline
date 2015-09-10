@@ -24,7 +24,7 @@ int main(int argc, char** argv) {
 	1 - defining basic quantities
 -------------------------------------------------------------------------------------------------------------------------*/
 
-#define dim 2
+#define dim 4
 
 Parameters p;
 p.load("inputs");

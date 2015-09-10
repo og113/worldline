@@ -27,7 +27,7 @@ number S0 (const Loop<Dim>& l) {
 	number result = DistanceSquared(l[l.size()-1],l[0]);
 	for (uint j=0; j<(l.size()-1); j++)
 		result += DistanceSquared(l[j+1],l[j]);
-	return result*l.size()/4.0;
+	return result*(number)l.size()/4.0;
 }
 
 // V0
