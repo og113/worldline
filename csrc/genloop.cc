@@ -420,7 +420,7 @@ void Loop<Dim>::grow() {
 	
 	firstStep();
 	followingSteps();
-	normalise();
+	//normalise();
 	centre();
 	
 	//gsl_rng_free(Generator);
