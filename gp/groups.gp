@@ -7,9 +7,9 @@ set term png size 1600,800; \
 set output outFile; \
 
 #histogram stuff
-n=500 #number of intervals
-max=0.033 #max value
-min=0.030 #min value
+n=10 #number of intervals
+max=20.00 #max value
+min=0.00 #min value
 width=(max-min)/n #interval width
 hist(x,width)=width*floor(x/width)+width/2.0
 set boxwidth width*0.9
@@ -27,6 +27,6 @@ set title "grouped results"
 set xlabel "<S0>_g"
 set ylabel "no. of groups"
      
-plot "results/150908144945loopGroups_dim_2_K_5.dat" @hist ls 1
+plot "results/150912085150loopGroups_dim_4_K_10.dat" @hist ls 1
 
 pause -1
