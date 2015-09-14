@@ -27,7 +27,16 @@ int main(int argc, char** argv) {
 #define dim 4
 
 Parameters p;
+/*p.LoopMin = 1;
+p.LoopMax = 1e4;
+p.Ng = 1e3;
+p.K = 5;
+p.g = 0.0;*/
 p.load("inputs");
+if (p.empty()) {
+	cerr << "Parameters empty: nothing in inputs file" << endl;
+	return 1;
+}
 uint Loops = p.LoopMax-p.LoopMin+1; // number of loops
 uint Length = pow(2,p.K);
 
@@ -57,7 +66,7 @@ string file, asciiFile;
 uint Seed = time(NULL);
 Loop<dim> loop(p.K,Seed);
 
-for (uint j=0; j<Loops; j++) {
+for (uint j=p.LoopMin; j<=p.LoopMax; j++) {
 file = "data/temp/loop_dim_"+nts<uint>(dim)+"_K_"+nts<uint>(p.K)+"_run_"+nts<uint>(j)+".dat";
 loop.grow();
 loop.save(file);
