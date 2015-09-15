@@ -23,16 +23,26 @@
 /*----------------------------------------------------------------------------------------------------------------------------
 	1 - loop functions
 		- S0
+		- DS0
 		- V0
+		- aprxDV0
 ----------------------------------------------------------------------------------------------------------------------------*/
 
 // S0
 template <uint Dim>
 number S0 (const Loop<Dim>& l);
 
+// DS0
+template <uint Dim>
+number DS0 (const Loop<Dim>& l, const Point<Dim>& p, const uint& loc);
+
 // V0
 template <uint Dim>
 number V0 (const Loop<Dim>& l);
+
+// aprxDV0
+template <uint Dim>
+number aprxDV0 (const Loop<Dim>& l, const Point<Dim>& p, const uint& loc);
 
 /*----------------------------------------------------------------------------------------------------------------------------
 	2 - data struct

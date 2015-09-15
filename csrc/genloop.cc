@@ -208,13 +208,14 @@ bool operator^=(const Point<Dim>& lhs, const Point<Dim>& rhs) {
 	2 - functions acting on Points
 		- DistanceSquared
 		- Distance
+		- Dot (product)
 ----------------------------------------------------------------------------------------------------------------------------*/
 
 //distance squared
 template <uint Dim>
 number DistanceSquared(const Point<Dim>& p1, const Point<Dim>& p2) {
-	number d = 0.0;
-	for (uint j=0; j<Dim; j++) {
+	number d = pow(p1[0]-p2[0],2);
+	for (uint j=1; j<Dim; j++) {
 		d += pow(p1[j]-p2[j],2);
 	}
 	return d;
@@ -227,6 +228,15 @@ number Distance(const Point<Dim>& p1, const Point<Dim>& p2) {
 	return sqrt(DistanceSquared(p1,p2));
 }
 
+// Dot
+template <uint Dim>
+number Dot(const Point<Dim>& p1, const Point<Dim>& p2, const Point<Dim>& q1, const Point<Dim>& q2) {
+	number d = (p1[0]-p2[0])*(q1[0]-q2[0]);
+	for (uint j=1; j<Dim; j++) {
+		d += (p1[j]-p2[j])*(q1[j]-q2[j]);
+	}
+	return d;
+}
 
 /*----------------------------------------------------------------------------------------------------------------------------
 	3 - Loop class
@@ -239,7 +249,7 @@ number Distance(const Point<Dim>& p1, const Point<Dim>& p2) {
 // minimal initialiser
 template <uint Dim>
 Loop<Dim>::Loop(const uint& k, const uint& seed): 
-		K(k), Seed(seed), Length(pow(2,k)) {
+		K(k), Seed(seed), Length(pow(2,k)), Grown(false) {
 	Points.resize(Length);
 	(Points[0]).zero();
 	Generator = gsl_rng_alloc(gsl_rng_taus); // could also use gsl_rng_mt19937 (mersener twist)
@@ -284,6 +294,25 @@ void Loop<Dim>::followingSteps() {
 		sigma /= SQRT2;
 		stepSize *= 2;
 	}
+}
+
+// metropolis
+template <uint Dim>
+void Loop<Dim>::metropolis() {
+	if (!Grown) {
+		cerr << "Loop error: cannot run metropolis before loop is grown" << endl;
+		return;
+	}
+	// choosing location to change
+	uint loc = (uint)(gsl_rng_uniform (Generator)*(size()+1.0));
+	
+	// calculating generation probability
+	
+	// generating new point according to generation probability
+	
+	// calculating acceptance probability
+	
+	// accepting new point according to acceptance probability
 }
 
 // normalise
@@ -382,9 +411,10 @@ void Loop<Dim>::load(const string& f) {
 			return;
 		}
 	}
+	Grown = true;
 }
 
-// loadAscii - should add functionality to check length of file is correct
+// loadAscii
 template <uint Dim>
 void Loop<Dim>::loadAscii(const string& f) {
 	uint fl = countLines(f);
@@ -410,6 +440,7 @@ void Loop<Dim>::loadAscii(const string& f) {
 			return;
 		}
 	}
+	Grown = true;
 }
 
 // grow
@@ -424,6 +455,7 @@ void Loop<Dim>::grow() {
 	centre();
 	
 	//gsl_rng_free(Generator);
+	Grown = true;
 }
 
 // checkLength
@@ -448,6 +480,7 @@ template <uint Dim>
 istream& operator>> (istream& is, Loop<Dim>& l) {
 	for (uint j=0; j<l.Length; j++)
 		is >> l.Points[j];
+	l.Grown = true;
 	return is;
 }
 

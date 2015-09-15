@@ -16,7 +16,9 @@
 /*----------------------------------------------------------------------------------------------------------------------------
 	1 - loop functions
 		- S0
+		- DS0
 		- V0
+		- aprxDV0
 		
 n.b. functions are defined for unit loops. for other loops the result must be multiplied by appropriate factors (depending on Dim) of T, the length of the loop.
 ----------------------------------------------------------------------------------------------------------------------------*/
@@ -30,11 +32,20 @@ number S0 (const Loop<Dim>& l) {
 	return result*(number)l.size()/4.0;
 }
 
+// DS0
+template <uint Dim>
+number DS0 (const Loop<Dim>& l, const Point<Dim>& p, const uint& loc) {
+	uint loc_pos = (loc==(l.size()-1)? 0: loc);
+	uint loc_neg = (loc==0? (l.size()-1): loc);
+	number result = Dot(p,l[loc],p,-l[loc]+l[loc_pos]+l[loc_neg]);
+	return result*(number)l.size()/2.0;
+}
+
 // V0
 template <uint Dim>
 number V0 (const Loop<Dim>& l) {
-	number result = 0.0;
-	for (uint j=1; j<l.size(); j++) {
+	number result = 2.0*pow(DistanceSquared(l[1],l[0]),(2.0-Dim)/2.0);
+	for (uint j=2; j<l.size(); j++) {
 		for (uint k=0; k<j; k++) {
 			result += 2.0*pow(DistanceSquared(l[j],l[k]),(2.0-Dim)/2.0);
 		}
@@ -42,6 +53,17 @@ number V0 (const Loop<Dim>& l) {
 	return result/pow(l.size()-1.0,2);
 }
 
+// aprxDV0
+template <uint Dim>
+number aprxDV0 (const Loop<Dim>& l, const Point<Dim>& p, const uint& loc) {
+	number result = 0.0;
+	for (uint j=1; j<l.size(); j++) {
+		for (uint k=0; k<j; k++) {
+			result += 2.0*pow(DistanceSquared(l[j],l[k]),-Dim/2.0);
+		}
+	}
+	return result/pow(l.size()-1.0,2);
+}
 
 /*----------------------------------------------------------------------------------------------------------------------------
 	4 - explicit template instantiation
@@ -51,10 +73,21 @@ template number S0<4> (const Loop<4>& l);
 
 // V0, Dim=4, slightly changed for speed
 template <> number V0 <4>(const Loop<4>& l) {
+	number result = 2.0/DistanceSquared(l[1],l[0]);
+	for (uint j=2; j<l.size(); j++) {
+		for (uint k=0; k<j; k++) {
+			result += 2.0/DistanceSquared(l[j],l[k]);
+		}
+	}
+	return result/pow(l.size()-1.0,2);
+}
+
+// aprxDV0, Dim=4, slightly changed for speed
+template <> number aprxDV0 <4>(const Loop<4>& l) {
 	number result = 0.0;
 	for (uint j=1; j<l.size(); j++) {
 		for (uint k=0; k<j; k++) {
-			result += 2.0*pow(DistanceSquared(l[j],l[k]),(2.0-Dim)/2.0);
+			result += 2.0/DistanceSquared(l[j],l[k]);
 		}
 	}
 	return result/pow(l.size()-1.0,2);

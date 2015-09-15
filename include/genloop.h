@@ -121,6 +121,10 @@ number DistanceSquared(const Point<Dim>&, const Point<Dim>&);
 template <uint Dim>
 number Distance(const Point<Dim>&, const Point<Dim>&);
 
+// Dot
+template <uint Dim>
+number Dot(const Point<Dim>&, const Point<Dim>&, const Point<Dim>&, const Point<Dim>&);
+
 /*----------------------------------------------------------------------------------------------------------------------------
 	Loop class
 ----------------------------------------------------------------------------------------------------------------------------*/
@@ -145,6 +149,9 @@ public:
 	
 	// grow loop
 	void grow();
+	
+	// metropolis
+	void metropolis();
 	
 	// clear
 	void clear();
@@ -179,6 +186,7 @@ private:
 	uint					Length;
 	vector< Point<Dim> >	Points;
   	gsl_rng * 				Generator;
+  	bool					Grown;
   	void					firstStep();
 	void 					followingSteps();
 	void					normalise();
