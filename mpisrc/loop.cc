@@ -45,7 +45,7 @@ if (p.empty()) {
 	return 1;
 }
 uint Length = pow(2,p.K);
-number dofs = (Length-1.0)*dim/2.0;
+uint dof = dim*(Length-1);
 
 vector<number> dataS0(p.Ng,0.0), dataS02(p.Ng,0.0); // dataZ(p.Ng,0.0)
 number aprxS0 = 0.0, aprxS02 = 0.0, error = 0.0; // aprxZ = 0.0
@@ -209,6 +209,11 @@ if (rank==0) {
 		error += pow(aprxS0_g[j]-aprxS0,2.0)/denom;
 	}
 	error = sqrt(error);
+	
+	number analytic = 0.5*(number)dof;
+	number absError = (analytic-aprxS0)/analytic;
+	number variance = aprxS02-aprxS0*aprxS0;
+	number abs2Error = (variance-analytic)/analytic;
 
 /*----------------------------------------------------------------------------------------------------------------------------
 	6. printing results
@@ -234,12 +239,13 @@ if (rank==0) {
 	fclose(ros);	
 	cout << "results printed to " << rf << endl;
 
-	
-	cout << "dofs = " << dofs << endl;
-	cout << "aprxS0 = " << aprxS0 << endl;
-	cout << "error = " << error << endl;
-	cout << "error2 = " << sqrt(aprxS02-aprxS0*aprxS0)/aprxS0 << ", expected = " << 1.0/sqrt(dofs) << endl;
-	cout << "abs error = " << abs(aprxS0-dofs)/dofs << endl;
+	cout << "timenumber: " << timenumber << endl;
+	printf("\n");
+	printf("%8s%8s%8s%8s%12s%12s%12s%12s%12s%12s\n","dim","Nl","Ng","K","S0","S02","var",\
+		"error","absError","abs2Error");
+	printf("%8i%8i%8i%8i%12.3g%12.3g%12.3g%12.3g%12.3g%12.3g\n",\
+		dim,Nl,p.Ng,p.K,aprxS0,aprxS02,variance,error,absError,abs2Error);
+	printf("\n");
 }
 
 MPI::Finalize();

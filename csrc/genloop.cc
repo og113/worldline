@@ -264,7 +264,7 @@ void Loop<Dim>::firstStep() {
 	number sigma = 1.0/SQRT2;
 	Points[Length/2] = Points[0];
 	for (uint j=0; j<Dim; j++)
-		(Points[Length/2])[j] += gsl_ran_gaussian_ziggurat (Generator, sigma);
+		(Points[Length/2])[j] += gsl_ran_gaussian (Generator, sigma); //gsl_ran_gaussian_ziggurat is another option
 }
 
 // following steps - problem when loc=N, instead of 0.
@@ -278,7 +278,7 @@ void Loop<Dim>::followingSteps() {
 			uint locU = ((2*m+2)*Length/stepSize==Length? 0: (2*m+2)*Length/stepSize);
 			Points[(2*m+1)*Length/stepSize] = (Points[locU]+Points[(2*m)*Length/stepSize])/2.0;
 			for (uint n=0; n<Dim; n++) {
-				(Points[(2*m+1)*Length/stepSize])[n] += gsl_ran_gaussian_ziggurat(Generator, sigma);
+				(Points[(2*m+1)*Length/stepSize])[n] += gsl_ran_gaussian(Generator, sigma); //gsl_ran_gaussian_ziggurat is another option
 			}
 		}
 		sigma /= SQRT2;
