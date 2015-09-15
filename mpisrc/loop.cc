@@ -45,6 +45,7 @@ if (p.empty()) {
 	return 1;
 }
 uint Length = pow(2,p.K);
+number dofs = (Length-1.0)*dim/2.0;
 
 vector<number> dataS0(p.Ng,0.0), dataS02(p.Ng,0.0); // dataZ(p.Ng,0.0)
 number aprxS0 = 0.0, aprxS02 = 0.0, error = 0.0; // aprxZ = 0.0
@@ -233,8 +234,12 @@ if (rank==0) {
 	fclose(ros);	
 	cout << "results printed to " << rf << endl;
 
+	
+	cout << "dofs = " << dofs << endl;
 	cout << "aprxS0 = " << aprxS0 << endl;
 	cout << "error = " << error << endl;
+	cout << "error2 = " << sqrt(aprxS02-aprxS0*aprxS0)/aprxS0 << ", expected = " << 1.0/sqrt(dofs) << endl;
+	cout << "abs error = " << abs(aprxS0-dofs)/dofs << endl;
 }
 
 MPI::Finalize();
