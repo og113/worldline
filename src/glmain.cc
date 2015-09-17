@@ -24,7 +24,7 @@ int main(int argc, char** argv) {
 	1 - defining basic quantities
 -------------------------------------------------------------------------------------------------------------------------*/
 
-#define dim 2
+#define dim 4
 
 Parameters p;
 /*p.LoopMin = 1;
@@ -73,18 +73,18 @@ loop.save(file);
 /*if (abs(loop.checkLength()-1.0)>MIN_NUMBER*Length)
 	cerr << "loop error: length = " << loop.checkLength() << endl;*/
 loop.clear();
-//Seed = time(NULL)+j;
-//loop.setSeed(Seed);
+Seed = time(NULL)+j;
+loop.setSeed(Seed);
 }
 
-asciiFile = "data/temp/loopAscii.dat";
+/*asciiFile = "data/temp/loopAscii.dat";
 Seed += 2.0;
 loop.grow();
 loop.saveAscii(asciiFile);
 Metropolis<dim> met(loop,Seed);
 met.step(1000);
 asciiFile = "data/temp/loopAsciiMet.dat";
-loop.saveAscii(asciiFile);
+loop.saveAscii(asciiFile);*/
 
 return 0;
 }

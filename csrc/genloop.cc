@@ -254,7 +254,7 @@ Loop<Dim>::Loop(const uint& k, const uint& seed):
 		K(k), Seed(seed), Length(pow(2,k)), Grown(false) {
 	Points.resize(Length);
 	(Points[0]).zero();
-	//Generator = gsl_rng_alloc(gsl_rng_taus); // could also use gsl_rng_mt19937 (mersener twist)
+	Generator = gsl_rng_alloc(gsl_rng_taus); // could also use gsl_rng_mt19937 (mersener twist)
 }
 
 // destructor
@@ -496,9 +496,9 @@ number DS0 (const Loop<Dim>& l, const Point<Dim>& p, const uint& loc) {
 	return result*(number)l.size()/2.0;
 }
 
-// V0
+// V
 template <uint Dim>
-number V0 (const Loop<Dim>& l) {
+number V (const Loop<Dim>& l) {
 	number result = 2.0*pow(DistanceSquared(l[1],l[0]),(2.0-Dim)/2.0);
 	for (uint j=2; j<l.size(); j++) {
 		for (uint k=0; k<j; k++) {
@@ -508,9 +508,22 @@ number V0 (const Loop<Dim>& l) {
 	return result/pow(l.size()-1.0,2);
 }
 
-// aprxDV0
+// DV
 template <uint Dim>
-number aprxDV0 (const Loop<Dim>& l, const Point<Dim>& p, const uint& loc) {
+number DV (const Loop<Dim>& l, const Point<Dim>& p, const uint& loc) {
+	number result = 0.0;
+	for (uint j=0; j<l.size(); j++) {
+		if (j!=loc) {
+			result += 2.0*pow(DistanceSquared(l[j],p),(2.0-Dim)/2.0);
+			result -= 2.0*pow(DistanceSquared(l[j],l[loc]),(2.0-Dim)/2.0);
+		}
+	}
+	return result/pow(l.size()-1.0,2);
+}
+
+// aprxDV
+template <uint Dim>
+number aprxDV (const Loop<Dim>& l, const Point<Dim>& p, const uint& loc) {
 	number result = 0.0;
 	for (uint j=1; j<l.size(); j++) {
 		for (uint k=0; k<j; k++) {
@@ -526,17 +539,25 @@ number aprxDV0 (const Loop<Dim>& l, const Point<Dim>& p, const uint& loc) {
 
 // constructor
 template <uint Dim>
-Metropolis<Dim>::Metropolis(Loop<Dim>& L, const uint& s): Seed(s), Steps(0) {
+Metropolis<Dim>::Metropolis(Loop<Dim>& L, const Parameters& p, const uint& s): Seed(s), Steps(0) {
 	LoopPtr = &L;
+	P = &p;
 	SOld = S0(L);
+	G = P->g;
+	if (abs(G)>MIN_NUMBER) {
+		/*G *= G;
+		if (Dim==4)
+			G /= 8.0*pi*pi;
+		else if (Dim>2)
+			G *= gsl_sf_gamma((Dim-2.0)/2.0)/8.0/pow(pi,Dim/2.0); //N.B. This blows up for Dim<3
+		else {
+			cerr << "Metropolis error: Dim = " << Dim << " but not set up to work with dimensions < 3." << endl;
+			return;
+		}*/
+		SOld += G*V(L);
+	}
 	// setting generator
 	Generator = gsl_rng_alloc(gsl_rng_taus);
-	gsl_rng_set(Generator,Seed);
-	// checking loop grown
-	if (!(*LoopPtr).Grown) {
-		cerr << "Metropolis error: cannot run Metropolis before loop is grown" << endl;
-		return;
-	}
 }
 
 // destructor
@@ -545,12 +566,23 @@ Metropolis<Dim>::~Metropolis() {
 	delete Generator;
 }
 
-// copy
+// set seed
+template <uint Dim>
+void Metropolis<Dim>::setSeed(const uint& s) {
+	Seed = s;
+}
 
 // Step
 template <uint Dim>
-void Metropolis<Dim>::step(const uint& Num) {	
+void Metropolis<Dim>::step(const uint& Num) {
+	gsl_rng_set(Generator,Seed);	
 	for (uint j=0; j<Num; j++) {
+		// checking loop grown
+		if (!(*LoopPtr).Grown) {
+			cerr << "Metropolis error: cannot run Metropolis before loop is grown" << endl;
+			return;
+		}
+	
 		// choosing location to change
 		uint loc = (uint)(gsl_rng_uniform (Generator)*LoopPtr->size());
 	
@@ -564,7 +596,9 @@ void Metropolis<Dim>::step(const uint& Num) {
 		}
 	
 		// calculating change in action
-		SChange = DS0<Dim>(*LoopPtr, temp, loc);	
+		SChange = DS0<Dim>(*LoopPtr, temp, loc);
+		if (abs(G)>MIN_NUMBER)
+			SChange += G*DV<Dim>(*LoopPtr, temp, loc);	
 	
 		// accepting new point according to acceptance probability
 		if (SChange<0.0) {
@@ -604,12 +638,24 @@ template ostream& operator<< <4>(ostream& os,const Loop<4>& l);
 template number S0<4> (const Loop<4>& l);
 template class Metropolis<4>;
 
-// V0, Dim=4, slightly changed for speed
-template <> number V0 <4>(const Loop<4>& l) {
+// V, Dim=4, slightly changed for speed
+template <> number V <4>(const Loop<4>& l) {
 	number result = 2.0/DistanceSquared(l[1],l[0]);
 	for (uint j=2; j<l.size(); j++) {
 		for (uint k=0; k<j; k++) {
 			result += 2.0/DistanceSquared(l[j],l[k]);
+		}
+	}
+	return result/pow(l.size()-1.0,2);
+}
+
+// DV, Dim=4, slightly changed for speed
+template <> number DV <4>(const Loop<4>& l, const Point<4>& p, const uint& loc) {
+	number result = 0.0;
+	for (uint j=0; j<l.size(); j++) {
+		if (j!=loc) {
+			result += 2.0/DistanceSquared(l[j],p);
+			result -= 2.0/DistanceSquared(l[j],l[loc]);
 		}
 	}
 	return result/pow(l.size()-1.0,2);
@@ -628,5 +674,6 @@ template number Distance(const Point<2>&, const Point<2>&);
 template class Loop<2>;
 template ostream& operator<< <2>(ostream& os,const Loop<2>& l);
 template number S0<2> (const Loop<2>& l);
-template number V0<2> (const Loop<2>& l);
+template number V<2> (const Loop<2>& l);
+template number DV<2> (const Loop<2>& l, const Point<2>& p, const uint& loc);
 template class Metropolis<2>;

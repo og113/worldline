@@ -10,7 +10,9 @@
 #include <iostream>
 #include <gsl/gsl_randist.h> 	// Distributions of random numbers
 #include <gsl/gsl_sf_exp.h> 	// Exponential functions
+#include <gsl/gsl_sf_gamma.h>   // Gamma functions
 #include "simple.h"
+#include "parameters.h"
 
 using namespace std;
 
@@ -215,13 +217,17 @@ number S0 (const Loop<Dim>& l);
 template <uint Dim>
 number DS0 (const Loop<Dim>& l, const Point<Dim>& p, const uint& loc);
 
-// V0
+// V
 template <uint Dim>
-number V0 (const Loop<Dim>& l);
+number V (const Loop<Dim>& l);
 
-// aprxDV0
+// DV
 template <uint Dim>
-number aprxDV0 (const Loop<Dim>& l, const Point<Dim>& p, const uint& loc);
+number DV (const Loop<Dim>& l, const Point<Dim>& p, const uint& loc);
+
+// aprxDV
+template <uint Dim>
+number aprxDV (const Loop<Dim>& l, const Point<Dim>& p, const uint& loc);
 
 /*----------------------------------------------------------------------------------------------------------------------------
 	5 - Metropolis
@@ -231,20 +237,24 @@ number aprxDV0 (const Loop<Dim>& l, const Point<Dim>& p, const uint& loc);
 template <uint Dim>
 class Metropolis {
 public:
-	Metropolis(Loop<Dim>& loop, const uint& seed);
-	//Metropolis(const Metropolis&);
+	Metropolis(Loop<Dim>& loop, const Parameters& p, const uint& seed);
 	~Metropolis();
 	
+	// step
 	void 				step(const uint&);
+	
+	// set seed
+	void 				setSeed(const uint&);
 	
 private:
 	uint				Seed;
 	uint				Steps;
+	number				G;
 	number				SOld;
 	number				SChange;
 	gsl_rng* 			Generator;
+	const Parameters*	P;
 	Loop<Dim>*			LoopPtr;
-	//void				copy(const Metropolis&);
 };
 
 #endif // __GENLOOP_H_INCLUDED__

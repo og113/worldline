@@ -46,8 +46,8 @@ if (p.empty()) {
 uint Length = pow(2,p.K);
 uint dof = dim*(Length-1);
 
-vector<number> dataS0(p.Ng,0.0), dataS02(p.Ng,0.0); // dataZ(p.Ng,0.0)
-number aprxS0 = 0.0, aprxS02 = 0.0, error = 0.0; // aprxZ = 0.0
+vector<number> dataS0(p.Ng,0.0), dataS02(p.Ng,0.0), dataV(p.Ng,0.0);
+number aprxS0 = 0.0, aprxS02 = 0.0, errorS0 = 0.0, aprxV = 0.0, errorV = 0.0;
 
 /*----------------------------------------------------------------------------------------------------------------------------
 	2. defining required nodes
@@ -148,27 +148,32 @@ if (rank>0) {
 		return 1;
 	}
 	
-	uint Seed = time(NULL)+rank+1;
+	uint Seed = time(NULL)+rank+2;
 	Loop<dim> l(p.K,Seed);
+	Metropolis<dim> met(l,p,Seed);
 	uint counter = 0;
 	uint id;
-	number s0;
-	//number e_s0;
-	number sums[2];
+	number s0, v, exp_v;
+	number sums[3];
 
 	for (uint j=loopMin; j<=loopMax; j++) {
 		counter++;
 		l.load(folder[j]);
+		if (abs(p.g)>MIN_NUMBER) {
+			met.step(100*Length);
+			met.setSeed(time(NULL)+rank+2);
+		}
 	
 		s0 = S0(l);
-		//e_s0 = gsl_sf_exp(-s0);
+		v = V(l);
+		exp_v = gsl_sf_exp(-v);
 		sums[0] += s0;
 		sums[1] += s0*s0;
-		//sums[2] += s0*s0*e_s0;
+		sums[2] += v;
 		
 		if (counter==Npg) {
 			id = (rank-1)*(p.Ng/Nw) + ((j+1)/Npg-1);		
-			MPI::COMM_WORLD.Send(&sums, 2, MPI::DOUBLE, 0, id);
+			MPI::COMM_WORLD.Send(&sums, 3, MPI::DOUBLE, 0, id);
 			//cout << "process " << rank << " sent message " << id << " to " << 0 << endl;
 			memset(sums,0,sizeof(sums));
 			counter = 0;
@@ -176,7 +181,7 @@ if (rank>0) {
 	}
 }
 else { // rank==0
-	number buf[2];
+	number buf[3];
 	MPI::Status status;
 	uint count=0;
 	while (count<p.Ng) {
@@ -184,15 +189,16 @@ else { // rank==0
 		MPI::COMM_WORLD.Recv(buf, 3, MPI::DOUBLE, status.Get_source(), status.Get_tag(), status);
 		dataS0[status.Get_tag()] = buf[0];
 		dataS02[status.Get_tag()] = buf[1];
-		//dataZ[status.Get_tag()] = buf[2];
+		dataV[status.Get_tag()] = buf[2];
 		//cout << "process " << rank << " recieved message " << status.Get_tag() << " from " << status.Get_source() << endl;
 		count++;
 		aprxS0 += buf[0];
 		aprxS02 += buf[1];
-		//aprxZ += buf[2];
+		aprxV += buf[2];
 	}
-	aprxS0 /= (double)Nl;
-	aprxS02 /= (double)Nl;
+	aprxS0 /= (number)Nl;
+	aprxS02 /= (number)Nl;
+	aprxV /= (number)Nl;
 	// better to do immediate probing 'iprobe' so that the 0 processor can do other tasks while waiting, like computing errors
 }
 
@@ -201,13 +207,16 @@ else { // rank==0
 ----------------------------------------------------------------------------------------------------------------------------*/
 
 if (rank==0) {
-	number aprxS0_g[p.Ng];
+	number aprxS0_g[p.Ng], aprxV_g[p.Ng];
 	number denom = (number)p.Ng*((number)p.Ng-1.0);
 	for (uint j=0; j<p.Ng; j++) {
 		aprxS0_g[j] = dataS0[j]/(number)Npg;
-		error += pow(aprxS0_g[j]-aprxS0,2.0)/denom;
+		aprxV_g[j] = dataV[j]/(number)Npg;
+		errorS0 += pow(aprxS0_g[j]-aprxS0,2.0)/denom;
+		errorV += pow(aprxV_g[j]-aprxV,2.0)/denom;
 	}
-	error = sqrt(error);
+	errorS0 = sqrt(errorS0);
+	errorV = sqrt(errorV);
 	
 	number analytic = 0.5*(number)dof;
 	number absError = (analytic-aprxS0)/analytic;
@@ -224,26 +233,25 @@ if (rank==0) {
 	FILE * ros;
 	ros = fopen(((string)rf).c_str(),"w");
 	for (uint j=0; j<p.Ng; j++) {
-		fprintf(ros,"%12s%5i%5i%5i%5i%5i%13.5g%13.5g%13.5g\n",\
-				timenumber.c_str(),dim,p.K,Nl,p.Ng,j,aprxS0_g[j],aprxS0,error);
+		fprintf(ros,"%12s%5i%5i%8i%8i%8i%13.5g%13.5g%13.5g%13.5g%13.5g%13.5g\n",\
+				timenumber.c_str(),dim,p.K,Nl,p.Ng,j,aprxS0_g[j],aprxS0,errorS0,aprxV_g[j],aprxV,errorV);
 	}
 	fclose(ros);	
 	cout << "results printed to " << rf << endl;
 	
-	rf.Timenumber = "";
-	rf.ID = "loop";
+	rf = "results/loop_dim_"+nts<uint>(dim)+".dat";
 	ros = fopen(((string)rf).c_str(),"a");
-		fprintf(ros,"%12s%5i%5i%5i%5i%13.5g%13.5g\n",\
-				timenumber.c_str(),dim,p.K,Nl,p.Ng,aprxS0,error);
+		fprintf(ros,"%12s%5i%5i%8i%8i%13.5g%13.5g%13.5g%13.5g\n",\
+				timenumber.c_str(),dim,p.K,Nl,p.Ng,aprxS0,errorS0,aprxV,errorV);
 	fclose(ros);	
 	cout << "results printed to " << rf << endl;
 
 	cout << "timenumber: " << timenumber << endl;
 	printf("\n");
-	printf("%8s%8s%8s%8s%12s%12s%12s%12s%12s%12s\n","dim","Nl","Ng","K","S0","S02","var",\
-		"error","absError","abs2Error");
-	printf("%8i%8i%8i%8i%12.3g%12.3g%12.3g%12.3g%12.3g%12.3g\n",\
-		dim,Nl,p.Ng,p.K,aprxS0,aprxS02,variance,error,absError,abs2Error);
+	printf("%8s%8s%8s%8s%12s%12s%12s%12s%12s%12s%12s%12s\n","dim","Nl","Ng","K","S0","S02","var",\
+		"errorS0","absErrorS0","abs2ErrorS0","V","errorV");
+	printf("%8i%8i%8i%8i%12.3g%12.3g%12.3g%12.3g%12.3g%12.3g%12.3g%12.3g\n",\
+		dim,Nl,p.Ng,p.K,aprxS0,aprxS02,variance,errorS0,absError,abs2Error,aprxV,errorV);
 	printf("\n");
 }
 

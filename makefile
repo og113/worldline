@@ -41,7 +41,7 @@ COMMONOBJS 		= $(patsubst %,$(CODIR)/%,$(_COMMONOBJS))
 
 #------------------------------------------------------------------------------------------------------------------------
 
-all: common glmain
+all: changeInputs common glmain loop
 
 common: $(COMMONOBJS)
 	@echo made common objects $(COMMONOBJS)
@@ -49,6 +49,10 @@ common: $(COMMONOBJS)
 glmain: $(ODIR)/glmain.o $(COMMONOBJS)
 	$(CC) -o $@ $^ $(CFLAGS) $(INCLUDES) $(LIBS)
 	@echo Simple compiler named glmain has been compiled
+	
+changeInputs: $(ODIR)/changeInputs.o $(COMMONOBJS)
+	$(CC) -o $@ $^ $(CFLAGS) $(INCLUDES) $(LIBS)
+	@echo Simple compiler named changeInputs has been compiled
 	
 loop: $(MPIODIR)/loop.o $(COMMONOBJS) $(FNSOBJS) 
 	$(MPICC) -o $@ $^ $(MPICFLAGS) $(INCLUDES) $(MPILIBS)
