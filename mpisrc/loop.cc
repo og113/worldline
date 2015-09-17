@@ -11,7 +11,6 @@
 #include <vector>
 #include <mpi.h>
 #include <gsl/gsl_sf_exp.h>
-#include "evalloop.h"
 #include "folder.h"
 #include "genloop.h"
 #include "parameters.h"

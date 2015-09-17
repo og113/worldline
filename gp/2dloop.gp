@@ -16,6 +16,7 @@ set ytic auto
 set title "2d loop"
 set xlabel "x"
 set ylabel "y"
-plot "data/temp/loopAscii.dat" using 1:2 with lines
+plot "data/temp/loopAscii.dat" using 1:2 with lines, \
+	"data/temp/loopAsciiMet.dat" using 1:2 with lines
 
 pause -1

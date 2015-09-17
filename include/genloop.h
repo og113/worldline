@@ -20,11 +20,13 @@ using namespace std;
 		1 - Point
 		2 - functions acting on Points
 		3 - Loop class
+		4 - Loop functions
+		5 - Metropolis
 ----------------------------------------------------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------------------------------------------------*/
 
 /*----------------------------------------------------------------------------------------------------------------------------
-	Point class
+	1 - Point class
 ----------------------------------------------------------------------------------------------------------------------------*/
 template <uint Dim>
 class Point;
@@ -111,7 +113,7 @@ private:
 };
 
 /*----------------------------------------------------------------------------------------------------------------------------
-	functions acting on Points
+	2 - functions acting on Points
 ----------------------------------------------------------------------------------------------------------------------------*/
 // Distance squared
 template <uint Dim>
@@ -126,7 +128,7 @@ template <uint Dim>
 number Dot(const Point<Dim>&, const Point<Dim>&, const Point<Dim>&, const Point<Dim>&);
 
 /*----------------------------------------------------------------------------------------------------------------------------
-	Loop class
+	3 - Loop class
 ----------------------------------------------------------------------------------------------------------------------------*/
 template <uint Dim>
 class Loop;
@@ -139,6 +141,10 @@ ostream& operator<< (ostream&,const Loop<Dim>&);
 template <uint Dim>
 istream& operator>>(istream&,Loop<Dim>&);
 
+// Metropolis
+template <uint Dim>
+class Metropolis;
+
 // Loop class
 template <uint Dim>
 class Loop {
@@ -150,8 +156,8 @@ public:
 	// grow loop
 	void grow();
 	
-	// metropolis
-	void metropolis();
+	// Metropolis
+	friend class Metropolis<Dim>;
 	
 	// clear
 	void clear();
@@ -185,12 +191,60 @@ private:
 	uint					Seed;
 	uint					Length;
 	vector< Point<Dim> >	Points;
-  	gsl_rng * 				Generator;
+  	gsl_rng* 				Generator;
   	bool					Grown;
   	void					firstStep();
 	void 					followingSteps();
 	void					normalise();
 	void 					centre();
+};
+
+/*----------------------------------------------------------------------------------------------------------------------------
+	4 - loop functions
+		- S0
+		- DS0
+		- V0
+		- aprxDV0
+----------------------------------------------------------------------------------------------------------------------------*/
+
+// S0
+template <uint Dim>
+number S0 (const Loop<Dim>& l);
+
+// DS0
+template <uint Dim>
+number DS0 (const Loop<Dim>& l, const Point<Dim>& p, const uint& loc);
+
+// V0
+template <uint Dim>
+number V0 (const Loop<Dim>& l);
+
+// aprxDV0
+template <uint Dim>
+number aprxDV0 (const Loop<Dim>& l, const Point<Dim>& p, const uint& loc);
+
+/*----------------------------------------------------------------------------------------------------------------------------
+	5 - Metropolis
+----------------------------------------------------------------------------------------------------------------------------*/
+
+// Metropolis
+template <uint Dim>
+class Metropolis {
+public:
+	Metropolis(Loop<Dim>& loop, const uint& seed);
+	//Metropolis(const Metropolis&);
+	~Metropolis();
+	
+	void 				step(const uint&);
+	
+private:
+	uint				Seed;
+	uint				Steps;
+	number				SOld;
+	number				SChange;
+	gsl_rng* 			Generator;
+	Loop<Dim>*			LoopPtr;
+	//void				copy(const Metropolis&);
 };
 
 #endif // __GENLOOP_H_INCLUDED__
