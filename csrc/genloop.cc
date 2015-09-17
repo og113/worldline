@@ -314,6 +314,7 @@ void Loop<Dim>::centre() {
 	Point<Dim> Xcm(Points[0]);
 	for (uint j=1; j<Length; j++)
 		Xcm += Points[j];
+	Xcm /= (number)Length;
 	for (uint l=0; l<Length; l++)
 		Points[l] -= Xcm;
 }
@@ -542,20 +543,9 @@ template <uint Dim>
 Metropolis<Dim>::Metropolis(Loop<Dim>& L, const Parameters& p, const uint& s): Seed(s), Steps(0) {
 	LoopPtr = &L;
 	P = &p;
-	SOld = S0(L);
 	G = P->g;
-	if (abs(G)>MIN_NUMBER) {
-		/*G *= G;
-		if (Dim==4)
-			G /= 8.0*pi*pi;
-		else if (Dim>2)
-			G *= gsl_sf_gamma((Dim-2.0)/2.0)/8.0/pow(pi,Dim/2.0); //N.B. This blows up for Dim<3
-		else {
-			cerr << "Metropolis error: Dim = " << Dim << " but not set up to work with dimensions < 3." << endl;
-			return;
-		}*/
-		SOld += G*V(L);
-	}
+	SOld = 0.0;
+
 	// setting generator
 	Generator = gsl_rng_alloc(gsl_rng_taus);
 }
@@ -575,13 +565,19 @@ void Metropolis<Dim>::setSeed(const uint& s) {
 // Step
 template <uint Dim>
 void Metropolis<Dim>::step(const uint& Num) {
-	gsl_rng_set(Generator,Seed);	
+	gsl_rng_set(Generator,Seed);
+	// checking loop grown
+	if (!LoopPtr->Grown) {
+		cerr << "Metropolis error: cannot run Metropolis before loop is grown" << endl;
+		return;
+	}
+	// initializing S0
+	SOld = S0(*LoopPtr);
+	if (abs(G)>MIN_NUMBER)
+		SOld += G*V(*LoopPtr);
+		
+	// starting metropolis loop
 	for (uint j=0; j<Num; j++) {
-		// checking loop grown
-		if (!(*LoopPtr).Grown) {
-			cerr << "Metropolis error: cannot run Metropolis before loop is grown" << endl;
-			return;
-		}
 	
 		// choosing location to change
 		uint loc = (uint)(gsl_rng_uniform (Generator)*LoopPtr->size());
@@ -674,6 +670,28 @@ template number Distance(const Point<2>&, const Point<2>&);
 template class Loop<2>;
 template ostream& operator<< <2>(ostream& os,const Loop<2>& l);
 template number S0<2> (const Loop<2>& l);
-template number V<2> (const Loop<2>& l);
-template number DV<2> (const Loop<2>& l, const Point<2>& p, const uint& loc);
 template class Metropolis<2>;
+
+// V, Dim=2, logarithmic, GF(x,y) = log(|x-y|)/2/pi
+template <> number V <2>(const Loop<2>& l) {
+	number result = 2.0/DistanceSquared(l[1],l[0]);
+	for (uint j=2; j<l.size(); j++) {
+		for (uint k=0; k<j; k++) {
+			result += gsl_sf_log(DistanceSquared(l[j],l[k]));
+		}
+	}
+	return result/pow(l.size()-1.0,2);
+}
+
+// DV, Dim=2, logarithmic, GF(x,y) = log(|x-y|)/2/pi
+template <> number DV <2>(const Loop<2>& l, const Point<2>& p, const uint& loc) {
+	number result = 0.0;
+	for (uint j=0; j<l.size(); j++) {
+		if (j!=loc) {
+			result += gsl_sf_log(DistanceSquared(l[j],p));
+			result -= gsl_sf_log(DistanceSquared(l[j],l[loc]));
+		}
+	}
+	return result/pow(l.size()-1.0,2);
+}
+

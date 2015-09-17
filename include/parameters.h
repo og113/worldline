@@ -30,6 +30,7 @@ struct Parameters {
 	uint LoopMin;
 	uint LoopMax;
 	uint Ng;
+	uint Nms;
 	uint K;
 	number g;
 	void save(const string& filename) const;

@@ -1,9 +1,9 @@
 #!/bin/bash
 
-for i in {4..10..1}
+for i in {0..1000..200}
 do
-	echo "running with K=$i"
-	./changeInputs -K $i
+	echo "running with Nms=$i"
+	./changeInputs -Nms $i
 	./glmain
 	mpirun -n 2 loop
 done

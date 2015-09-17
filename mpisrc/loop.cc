@@ -46,8 +46,8 @@ if (p.empty()) {
 uint Length = pow(2,p.K);
 uint dof = dim*(Length-1);
 
-vector<number> dataS0(p.Ng,0.0), dataS02(p.Ng,0.0), dataV(p.Ng,0.0);
-number aprxS0 = 0.0, aprxS02 = 0.0, errorS0 = 0.0, aprxV = 0.0, errorV = 0.0;
+vector<number> dataS0(p.Ng,0.0), dataS02(p.Ng,0.0), dataV(p.Ng,0.0), dataV2(p.Ng,0.0);
+number aprxS0 = 0.0, aprxS02 = 0.0, errorS0 = 0.0, aprxV = 0.0, aprxV2 = 0.0, errorV = 0.0;
 
 /*----------------------------------------------------------------------------------------------------------------------------
 	2. defining required nodes
@@ -150,19 +150,14 @@ if (rank>0) {
 	
 	uint Seed = time(NULL)+rank+2;
 	Loop<dim> l(p.K,Seed);
-	Metropolis<dim> met(l,p,Seed);
 	uint counter = 0;
 	uint id;
 	number s0, v, exp_v;
-	number sums[3];
+	number sums[4];
 
 	for (uint j=loopMin; j<=loopMax; j++) {
 		counter++;
 		l.load(folder[j]);
-		if (abs(p.g)>MIN_NUMBER) {
-			met.step(100*Length);
-			met.setSeed(time(NULL)+rank+2);
-		}
 	
 		s0 = S0(l);
 		v = V(l);
@@ -170,10 +165,11 @@ if (rank>0) {
 		sums[0] += s0;
 		sums[1] += s0*s0;
 		sums[2] += v;
+		sums[3] += v*v;
 		
 		if (counter==Npg) {
 			id = (rank-1)*(p.Ng/Nw) + ((j+1)/Npg-1);		
-			MPI::COMM_WORLD.Send(&sums, 3, MPI::DOUBLE, 0, id);
+			MPI::COMM_WORLD.Send(&sums, 4, MPI::DOUBLE, 0, id);
 			//cout << "process " << rank << " sent message " << id << " to " << 0 << endl;
 			memset(sums,0,sizeof(sums));
 			counter = 0;
@@ -181,24 +177,27 @@ if (rank>0) {
 	}
 }
 else { // rank==0
-	number buf[3];
+	number buf[4];
 	MPI::Status status;
 	uint count=0;
 	while (count<p.Ng) {
 		MPI::COMM_WORLD.Probe(MPI_ANY_SOURCE, MPI_ANY_TAG, status);
-		MPI::COMM_WORLD.Recv(buf, 3, MPI::DOUBLE, status.Get_source(), status.Get_tag(), status);
+		MPI::COMM_WORLD.Recv(buf, 4, MPI::DOUBLE, status.Get_source(), status.Get_tag(), status);
 		dataS0[status.Get_tag()] = buf[0];
 		dataS02[status.Get_tag()] = buf[1];
 		dataV[status.Get_tag()] = buf[2];
+		dataV2[status.Get_tag()] = buf[3];
 		//cout << "process " << rank << " recieved message " << status.Get_tag() << " from " << status.Get_source() << endl;
 		count++;
 		aprxS0 += buf[0];
 		aprxS02 += buf[1];
 		aprxV += buf[2];
+		aprxV2 += buf[3];
 	}
 	aprxS0 /= (number)Nl;
 	aprxS02 /= (number)Nl;
 	aprxV /= (number)Nl;
+	aprxV2 /= (number)Nl;
 	// better to do immediate probing 'iprobe' so that the 0 processor can do other tasks while waiting, like computing errors
 }
 
@@ -218,10 +217,8 @@ if (rank==0) {
 	errorS0 = sqrt(errorS0);
 	errorV = sqrt(errorV);
 	
-	number analytic = 0.5*(number)dof;
-	number absError = (analytic-aprxS0)/analytic;
-	number variance = aprxS02-aprxS0*aprxS0;
-	number abs2Error = (variance-analytic)/analytic;
+	number varianceS0 = aprxS02-aprxS0*aprxS0;
+	number varianceV = aprxV2-aprxV*aprxV;
 
 /*----------------------------------------------------------------------------------------------------------------------------
 	6. printing results
@@ -248,10 +245,10 @@ if (rank==0) {
 
 	cout << "timenumber: " << timenumber << endl;
 	printf("\n");
-	printf("%8s%8s%8s%8s%12s%12s%12s%12s%12s%12s%12s%12s\n","dim","Nl","Ng","K","S0","S02","var",\
-		"errorS0","absErrorS0","abs2ErrorS0","V","errorV");
+	printf("%8s%8s%8s%8s%12s%12s%12s%12s%12s%12s%12s%12s\n","dim","Nl","Ng","K","S0","S02","varS0",\
+		"errorS0","V","V2","varV","errorV");
 	printf("%8i%8i%8i%8i%12.3g%12.3g%12.3g%12.3g%12.3g%12.3g%12.3g%12.3g\n",\
-		dim,Nl,p.Ng,p.K,aprxS0,aprxS02,variance,errorS0,absError,abs2Error,aprxV,errorV);
+		dim,Nl,p.Ng,p.K,aprxS0,aprxS02,varianceS0,errorS0,aprxV,aprxV2,varianceV,errorV);
 	printf("\n");
 }
 

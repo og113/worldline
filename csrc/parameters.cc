@@ -31,6 +31,7 @@ ostream& operator<<(ostream& os, const Parameters& p) {
 	os << setw(20) << "LoopMin" << setw(20) << p.LoopMin << endl;
 	os << setw(20) << "LoopMax" << setw(20) << p.LoopMax << endl;
 	os << setw(20) << "Ng" << setw(20) << p.Ng << endl;
+	os << setw(20) << "Nms" << setw(20) << p.Nms << endl;
 	os << setw(20) << "K" << setw(20) << p.K << endl;
 	os << setw(20) << "g" << setw(20) << p.g << endl;
 	return os;
@@ -63,6 +64,7 @@ void Parameters::load(const string& filename) {
 	is >> dross >> LoopMin;
 	is >> dross >> LoopMax;
 	is >> dross >> Ng;
+	is >> dross >> Nms;
 	is >> dross >> K;
 	is >> dross >> g;
 	is.close();
@@ -70,12 +72,12 @@ void Parameters::load(const string& filename) {
 
 // empty
 bool Parameters::empty() const {
-	return (LoopMin==LoopMax && Ng==0 && K==0 && abs(g)<MIN_NUMBER);
+	return (LoopMin==LoopMax && Ng==0 && Nms==0 && K==0 && abs(g)<MIN_NUMBER);
 }
 
 // operator==
 bool operator==(const Parameters& l, const Parameters& r){
-	return (l.LoopMin==r.LoopMin && l.LoopMax==r.LoopMax && l.Ng==r.Ng && l.K==r.K && abs(l.g-r.g)<MIN_NUMBER);
+	return (l.LoopMin==r.LoopMin && l.LoopMax==r.LoopMax && l.Ng==r.Ng && l.Nms==r.Nms && l.K==r.K && abs(l.g-r.g)<MIN_NUMBER);
 }
 
 // writeBinary
@@ -83,6 +85,7 @@ ostream& Parameters::writeBinary(ostream& os) const {
 	os.write(reinterpret_cast<const char*>(&LoopMin),sizeof(uint));
 	os.write(reinterpret_cast<const char*>(&LoopMax),sizeof(uint));
 	os.write(reinterpret_cast<const char*>(&Ng),sizeof(uint));
+	os.write(reinterpret_cast<const char*>(&Nms),sizeof(uint));
 	os.write(reinterpret_cast<const char*>(&K),sizeof(uint));
 	os.write(reinterpret_cast<const char*>(&g),sizeof(number));
 	return os;
@@ -93,6 +96,7 @@ istream& Parameters::readBinary(istream& is) {
 	is.read(reinterpret_cast<char*>(&LoopMin),sizeof(uint));
 	is.read(reinterpret_cast<char*>(&LoopMax),sizeof(uint));
 	is.read(reinterpret_cast<char*>(&Ng),sizeof(uint));
+	is.read(reinterpret_cast<char*>(&Nms),sizeof(uint));
 	is.read(reinterpret_cast<char*>(&K),sizeof(uint));
 	is.read(reinterpret_cast<char*>(&g),sizeof(number));
 	return is;

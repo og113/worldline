@@ -30,6 +30,7 @@ Parameters p;
 /*p.LoopMin = 1;
 p.LoopMax = 1e4;
 p.Ng = 1e3;
+p.Nms = 1e2;
 p.K = 5;
 p.g = 0.0;*/
 p.load("inputs");
@@ -65,26 +66,34 @@ cout << "generating " << Loops << " unit loops each of " << Length << " points i
 string file, asciiFile;
 uint Seed = time(NULL);
 Loop<dim> loop(p.K,Seed);
+Metropolis<dim> met(loop,p,Seed);
 
 for (uint j=p.LoopMin; j<=p.LoopMax; j++) {
-file = "data/temp/loop_dim_"+nts<uint>(dim)+"_K_"+nts<uint>(p.K)+"_run_"+nts<uint>(j)+".dat";
-loop.grow();
-loop.save(file);
-/*if (abs(loop.checkLength()-1.0)>MIN_NUMBER*Length)
-	cerr << "loop error: length = " << loop.checkLength() << endl;*/
-loop.clear();
-Seed = time(NULL)+j;
-loop.setSeed(Seed);
+	file = "data/temp/loop_dim_"+nts<uint>(dim)+"_K_"+nts<uint>(p.K)+"_run_"+nts<uint>(j)+".dat";
+	loop.grow();
+	if (abs(p.g)>MIN_NUMBER && p.Nms>0) {
+		met.step(p.Nms*Length);
+		met.setSeed(time(NULL)+j+2);
+	}
+	loop.save(file);
+	loop.clear();
+	loop.setSeed(time(NULL)+j+3);
 }
 
-/*asciiFile = "data/temp/loopAscii.dat";
-Seed += 2.0;
+
+//asciiFile = "data/temp/loopAscii.dat";
 loop.grow();
-loop.saveAscii(asciiFile);
-Metropolis<dim> met(loop,Seed);
-met.step(1000);
-asciiFile = "data/temp/loopAsciiMet.dat";
-loop.saveAscii(asciiFile);*/
+//loop.saveAscii(asciiFile);
+cout << "0 metropolis runs, V = " << V(loop) << endl;
+
+for (uint j=0 ;j<8; j++) {
+	uint runs = pow(10,j);
+	met.setSeed(time(NULL)+j+2);
+	met.step(runs);
+	cout << nts<uint>(runs) << " metropolis runs, V = " << V(loop) << endl;
+	//asciiFile = "data/temp/loopAsciiMet_run_"+nts<uint>(j)+".dat";
+	//loop.saveAscii(asciiFile);
+}
 
 return 0;
 }

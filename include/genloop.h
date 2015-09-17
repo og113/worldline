@@ -10,7 +10,8 @@
 #include <iostream>
 #include <gsl/gsl_randist.h> 	// Distributions of random numbers
 #include <gsl/gsl_sf_exp.h> 	// Exponential functions
-#include <gsl/gsl_sf_gamma.h>   // Gamma functions
+#include <gsl/gsl_sf_log.h>		// Logarithm functions
+//#include <gsl/gsl_sf_gamma.h>   // Gamma functions
 #include "simple.h"
 #include "parameters.h"
 
