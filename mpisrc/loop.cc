@@ -57,7 +57,7 @@ number aprxS0 = 0.0, aprxS02 = 0.0, errorS0 = 0.0, aprxV = 0.0, aprxV2 = 0.0, er
 		- initializing mpi
 ----------------------------------------------------------------------------------------------------------------------------*/
 
-int Nw = 5;
+int Nw = 20;
 int nodesTot = 1 + Nw;
 uint Nl, Npg, Npw;
 //number T = 0.25;
