@@ -3,6 +3,7 @@
 		program to give simple mpi wrapper for main
 ----------------------------------------------------------------------------------------------------------------------------*/
 
+#include <cstring>
 #include <ctime>
 #include <iostream>
 #include <fstream>
@@ -231,25 +232,25 @@ if (rank==0) {
 	FILE * ros;
 	ros = fopen(((string)rf).c_str(),"w");
 	for (uint j=0; j<p.Ng; j++) {
-		fprintf(ros,"%12s%5i%5i%8i%8i%8i%13.5g%13.5g%13.5g%13.5g%13.5g%13.5g\n",\
-				timenumber.c_str(),dim,p.K,Nl,p.Ng,j,aprxS0_g[j],aprxS0,errorS0,aprxV_g[j],aprxV,errorV);
+		fprintf(ros,"%12s%5i%5i%8i%8i%10.2g%8i%13.5g%13.5g%13.5g%13.5g%13.5g%13.5g\n",\
+				timenumber.c_str(),dim,p.K,Nl,p.Ng,p.g,j,aprxS0_g[j],aprxS0,errorS0,aprxV_g[j],aprxV,errorV);
 	}
 	fclose(ros);	
 	cout << "results printed to " << rf << endl;
 	
 	rf = "results/loop_dim_"+nts<uint>(dim)+".dat";
 	ros = fopen(((string)rf).c_str(),"a");
-		fprintf(ros,"%12s%5i%5i%8i%8i%13.5g%13.5g%13.5g%13.5g\n",\
-				timenumber.c_str(),dim,p.K,Nl,p.Ng,aprxS0,errorS0,aprxV,errorV);
+		fprintf(ros,"%12s%5i%5i%8i%8i%10.2g%13.5g%13.5g%13.5g%13.5g\n",\
+				timenumber.c_str(),dim,p.K,Nl,p.Ng,p.g,aprxS0,errorS0,aprxV,errorV);
 	fclose(ros);	
 	cout << "results printed to " << rf << endl;
 
 	cout << "timenumber: " << timenumber << endl;
 	printf("\n");
-	printf("%8s%8s%8s%8s%12s%12s%12s%12s%12s%12s%12s%12s\n","dim","Nl","Ng","K","S0","S02","varS0",\
+	printf("%8s%8s%8s%8s%10s%12s%12s%12s%12s%12s%12s%12s%12s\n","dim","Nl","Ng","K","g","S0","S02","varS0",\
 		"errorS0","V","V2","varV","errorV");
-	printf("%8i%8i%8i%8i%12.3g%12.3g%12.3g%12.3g%12.3g%12.3g%12.3g%12.3g\n",\
-		dim,Nl,p.Ng,p.K,aprxS0,aprxS02,varianceS0,errorS0,aprxV,aprxV2,varianceV,errorV);
+	printf("%8i%8i%8i%8i%10.2g%12.3g%12.3g%12.3g%12.3g%12.3g%12.3g%12.3g%12.3g\n",\
+		dim,Nl,p.Ng,p.K,p.g,aprxS0,aprxS02,varianceS0,errorS0,aprxV,aprxV2,varianceV,errorV);
 	printf("\n");
 }
 
