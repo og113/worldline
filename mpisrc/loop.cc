@@ -57,7 +57,7 @@ number aprxS0 = 0.0, aprxS02 = 0.0, errorS0 = 0.0, aprxV = 0.0, aprxV2 = 0.0, er
 		- initializing mpi
 ----------------------------------------------------------------------------------------------------------------------------*/
 
-int Nw = 5;
+int Nw = 1;
 int nodesTot = 1 + Nw;
 uint Nl, Npg, Npw;
 //number T = 0.25;
@@ -81,7 +81,6 @@ else {
 }
 
 int nodes, rank;
-int returnValue = 0;
 
 MPI::Init(argc, argv);
 MPI_Comm_size(MPI_COMM_WORLD, &nodes);
@@ -247,10 +246,10 @@ if (rank==0) {
 
 	cout << "timenumber: " << timenumber << endl;
 	printf("\n");
-	printf("%8s%8s%8s%8s%10s%12s%12s%12s%12s%12s%12s%12s%12s\n","dim","Nl","Ng","K","g","S0","S02","varS0",\
-		"errorS0","V","V2","varV","errorV");
-	printf("%8i%8i%8i%8i%10.2g%12.3g%12.3g%12.3g%12.3g%12.3g%12.3g%12.3g%12.3g\n",\
-		dim,Nl,p.Ng,p.K,p.g,aprxS0,aprxS02,varianceS0,errorS0,aprxV,aprxV2,varianceV,errorV);
+	printf("%8s%8s%8s%8s%8s%12s%12s%12s%12s%12s%12s\n","dim","Nl","Ng","K","g","S0","varS0",\
+		"errorS0","V","varV","errorV");
+	printf("%8i%8i%8i%8i%8.2g%12.3g%12.3g%12.3g%12.3g%12.3g%12.3g\n",\
+		dim,Nl,p.Ng,p.K,p.g,aprxS0,varianceS0,errorS0,aprxV,varianceV,errorV);
 	printf("\n");
 }
 

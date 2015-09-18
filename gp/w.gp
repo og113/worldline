@@ -11,7 +11,7 @@ p(x)=x/sinh(x)
 
 unset log
 unset label
-unset key
+set key below
 set autoscale
 set xtic auto
 set ytic auto
@@ -20,7 +20,7 @@ set xlabel "TeB"
 set ylabel "<W>
 
 set xrange [0.0000001:5]    
-plot "results/loop_dim_4.dat" u 4:8 ls 1, \
+plot "results/loop_dim_4.dat" u 6:9 ls 1, \
 	p(x) with lines
 
 pause -1
