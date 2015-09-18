@@ -11,6 +11,7 @@
 #include <vector>
 #include <mpi.h>
 #include <gsl/gsl_sf_exp.h>
+#include <gsl/gsl_sf_trig.h>
 #include "folder.h"
 #include "genloop.h"
 #include "parameters.h"
@@ -152,7 +153,7 @@ if (rank>0) {
 	Loop<dim> l(p.K,Seed);
 	uint counter = 0;
 	uint id;
-	number s0, v, exp_v;
+	number s0, v, w;
 	number sums[4];
 
 	for (uint j=loopMin; j<=loopMax; j++) {
@@ -160,12 +161,12 @@ if (rank>0) {
 		l.load(folder[j]);
 	
 		s0 = S0(l);
-		v = V(l);
-		exp_v = gsl_sf_exp(-v);
+		v = V0(l);
+		w = gsl_sf_cos(p.g*I(l));
 		sums[0] += s0;
 		sums[1] += s0*s0;
-		sums[2] += v;
-		sums[3] += v*v;
+		sums[2] += w;
+		sums[3] += w*w;
 		
 		if (counter==Npg) {
 			id = (rank-1)*(p.Ng/Nw) + ((j+1)/Npg-1);		

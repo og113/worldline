@@ -218,17 +218,28 @@ number S0 (const Loop<Dim>& l);
 template <uint Dim>
 number DS0 (const Loop<Dim>& l, const Point<Dim>& p, const uint& loc);
 
-// V
+// V0
 template <uint Dim>
-number V (const Loop<Dim>& l);
+number V0 (const Loop<Dim>& l);
 
-// DV
+// DV0
 template <uint Dim>
-number DV (const Loop<Dim>& l, const Point<Dim>& p, const uint& loc);
+number DV0 (const Loop<Dim>& l, const Point<Dim>& p, const uint& loc);
 
-// aprxDV
+// aprxDV0
 template <uint Dim>
-number aprxDV (const Loop<Dim>& l, const Point<Dim>& p, const uint& loc);
+number aprxDV0 (const Loop<Dim>& l, const Point<Dim>& p, const uint& loc);
+
+// V1
+template <uint Dim>
+number V1 (const Loop<Dim>& l);
+
+// DV1
+template <uint Dim>
+number DV1 (const Loop<Dim>& l, const Point<Dim>& p, const uint& loc);
+
+// I
+number I (const Loop<4>& l);
 
 /*----------------------------------------------------------------------------------------------------------------------------
 	5 - Metropolis

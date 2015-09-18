@@ -1,9 +1,10 @@
 #!/bin/bash
 
-for i in {0..1000..200}
+for i in {0..24..1}
 do
-	echo "running with Nms=$i"
-	./changeInputs -Nms $i
+	g=$(awk "BEGIN {printf \"%.2f\",$i/4}")
+	echo "running with Nms = $g"
+	./changeInputs -g $i
 	./glmain
 	mpirun -n 2 loop
 done

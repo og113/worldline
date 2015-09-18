@@ -497,9 +497,9 @@ number DS0 (const Loop<Dim>& l, const Point<Dim>& p, const uint& loc) {
 	return result*(number)l.size()/2.0;
 }
 
-// V
+// V0
 template <uint Dim>
-number V (const Loop<Dim>& l) {
+number V0 (const Loop<Dim>& l) {
 	number result = 2.0*pow(DistanceSquared(l[1],l[0]),(2.0-Dim)/2.0);
 	for (uint j=2; j<l.size(); j++) {
 		for (uint k=0; k<j; k++) {
@@ -509,9 +509,9 @@ number V (const Loop<Dim>& l) {
 	return result/pow(l.size()-1.0,2);
 }
 
-// DV
+// DV0
 template <uint Dim>
-number DV (const Loop<Dim>& l, const Point<Dim>& p, const uint& loc) {
+number DV0 (const Loop<Dim>& l, const Point<Dim>& p, const uint& loc) {
 	number result = 0.0;
 	for (uint j=0; j<l.size(); j++) {
 		if (j!=loc) {
@@ -522,9 +522,9 @@ number DV (const Loop<Dim>& l, const Point<Dim>& p, const uint& loc) {
 	return result/pow(l.size()-1.0,2);
 }
 
-// aprxDV
+// aprxDV0
 template <uint Dim>
-number aprxDV (const Loop<Dim>& l, const Point<Dim>& p, const uint& loc) {
+number aprxDV0 (const Loop<Dim>& l, const Point<Dim>& p, const uint& loc) {
 	number result = 0.0;
 	for (uint j=1; j<l.size(); j++) {
 		for (uint k=0; k<j; k++) {
@@ -532,6 +532,45 @@ number aprxDV (const Loop<Dim>& l, const Point<Dim>& p, const uint& loc) {
 		}
 	}
 	return result/pow(l.size()-1.0,2);
+}
+
+// V1
+template <uint Dim>
+number V1 (const Loop<Dim>& l) {
+	number result = 2.0*Dot(l[2],l[1],l[1],l[0])*pow(DistanceSquared(l[1],l[0]),(2.0-Dim)/2.0);
+	uint posj, posk;
+	for (uint j=2; j<l.size(); j++) {
+		posj = (j!=(l.size()-1)?j+1:0);
+		for (uint k=0; k<j; k++) {
+			posk = (k!=(l.size()-1)?k+1:0);
+			result += 2.0*Dot(l[posj],l[j],l[posk],l[k])*pow(DistanceSquared(l[j],l[k]),(2.0-Dim)/2.0);
+		}
+	}
+	return result*l.size()/pow(l.size()-1.0,2);
+}
+
+// DV1
+template <uint Dim>
+number DV1 (const Loop<Dim>& l, const Point<Dim>& p, const uint& loc) {
+	number result = 0.0;
+	uint posj, posloc = (loc!=(l.size()-1)?loc+1:0);
+	for (uint j=0; j<l.size(); j++) {
+		if (j!=loc) {
+			posj = (j!=(l.size()-1)?j+1:0);
+			if (posj==loc)
+				result += 2.0*Dot(p,l[j],l[posloc],p)*pow(DistanceSquared(l[j],p),(2.0-Dim)/2.0);
+			else
+				result += 2.0*Dot(l[posj],l[j],l[posloc],p)*pow(DistanceSquared(l[j],p),(2.0-Dim)/2.0);
+			result -= 2.0*Dot(l[posj],l[j],l[posloc],l[loc])*pow(DistanceSquared(l[j],l[loc]),(2.0-Dim)/2.0);
+		}
+	}
+	return result/pow(l.size()-1.0,2);
+}
+
+// I
+template <uint Dim>
+number I (const Loop<Dim>& l) {
+	return 0;
 }
 
 /*----------------------------------------------------------------------------------------------------------------------------
@@ -574,7 +613,7 @@ void Metropolis<Dim>::step(const uint& Num) {
 	// initializing S0
 	SOld = S0(*LoopPtr);
 	if (abs(G)>MIN_NUMBER)
-		SOld += G*V(*LoopPtr);
+		SOld += G*V0(*LoopPtr);
 		
 	// starting metropolis loop
 	for (uint j=0; j<Num; j++) {
@@ -594,7 +633,7 @@ void Metropolis<Dim>::step(const uint& Num) {
 		// calculating change in action
 		SChange = DS0<Dim>(*LoopPtr, temp, loc);
 		if (abs(G)>MIN_NUMBER)
-			SChange += G*DV<Dim>(*LoopPtr, temp, loc);	
+			SChange += G*DV0<Dim>(*LoopPtr, temp, loc);	
 	
 		// accepting new point according to acceptance probability
 		if (SChange<0.0) {
@@ -635,7 +674,7 @@ template number S0<4> (const Loop<4>& l);
 template class Metropolis<4>;
 
 // V, Dim=4, slightly changed for speed
-template <> number V <4>(const Loop<4>& l) {
+template <> number V0 <4>(const Loop<4>& l) {
 	number result = 2.0/DistanceSquared(l[1],l[0]);
 	for (uint j=2; j<l.size(); j++) {
 		for (uint k=0; k<j; k++) {
@@ -646,7 +685,7 @@ template <> number V <4>(const Loop<4>& l) {
 }
 
 // DV, Dim=4, slightly changed for speed
-template <> number DV <4>(const Loop<4>& l, const Point<4>& p, const uint& loc) {
+template <> number DV0 <4>(const Loop<4>& l, const Point<4>& p, const uint& loc) {
 	number result = 0.0;
 	for (uint j=0; j<l.size(); j++) {
 		if (j!=loc) {
@@ -655,6 +694,17 @@ template <> number DV <4>(const Loop<4>& l, const Point<4>& p, const uint& loc) 
 		}
 	}
 	return result/pow(l.size()-1.0,2);
+}
+
+// I, for Dim=4
+template <> number I<4> (const Loop<4>& l) {
+uint posj = 1;
+	number result = (l[0])[1]*((l[1])[2]-(l[0])[2]);
+	for (uint j=1; j<l.size(); j++) {
+		posj = (j==(l.size()-1)?0:j+1);
+		result += (l[j])[1]*((l[posj])[2]-(l[j])[2]);
+	}
+	return result;
 }
 
 // Dim=2
@@ -670,10 +720,11 @@ template number Distance(const Point<2>&, const Point<2>&);
 template class Loop<2>;
 template ostream& operator<< <2>(ostream& os,const Loop<2>& l);
 template number S0<2> (const Loop<2>& l);
+template number I<2> (const Loop<2>& l);
 template class Metropolis<2>;
 
-// V, Dim=2, logarithmic, GF(x,y) = log(|x-y|)/2/pi
-template <> number V <2>(const Loop<2>& l) {
+// V0, Dim=2, logarithmic, GF(x,y) = log(|x-y|)/2/pi
+template <> number V0 <2>(const Loop<2>& l) {
 	number result = 2.0/DistanceSquared(l[1],l[0]);
 	for (uint j=2; j<l.size(); j++) {
 		for (uint k=0; k<j; k++) {
@@ -683,8 +734,8 @@ template <> number V <2>(const Loop<2>& l) {
 	return result/pow(l.size()-1.0,2);
 }
 
-// DV, Dim=2, logarithmic, GF(x,y) = log(|x-y|)/2/pi
-template <> number DV <2>(const Loop<2>& l, const Point<2>& p, const uint& loc) {
+// DV0, Dim=2, logarithmic, GF(x,y) = log(|x-y|)/2/pi
+template <> number DV0 <2>(const Loop<2>& l, const Point<2>& p, const uint& loc) {
 	number result = 0.0;
 	for (uint j=0; j<l.size(); j++) {
 		if (j!=loc) {

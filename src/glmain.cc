@@ -82,18 +82,19 @@ for (uint j=p.LoopMin; j<=p.LoopMax; j++) {
 
 
 //asciiFile = "data/temp/loopAscii.dat";
-loop.grow();
+/*loop.grow();
 //loop.saveAscii(asciiFile);
-cout << "0 metropolis runs, V = " << V(loop) << endl;
-
-for (uint j=0 ;j<8; j++) {
-	uint runs = pow(10,j);
-	met.setSeed(time(NULL)+j+2);
-	met.step(runs);
-	cout << nts<uint>(runs) << " metropolis runs, V = " << V(loop) << endl;
-	//asciiFile = "data/temp/loopAsciiMet_run_"+nts<uint>(j)+".dat";
-	//loop.saveAscii(asciiFile);
-}
+cout << "0 metropolis runs, V = " << V0(loop) << endl;
+if (abs(p.g)>MIN_NUMBER) {
+	for (uint j=0 ;j<8; j++) {
+		uint runs = pow(10,j);
+		met.setSeed(time(NULL)+j+2);
+		met.step(runs);
+		cout << nts<uint>(runs) << " metropolis runs, V = " << V0(loop) << endl;
+		//asciiFile = "data/temp/loopAsciiMet_run_"+nts<uint>(j)+".dat";
+		//loop.saveAscii(asciiFile);
+	}
+}*/
 
 return 0;
 }
