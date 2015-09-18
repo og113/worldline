@@ -33,7 +33,7 @@ string fi = "inputs", fo;
 
 // getting filenames
 if (argc % 2 && argc>1) {
-	for (unsigned int j=0; j<(int)(argc/2); j++) {
+	for (uint j=0; j<(uint)(argc/2); j++) {
 		string id = argv[2*j+1];
 		if (id[0]=='-') id = id.substr(1);
 		if (id.compare("f")==0 || id.compare("fi")==0 || id.compare("fileIn")==0) fi = (string)(argv[2*j+2]);
@@ -47,7 +47,7 @@ p.load(fi);
 
 // getting parameters
 if (argc % 2 && argc>1) {
-	for (unsigned int j=0; j<(int)(argc/2); j++) {
+	for (uint j=0; j<(uint)(argc/2); j++) {
 		string id = argv[2*j+1];
 		if (id[0]=='-') id = id.substr(1);
 		if (id.compare("LoopMin")==0) p.LoopMin = stringToNumber<uint>(argv[2*j+2]);

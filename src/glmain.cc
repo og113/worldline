@@ -46,7 +46,7 @@ uint Length = pow(2,p.K);
 -------------------------------------------------------------------------------------------------------------------------*/
 if (argc == 2) p.K = stringToNumber<uint>(argv[1]);
 else if (argc % 2 && argc>1) {
-for (unsigned int j=0; j<(int)(argc/2); j++) {
+for (uint j=0; j<(uint)(argc/2); j++) {
 		string id = argv[2*j+1];
 		if (id[0]=='-') id = id.substr(1);
 		if (id.compare("k")==0 || id.compare("K")==0) p.K = stringToNumber<uint>(argv[2*j+2]);
