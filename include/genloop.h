@@ -238,8 +238,9 @@ number V1 (const Loop<Dim>& l);
 template <uint Dim>
 number DV1 (const Loop<Dim>& l, const Point<Dim>& p, const uint& loc);
 
-// I
-number I (const Loop<4>& l);
+// I0
+template <uint Dim>
+number I0 (const Loop<Dim>& l);
 
 /*----------------------------------------------------------------------------------------------------------------------------
 	5 - Metropolis
