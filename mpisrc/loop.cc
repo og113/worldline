@@ -3,6 +3,7 @@
 		program to give simple mpi wrapper for main
 ----------------------------------------------------------------------------------------------------------------------------*/
 
+#include <cstring>
 #include <ctime>
 #include <iostream>
 #include <fstream>
@@ -56,7 +57,7 @@ number aprxS0 = 0.0, aprxS02 = 0.0, errorS0 = 0.0, aprxV = 0.0, aprxV2 = 0.0, er
 		- initializing mpi
 ----------------------------------------------------------------------------------------------------------------------------*/
 
-int Nw = 1;
+int Nw = 5;
 int nodesTot = 1 + Nw;
 uint Nl, Npg, Npw;
 //number T = 0.25;
@@ -156,13 +157,13 @@ if (rank>0) {
 	number s0, v, w;
 	number sums[4];
 
-	for (uint j=loopMin; j<=loopMax; j++) {
+	for (uint j=0; j<Npw; j++) {
 		counter++;
 		l.load(folder[j]);
 	
 		s0 = S0(l);
 		v = V0(l);
-		w = gsl_sf_cos(p.g*I(l));
+		w = gsl_sf_cos(p.g*I0(l));
 		sums[0] += s0;
 		sums[1] += s0*s0;
 		sums[2] += w;

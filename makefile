@@ -7,10 +7,11 @@ CODIR			= cobjs
 TSDIR			= tests
 MPISDIR			= mpisrc
 MPIODIR			= mpiobjs
-CC 				= g++
-MPICC			= mpic++
-OPTIM 			= 
-CFLAGS 			= -Wall -g -O0
+CC                      = icpc
+MPICC                   = icpc
+OPTIM                   =
+CFLAGS                  = -Wall -g -std=c++0x -O3 -xHost -mcmodel=medium -align -ansi-alias -restrict
+MPICFLAGS               = -Wall -g -std=c++0x -O3 -xHost -mcmodel=medium -align -ansi-alias -restrict
 #CFLAGS EXPLAINED:
 #-std=c++0x 		: added so that auto lambda functions can be used
 #-std=c++11 		: for more modern std c++

@@ -567,9 +567,9 @@ number DV1 (const Loop<Dim>& l, const Point<Dim>& p, const uint& loc) {
 	return result/pow(l.size()-1.0,2);
 }
 
-// I
+// I0
 template <uint Dim>
-number I (const Loop<Dim>& l) {
+number I0 (const Loop<Dim>& l) {
 	return 0;
 }
 
@@ -697,7 +697,7 @@ template <> number DV0 <4>(const Loop<4>& l, const Point<4>& p, const uint& loc)
 }
 
 // I, for Dim=4
-template <> number I<4> (const Loop<4>& l) {
+template <> number I0 <4>(const Loop<4>& l) {
 uint posj = 1;
 	number result = (l[0])[1]*((l[1])[2]-(l[0])[2]);
 	for (uint j=1; j<l.size(); j++) {
@@ -720,7 +720,6 @@ template number Distance(const Point<2>&, const Point<2>&);
 template class Loop<2>;
 template ostream& operator<< <2>(ostream& os,const Loop<2>& l);
 template number S0<2> (const Loop<2>& l);
-template number I<2> (const Loop<2>& l);
 template class Metropolis<2>;
 
 // V0, Dim=2, logarithmic, GF(x,y) = log(|x-y|)/2/pi
