@@ -1,0 +1,13 @@
+$ cat .gitignore
+# exclude everything except directory foo/bar
+*~
+old/*
+objs/*
+cobjs/*
+mpiobjs/*
+temp/*
+data/temp/*
+makefile
+loop
+glmain
+changeInputs

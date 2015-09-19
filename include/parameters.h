@@ -12,6 +12,7 @@
 -------------------------------------------------------------------------------------------------------------------------
 CONTENTS
 	1 - Parameters
+	2 - ParametersRange
 -------------------------------------------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------------------------------------------*/
 
@@ -27,8 +28,7 @@ CONTENTS
 
 // Parameters
 struct Parameters {
-	uint LoopMin;
-	uint LoopMax;
+	uint LoopNum;
 	uint Ng;
 	uint Nms;
 	uint K;
@@ -45,5 +45,34 @@ ostream& operator<<(ostream&, const Parameters&);
 
 // operator==
 bool operator==(const Parameters& lhs, const Parameters& rhs);
+
+
+/*-------------------------------------------------------------------------------------------------------------------------
+	2. ParametersRange
+		- ParametersRange
+		- operator<<
+		- operator==
+	
+	N.B. for structs the compiler automatically writes the following member functions, unless user provided:
+	 empty constructor; copy constructor; assignment operator=; destructor
+-------------------------------------------------------------------------------------------------------------------------*/
+
+// ParametersRange
+struct ParametersRange {
+	Parameters Min;
+	Parameters Step;
+	Parameters Max;
+	void save(const string& filename) const;
+	void load(const string& filename);
+	bool empty() const;
+	ostream& writeBinary(ostream&) const;
+	istream& readBinary(istream&);
+};
+
+// operator<<
+ostream& operator<<(ostream&, const ParametersRange&);
+
+// operator==
+bool operator==(const Parameters& lhs, const ParametersRange& rhs);
 
 #endif // __PARAMETERS_H_INCLUDED__
