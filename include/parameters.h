@@ -6,7 +6,10 @@
 #define __PARAMETERS_H_INCLUDED__
 
 #include <iostream>
+#include <vector>
 #include "simple.h"
+
+using namespace std;
 
 /*-------------------------------------------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------------------------------------------
@@ -28,7 +31,8 @@ CONTENTS
 
 // Parameters
 struct Parameters {
-	uint LoopNum;
+	static const uint Size;
+	uint Loops;
 	uint Ng;
 	uint Nms;
 	uint K;
@@ -59,11 +63,12 @@ bool operator==(const Parameters& lhs, const Parameters& rhs);
 
 // ParametersRange
 struct ParametersRange {
+	static const uint Size;
 	ParametersRange();
-	ParametersRange(const Parameters& min, const Parameters& step, const Parameters& max);
-	Parameters Min;
-	Parameters Step;
-	Parameters Max;
+	ParametersRange(const Parameters& min, const Parameters& max, const vector<uint>& steps);
+	Parameters 		Min;
+	Parameters 		Max;
+	vector<uint> 	Steps;
 	void save(const string& filename) const;
 	void load(const string& filename);
 	bool empty() const;
