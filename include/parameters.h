@@ -59,6 +59,8 @@ bool operator==(const Parameters& lhs, const Parameters& rhs);
 
 // ParametersRange
 struct ParametersRange {
+	ParametersRange();
+	ParametersRange(const Parameters& min, const Parameters& step, const Parameters& max);
 	Parameters Min;
 	Parameters Step;
 	Parameters Max;

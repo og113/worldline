@@ -109,6 +109,13 @@ istream& Parameters::readBinary(istream& is) {
 	 empty constructor; copy constructor; assignment operator=; destructor
 -------------------------------------------------------------------------------------------------------------------------*/
 
+// ParametersRange empty constructor
+ParametersRange::ParametersRange(): Min(), Step(), Max() {}
+
+// ParametersRange constructor
+ParametersRange::ParametersRange(const Parameters& min, const Parameters& step, const Parameters& max): \
+									Min(min), Step(step), Max(max) {}
+
 // save
 void ParametersRange::save(const string& filename) const {
 	ofstream os;
@@ -166,16 +173,16 @@ istream& ParametersRange::readBinary(istream& is) {
 // operator<<
 ostream& operator<<(ostream& os, const ParametersRange& pr) {
 	os << left;
-	os << setw(20) << "LoopNum" << setw(20) << "[ " << (pr.Min).LoopNum << " , " \
-						<< (pr.Step).LoopNum << " , " << (pr.Max).LoopNum << " ]" << endl;
-	os << setw(20) << "Ng" << setw(20) << "[ " << (pr.Min).Ng << " , " \
-						<< (pr.Step).Ng << " , " << (pr.Max).Ng << " ]" << endl;
-	os << setw(20) << "Nms" << setw(20) << "[ " << (pr.Min).Nms << " , " \
-						<< (pr.Step).Nms << " , " << (pr.Max).Nms << " ]" << endl;
-	os << setw(20) << "K" << setw(20) << "[ " << (pr.Min).K << " , " \
-						<< (pr.Step).K << " , " << (pr.Max).K << " ]" << endl;
-	os << setw(20) << "g" << setw(20) << "[ " << (pr.Min).g << " , " \
-						<< (pr.Step).g << " , " << (pr.Max).g << " ]" << endl;
+	os << setw(20) << "LoopNum" << "[ " << setw(12) << (pr.Min).LoopNum << " , " \
+						<< setw(12) << (pr.Step).LoopNum << " , " << setw(12) << (pr.Max).LoopNum << " ]" << endl;
+	os << setw(20) << "Ng" << "[ " << setw(12) <<  (pr.Min).Ng << " , " \
+						<< setw(12) << (pr.Step).Ng << " , " << setw(12) << (pr.Max).Ng << " ]" << endl;
+	os << setw(20) << "Nms" << "[ " << setw(12) << (pr.Min).Nms << " , " \
+						<< setw(12) << (pr.Step).Nms << " , " << setw(12) << (pr.Max).Nms << " ]" << endl;
+	os << setw(20) << "K" << "[ " << setw(12) << setw(12) << (pr.Min).K << " , " \
+						<< setw(12) << (pr.Step).K << " , " << setw(12) << (pr.Max).K << " ]" << endl;
+	os << setw(20) << "g" << "[ " << setw(12) << (pr.Min).g << " , " \
+						<< setw(12) << (pr.Step).g << " , " << setw(12) << (pr.Max).g << " ]" << endl;
 	return os;
 }
 
