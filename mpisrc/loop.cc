@@ -39,8 +39,9 @@ int main(int argc, char** argv) {
 ----------------------------------------------------------------------------------------------------------------------------*/
 
 #define dim 4
-Parameters p;
-p.load("inputs");
+ParametersRange pr;
+pr.load("inputs");
+Parameters p = pr.Min;
 if (p.empty()) {
 	cerr << "Parameters empty: nothing in inputs file" << endl;
 	return 1;
@@ -61,14 +62,7 @@ int Nw = 1;
 int nodesTot = 1 + Nw;
 uint Nl, Npg, Npw;
 //number T = 0.25;
-
-if ((p.LoopMax-p.LoopMin)<=0) {
-	cerr << "Parameters error: LoopMax<=LoopMin" << endl;
-	return 1;
-}
-else {
-	Nl = p.LoopMax-p.LoopMin+1;
-}
+Nl = p.Loops;
 
 if (Nl%p.Ng!=0 || Nl%Nw!=0 || p.Ng%Nw!=0) {
 	cerr << "Ratios are not all integers:" << endl;

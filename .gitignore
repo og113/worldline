@@ -1,3 +1,13 @@
 $ cat .gitignore
 *.[oa]
 *~
+old/*
+objs/*
+cobjs/*
+mpiobjs/*
+temp/*
+data/temp/*
+makefile
+loop
+glmain
+changeInputs
