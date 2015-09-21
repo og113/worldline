@@ -66,8 +66,8 @@ vector<number> sums(2*Nq,0.0);
 vector<number> error(Nq,0.0);
 
 // distribution of quantity
-vector<number> dataS0(p.Ng,0.0);
-vector<number> dataS02(p.Ng,0.0);
+//vector<number> dataS0(p.Ng,0.0);
+//vector<number> dataS02(p.Ng,0.0);
 
 /*----------------------------------------------------------------------------------------------------------------------------
 	2. defining required nodes
@@ -81,12 +81,6 @@ MPI_Init(NULL, NULL);
 
 MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 MPI_Comm_size(MPI_COMM_WORLD, &Nw);
-if (Nw==1) {
-	if (rank==root) {
-	cerr << "Only 1 node available, need more than 1" << endl;
-	MPI_Abort(MPI_COMM_WORLD, 1);
-	}
-}
 
 /*----------------------------------------------------------------------------------------------------------------------------
 	3. starting parameter loop
@@ -160,7 +154,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		localSums[5] += w*w;
 	
 		if (counter==Npg) {
-			id = rank*(p.Ng/Nw)+((j+1)/Npg-1);
+			//id = rank*(p.Ng/Nw)+((j+1)/Npg-1);
 			MPI_Reduce(&localSums, &sums, 2*Nq, MPI_DOUBLE, MPI_SUM, root, MPI_COMM_WORLD);
 			memset(localSums,0,sizeof(localSums));
 			counter = 0;
