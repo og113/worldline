@@ -29,14 +29,19 @@ CONTENTS
 	 empty constructor; copy constructor; assignment operator=; destructor
 -------------------------------------------------------------------------------------------------------------------------*/
 
+// ParametersRange declaration
+struct ParametersRange;
+
 // Parameters
 struct Parameters {
 	static const uint Size;
+	enum Label { loops=1, ng=2, nms=3, k=4, g=5};
 	uint Loops;
 	uint Ng;
 	uint Nms;
 	uint K;
-	number g;
+	number G;
+	void step(const ParametersRange&);
 	void save(const string& filename) const;
 	void load(const string& filename);
 	bool empty() const;
@@ -69,6 +74,7 @@ struct ParametersRange {
 	Parameters 		Min;
 	Parameters 		Max;
 	vector<uint> 	Steps;
+	bool			toStep(Parameters::Label&) const;
 	void save(const string& filename) const;
 	void load(const string& filename);
 	bool empty() const;

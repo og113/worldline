@@ -30,6 +30,41 @@ CONTENTS
 const uint Parameters::Size = 5;
 const uint ParametersRange::Size = 5;
 
+// step
+void Parameters::step(const ParametersRange& pr) {
+	Label label = static_cast<Parameters::Label>(0);
+	if (pr.toStep(label)) {
+		number stepSize;
+		switch (label){
+			case loops:
+				stepSize = ((pr.Max).Loops-(pr.Min).Loops)/((pr.Steps)[label]-1.0);
+				Loops += (uint)stepSize;
+				break;
+			case ng:
+				stepSize = ((pr.Max).Ng-(pr.Min).Ng)/((pr.Steps)[label]-1.0);
+				Ng += (uint)stepSize;
+				break;
+			case nms:
+				stepSize = ((pr.Max).Nms-(pr.Min).Nms)/((pr.Steps)[label]-1.0);
+				Nms += (uint)stepSize;
+				break;
+			case k:
+				stepSize = ((pr.Max).K-(pr.Min).K)/((pr.Steps)[label]-1.0);
+				K += (uint)stepSize;
+				break;
+			case g:
+				stepSize = ((pr.Max).G-(pr.Min).G)/((pr.Steps)[label]-1.0);
+				G += stepSize;
+				break;
+			default:
+				cerr << "Parameters error: Label unknown" << endl;
+				break;
+		}
+	}
+	else {
+		cerr << "Parameters error: cannot step as Steps vector does not contain one nonZero element" << endl;
+	}
+}
 
 // operator<<
 ostream& operator<<(ostream& os, const Parameters& p) {
@@ -38,7 +73,7 @@ ostream& operator<<(ostream& os, const Parameters& p) {
 	os << setw(20) << "Ng" << setw(20) << p.Ng << endl;
 	os << setw(20) << "Nms" << setw(20) << p.Nms << endl;
 	os << setw(20) << "K" << setw(20) << p.K << endl;
-	os << setw(20) << "g" << setw(20) << p.g << endl;
+	os << setw(20) << "G" << setw(20) << p.G << endl;
 	return os;
 }
 
@@ -70,7 +105,7 @@ void Parameters::load(const string& filename) {
 	is >> dross >> Ng;
 	is >> dross >> Nms;
 	is >> dross >> K;
-	is >> dross >> g;
+	is >> dross >> G;
 	is.close();
 }
 
@@ -81,7 +116,7 @@ bool Parameters::empty() const {
 
 // operator==
 bool operator==(const Parameters& l, const Parameters& r){
-	return (l.Loops==r.Loops && l.Ng==r.Ng && l.Nms==r.Nms && l.K==r.K && abs(l.g-r.g)<MIN_NUMBER);
+	return (l.Loops==r.Loops && l.Ng==r.Ng && l.Nms==r.Nms && l.K==r.K && abs(l.G-r.G)<MIN_NUMBER);
 }
 
 // writeBinary
@@ -90,7 +125,7 @@ ostream& Parameters::writeBinary(ostream& os) const {
 	os.write(reinterpret_cast<const char*>(&Ng),sizeof(uint));
 	os.write(reinterpret_cast<const char*>(&Nms),sizeof(uint));
 	os.write(reinterpret_cast<const char*>(&K),sizeof(uint));
-	os.write(reinterpret_cast<const char*>(&g),sizeof(number));
+	os.write(reinterpret_cast<const char*>(&G),sizeof(number));
 	return os;
 }
 
@@ -100,7 +135,7 @@ istream& Parameters::readBinary(istream& is) {
 	is.read(reinterpret_cast<char*>(&Ng),sizeof(uint));
 	is.read(reinterpret_cast<char*>(&Nms),sizeof(uint));
 	is.read(reinterpret_cast<char*>(&K),sizeof(uint));
-	is.read(reinterpret_cast<char*>(&g),sizeof(number));
+	is.read(reinterpret_cast<char*>(&G),sizeof(number));
 	return is;
 }
 
@@ -128,6 +163,18 @@ ParametersRange::ParametersRange(const Parameters& min, const Parameters& max, c
 		Steps = vector<uint>(Size,0);
 		cerr << "ParametersRange Error: Initialization not possible as input steps.size() = " << steps.size() << " not " << Size << endl;
 	} 							
+}
+
+// toStep
+bool ParametersRange::toStep(Parameters::Label& stepNum) const {
+	uint nonZeros = 0;
+	for (uint j=0; j<Size; j++) {
+		if (Steps[j]>0) {
+			stepNum = static_cast<Parameters::Label>(j);
+			nonZeros++;
+		}
+	}
+	return (nonZeros==1);
 }
 
 // save
@@ -159,7 +206,7 @@ void ParametersRange::load(const string& filename) {
 	is >> dross >> dross >> Min.Ng >> dross >> Max.Ng >> dross >> Steps[1] >> dross;
 	is >> dross >> dross >> Min.Nms >> dross >> Max.Nms >> dross >> Steps[2] >> dross;
 	is >> dross >> dross >> Min.K >> dross >> Max.K >> dross >> Steps[3] >> dross;
-	is >> dross >> dross >> Min.g >> dross >> Max.g >> dross >> Steps[4] >> dross;
+	is >> dross >> dross >> Min.G >> dross >> Max.G >> dross >> Steps[4] >> dross;
 	is.close();
 }
 
@@ -195,8 +242,8 @@ ostream& operator<<(ostream& os, const ParametersRange& pr) {
 						<< setw(12) << (pr.Max).Nms << " , " << setw(12) << (pr.Steps)[2] << " ]" << endl;
 	os << setw(20) << "K" << "[ " << setw(12) << setw(12) << (pr.Min).K << " , " \
 						<< setw(12) << (pr.Max).K << " , " << setw(12) << (pr.Steps)[3] << " ]" << endl;
-	os << setw(20) << "g" << "[ " << setw(12) << (pr.Min).g << " , " \
-						<< setw(12) << (pr.Max).g << " , " << setw(12) << (pr.Steps)[4] << " ]" << endl;
+	os << setw(20) << "g" << "[ " << setw(12) << (pr.Min).G << " , " \
+						<< setw(12) << (pr.Max).G << " , " << setw(12) << (pr.Steps)[4] << " ]" << endl;
 	return os;
 }
 
