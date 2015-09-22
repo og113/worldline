@@ -37,23 +37,23 @@ void Parameters::step(const ParametersRange& pr) {
 		number stepSize;
 		switch (label){
 			case nl:
-				stepSize = ((pr.Max).Nl-(pr.Min).Nl)/((pr.Steps)[label]-1.0);
+				stepSize = ((pr.Max).Nl-(pr.Min).Nl)/((pr.Steps)[label-1]-1.0);
 				Nl += (uint)stepSize;
 				break;
 			case ng:
-				stepSize = ((pr.Max).Ng-(pr.Min).Ng)/((pr.Steps)[label]-1.0);
+				stepSize = ((pr.Max).Ng-(pr.Min).Ng)/((pr.Steps)[label-1]-1.0);
 				Ng += (uint)stepSize;
 				break;
 			case nms:
-				stepSize = ((pr.Max).Nms-(pr.Min).Nms)/((pr.Steps)[label]-1.0);
+				stepSize = ((pr.Max).Nms-(pr.Min).Nms)/((pr.Steps)[label-1]-1.0);
 				Nms += (uint)stepSize;
 				break;
 			case k:
-				stepSize = ((pr.Max).K-(pr.Min).K)/((pr.Steps)[label]-1.0);
+				stepSize = ((pr.Max).K-(pr.Min).K)/((pr.Steps)[label-1]-1.0);
 				K += (uint)stepSize;
 				break;
 			case g:
-				stepSize = ((pr.Max).G-(pr.Min).G)/((pr.Steps)[label]-1.0);
+				stepSize = ((pr.Max).G-(pr.Min).G)/((pr.Steps)[label-1]-1.0);
 				G += stepSize;
 				break;
 			default:
@@ -170,7 +170,7 @@ bool ParametersRange::toStep(Parameters::Label& stepNum) const {
 	uint nonZeros = 0;
 	for (uint j=0; j<Size; j++) {
 		if (Steps[j]>0) {
-			stepNum = static_cast<Parameters::Label>(j);
+			stepNum = static_cast<Parameters::Label>(j+1);
 			nonZeros++;
 		}
 	}
