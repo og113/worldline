@@ -36,9 +36,9 @@ void Parameters::step(const ParametersRange& pr) {
 	if (pr.toStep(label)) {
 		number stepSize;
 		switch (label){
-			case loops:
-				stepSize = ((pr.Max).Loops-(pr.Min).Loops)/((pr.Steps)[label]-1.0);
-				Loops += (uint)stepSize;
+			case nl:
+				stepSize = ((pr.Max).Nl-(pr.Min).Nl)/((pr.Steps)[label]-1.0);
+				Nl += (uint)stepSize;
 				break;
 			case ng:
 				stepSize = ((pr.Max).Ng-(pr.Min).Ng)/((pr.Steps)[label]-1.0);
@@ -69,7 +69,7 @@ void Parameters::step(const ParametersRange& pr) {
 // operator<<
 ostream& operator<<(ostream& os, const Parameters& p) {
 	os << left;
-	os << setw(20) << "Loops" << setw(20) << p.Loops << endl;
+	os << setw(20) << "Nl" << setw(20) << p.Nl << endl;
 	os << setw(20) << "Ng" << setw(20) << p.Ng << endl;
 	os << setw(20) << "Nms" << setw(20) << p.Nms << endl;
 	os << setw(20) << "K" << setw(20) << p.K << endl;
@@ -101,7 +101,7 @@ void Parameters::load(const string& filename) {
 		return;
 	}
 	string dross;
-	is >> dross >> Loops;
+	is >> dross >> Nl;
 	is >> dross >> Ng;
 	is >> dross >> Nms;
 	is >> dross >> K;
@@ -111,17 +111,17 @@ void Parameters::load(const string& filename) {
 
 // empty
 bool Parameters::empty() const {
-	return (Loops==0 && Ng==0 && Nms==0 && K==0 && abs(g)<MIN_NUMBER);
+	return (Nl==0 && Ng==0 && Nms==0 && K==0 && abs(g)<MIN_NUMBER);
 }
 
 // operator==
 bool operator==(const Parameters& l, const Parameters& r){
-	return (l.Loops==r.Loops && l.Ng==r.Ng && l.Nms==r.Nms && l.K==r.K && abs(l.G-r.G)<MIN_NUMBER);
+	return (l.Nl==r.Nl && l.Ng==r.Ng && l.Nms==r.Nms && l.K==r.K && abs(l.G-r.G)<MIN_NUMBER);
 }
 
 // writeBinary
 ostream& Parameters::writeBinary(ostream& os) const {
-	os.write(reinterpret_cast<const char*>(&Loops),sizeof(uint));
+	os.write(reinterpret_cast<const char*>(&Nl),sizeof(uint));
 	os.write(reinterpret_cast<const char*>(&Ng),sizeof(uint));
 	os.write(reinterpret_cast<const char*>(&Nms),sizeof(uint));
 	os.write(reinterpret_cast<const char*>(&K),sizeof(uint));
@@ -131,7 +131,7 @@ ostream& Parameters::writeBinary(ostream& os) const {
 
 // readBinary
 istream& Parameters::readBinary(istream& is) {
-	is.read(reinterpret_cast<char*>(&Loops),sizeof(uint));
+	is.read(reinterpret_cast<char*>(&Nl),sizeof(uint));
 	is.read(reinterpret_cast<char*>(&Ng),sizeof(uint));
 	is.read(reinterpret_cast<char*>(&Nms),sizeof(uint));
 	is.read(reinterpret_cast<char*>(&K),sizeof(uint));
@@ -202,7 +202,7 @@ void ParametersRange::load(const string& filename) {
 	}
 	string dross;
 	// THIS NEEDS REDOING SO THAT THERE AREN'T MISTAKES WHEN SPACES DISAPPEAR
-	is >> dross >> dross >> Min.Loops >> dross >> Max.Loops >> dross >> Steps[0] >> dross;
+	is >> dross >> dross >> Min.Nl >> dross >> Max.Nl >> dross >> Steps[0] >> dross;
 	is >> dross >> dross >> Min.Ng >> dross >> Max.Ng >> dross >> Steps[1] >> dross;
 	is >> dross >> dross >> Min.Nms >> dross >> Max.Nms >> dross >> Steps[2] >> dross;
 	is >> dross >> dross >> Min.K >> dross >> Max.K >> dross >> Steps[3] >> dross;
@@ -234,8 +234,8 @@ istream& ParametersRange::readBinary(istream& is) {
 // operator<<
 ostream& operator<<(ostream& os, const ParametersRange& pr) {
 	os << left;
-	os << setw(20) << "Loops" << "[ " << setw(12) << (pr.Min).Loops << " , " \
-						<< setw(12) << (pr.Max).Loops << " , " << setw(12) << (pr.Steps)[0] << " ]" << endl;
+	os << setw(20) << "Nl" << "[ " << setw(12) << (pr.Min).Nl << " , " \
+						<< setw(12) << (pr.Max).Nl << " , " << setw(12) << (pr.Steps)[0] << " ]" << endl;
 	os << setw(20) << "Ng" << "[ " << setw(12) <<  (pr.Min).Ng << " , " \
 						<< setw(12) << (pr.Max).Ng << " , " << setw(12) << (pr.Steps)[1] << " ]" << endl;
 	os << setw(20) << "Nms" << "[ " << setw(12) << (pr.Min).Nms << " , " \

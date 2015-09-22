@@ -35,8 +35,8 @@ struct ParametersRange;
 // Parameters
 struct Parameters {
 	static const uint Size;
-	enum Label { loops=1, ng=2, nms=3, k=4, g=5};
-	uint Loops;
+	enum Label { nl=1, ng=2, nms=3, k=4, g=5};
+	uint Nl;
 	uint Ng;
 	uint Nms;
 	uint K;
