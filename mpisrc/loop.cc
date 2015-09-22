@@ -1,6 +1,6 @@
 /*----------------------------------------------------------------------------------------------------------------------------
-	wrapper
-		program to give simple mpi wrapper for main
+	loop
+		program to calculate quantities about worldlines
 ----------------------------------------------------------------------------------------------------------------------------*/
 
 #include <cstring>
@@ -23,118 +23,146 @@ using namespace std;
 /*----------------------------------------------------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------------------------------------------------
 	CONTENTS
-		1 - defining loop quantitites
-		2 - defining required nodes
-		3 - coordinating files
-		4 - evaluating loop quantitites
-		5 - evaluating errors
-		6 - printing results
+		0 - getting parameters
+		1 - initializing mpi
+		2 - getting argv
+		2 - defining basic quantitites
+		3 - starting parameter loop
+		4 - coordinating files
+		5 - evaluating loop quantitites
+		6 - evaluating errors
+		7 - printing results
 ----------------------------------------------------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------------------------------------------------*/
 
 int main(int argc, char** argv) {
 /*----------------------------------------------------------------------------------------------------------------------------
-	1. defining loop quantitites
-	
+	0. getting parameters
 ----------------------------------------------------------------------------------------------------------------------------*/
 
+//dimension
 #define dim 4
-Parameters p;
-p.load("inputs");
+
+// parameters
+ParametersRange pr;
+pr.load("inputs");
+Parameters p = pr.Min;
 if (p.empty()) {
 	cerr << "Parameters empty: nothing in inputs file" << endl;
 	return 1;
 }
-uint Length = pow(2,p.K);
-uint dof = dim*(Length-1);
-
-vector<number> dataS0(p.Ng,0.0), dataS02(p.Ng,0.0), dataV(p.Ng,0.0), dataV2(p.Ng,0.0);
-number aprxS0 = 0.0, aprxS02 = 0.0, errorS0 = 0.0, aprxV = 0.0, aprxV2 = 0.0, errorV = 0.0;
 
 /*----------------------------------------------------------------------------------------------------------------------------
-	2. defining required nodes
-		- checking all the ratios are integers
-		- initializing mpi
+	1. initializing mpi
 ----------------------------------------------------------------------------------------------------------------------------*/
 
-int Nw = 20;
-int nodesTot = 1 + Nw;
-uint Nl, Npg, Npw;
-//number T = 0.25;
+int Nw, rank, root = 0; // Nw, number of workers
 
-if ((p.LoopMax-p.LoopMin)<=0) {
-	cerr << "Parameters error: LoopMax<=LoopMin" << endl;
-	return 1;
-}
-else {
-	Nl = p.LoopMax-p.LoopMin+1;
-}
+MPI_Init(&argc, &argv);
 
-if (Nl%p.Ng!=0 || Nl%Nw!=0 || p.Ng%Nw!=0) {
-	cerr << "Ratios are not all integers:" << endl;
-	cerr << "Nl = " << Nl << ", Ng = " << p.Ng << ", Nw = " << Nw << endl;
-	return 1;
-}
-else {
-	Npg = (uint)Nl/p.Ng;
-	Npw = (uint)Nl/Nw;
-}
-
-int nodes, rank;
-int returnValue = 0;
-
-MPI::Init(argc, argv);
-MPI_Comm_size(MPI_COMM_WORLD, &nodes);
 MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-if (nodes==nodesTot) {
-	if (rank==0) {
-		cout << "running " << nodes << " nodes" << endl;
-	}
-}
-else {
-	if (rank==0) {
-		cerr << "have " << nodes << " nodes available" << endl;
-		cerr << "require " << nodesTot << " nodes to run" << endl;
-	}
-	MPI::Finalize();
-	return 1;
-}
+MPI_Comm_size(MPI_COMM_WORLD, &Nw);
 
-/*----------------------------------------------------------------------------------------------------------------------------
-	3. coordinating files
-----------------------------------------------------------------------------------------------------------------------------*/
-
-uint loopMin, loopMax;
-
-if (rank==0) {
-	for (int k=0; k<Nw; k++) {
-		loopMin = k*Npw;
-		loopMax = (k+1)*Npw-1;
-		
-		MPI::COMM_WORLD.Send(&loopMin, 1, MPI::UNSIGNED, k+1, 0);		
-		MPI::COMM_WORLD.Send(&loopMax, 1, MPI::UNSIGNED, k+1, 1);
-		
-		//cout << "process " << 0 << " sent " << loopMin << " and " << loopMax << " to process " << k+1 << endl;
-		
-	}
-}
-else {
-	MPI::Status status;
-	MPI::COMM_WORLD.Probe(0, 0, status);
-	MPI::COMM_WORLD.Recv(&loopMin, 1, MPI::UNSIGNED, 0, 0, status);	
-	MPI::COMM_WORLD.Probe(0, 1, status);
-	MPI::COMM_WORLD.Recv(&loopMax, 1, MPI::UNSIGNED, 0, 1, status);
+if (rank==root)
+	cout << "starting loop with " << Nw << " nodes" << endl;
 	
-	//cout << "process " << rank << " recieved " << loopMin << " and " << loopMax << " from process 0" << endl;
-}
-
 /*----------------------------------------------------------------------------------------------------------------------------
-	4. evaluating loop quantitites
+	2. getting argv
 ----------------------------------------------------------------------------------------------------------------------------*/
 
-if (rank>0) {
-	FilenameAttributes faMin, faMax;
+// data to print
+string dataChoice = "";
 
+// getting argv
+if (argc % 2 && argc>1) {
+	for (uint j=0; j<(uint)(argc/2); j++) {
+		string id = argv[2*j+1];
+		if (id[0]=='-') id = id.substr(1);
+		if (id.compare("data")==0 || id.compare("dataChoice")==0) dataChoice = (string)(argv[2*j+2]);
+		else {
+			cerr << "argv id " << id << " not understood" << endl;
+			MPI_Abort(MPI_COMM_WORLD,1);
+		}
+	}
+}
+
+// setting dataChoice to a standard form
+if (dataChoice.compare("S0")==0 || dataChoice.compare("s0")==0) {
+	dataChoice = "s0";
+}
+else if (dataChoice.compare("V")==0 || dataChoice.compare("v")==0) {
+	dataChoice = "v";
+}
+else if (dataChoice.compare("W")==0 || dataChoice.compare("w")==0) {
+	dataChoice = "w";
+}
+else if (!dataChoice.empty()) {
+	cerr << "dataChoice, " << dataChoice << ", not understood" << endl;
+	dataChoice = "";
+}
+
+
+/*----------------------------------------------------------------------------------------------------------------------------
+	3. defining basic quantitites	
+----------------------------------------------------------------------------------------------------------------------------*/
+
+// parameter loops
+uint Npl = 1; // number of parameter loops
+Parameters::Label label = static_cast<Parameters::Label>(0);
+if (pr.toStep(label)) {
+	Npl = (pr.Steps)[label];
+}
+
+// quantities to calculate
+// elements in sums are in pairs of (X,X^2): S0, V, W
+// separate vector for error
+uint Nq = 3; // number of quantities
+number *sums = NULL, *sums2= NULL;
+number *temp= NULL, *temp2= NULL; // as MPI_SUM doesn't store previous value
+
+// distribution of quantity
+number *data= NULL, *data2= NULL;
+
+/*----------------------------------------------------------------------------------------------------------------------------
+	3. starting parameter loop
+		- dealing with parameters
+		- initializing data arrays
+----------------------------------------------------------------------------------------------------------------------------*/
+
+for (uint pl=0; pl<Npl; pl++) {
+	// stepping parameters
+	if (pr.toStep(label))
+		p.step(pr);
+		
+	uint Npg = (uint)p.Nl/p.Ng; // Npg, number of loops per group
+	uint Npw = (uint)p.Nl/Nw; // Npw, number of loops per worker
+	uint Ngpw = (uint)p.Ng/Nw; // Ngpw, number of groups per worker
+	
+	if (rank==root) {
+		// checking relevant ratios are integers
+		if (p.Nl%p.Ng!=0 || p.Nl%Nw!=0 || p.Ng%Nw!=0) {
+			cerr << "Relevant ratios are not all integers:" << endl;
+			cerr << "Nl = " << p.Nl << ", Ng = " << p.Ng << ", Nw = " << Nw << endl;
+			MPI_Abort(MPI_COMM_WORLD,1);
+		}
+		// allocating space for data in root
+		sums = new number[Nq](); // n.b. () is for initializing to zero
+		sums2 = new number[Nq]();
+		temp = new number[Nq]();
+		temp2 = new number[Nq]();
+		data = new number[p.Ng]();
+		data2 = new number[p.Ng]();
+	}
+
+	/*----------------------------------------------------------------------------------------------------------------------------
+		4. coordinating files and data arrays
+	----------------------------------------------------------------------------------------------------------------------------*/
+	
+	uint loopMin = rank*Npw;
+	uint loopMax = (rank+1)*Npw-1;
+	
+	// constructing folders
+	FilenameAttributes faMin, faMax;
 	faMin.Directory = "data/temp";
 	faMin.Timenumber = "";
 	(faMin.Extras).push_back(StringPair("dim",nts<uint>(dim)));
@@ -150,110 +178,148 @@ if (rank>0) {
 		return 1;
 	}
 	
+	// local data arrays
+	number *data_local = new number[Ngpw]();
+	number *data2_local = new number[Ngpw]();
+
+	/*----------------------------------------------------------------------------------------------------------------------------
+		5. evaluating loop quantitites
+	----------------------------------------------------------------------------------------------------------------------------*/
+
 	uint Seed = time(NULL)+rank+2;
 	Loop<dim> l(p.K,Seed);
-	uint counter = 0;
-	uint id;
+	uint counter = 0, id;
 	number s0, v, w;
-	number sums[4];
+	number *sums_local = new number[Nq]();
+	number *sums2_local = new number[Nq]();
 
 	for (uint j=0; j<Npw; j++) {
 		counter++;
 		l.load(folder[j]);
-	
+
 		s0 = S0(l);
 		v = V0(l);
-		w = gsl_sf_cos(p.g*I0(l));
-		sums[0] += s0;
-		sums[1] += s0*s0;
-		sums[2] += w;
-		sums[3] += w*w;
-		
+		w = gsl_sf_cos(p.G*I0(l));
+		sums_local[0] += s0;
+		sums_local[1] += v;
+		sums_local[2] += w;
+	
 		if (counter==Npg) {
-			id = (rank-1)*(p.Ng/Nw) + ((j+1)/Npg-1);		
-			MPI::COMM_WORLD.Send(&sums, 4, MPI::DOUBLE, 0, id);
-			//cout << "process " << rank << " sent message " << id << " to " << 0 << endl;
-			memset(sums,0,sizeof(sums));
+			sums2_local[0] = sums_local[0]*sums_local[0];
+			sums2_local[1] = sums_local[1]*sums_local[1];
+			sums2_local[2] = sums_local[2]*sums_local[2];
+			
+			if (!dataChoice.empty()) {
+				id = ((j+1)/Npg-1); // for global id: +rank*(p.Ng/Nw)
+				if (dataChoice.compare("s0")==0) {
+					data_local[id] = sums_local[0]/(number)Npg;
+					data2_local[id] = data_local[id]*data_local[id];
+				}
+				else if (dataChoice.compare("v")==0) {
+					data_local[id] = sums_local[1]/(number)Npg;
+					data2_local[id] = data_local[id]*data_local[id];
+				}
+				else if (dataChoice.compare("w")==0) {
+					data_local[id] = sums_local[2]/(number)Npg;
+					data2_local[id] = data_local[id]*data_local[id];
+				}
+			}
+			
+			MPI_Reduce(sums_local, temp, Nq, MPI_DOUBLE, MPI_SUM, root, MPI_COMM_WORLD);
+			MPI_Reduce(sums2_local, temp2, Nq, MPI_DOUBLE, MPI_SUM, root, MPI_COMM_WORLD);
+			if (rank==root) {
+				for (uint k=0; k<Nq; k++) {
+					sums[k] += temp[k];
+					sums2[k] += temp2[k];
+				}
+			}
+			memset(sums_local,0,Nq*sizeof(number));
 			counter = 0;
 		}
 	}
-}
-else { // rank==0
-	number buf[4];
-	MPI::Status status;
-	uint count=0;
-	while (count<p.Ng) {
-		MPI::COMM_WORLD.Probe(MPI_ANY_SOURCE, MPI_ANY_TAG, status);
-		MPI::COMM_WORLD.Recv(buf, 4, MPI::DOUBLE, status.Get_source(), status.Get_tag(), status);
-		dataS0[status.Get_tag()] = buf[0];
-		dataS02[status.Get_tag()] = buf[1];
-		dataV[status.Get_tag()] = buf[2];
-		dataV2[status.Get_tag()] = buf[3];
-		//cout << "process " << rank << " recieved message " << status.Get_tag() << " from " << status.Get_source() << endl;
-		count++;
-		aprxS0 += buf[0];
-		aprxS02 += buf[1];
-		aprxV += buf[2];
-		aprxV2 += buf[3];
-	}
-	aprxS0 /= (number)Nl;
-	aprxS02 /= (number)Nl;
-	aprxV /= (number)Nl;
-	aprxV2 /= (number)Nl;
-	// better to do immediate probing 'iprobe' so that the 0 processor can do other tasks while waiting, like computing errors
-}
-
-/*----------------------------------------------------------------------------------------------------------------------------
-	5. evaluating errors
-----------------------------------------------------------------------------------------------------------------------------*/
-
-if (rank==0) {
-	number aprxS0_g[p.Ng], aprxV_g[p.Ng];
-	number denom = (number)p.Ng*((number)p.Ng-1.0);
-	for (uint j=0; j<p.Ng; j++) {
-		aprxS0_g[j] = dataS0[j]/(number)Npg;
-		aprxV_g[j] = dataV[j]/(number)Npg;
-		errorS0 += pow(aprxS0_g[j]-aprxS0,2.0)/denom;
-		errorV += pow(aprxV_g[j]-aprxV,2.0)/denom;
-	}
-	errorS0 = sqrt(errorS0);
-	errorV = sqrt(errorV);
 	
-	number varianceS0 = aprxS02-aprxS0*aprxS0;
-	number varianceV = aprxV2-aprxV*aprxV;
-
-/*----------------------------------------------------------------------------------------------------------------------------
-	6. printing results
-----------------------------------------------------------------------------------------------------------------------------*/
-
-	string timenumber = currentDateTime();	
+	delete[] sums_local;
+	delete[] sums2_local;
 	
-	Filename rf = "results/"+timenumber+"loopGroups_dim_"+nts<uint>(dim)+"_K_"+nts<uint>(p.K)+".dat";
-	FILE * ros;
-	ros = fopen(((string)rf).c_str(),"w");
-	for (uint j=0; j<p.Ng; j++) {
-		fprintf(ros,"%12s%5i%5i%8i%8i%8i%13.5g%13.5g%13.5g%13.5g%13.5g%13.5g\n",\
-				timenumber.c_str(),dim,p.K,Nl,p.Ng,j,aprxS0_g[j],aprxS0,errorS0,aprxV_g[j],aprxV,errorV);
+	// gathering data
+	if (!dataChoice.empty()) {
+		MPI_Gather(data_local, Ngpw, MPI_DOUBLE, data, Ngpw, MPI_DOUBLE, root, MPI_COMM_WORLD);
+		MPI_Gather(data2_local, Ngpw, MPI_DOUBLE, data2, Ngpw, MPI_DOUBLE, root, MPI_COMM_WORLD);
 	}
-	fclose(ros);	
-	cout << "results printed to " << rf << endl;
-	
-	rf = "results/loop_dim_"+nts<uint>(dim)+".dat";
-	ros = fopen(((string)rf).c_str(),"a");
-		fprintf(ros,"%12s%5i%5i%8i%8i%13.5g%13.5g%13.5g%13.5g\n",\
-				timenumber.c_str(),dim,p.K,Nl,p.Ng,aprxS0,errorS0,aprxV,errorV);
-	fclose(ros);	
-	cout << "results printed to " << rf << endl;
 
-	cout << "timenumber: " << timenumber << endl;
-	printf("\n");
-	printf("%8s%8s%8s%8s%12s%12s%12s%12s%12s%12s%12s%12s\n","dim","Nl","Ng","K","S0","S02","varS0",\
-		"errorS0","V","V2","varV","errorV");
-	printf("%8i%8i%8i%8i%12.3g%12.3g%12.3g%12.3g%12.3g%12.3g%12.3g%12.3g\n",\
-		dim,Nl,p.Ng,p.K,aprxS0,aprxS02,varianceS0,errorS0,aprxV,aprxV2,varianceV,errorV);
-	printf("\n");
+	/*----------------------------------------------------------------------------------------------------------------------------
+		6. evaluating errors
+	----------------------------------------------------------------------------------------------------------------------------*/
+
+	if (rank==root) {
+		vector<number> averages(Nq), averages2(Nq);
+		vector<number> variances(Nq);
+		vector<number> errors(Nq);
+		
+		for (uint j=0; j<Nq; j++) {
+			averages[j] = sums[j]/(number)p.Nl;
+			averages2[j] = sums2[j]/(number)Npg/(number)Npg/(number)p.Ng;
+			variances[j] = averages2[j]-averages[j]*averages[j];
+			errors[j] = sqrt(variances[j]/(p.Ng-1.0));
+		}
+
+	/*----------------------------------------------------------------------------------------------------------------------------
+		7. printing results
+	----------------------------------------------------------------------------------------------------------------------------*/
+
+		string timenumber = currentDateTime();	
+	
+		Filename rf = "results/loop_dim_"+nts<uint>(dim)+".dat";
+		FILE * ros;
+		ros = fopen(((string)rf).c_str(),"a");
+		fprintf(ros,"%12s%5i%5i%8i%8i%8.2g",timenumber.c_str(),dim,p.K,p.Nl,p.Ng,p.G);
+		for (uint j=0; j<Nq; j++)
+			fprintf(ros,"%13.5g%13.5g",averages[j],errors[j]);
+		fprintf(ros,"\n");
+		fclose(ros);
+		
+		cout << "results printed to " << rf << endl;
+		if (!dataChoice.empty()) {
+			rf = "results/"+timenumber+"loop_data_"+dataChoice+"_dim_"+nts<uint>(dim)+"_K_"+nts<uint>(p.K)+".dat";
+			ros = fopen(((string)rf).c_str(),"w");
+			for (uint j=0; j<p.Ng; j++) {
+				fprintf(ros,"%12s%5i%5i%8i%8i%8.2g%8i%13.5g\n",timenumber.c_str(),dim,p.K,p.Nl,p.Ng,p.G,j,data[j]);
+			}
+			fclose(ros);	
+			cout << "results printed to " << rf << endl;
+		}
+	
+		cout << "timenumber: " << timenumber << endl;
+		printf("\n");
+		printf("%8s%8s%8s%8s%8s%12s%12s%12s%12s%12s%12s\n","dim","Nl","Ng","K","g","S0",\
+			"errorS0","V","errorV","W","errorW");
+		printf("%8i%8i%8i%8i%8.2g",dim,p.Nl,p.Ng,p.K,p.G);
+		for (uint j=0; j<Nq; j++)
+			printf("%12.4g%12.4g",averages[j],errors[j]);
+		printf("\n\n");
+		
+		// deleting space for data in root
+		delete[] sums;
+		sums = NULL;
+		delete[] sums2;
+		sums2 = NULL;
+		delete[] temp;
+		temp = NULL;
+		delete[] temp2;
+		temp2 = NULL;
+		delete[] data;
+		data = NULL;
+		delete[] data2;
+		data2 = NULL;
+	}
+	
+	delete[] data_local;
+	data_local = NULL;
+	delete[] data2_local;
+	data2_local = NULL;
 }
 
+MPI_Barrier(MPI_COMM_WORLD);
 MPI::Finalize();
 
 return 0;

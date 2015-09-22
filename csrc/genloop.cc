@@ -582,7 +582,7 @@ template <uint Dim>
 Metropolis<Dim>::Metropolis(Loop<Dim>& L, const Parameters& p, const uint& s): Seed(s), Steps(0) {
 	LoopPtr = &L;
 	P = &p;
-	G = P->g;
+	G = P->G;
 	SOld = 0.0;
 
 	// setting generator

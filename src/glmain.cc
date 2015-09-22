@@ -26,19 +26,13 @@ int main(int argc, char** argv) {
 
 #define dim 4
 
-Parameters p;
-/*p.LoopMin = 1;
-p.LoopMax = 1e4;
-p.Ng = 1e3;
-p.Nms = 1e2;
-p.K = 5;
-p.g = 0.0;*/
-p.load("inputs");
-if (p.empty()) {
+ParametersRange pr;
+pr.load("inputs");
+if (pr.empty()) {
 	cerr << "Parameters empty: nothing in inputs file" << endl;
 	return 1;
 }
-uint Loops = p.LoopMax-p.LoopMin+1; // number of loops
+Parameters p = pr.Min;
 uint Length = pow(2,p.K);
 
 /*-------------------------------------------------------------------------------------------------------------------------
@@ -50,7 +44,7 @@ for (uint j=0; j<(uint)(argc/2); j++) {
 		string id = argv[2*j+1];
 		if (id[0]=='-') id = id.substr(1);
 		if (id.compare("k")==0 || id.compare("K")==0) p.K = stringToNumber<uint>(argv[2*j+2]);
-		if (id.compare("l")==0 || id.compare("loops")==0) p.K = stringToNumber<uint>(argv[2*j+2]);
+		if (id.compare("l")==0 || id.compare("loops")==0) p.Loops = stringToNumber<uint>(argv[2*j+2]);
 		else {
 			cerr << "input " << id << " unrecognized" << endl;
 			return 1;
@@ -58,7 +52,7 @@ for (uint j=0; j<(uint)(argc/2); j++) {
 	}
 }
 
-cout << "generating " << Loops << " unit loops each of " << Length << " points in " << dim << " dimensions" << endl;
+cout << "generating " << p.Loops << " unit loops each of " << Length << " points in " << dim << " dimensions" << endl;
 
 /*-------------------------------------------------------------------------------------------------------------------------
 	3 - making and saving loops
@@ -68,7 +62,7 @@ uint Seed = time(NULL);
 Loop<dim> loop(p.K,Seed);
 Metropolis<dim> met(loop,p,Seed);
 
-for (uint j=p.LoopMin; j<=p.LoopMax; j++) {
+for (uint j=0; j<p.Loops; j++) {
 	file = "data/temp/loop_dim_"+nts<uint>(dim)+"_K_"+nts<uint>(p.K)+"_run_"+nts<uint>(j)+".dat";
 	loop.grow();
 	if (abs(p.g)>MIN_NUMBER && p.Nms>0) {
