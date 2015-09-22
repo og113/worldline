@@ -111,6 +111,8 @@ uint Npl = 1; // number of parameter loops
 Parameters::Label label = static_cast<Parameters::Label>(0);
 if (pr.toStep(label)) {
 	Npl = (pr.Steps)[label];
+	if (rank==root)
+		cout << "looping " << label << " over " << Npl << " steps" << endl;
 }
 
 // quantities to calculate
@@ -163,7 +165,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	
 	// constructing folders
 	FilenameAttributes faMin, faMax;
-	faMin.Directory = "data/temp";
+	faMin.Directory = "data";
 	faMin.Timenumber = "";
 	(faMin.Extras).push_back(StringPair("dim",nts<uint>(dim)));
 	(faMin.Extras).push_back(StringPair("K",nts<uint>(p.K)));
@@ -291,7 +293,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	
 		cout << "timenumber: " << timenumber << endl;
 		printf("\n");
-		printf("%8s%8s%8s%8s%8s%12s%12s%12s%12s%12s%12s\n","dim","Nl","Ng","K","g","S0",\
+		printf("%8s%8s%8s%8s%8s%12s%12s%12s%12s%12s%12s\n","dim","Nl","Ng","K","G","S0",\
 			"errorS0","V","errorV","W","errorW");
 		printf("%8i%8i%8i%8i%8.2g",dim,p.Nl,p.Ng,p.K,p.G);
 		for (uint j=0; j<Nq; j++)

@@ -111,7 +111,7 @@ void Parameters::load(const string& filename) {
 
 // empty
 bool Parameters::empty() const {
-	return (Nl==0 && Ng==0 && Nms==0 && K==0 && abs(g)<MIN_NUMBER);
+	return (Nl==0 && Ng==0 && Nms==0 && K==0 && abs(G)<MIN_NUMBER);
 }
 
 // operator==

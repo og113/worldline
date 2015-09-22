@@ -44,7 +44,7 @@ for (uint j=0; j<(uint)(argc/2); j++) {
 		string id = argv[2*j+1];
 		if (id[0]=='-') id = id.substr(1);
 		if (id.compare("k")==0 || id.compare("K")==0) p.K = stringToNumber<uint>(argv[2*j+2]);
-		if (id.compare("l")==0 || id.compare("loops")==0) p.Loops = stringToNumber<uint>(argv[2*j+2]);
+		if (id.compare("l")==0 || id.compare("Nl")==0) p.Nl = stringToNumber<uint>(argv[2*j+2]);
 		else {
 			cerr << "input " << id << " unrecognized" << endl;
 			return 1;
@@ -52,7 +52,7 @@ for (uint j=0; j<(uint)(argc/2); j++) {
 	}
 }
 
-cout << "generating " << p.Loops << " unit loops each of " << Length << " points in " << dim << " dimensions" << endl;
+cout << "generating " << p.Nl << " unit loops each of " << Length << " points in " << dim << " dimensions" << endl;
 
 /*-------------------------------------------------------------------------------------------------------------------------
 	3 - making and saving loops
@@ -62,8 +62,8 @@ uint Seed = time(NULL);
 Loop<dim> loop(p.K,Seed);
 Metropolis<dim> met(loop,p,Seed);
 
-for (uint j=0; j<p.Loops; j++) {
-	file = "data/temp/loop_dim_"+nts<uint>(dim)+"_K_"+nts<uint>(p.K)+"_run_"+nts<uint>(j)+".dat";
+for (uint j=0; j<p.Nl; j++) {
+	file = "data/loop_dim_"+nts<uint>(dim)+"_K_"+nts<uint>(p.K)+"_run_"+nts<uint>(j)+".dat";
 	loop.grow();
 	if (abs(p.g)>MIN_NUMBER && p.Nms>0) {
 		met.step(p.Nms*Length);
