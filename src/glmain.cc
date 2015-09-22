@@ -63,7 +63,7 @@ Loop<dim> loop(p.K,Seed);
 Metropolis<dim> met(loop,p,Seed);
 
 for (uint j=0; j<p.Nl; j++) {
-	file = "data/loop_dim_"+nts<uint>(dim)+"_K_"+nts<uint>(p.K)+"_run_"+nts<uint>(j)+".dat";
+	file = "data/loops/loop_dim_"+nts<uint>(dim)+"_K_"+nts<uint>(p.K)+"_run_"+nts<uint>(j)+".dat";
 	loop.grow();
 	if (abs(p.g)>MIN_NUMBER && p.Nms>0) {
 		met.step(p.Nms*Length);

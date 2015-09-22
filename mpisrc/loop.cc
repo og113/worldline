@@ -165,7 +165,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	
 	// constructing folders
 	FilenameAttributes faMin, faMax;
-	faMin.Directory = "data";
+	faMin.Directory = "data/loops";
 	faMin.Timenumber = "";
 	(faMin.Extras).push_back(StringPair("dim",nts<uint>(dim)));
 	(faMin.Extras).push_back(StringPair("K",nts<uint>(p.K)));
