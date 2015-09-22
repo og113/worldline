@@ -110,7 +110,9 @@ else if (!dataChoice.empty()) {
 uint Npl = 1; // number of parameter loops
 Parameters::Label label = static_cast<Parameters::Label>(0);
 if (pr.toStep(label)) {
-	Npl = (pr.Steps)[label];
+	Npl = (pr.Steps)[label-1];
+	if (rank==root)
+		cout << "looping " << label << " over " << Npl << " steps" << endl;
 }
 
 // quantities to calculate
@@ -131,7 +133,7 @@ number *data= NULL, *data2= NULL;
 
 for (uint pl=0; pl<Npl; pl++) {
 	// stepping parameters
-	if (pr.toStep(label))
+	if (pr.toStep(label) && pl>0)
 		p.step(pr);
 		
 	uint Npg = (uint)p.Nl/p.Ng; // Npg, number of loops per group
