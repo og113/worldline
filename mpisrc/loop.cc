@@ -278,7 +278,7 @@ for (uint pl=0; pl<Npl; pl++) {
 			sigma_zz = z2-z*z;
 			
 			averages[Nr-Na] = v/z;
-			errors[Nr-Na] = (sigma_vv - 2.0*v*sigma_vz/z + v*v*sigma_zz/z/z)/z/z;
+			errors[Nr-Na] = sqrt((sigma_vv - 2.0*v*sigma_vz/z + v*v*sigma_zz/z/z)/z/z);
 			
 		}
 
