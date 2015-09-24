@@ -120,7 +120,6 @@ void FilenameAttributes::clear() {
 
 /*-------------------------------------------------------------------------------------------------------------------------
 	2. definitions for Filename etc errors Errors
-		- FilenameError::Extras
 		- FilenameComparatorError::LU
 		- FolderError::System
 -------------------------------------------------------------------------------------------------------------------------*/
@@ -190,8 +189,8 @@ void Filename::set(const string& f) {
 		while (stop!=string::npos && !(temp[0]=='.' && temp.find_last_of(".")==0)) {
 			stop = temp.find("_");
 			if (stop==string::npos) {
-				FilenameError::Extras e(f);
-				throw e;
+				clear();
+				return;
 			}
 			StringPair sp;
 			sp.first = temp.substr(0,stop);
@@ -217,11 +216,6 @@ void Filename::set(const string& f) {
 	catch (std::out_of_range & ex) {
 		clear();
 		//cerr << "Filename error: file, " << f << ", not of expected form";
-		return;
-	}
-	catch (FilenameError::Extras & fe) {
-		clear();
-		//cerr << fe;
 		return;
 	}
 }
@@ -402,6 +396,11 @@ void FilenameComparator::setUpper(const FilenameAttributes& u) {
 	}
 }
 
+// Directory
+const string& FilenameComparator::Directory() const {
+	return Lower.Directory;
+}
+
 // operator(Filename)
 bool FilenameComparator::operator()(const Filename& f) const{
 	if (!(Lower.Directory).empty()) {
@@ -517,7 +516,7 @@ void Folder::refresh() {
 	try {
 	clear();
 	string file = "temp/"+currentPartSec()+"dataFiles.txt";
-	string command1 = "find data/* -type f > " + file;
+	string command1 = "find "+Comparator.Directory()+"* -type f > "+file;
 	int systemCall = system(command1.c_str());
 	if (systemCall==-1) {
 		FolderError::System e;

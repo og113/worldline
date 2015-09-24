@@ -166,6 +166,7 @@ public:
 	void 				setUpper(const FilenameAttributes&);
 	bool 				operator()(const Filename&) const;
 	friend ostream& operator<<(ostream&, const FilenameComparator&);
+	const string&		Directory() const;
 private:
 	FilenameAttributes 	Lower;
 	FilenameAttributes 	Upper;
