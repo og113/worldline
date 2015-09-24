@@ -93,6 +93,9 @@ if (dataChoice.compare("S0")==0 || dataChoice.compare("s0")==0) {
 else if (dataChoice.compare("V")==0 || dataChoice.compare("v")==0) {
 	dataChoice = "v";
 }
+else if (dataChoice.compare("Z")==0 || dataChoice.compare("z")==0) {
+	dataChoice = "z";
+}
 else if (dataChoice.compare("W")==0 || dataChoice.compare("w")==0) {
 	dataChoice = "w";
 }
@@ -115,15 +118,18 @@ if (pr.toStep(label)) {
 		cout << "looping " << label << " over " << Npl << " steps" << endl;
 }
 
-// quantities to calculate
+// quantities to calculate sums for
 // elements in sums are in pairs of (X,X^2): S0, V, W
-// separate vector for error
-uint Nq = 3; // number of quantities
-number *sums = NULL, *sums2= NULL;
-number *temp= NULL, *temp2= NULL; // as MPI_SUM doesn't store previous value
+// these quantities can be calculated quickly and parallely
+uint Nr = 3; // number of different results desired
+uint Na = 1; // number of auxialliary quantities to calculate
+uint Nct = 1; // number of cross terms to calculate
+uint Nq = 2*(Nr+Na)+Nct; // total number of quantities to sum
+number *sums = NULL;
+number *temp = NULL; // as MPI_SUM doesn't store previous value
 
 // distribution of quantity
-number *data= NULL, *data2= NULL;
+number *data = NULL;
 
 /*----------------------------------------------------------------------------------------------------------------------------
 	3. starting parameter loop
@@ -149,11 +155,9 @@ for (uint pl=0; pl<Npl; pl++) {
 		}
 		// allocating space for data in root
 		sums = new number[Nq](); // n.b. () is for initializing to zero
-		sums2 = new number[Nq]();
 		temp = new number[Nq]();
-		temp2 = new number[Nq]();
-		data = new number[p.Ng]();
-		data2 = new number[p.Ng]();
+		if (!dataChoice.empty())
+			data = new number[p.Ng]();
 	}
 
 	/*----------------------------------------------------------------------------------------------------------------------------
@@ -181,8 +185,9 @@ for (uint pl=0; pl<Npl; pl++) {
 	}
 	
 	// local data arrays
-	number *data_local = new number[Ngpw]();
-	number *data2_local = new number[Ngpw]();
+	number *data_local = NULL;
+	if (!dataChoice.empty())
+		data_local = new number[Ngpw]();
 
 	/*----------------------------------------------------------------------------------------------------------------------------
 		5. evaluating loop quantitites
@@ -191,49 +196,44 @@ for (uint pl=0; pl<Npl; pl++) {
 	uint Seed = time(NULL)+rank+2;
 	Loop<dim> l(p.K,Seed);
 	uint counter = 0, id;
-	number s0, v, w;
+	number s0, vz, z, w;
 	number *sums_local = new number[Nq]();
-	number *sums2_local = new number[Nq]();
 
 	for (uint j=0; j<Npw; j++) {
 		counter++;
 		l.load(folder[j]);
 
 		s0 = S0(l);
-		v = V0(l);
+		vz = V0(l);
+		z = gsl_sf_exp(-vz);
+		vz *= z;
 		w = gsl_sf_cos(p.G*I0(l));
 		sums_local[0] += s0;
-		sums_local[1] += v;
 		sums_local[2] += w;
+		sums_local[4] += vz;
+		sums_local[6] += z;
 	
 		if (counter==Npg) {
-			sums2_local[0] = sums_local[0]*sums_local[0];
-			sums2_local[1] = sums_local[1]*sums_local[1];
-			sums2_local[2] = sums_local[2]*sums_local[2];
+			for (uint k=0; k<(Nr+Na); k++) 
+				sums_local[2*k+1] = sums_local[2*k]*sums_local[2*k];
+			sums_local[8] = sums_local[4]*sums_local[6];
 			
 			if (!dataChoice.empty()) {
 				id = ((j+1)/Npg-1); // for global id: +rank*(p.Ng/Nw)
-				if (dataChoice.compare("s0")==0) {
+				if (dataChoice.compare("s0")==0)
 					data_local[id] = sums_local[0]/(number)Npg;
-					data2_local[id] = data_local[id]*data_local[id];
-				}
-				else if (dataChoice.compare("v")==0) {
+				else if (dataChoice.compare("v")==0)
 					data_local[id] = sums_local[1]/(number)Npg;
-					data2_local[id] = data_local[id]*data_local[id];
-				}
-				else if (dataChoice.compare("w")==0) {
+				else if (dataChoice.compare("z")==0)
 					data_local[id] = sums_local[2]/(number)Npg;
-					data2_local[id] = data_local[id]*data_local[id];
-				}
+				else if (dataChoice.compare("w")==0) 
+					data_local[id] = sums_local[3]/(number)Npg;
 			}
 			
 			MPI_Reduce(sums_local, temp, Nq, MPI_DOUBLE, MPI_SUM, root, MPI_COMM_WORLD);
-			MPI_Reduce(sums2_local, temp2, Nq, MPI_DOUBLE, MPI_SUM, root, MPI_COMM_WORLD);
 			if (rank==root) {
-				for (uint k=0; k<Nq; k++) {
+				for (uint k=0; k<Nq; k++)
 					sums[k] += temp[k];
-					sums2[k] += temp2[k];
-				}
 			}
 			memset(sums_local,0,Nq*sizeof(number));
 			counter = 0;
@@ -241,28 +241,45 @@ for (uint pl=0; pl<Npl; pl++) {
 	}
 	
 	delete[] sums_local;
-	delete[] sums2_local;
 	
 	// gathering data
-	if (!dataChoice.empty()) {
+	if (!dataChoice.empty())
 		MPI_Gather(data_local, Ngpw, MPI_DOUBLE, data, Ngpw, MPI_DOUBLE, root, MPI_COMM_WORLD);
-		MPI_Gather(data2_local, Ngpw, MPI_DOUBLE, data2, Ngpw, MPI_DOUBLE, root, MPI_COMM_WORLD);
-	}
 
 	/*----------------------------------------------------------------------------------------------------------------------------
 		6. evaluating errors
 	----------------------------------------------------------------------------------------------------------------------------*/
 
 	if (rank==root) {
-		vector<number> averages(Nq), averages2(Nq);
-		vector<number> variances(Nq);
-		vector<number> errors(Nq);
+		vector<number> averages(Nr);
+		vector<number> errors(Nr);
+		number average2, variance;
 		
-		for (uint j=0; j<Nq; j++) {
-			averages[j] = sums[j]/(number)p.Nl;
-			averages2[j] = sums2[j]/(number)Npg/(number)Npg/(number)p.Ng;
-			variances[j] = averages2[j]-averages[j]*averages[j];
-			errors[j] = sqrt(variances[j]/(p.Ng-1.0));
+		// first, results not requiring auxilliary quantities, i.e. s0 and w
+		for (uint j=0; j<(Nr-Na); j++) {
+			averages[j] = sums[2*j]/(number)p.Nl;
+			average2 = sums[2*j+1]/(number)Npg/(number)p.Nl;
+			variance = average2-averages[j]*averages[j];
+			errors[j] = sqrt(variance/(p.Ng-1.0));
+		}
+		
+		// then the more complicated ones, v from vz and z
+		if (Na>0) {
+			number v, v2, z, z2, vz;
+			number sigma_vv, sigma_vz, sigma_zz;
+			
+			v = sums[2*(Nr-Na)]/(number)p.Nl;
+			v2 = sums[2*(Nr-Na)+1]/(number)Npg/(number)p.Nl;
+			z = sums[2*(Nr-Na+1)]/(number)p.Nl;
+			z2 = sums[2*(Nr-Na+1)+1]/(number)Npg/(number)p.Nl;
+			vz = sums[2*(Nr+Na)]/(number)Npg/(number)p.Nl;
+			sigma_vv = v2-v*v;
+			sigma_vz = vz-v*z;
+			sigma_zz = z2-z*z;
+			
+			averages[Nr-Na] = v/z;
+			errors[Nr-Na] = (sigma_vv - 2.0*v*sigma_vz/z + v*v*sigma_zz/z/z)/z/z;
+			
 		}
 
 	/*----------------------------------------------------------------------------------------------------------------------------
@@ -275,7 +292,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		FILE * ros;
 		ros = fopen(((string)rf).c_str(),"a");
 		fprintf(ros,"%12s%5i%5i%8i%8i%8.2g",timenumber.c_str(),dim,p.K,p.Nl,p.Ng,p.G);
-		for (uint j=0; j<Nq; j++)
+		for (uint j=0; j<Nr; j++)
 			fprintf(ros,"%13.5g%13.5g",averages[j],errors[j]);
 		fprintf(ros,"\n");
 		fclose(ros);
@@ -294,31 +311,23 @@ for (uint pl=0; pl<Npl; pl++) {
 		cout << "timenumber: " << timenumber << endl;
 		printf("\n");
 		printf("%8s%8s%8s%8s%8s%12s%12s%12s%12s%12s%12s\n","dim","Nl","Ng","K","G","S0",\
-			"errorS0","V","errorV","W","errorW");
+			"errorS0","W","errorW","V","errorV");
 		printf("%8i%8i%8i%8i%8.2g",dim,p.Nl,p.Ng,p.K,p.G);
-		for (uint j=0; j<Nq; j++)
+		for (uint j=0; j<Nr; j++)
 			printf("%12.4g%12.4g",averages[j],errors[j]);
 		printf("\n\n");
 		
 		// deleting space for data in root
 		delete[] sums;
 		sums = NULL;
-		delete[] sums2;
-		sums2 = NULL;
 		delete[] temp;
 		temp = NULL;
-		delete[] temp2;
-		temp2 = NULL;
 		delete[] data;
 		data = NULL;
-		delete[] data2;
-		data2 = NULL;
 	}
 	
 	delete[] data_local;
 	data_local = NULL;
-	delete[] data2_local;
-	data2_local = NULL;
 }
 
 MPI_Barrier(MPI_COMM_WORLD);
