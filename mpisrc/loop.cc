@@ -311,10 +311,10 @@ for (uint pl=0; pl<Npl; pl++) {
 		cout << "timenumber: " << timenumber << endl;
 		printf("\n");
 		printf("%8s%8s%8s%8s%8s%12s%12s%12s%12s%12s%12s\n","dim","Nl","Ng","K","G","S0",\
-			"errorS0","W","errorW","V","errorV");
+			"errorS0","W","%errorW","V","%errorV");
 		printf("%8i%8i%8i%8i%8.2g",dim,p.Nl,p.Ng,p.K,p.G);
 		for (uint j=0; j<Nr; j++)
-			printf("%12.4g%12.4g",averages[j],errors[j]);
+			printf("%12.4g%12.4g",averages[j],errors[j]/averages[j]);
 		printf("\n\n");
 		
 		// deleting space for data in root
