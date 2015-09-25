@@ -164,6 +164,7 @@ public:
 	void 				set(const FilenameAttributes&);
 	void 				setLower(const FilenameAttributes&);
 	void 				setUpper(const FilenameAttributes&);
+	string				core() const;
 	bool 				operator()(const Filename&) const;
 	friend ostream& operator<<(ostream&, const FilenameComparator&);
 private:
