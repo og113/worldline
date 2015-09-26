@@ -117,7 +117,7 @@ for (uint pl=0; pl<Npl; pl++) {
 
 	for (uint j=0; j<Npw; j++) {
 		id = rank*Npw+j;
-		file = "data/loops/loop_dim_"+nts<uint>(dim)+"_K_"+nts<uint>(p.K)+"_run_"+nts<uint>(id)+".dat";
+		file = "data/loops/dim_"+nts<uint>(dim)+"/K_"+nts<uint>(p.K)+"/loop_run_"+nts<uint>(id)+".dat";
 		loop.grow();
 		if (abs(p.g)>MIN_NUMBER && p.Nms>0) {
 			met.step(p.Nms*Length);
