@@ -223,11 +223,11 @@ for (uint pl=0; pl<Npl; pl++) {
 				if (dataChoice.compare("s0")==0)
 					data_local[id] = sums_local[0]/(number)Npg;
 				else if (dataChoice.compare("v")==0)
-					data_local[id] = sums_local[1]/(number)Npg;
+					data_local[id] = sums_local[2]/sums_local[4];
 				else if (dataChoice.compare("z")==0)
-					data_local[id] = sums_local[2]/(number)Npg;
+					data_local[id] = sums_local[4]/(number)Npg;
 				else if (dataChoice.compare("w")==0) 
-					data_local[id] = sums_local[3]/(number)Npg;
+					data_local[id] = sums_local[6]/(number)Npg;
 			}
 			
 			MPI_Reduce(sums_local, temp, Nq, MPI_DOUBLE, MPI_SUM, root, MPI_COMM_WORLD);
@@ -299,7 +299,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		
 		cout << "results printed to " << rf << endl;
 		if (!dataChoice.empty()) {
-			rf = "results/"+timenumber+"loop_data_"+dataChoice+"_dim_"+nts<uint>(dim)+"_K_"+nts<uint>(p.K)+".dat";
+			rf = "data/"+timenumber+"loop_data_"+dataChoice+"_dim_"+nts<uint>(dim)+"_K_"+nts<uint>(p.K)+".dat";
 			ros = fopen(((string)rf).c_str(),"w");
 			for (uint j=0; j<p.Ng; j++) {
 				fprintf(ros,"%12s%5i%5i%8i%8i%8.2g%8i%13.5g\n",timenumber.c_str(),dim,p.K,p.Nl,p.Ng,p.G,j,data[j]);

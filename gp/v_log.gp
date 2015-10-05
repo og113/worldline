@@ -12,13 +12,13 @@ unset label
 set autoscale
 set xtic auto
 set ytic auto
-set title "v vs log(N)"
-set xlabel "log(N)"
+set title "v vs log_2(N)"
+set xlabel "log_2(N)"
 set ylabel "v"
 f(x) = a+b*x
-fit f(x) "results/loop_dim_4.dat" using (log(2**$3)):8 via a, b
+fit f(x) "results/VvsK_dim_4.dat" using 3:11 via a, b
 set key below
-plot "results/loop_dim_4.dat" using (log(2**$3)):8 with lines, \
+plot "results/VvsK_dim_4.dat" using 3:11:12 with yerrorbars, \
 	f(x) title sprintf("f(x) = %3.4f+%3.4f*x",a,b) with lines
 
 pause -1

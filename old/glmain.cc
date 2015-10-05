@@ -44,7 +44,7 @@ for (uint j=0; j<(uint)(argc/2); j++) {
 		string id = argv[2*j+1];
 		if (id[0]=='-') id = id.substr(1);
 		if (id.compare("k")==0 || id.compare("K")==0) p.K = stringToNumber<uint>(argv[2*j+2]);
-		if (id.compare("l")==0 || id.compare("Nl")==0) p.Nl = stringToNumber<uint>(argv[2*j+2]);
+		else if (id.compare("l")==0 || id.compare("Nl")==0) p.Nl = stringToNumber<uint>(argv[2*j+2]);
 		else {
 			cerr << "input " << id << " unrecognized" << endl;
 			return 1;
