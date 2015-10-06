@@ -2,6 +2,8 @@
  	definitions for the Folder class and dependencies
  -------------------------------------------------------------------------------------------------------------------------*/
 
+#include <glob.h>
+#include <cstring>
 #include <string>
 #include <stdexcept>
 #include <fstream>
@@ -396,9 +398,9 @@ void FilenameComparator::setUpper(const FilenameAttributes& u) {
 	}
 }
 
-// Directory
-const string& FilenameComparator::Directory() const {
-	return Lower.Directory;
+// core
+string FilenameComparator::core() const {
+	return Lower.Directory + "/" + Lower.ID + "*" + Lower.Suffix;
 }
 
 // operator(Filename)
@@ -513,30 +515,31 @@ void Folder::order() {
 
 // refresh
 void Folder::refresh() {
-	try {
-	clear();
-	string file = "temp/"+currentPartSec()+"dataFiles.txt";
-	string command1 = "find "+Comparator.Directory()+"* -type f > "+file;
-	int systemCall = system(command1.c_str());
-	if (systemCall==-1) {
-		FolderError::System e;
-		throw e;
+	glob_t globbuf;
+	string search = Comparator.core();
+	int err = glob(search.c_str(), GLOB_NOSORT, NULL, &globbuf); // GLOB_NOSORT if doing sort elsewhere, otherwise set to zero
+	if(err == 0) {
+		uint count = 0;
+		Filenames.resize(globbuf.gl_pathc);
+		Filename f;
+		for (uint i = 0; i<globbuf.gl_pathc; i++) {
+			if ((globbuf.gl_pathv[i])[strlen((globbuf.gl_pathv[i]))-1]!='~') {
+				f = string(globbuf.gl_pathv[i]);
+				if (!isPresent(f) && Comparator(f)) {
+					Filenames[count] = f;
+					count++;
+				}
+			}
+		}
+		Filenames.resize(count);
+		if(globbuf.gl_pathc>0)
+			globfree(&globbuf);
+		sort();
 	}
-	ifstream is;
-	Filename f;
-    is.open (file.c_str());
-	while ( !is.eof() ){
-		is >> f;
-		if (!f.empty() && (f())[(f()).size()-1]!='~' && (f.ID).compare("dataFiles")!=0)
-			if (!isPresent(f) && Comparator(f)) Filenames.push_back(f);
+	else {
+		cerr << "Folder search error " << err << endl;
+		return;
 	}
-    is.close();
-    sort();
-    }
-    catch (FolderError::System e) {
-    	cerr << e;
-    	return;
-    }
 }
 
 // update

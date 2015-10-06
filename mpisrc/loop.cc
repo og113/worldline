@@ -169,10 +169,8 @@ for (uint pl=0; pl<Npl; pl++) {
 	
 	// constructing folders
 	FilenameAttributes faMin, faMax;
-	faMin.Directory = "data/loops";
+	faMin.Directory = "data/loops/dim_"+nts<uint>(dim)+"/K_"+nts<uint>(p.K);
 	faMin.Timenumber = "";
-	(faMin.Extras).push_back(StringPair("dim",nts<uint>(dim)));
-	(faMin.Extras).push_back(StringPair("K",nts<uint>(p.K)));
 	faMax = faMin;
 	(faMin.Extras).push_back(StringPair("run",nts<uint>(loopMin)));
 	(faMax.Extras).push_back(StringPair("run",nts<uint>(loopMax)));
@@ -223,7 +221,7 @@ for (uint pl=0; pl<Npl; pl++) {
 				if (dataChoice.compare("s0")==0)
 					data_local[id] = sums_local[0]/(number)Npg;
 				else if (dataChoice.compare("v")==0)
-					data_local[id] = sums_local[2]/sums_local[4];
+					data_local[id] = sums_local[4]/sums_local[6];
 				else if (dataChoice.compare("z")==0)
 					data_local[id] = sums_local[4]/(number)Npg;
 				else if (dataChoice.compare("w")==0) 
@@ -314,7 +312,7 @@ for (uint pl=0; pl<Npl; pl++) {
 			"%errorS0","W","%errorW","V","%errorV");
 		printf("%8i%8i%8i%8i%8.2g",dim,p.Nl,p.Ng,p.K,p.G);
 		for (uint j=0; j<Nr; j++)
-			printf("%12.4g%12.4g",averages[j],errors[j]/averages[j]);
+			printf("%12.4g%12.4g",averages[j],100.0*errors[j]/averages[j]);
 		printf("\n\n");
 		
 		// deleting space for data in root
