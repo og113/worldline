@@ -122,7 +122,6 @@ void FilenameAttributes::clear() {
 
 /*-------------------------------------------------------------------------------------------------------------------------
 	2. definitions for Filename etc errors Errors
-		- FilenameError::Extras
 		- FilenameComparatorError::LU
 		- FolderError::System
 -------------------------------------------------------------------------------------------------------------------------*/

@@ -113,16 +113,11 @@ for (uint pl=0; pl<Npl; pl++) {
 	string file, asciiFile;
 	uint Seed = time(NULL), id;
 	Loop<dim> loop(p.K,Seed);
-	Metropolis<dim> met(loop,p,Seed);
 
 	for (uint j=0; j<Npw; j++) {
 		id = rank*Npw+j;
 		file = "data/loops/dim_"+nts<uint>(dim)+"/K_"+nts<uint>(p.K)+"/loop_run_"+nts<uint>(id)+".dat";
 		loop.grow();
-		if (abs(p.g)>MIN_NUMBER && p.Nms>0) {
-			met.step(p.Nms*Length);
-			met.setSeed(time(NULL)+id*1000+2);
-		}
 		loop.save(file);
 		loop.clear();
 		loop.setSeed(time(NULL)+id*1000+3);

@@ -27,8 +27,8 @@ CONTENTS
 -------------------------------------------------------------------------------------------------------------------------*/
 
 // Size
-const uint Parameters::Size = 5;
-const uint ParametersRange::Size = 5;
+const uint Parameters::Size = 8;
+const uint ParametersRange::Size = 8;
 
 // step
 void Parameters::step(const ParametersRange& pr) {
@@ -44,9 +44,17 @@ void Parameters::step(const ParametersRange& pr) {
 				stepSize = ((pr.Max).Ng-(pr.Min).Ng)/((pr.Steps)[label-1]-1.0);
 				Ng += (uint)stepSize;
 				break;
-			case nms:
-				stepSize = ((pr.Max).Nms-(pr.Min).Nms)/((pr.Steps)[label-1]-1.0);
-				Nms += (uint)stepSize;
+				break;
+			case nig:
+				stepSize = ((pr.Max).Nig-(pr.Min).Nig)/((pr.Steps)[label-1]-1.0);
+				Nig += (uint)stepSize;
+				break;
+			case nsw:
+				stepSize = ((pr.Max).Nsw-(pr.Min).Nsw)/((pr.Steps)[label-1]-1.0);
+				Nsw += (uint)stepSize;
+			case npsw:
+				stepSize = ((pr.Max).Npsw-(pr.Min).Npsw)/((pr.Steps)[label-1]-1.0);
+				Npsw += (uint)stepSize;
 				break;
 			case k:
 				stepSize = ((pr.Max).K-(pr.Min).K)/((pr.Steps)[label-1]-1.0);
@@ -55,6 +63,10 @@ void Parameters::step(const ParametersRange& pr) {
 			case g:
 				stepSize = ((pr.Max).G-(pr.Min).G)/((pr.Steps)[label-1]-1.0);
 				G += stepSize;
+				break;
+			case epsi:
+				stepSize = ((pr.Max).Epsi-(pr.Min).Epsi)/((pr.Steps)[label-1]-1.0);
+				Epsi += stepSize;
 				break;
 			default:
 				cerr << "Parameters error: Label unknown" << endl;
@@ -71,9 +83,12 @@ ostream& operator<<(ostream& os, const Parameters& p) {
 	os << left;
 	os << setw(20) << "Nl" << setw(20) << p.Nl << endl;
 	os << setw(20) << "Ng" << setw(20) << p.Ng << endl;
-	os << setw(20) << "Nms" << setw(20) << p.Nms << endl;
+	os << setw(20) << "Nig" << setw(20) << p.Nig << endl;
+	os << setw(20) << "Nsw" << setw(20) << p.Nsw << endl;
+	os << setw(20) << "Npsw" << setw(20) << p.Npsw << endl;
 	os << setw(20) << "K" << setw(20) << p.K << endl;
 	os << setw(20) << "G" << setw(20) << p.G << endl;
+	os << setw(20) << "Epsi" << setw(20) << p.Epsi << endl;
 	return os;
 }
 
@@ -103,29 +118,35 @@ void Parameters::load(const string& filename) {
 	string dross;
 	is >> dross >> Nl;
 	is >> dross >> Ng;
-	is >> dross >> Nms;
+	is >> dross >> Nig;
+	is >> dross >> Nsw;
+	is >> dross >> Npsw;
 	is >> dross >> K;
 	is >> dross >> G;
+	is >> dross >> Epsi;
 	is.close();
 }
 
 // empty
 bool Parameters::empty() const {
-	return (Nl==0 && Ng==0 && Nms==0 && K==0 && abs(G)<MIN_NUMBER);
+	return (Nl==0 && Ng==0 && Nig==0 && Nsw==0 && Npsw==0 && K==0 && abs(G)<MIN_NUMBER);
 }
 
 // operator==
 bool operator==(const Parameters& l, const Parameters& r){
-	return (l.Nl==r.Nl && l.Ng==r.Ng && l.Nms==r.Nms && l.K==r.K && abs(l.G-r.G)<MIN_NUMBER);
+	return (l.Nl==r.Nl && l.Ng==r.Ng && l.Nig==r.Nig && l.Nsw==r.Nsw && l.Npsw==r.Npsw && l.K==r.K && abs(l.G-r.G)<MIN_NUMBER);
 }
 
 // writeBinary
 ostream& Parameters::writeBinary(ostream& os) const {
 	os.write(reinterpret_cast<const char*>(&Nl),sizeof(uint));
 	os.write(reinterpret_cast<const char*>(&Ng),sizeof(uint));
-	os.write(reinterpret_cast<const char*>(&Nms),sizeof(uint));
+	os.write(reinterpret_cast<const char*>(&Nig),sizeof(uint));
+	os.write(reinterpret_cast<const char*>(&Nsw),sizeof(uint));
+	os.write(reinterpret_cast<const char*>(&Npsw),sizeof(uint));
 	os.write(reinterpret_cast<const char*>(&K),sizeof(uint));
 	os.write(reinterpret_cast<const char*>(&G),sizeof(number));
+	os.write(reinterpret_cast<const char*>(&Epsi),sizeof(number));
 	return os;
 }
 
@@ -133,9 +154,12 @@ ostream& Parameters::writeBinary(ostream& os) const {
 istream& Parameters::readBinary(istream& is) {
 	is.read(reinterpret_cast<char*>(&Nl),sizeof(uint));
 	is.read(reinterpret_cast<char*>(&Ng),sizeof(uint));
-	is.read(reinterpret_cast<char*>(&Nms),sizeof(uint));
+	is.read(reinterpret_cast<char*>(&Nig),sizeof(uint));
+	is.read(reinterpret_cast<char*>(&Nsw),sizeof(uint));
+	is.read(reinterpret_cast<char*>(&Npsw),sizeof(uint));
 	is.read(reinterpret_cast<char*>(&K),sizeof(uint));
 	is.read(reinterpret_cast<char*>(&G),sizeof(number));
+	is.read(reinterpret_cast<char*>(&Epsi),sizeof(number));
 	return is;
 }
 
@@ -204,9 +228,12 @@ void ParametersRange::load(const string& filename) {
 	// THIS NEEDS REDOING SO THAT THERE AREN'T MISTAKES WHEN SPACES DISAPPEAR
 	is >> dross >> dross >> Min.Nl >> dross >> Max.Nl >> dross >> Steps[0] >> dross;
 	is >> dross >> dross >> Min.Ng >> dross >> Max.Ng >> dross >> Steps[1] >> dross;
-	is >> dross >> dross >> Min.Nms >> dross >> Max.Nms >> dross >> Steps[2] >> dross;
-	is >> dross >> dross >> Min.K >> dross >> Max.K >> dross >> Steps[3] >> dross;
-	is >> dross >> dross >> Min.G >> dross >> Max.G >> dross >> Steps[4] >> dross;
+	is >> dross >> dross >> Min.Nig >> dross >> Max.Nig >> dross >> Steps[3] >> dross;
+	is >> dross >> dross >> Min.Nsw >> dross >> Max.Nsw >> dross >> Steps[2] >> dross;
+	is >> dross >> dross >> Min.Npsw >> dross >> Max.Npsw >> dross >> Steps[4] >> dross;
+	is >> dross >> dross >> Min.K >> dross >> Max.K >> dross >> Steps[5] >> dross;
+	is >> dross >> dross >> Min.G >> dross >> Max.G >> dross >> Steps[6] >> dross;
+	is >> dross >> dross >> Min.Epsi >> dross >> Max.Epsi >> dross >> Steps[7] >> dross;
 	is.close();
 }
 
@@ -238,12 +265,18 @@ ostream& operator<<(ostream& os, const ParametersRange& pr) {
 						<< setw(12) << (pr.Max).Nl << " , " << setw(12) << (pr.Steps)[0] << " ]" << endl;
 	os << setw(20) << "Ng" << "[ " << setw(12) <<  (pr.Min).Ng << " , " \
 						<< setw(12) << (pr.Max).Ng << " , " << setw(12) << (pr.Steps)[1] << " ]" << endl;
-	os << setw(20) << "Nms" << "[ " << setw(12) << (pr.Min).Nms << " , " \
-						<< setw(12) << (pr.Max).Nms << " , " << setw(12) << (pr.Steps)[2] << " ]" << endl;
+	os << setw(20) << "Nig" << "[ " << setw(12) << (pr.Min).Nig << " , " \
+						<< setw(12) << (pr.Max).Nig << " , " << setw(12) << (pr.Steps)[3] << " ]" << endl;
+	os << setw(20) << "Nsw" << "[ " << setw(12) << (pr.Min).Nsw << " , " \
+						<< setw(12) << (pr.Max).Nsw << " , " << setw(12) << (pr.Steps)[2] << " ]" << endl;
+	os << setw(20) << "Npsw" << "[ " << setw(12) << (pr.Min).Npsw << " , " \
+						<< setw(12) << (pr.Max).Npsw << " , " << setw(12) << (pr.Steps)[4] << " ]" << endl;
 	os << setw(20) << "K" << "[ " << setw(12) << setw(12) << (pr.Min).K << " , " \
-						<< setw(12) << (pr.Max).K << " , " << setw(12) << (pr.Steps)[3] << " ]" << endl;
-	os << setw(20) << "g" << "[ " << setw(12) << (pr.Min).G << " , " \
-						<< setw(12) << (pr.Max).G << " , " << setw(12) << (pr.Steps)[4] << " ]" << endl;
+						<< setw(12) << (pr.Max).K << " , " << setw(12) << (pr.Steps)[5] << " ]" << endl;
+	os << setw(20) << "G" << "[ " << setw(12) << (pr.Min).G << " , " \
+						<< setw(12) << (pr.Max).G << " , " << setw(12) << (pr.Steps)[6] << " ]" << endl;
+	os << setw(20) << "Epsi" << "[ " << setw(12) << (pr.Min).Epsi << " , " \
+						<< setw(12) << (pr.Max).Epsi << " , " << setw(12) << (pr.Steps)[7] << " ]" << endl;
 	return os;
 }
 
