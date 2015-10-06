@@ -1,6 +1,6 @@
 /*----------------------------------------------------------------------------------------------------------------------------
-	loop
-		program to calculate quantities about worldlines, using gaussian probability distribution
+	loop2
+		program to calculate quantities about worldlines, using metropolis monte-carlo
 ----------------------------------------------------------------------------------------------------------------------------*/
 
 #include <cstring>
@@ -93,9 +93,6 @@ if (dataChoice.compare("S0")==0 || dataChoice.compare("s0")==0) {
 else if (dataChoice.compare("V")==0 || dataChoice.compare("v")==0) {
 	dataChoice = "v";
 }
-else if (dataChoice.compare("Z")==0 || dataChoice.compare("z")==0) {
-	dataChoice = "z";
-}
 else if (dataChoice.compare("W")==0 || dataChoice.compare("w")==0) {
 	dataChoice = "w";
 }
@@ -121,14 +118,12 @@ if (pr.toStep(label)) {
 // elements in sums are in pairs of (X,X^2): S0, V, W
 // these quantities can be calculated quickly and parallely
 uint Nr = 3; // number of different results desired
-uint Na = 1; // number of auxialliary quantities to calculate
-uint Nct = 1; // number of cross terms to calculate
-uint Nq = 2*(Nr+Na)+Nct; // total number of quantities to sum
+uint Nq = 2*Nr; // total number of quantities to sum
 number *sums = NULL;
 number *temp = NULL; // as MPI_SUM doesn't store previous value
 
 // distribution of quantity
-number *data = NULL;
+number *data_s0 = NULL, *data_w = NULL, *data_v = NULL;
 
 /*----------------------------------------------------------------------------------------------------------------------------
 	3. starting parameter loop
@@ -144,6 +139,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	uint Npg = (uint)p.Nl/p.Ng; // Npg, number of loops per group
 	uint Npw = (uint)p.Nl/Nw; // Npw, number of loops per worker
 	uint Ngpw = (uint)p.Ng/Nw; // Ngpw, number of groups per worker
+	uint Np = pow(2,p.K); // Np, number of points per loop
 	
 	if (rank==root) {
 		// checking relevant ratios are integers
@@ -155,8 +151,9 @@ for (uint pl=0; pl<Npl; pl++) {
 		// allocating space for data in root
 		sums = new number[Nq](); // n.b. () is for initializing to zero
 		temp = new number[Nq]();
-		if (!dataChoice.empty())
-			data = new number[p.Ng]();
+		data_s0 = new number[p.Ng]();
+		data_w = new number[p.Ng]();
+		data_v = new number[p.Ng]();
 	}
 
 	/*----------------------------------------------------------------------------------------------------------------------------
@@ -182,9 +179,9 @@ for (uint pl=0; pl<Npl; pl++) {
 	}
 	
 	// local data arrays
-	number *data_local = NULL;
-	if (!dataChoice.empty())
-		data_local = new number[Ngpw]();
+	number *data_local_s0 = new number[Ngpw]();
+	number *data_local_w = new number[Ngpw]();
+	number *data_local_v = new number[Ngpw]();
 
 	/*----------------------------------------------------------------------------------------------------------------------------
 		5. evaluating loop quantitites
@@ -192,56 +189,61 @@ for (uint pl=0; pl<Npl; pl++) {
 
 	uint Seed = time(NULL)+rank+2;
 	Loop<dim> l(p.K,Seed);
-	uint counter = 0, id;
+	Metropolis<dim> met(l,p.K,++Seed);
+	uint groupCounter = 0, id;
 	number s0, vz, z, w;
 	number *sums_local = new number[Nq]();
 
 	for (uint j=0; j<Npw; j++) {
-		counter++;
+		groupCounter++;
 		l.load(folder[j]);
-
-		s0 = S0(l);
-		vz = V0(l);
-		z = gsl_sf_exp(-vz);
-		vz *= z;
-		w = gsl_sf_cos(p.G*I0(l));
-		sums_local[0] += s0;
-		sums_local[2] += w;
-		sums_local[4] += vz;
-		sums_local[6] += z;
+		
+		if (abs(p.G)>MIN_NUMBER && p.Nms>0) {
+			met.step(Nig*Np);
+			met.setSeed(time(NULL)+j*1000+rank+2);
+		}
+		
+		for (uint k=0; k<Nsw; k++) {
+		
+			if (abs(p.G)>MIN_NUMBER && p.Nms>0) {
+				met.step(Npsw*Np);
+				met.setSeed(time(NULL)+j*1000+rank+2);
+			}
+			
+			s0 = S0(l);
+			w = gsl_sf_cos(p.G*I0(l));
+			v = V0(l);
+			sums_local[0] += s0;
+			sums_local[2] += w;
+			sums_local[4] += v;
 	
-		if (counter==Npg) {
-			for (uint k=0; k<(Nr+Na); k++) 
-				sums_local[2*k+1] = sums_local[2*k]*sums_local[2*k];
-			sums_local[8] = sums_local[4]*sums_local[6];
-			
-			if (!dataChoice.empty()) {
+			if (groupCounter==Npg) {
+				for (uint l=0; l<Nr; k++) 
+					sums_local[2*l+1] = sums_local[2*l]*sums_local[2*l];
+				
 				id = ((j+1)/Npg-1); // for global id: +rank*(p.Ng/Nw)
-				if (dataChoice.compare("s0")==0)
-					data_local[id] = sums_local[0]/(number)Npg;
-				else if (dataChoice.compare("v")==0)
-					data_local[id] = sums_local[4]/sums_local[6];
-				else if (dataChoice.compare("z")==0)
-					data_local[id] = sums_local[4]/(number)Npg;
-				else if (dataChoice.compare("w")==0) 
-					data_local[id] = sums_local[6]/(number)Npg;
+				
+				data_local_s0[id] = sums_local[0]/(number)Npg;
+				data_local_w[id] = sums_local[2]/(number)Npg;
+				data_local_v[id] = sums_local[4]/(number)Npg;
+	
+				MPI_Reduce(sums_local, temp, Nq, MPI_DOUBLE, MPI_SUM, root, MPI_COMM_WORLD);
+				if (rank==root) {
+					for (uint l=0; l<Nq; l++)
+						sums[l] += temp[l];
+				}
+				memset(sums_local,0,Nq*sizeof(number));
+				groupCounter = 0;
 			}
-			
-			MPI_Reduce(sums_local, temp, Nq, MPI_DOUBLE, MPI_SUM, root, MPI_COMM_WORLD);
-			if (rank==root) {
-				for (uint k=0; k<Nq; k++)
-					sums[k] += temp[k];
-			}
-			memset(sums_local,0,Nq*sizeof(number));
-			counter = 0;
 		}
 	}
 	
 	delete[] sums_local;
 	
 	// gathering data
-	if (!dataChoice.empty())
-		MPI_Gather(data_local, Ngpw, MPI_DOUBLE, data, Ngpw, MPI_DOUBLE, root, MPI_COMM_WORLD);
+	MPI_Gather(data_local_s0, Ngpw, MPI_DOUBLE, data_s0, Ngpw, MPI_DOUBLE, root, MPI_COMM_WORLD);
+	MPI_Gather(data_local_w, Ngpw, MPI_DOUBLE, data_w, Ngpw, MPI_DOUBLE, root, MPI_COMM_WORLD);
+	MPI_Gather(data_local_v, Ngpw, MPI_DOUBLE, data_v, Ngpw, MPI_DOUBLE, root, MPI_COMM_WORLD);
 
 	/*----------------------------------------------------------------------------------------------------------------------------
 		6. evaluating errors

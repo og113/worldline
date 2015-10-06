@@ -251,13 +251,15 @@ template <uint Dim>
 class Metropolis {
 public:
 	Metropolis(Loop<Dim>& loop, const Parameters& p, const uint& seed);
+	Metropolis(const Parameters& p, const uint& seed);
 	~Metropolis();
 	
 	// step
 	void 				step(const uint&);
 	
-	// set seed
+	// set seed, loop
 	void 				setSeed(const uint&);
+	void 				setLoop(Loop<Dim>&);
 	
 private:
 	uint				Seed;
