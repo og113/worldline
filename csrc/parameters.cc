@@ -134,7 +134,7 @@ bool Parameters::empty() const {
 
 // operator==
 bool operator==(const Parameters& l, const Parameters& r){
-	return (l.Nl==r.Nl && l.Ng==r.Ng && l.Nig==r.Nig && && l.Nsw==r.Nsw && && l.Npsw==r.Npsw && l.K==r.K && abs(l.G-r.G)<MIN_NUMBER);
+	return (l.Nl==r.Nl && l.Ng==r.Ng && l.Nig==r.Nig && l.Nsw==r.Nsw && l.Npsw==r.Npsw && l.K==r.K && abs(l.G-r.G)<MIN_NUMBER);
 }
 
 // writeBinary
