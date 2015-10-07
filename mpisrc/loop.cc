@@ -168,7 +168,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	
 	// constructing folders
 	FilenameAttributes faMin, faMax;
-	faMin.Directory = "data/loops/dim_"+nts<uint>(dim)+"/K_"+nts<uint>(p.K);
+	faMin.Directory = "data/loops/gaussian/dim_"+nts<uint>(dim)+"/K_"+nts<uint>(p.K);
 	faMin.Timenumber = "";
 	faMax = faMin;
 	(faMin.Extras).push_back(StringPair("run",nts<uint>(loopMin)));
@@ -219,12 +219,12 @@ for (uint pl=0; pl<Npl; pl++) {
 				id = ((j+1)/Npg-1); // for global id: +rank*(p.Ng/Nw)
 				if (dataChoice.compare("s0")==0)
 					data_local[id] = sums_local[0]/(number)Npg;
+				else if (dataChoice.compare("w")==0) 
+					data_local[id] = sums_local[2]/(number)Npg;
 				else if (dataChoice.compare("v")==0)
 					data_local[id] = sums_local[4]/sums_local[6];
 				else if (dataChoice.compare("z")==0)
 					data_local[id] = sums_local[4]/(number)Npg;
-				else if (dataChoice.compare("w")==0) 
-					data_local[id] = sums_local[6]/(number)Npg;
 			}
 			
 			MPI_Reduce(sums_local, temp, Nq, MPI_DOUBLE, MPI_SUM, root, MPI_COMM_WORLD);
@@ -286,6 +286,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		string timenumber = currentDateTime();	
 	
 		Filename rf = "results/loop_dim_"+nts<uint>(dim)+".dat";
+		rf.ID += "Office";
 		FILE * ros;
 		ros = fopen(((string)rf).c_str(),"a");
 		fprintf(ros,"%12s%5i%5i%8i%8i%8.2g",timenumber.c_str(),dim,p.K,p.Nl,p.Ng,p.G);

@@ -116,7 +116,7 @@ for (uint pl=0; pl<Npl; pl++) {
 
 	for (uint j=0; j<Npw; j++) {
 		id = rank*Npw+j;
-		file = "data/loops/dim_"+nts<uint>(dim)+"/K_"+nts<uint>(p.K)+"/loop_run_"+nts<uint>(id)+".dat";
+		file = "data/gaussian/loops/dim_"+nts<uint>(dim)+"/K_"+nts<uint>(p.K)+"/loop_run_"+nts<uint>(id)+".dat";
 		loop.grow();
 		loop.save(file);
 		loop.clear();
