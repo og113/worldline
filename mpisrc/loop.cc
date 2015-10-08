@@ -193,7 +193,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	uint Seed = time(NULL)+rank+2;
 	Loop<dim> l(p.K,Seed);
 	uint counter = 0, id;
-	number s0, vz, z, w;
+	number s0, vz, z, w, gbt = p.G*p.B*p.T;
 	number *sums_local = new number[Nq]();
 
 	for (uint j=0; j<Npw; j++) {
@@ -204,7 +204,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		vz = p.G*V0(l);
 		z = gsl_sf_exp(-vz);
 		vz *= z;
-		w = gsl_sf_cos(p.G*p.B*p.T*I0(l));
+		w = gsl_sf_cos(gbt*I0(l));
 		sums_local[0] += s0;
 		sums_local[2] += w;
 		sums_local[4] += vz;
@@ -289,7 +289,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		rf.ID += "Office";
 		FILE * ros;
 		ros = fopen(((string)rf).c_str(),"a");
-		fprintf(ros,"%12s%5i%5i%8i%8i%8.2g",timenumber.c_str(),dim,p.K,p.Nl,p.Ng,p.G);
+		fprintf(ros,"%12s%5i%5i%8i%8i%8.2g%8.2g%8.2g",timenumber.c_str(),dim,p.K,p.Nl,p.Ng,p.G,p.B,p.T);
 		for (uint j=0; j<Nr; j++)
 			fprintf(ros,"%13.5g%13.5g",averages[j],errors[j]);
 		fprintf(ros,"\n");
@@ -300,7 +300,7 @@ for (uint pl=0; pl<Npl; pl++) {
 			rf = "data/"+timenumber+"loop_data_"+dataChoice+"_dim_"+nts<uint>(dim)+"_K_"+nts<uint>(p.K)+".dat";
 			ros = fopen(((string)rf).c_str(),"w");
 			for (uint j=0; j<p.Ng; j++) {
-				fprintf(ros,"%12s%5i%5i%8i%8i%8.2g%8i%13.5g\n",timenumber.c_str(),dim,p.K,p.Nl,p.Ng,p.G,j,data[j]);
+				fprintf(ros,"%12s%5i%5i%8i%8i%8.2g%8.2g%8.2g%8i%13.5g\n",timenumber.c_str(),dim,p.K,p.Nl,p.Ng,p.G,p.B,p.T,j,data[j]);
 			}
 			fclose(ros);	
 			cout << "results printed to " << rf << endl;
@@ -308,9 +308,9 @@ for (uint pl=0; pl<Npl; pl++) {
 	
 		cout << "timenumber: " << timenumber << endl;
 		printf("\n");
-		printf("%8s%8s%8s%8s%8s%12s%12s%12s%12s%12s%12s\n","dim","Nl","Ng","K","G","S0",\
+		printf("%8s%8s%8s%8s%8s%8s%8s%12s%12s%12s%12s%12s%12s\n","dim","Nl","Ng","K","G","B","T","S0",\
 			"%errorS0","W","%errorW","V","%errorV");
-		printf("%8i%8i%8i%8i%8.2g",dim,p.Nl,p.Ng,p.K,p.G);
+		printf("%8i%8i%8i%8i%8.2g%8.2g%8.2g",dim,p.Nl,p.Ng,p.K,p.G,p.B,p.T);
 		for (uint j=0; j<Nr; j++)
 			printf("%12.4g%12.4g",averages[j],100.0*errors[j]/averages[j]);
 		printf("\n\n");

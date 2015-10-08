@@ -536,8 +536,19 @@ void Folder::refresh() {
 			globfree(&globbuf);
 		sort();
 	}
+	else if (err==GLOB_NOSPACE) {
+        	cerr << "Folder search error " << err << ", running out of memory" << endl;
+		return;
+	}
+	else if (err==GLOB_ABORTED) {
+        	cerr << "Folder search error " << err << ", GLOB_ABORTED" << endl;
+		return;
+	}
+	else if (err==GLOB_NOMATCH) {
+		return;
+	}
 	else {
-		cerr << "Folder search error " << err << endl;
+		cerr << "Folder search error " << err << ", unknown" << endl;
 		return;
 	}
 }
