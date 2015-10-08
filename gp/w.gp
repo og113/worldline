@@ -20,7 +20,7 @@ set xlabel "TeB"
 set ylabel "<W>
 
 set xrange [0.0000001:5]    
-plot "results/loop_dim_4_K_10.dat" u 6:11:12 with yerrorbars ls 1, \
+plot "results/loopCosmos_dim_4.dat" u 8:(($11-1-$8**2/6.0)/$8**3)/:12 with yerrorbars ls 1, \
 	p(x) with lines
 
 pause -1
