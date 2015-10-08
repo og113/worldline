@@ -168,7 +168,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	
 	// constructing folders
 	FilenameAttributes faMin, faMax;
-	faMin.Directory = "data/loops/gaussian/dim_"+nts<uint>(dim)+"/K_"+nts<uint>(p.K);
+	faMin.Directory = "data/loops/s0/dim_"+nts<uint>(dim)+"/K_"+nts<uint>(p.K);
 	faMin.Timenumber = "";
 	faMax = faMin;
 	(faMin.Extras).push_back(StringPair("run",nts<uint>(loopMin)));
@@ -201,10 +201,10 @@ for (uint pl=0; pl<Npl; pl++) {
 		l.load(folder[j]);
 
 		s0 = S0(l);
-		vz = V0(l);
+		vz = p.G*V0(l);
 		z = gsl_sf_exp(-vz);
 		vz *= z;
-		w = gsl_sf_cos(p.G*I0(l));
+		w = gsl_sf_cos(p.G*p.B*p.T*I0(l));
 		sums_local[0] += s0;
 		sums_local[2] += w;
 		sums_local[4] += vz;
