@@ -96,8 +96,8 @@ else if (dataChoice.compare("V")==0 || dataChoice.compare("v")==0) {
 else if (dataChoice.compare("Z")==0 || dataChoice.compare("z")==0) {
 	dataChoice = "z";
 }
-else if (dataChoice.compare("W")==0 || dataChoice.compare("w")==0) {
-	dataChoice = "w";
+else if (dataChoice.compare("R")==0 || dataChoice.compare("r")==0) {
+	dataChoice = "r";
 }
 else if (!dataChoice.empty()) {
 	cerr << "dataChoice, " << dataChoice << ", not understood" << endl;
@@ -193,7 +193,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	uint Seed = time(NULL)+rank+2;
 	Loop<dim> l(p.K,Seed);
 	uint counter = 0, id;
-	number s0, vz, z, w, gbt = p.G*p.B*p.T;
+	number s0, vz, z, I, rate, lp = 1.0/p.G*p.B; // w, gbt = p.G*p.B*p.T; // n.b. mass=1, lp is large parameter for weak fields
 	number *sums_local = new number[Nq]();
 
 	for (uint j=0; j<Npw; j++) {
@@ -204,9 +204,13 @@ for (uint pl=0; pl<Npl; pl++) {
 		vz = p.G*V0(l);
 		z = gsl_sf_exp(-vz);
 		vz *= z;
-		w = gsl_sf_cos(gbt*I0(l));
+		//w = gsl_sf_cos(gbt*I0(l));
+		I = I0(l);
+		rate = -pi/12.0;
+		rate += (abs(I)<lp? -pi*I*I/4.0: -(pi*lp/2.0)*(abs(I)-lp/2.0));
+		rate *= -2.0*pow(p.G*p.B/4.0/pi,2.0);
 		sums_local[0] += s0;
-		sums_local[2] += w;
+		sums_local[2] += rate;
 		sums_local[4] += vz;
 		sums_local[6] += z;
 	
@@ -219,7 +223,7 @@ for (uint pl=0; pl<Npl; pl++) {
 				id = ((j+1)/Npg-1); // for global id: +rank*(p.Ng/Nw)
 				if (dataChoice.compare("s0")==0)
 					data_local[id] = sums_local[0]/(number)Npg;
-				else if (dataChoice.compare("w")==0) 
+				else if (dataChoice.compare("r")==0) 
 					data_local[id] = sums_local[2]/(number)Npg;
 				else if (dataChoice.compare("v")==0)
 					data_local[id] = sums_local[4]/sums_local[6];
@@ -309,7 +313,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		cout << "timenumber: " << timenumber << endl;
 		printf("\n");
 		printf("%8s%8s%8s%8s%8s%8s%8s%12s%12s%12s%12s%12s%12s\n","dim","Nl","Ng","K","G","B","T","S0",\
-			"%errorS0","W","%errorW","V","%errorV");
+			"%errorS0","Rate","%errorW","V","%errorV");
 		printf("%8i%8i%8i%8i%8.5g%8.5g%8.5g",dim,p.Nl,p.Ng,p.K,p.G,p.B,p.T);
 		for (uint j=0; j<Nr; j++)
 			printf("%12.4g%12.4g",averages[j],100.0*errors[j]/averages[j]);
