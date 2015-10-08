@@ -289,7 +289,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		rf.ID += "Cosmos";
 		FILE * ros;
 		ros = fopen(((string)rf).c_str(),"a");
-		fprintf(ros,"%12s%5i%5i%8i%8i%8.2g%8.2g%8.2g",timenumber.c_str(),dim,p.K,p.Nl,p.Ng,p.G,p.B,p.T);
+		fprintf(ros,"%12s%5i%5i%8i%8i%8.5g%8.5g%8.5g",timenumber.c_str(),dim,p.K,p.Nl,p.Ng,p.G,p.B,p.T);
 		for (uint j=0; j<Nr; j++)
 			fprintf(ros,"%13.5g%13.5g",averages[j],errors[j]);
 		fprintf(ros,"\n");
