@@ -7,7 +7,7 @@ set term png size 1600,800; \
 set output outFile; \
 
 # approximate analytic result
-p(x)=x/sinh(x)
+p(x)=(x/sinh(x)-1-x**2/6.0)
 
 unset log
 unset label
@@ -19,8 +19,8 @@ set title "<W>(TeB)"
 set xlabel "TeB"
 set ylabel "<W>
 
-set xrange [0.0000001:5]    
-plot "results/loopCosmos_dim_4.dat" u 8:(($11-1-$8**2/6.0)/$8**3)/:12 with yerrorbars ls 1, \
+set xrange [0.0000001:16]    
+plot "results/WvsgBT.dat" u 8:(($11-1-$8**2/6.0)):12 with yerrorbars ls 1, \
 	p(x) with lines
 
 pause -1
