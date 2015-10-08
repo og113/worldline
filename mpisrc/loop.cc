@@ -193,7 +193,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	uint Seed = time(NULL)+rank+2;
 	Loop<dim> l(p.K,Seed);
 	uint counter = 0, id;
-	number s0, vz, z, I, rate, lp = 1.0/p.G*p.B; // w, gbt = p.G*p.B*p.T; // n.b. mass=1, lp is large parameter for weak fields
+	number s0, vz, z, I, f, lp = 1.0/p.G*p.B; // w, gbt = p.G*p.B*p.T; // n.b. mass=1, lp is large parameter for weak fields
 	number *sums_local = new number[Nq]();
 
 	for (uint j=0; j<Npw; j++) {
@@ -206,11 +206,9 @@ for (uint pl=0; pl<Npl; pl++) {
 		vz *= z;
 		//w = gsl_sf_cos(gbt*I0(l));
 		I = I0(l);
-		rate = -pi/12.0;
-		rate += (abs(I)<lp? -pi*I*I/4.0: -(pi*lp/2.0)*(abs(I)-lp/2.0));
-		rate *= -2.0*pow(p.G*p.B/4.0/pi,2.0);
+		f = (abs(I)<lp? -pi*I*I/4.0: -(pi*lp/2.0)*(abs(I)-lp/2.0));
 		sums_local[0] += s0;
-		sums_local[2] += rate;
+		sums_local[2] += f;
 		sums_local[4] += vz;
 		sums_local[6] += z;
 	
@@ -290,7 +288,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		string timenumber = currentDateTime();	
 	
 		Filename rf = "results/loop_dim_"+nts<uint>(dim)+".dat";
-		rf.ID += "Office";
+		rf.ID += "Cosmos";
 		FILE * ros;
 		ros = fopen(((string)rf).c_str(),"a");
 		fprintf(ros,"%12s%5i%5i%8i%8i%8.5g%8.5g%8.5g",timenumber.c_str(),dim,p.K,p.Nl,p.Ng,p.G,p.B,p.T);
@@ -313,7 +311,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		cout << "timenumber: " << timenumber << endl;
 		printf("\n");
 		printf("%8s%8s%8s%8s%8s%8s%8s%12s%12s%12s%12s%12s%12s\n","dim","Nl","Ng","K","G","B","T","S0",\
-			"%errorS0","Rate","%errorW","V","%errorV");
+			"%errorS0","F","%errorF","V","%errorV");
 		printf("%8i%8i%8i%8i%8.5g%8.5g%8.5g",dim,p.Nl,p.Ng,p.K,p.G,p.B,p.T);
 		for (uint j=0; j<Nr; j++)
 			printf("%12.4g%12.4g",averages[j],100.0*errors[j]/averages[j]);
