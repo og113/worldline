@@ -27,8 +27,8 @@ CONTENTS
 -------------------------------------------------------------------------------------------------------------------------*/
 
 // Size
-const uint Parameters::Size = 8;
-const uint ParametersRange::Size = 8;
+const uint Parameters::Size = 10;
+const uint ParametersRange::Size = 10;
 
 // step
 void Parameters::step(const ParametersRange& pr) {
@@ -64,6 +64,14 @@ void Parameters::step(const ParametersRange& pr) {
 				stepSize = ((pr.Max).G-(pr.Min).G)/((pr.Steps)[label-1]-1.0);
 				G += stepSize;
 				break;
+			case b:
+				stepSize = ((pr.Max).B-(pr.Min).B)/((pr.Steps)[label-1]-1.0);
+				B += stepSize;
+				break;
+			case t:
+				stepSize = ((pr.Max).T-(pr.Min).T)/((pr.Steps)[label-1]-1.0);
+				T += stepSize;
+				break;
 			case epsi:
 				stepSize = ((pr.Max).Epsi-(pr.Min).Epsi)/((pr.Steps)[label-1]-1.0);
 				Epsi += stepSize;
@@ -88,6 +96,8 @@ ostream& operator<<(ostream& os, const Parameters& p) {
 	os << setw(20) << "Npsw" << setw(20) << p.Npsw << endl;
 	os << setw(20) << "K" << setw(20) << p.K << endl;
 	os << setw(20) << "G" << setw(20) << p.G << endl;
+	os << setw(20) << "B" << setw(20) << p.B << endl;
+	os << setw(20) << "T" << setw(20) << p.T << endl;
 	os << setw(20) << "Epsi" << setw(20) << p.Epsi << endl;
 	return os;
 }
@@ -123,18 +133,20 @@ void Parameters::load(const string& filename) {
 	is >> dross >> Npsw;
 	is >> dross >> K;
 	is >> dross >> G;
+	is >> dross >> B;
+	is >> dross >> T;
 	is >> dross >> Epsi;
 	is.close();
 }
 
 // empty
 bool Parameters::empty() const {
-	return (Nl==0 && Ng==0 && Nig==0 && Nsw==0 && Npsw==0 && K==0 && abs(G)<MIN_NUMBER);
+	return (Nl==0 && Ng==0 && Nig==0 && Nsw==0 && Npsw==0 && K==0 && abs(G)<MIN_NUMBER && abs(B)<MIN_NUMBER && abs(T)<MIN_NUMBER && abs(Epsi)<MIN_NUMBER);
 }
 
 // operator==
 bool operator==(const Parameters& l, const Parameters& r){
-	return (l.Nl==r.Nl && l.Ng==r.Ng && l.Nig==r.Nig && l.Nsw==r.Nsw && l.Npsw==r.Npsw && l.K==r.K && abs(l.G-r.G)<MIN_NUMBER);
+	return (l.Nl==r.Nl && l.Ng==r.Ng && l.Nig==r.Nig && l.Nsw==r.Nsw && l.Npsw==r.Npsw && l.K==r.K && abs(l.G-r.G)<MIN_NUMBER && abs(l.B-r.B)<MIN_NUMBER && abs(l.T-r.T)<MIN_NUMBER && abs(l.Epsi-r.Epsi)<MIN_NUMBER);
 }
 
 // writeBinary
@@ -146,6 +158,8 @@ ostream& Parameters::writeBinary(ostream& os) const {
 	os.write(reinterpret_cast<const char*>(&Npsw),sizeof(uint));
 	os.write(reinterpret_cast<const char*>(&K),sizeof(uint));
 	os.write(reinterpret_cast<const char*>(&G),sizeof(number));
+	os.write(reinterpret_cast<const char*>(&B),sizeof(number));
+	os.write(reinterpret_cast<const char*>(&T),sizeof(number));
 	os.write(reinterpret_cast<const char*>(&Epsi),sizeof(number));
 	return os;
 }
@@ -159,6 +173,8 @@ istream& Parameters::readBinary(istream& is) {
 	is.read(reinterpret_cast<char*>(&Npsw),sizeof(uint));
 	is.read(reinterpret_cast<char*>(&K),sizeof(uint));
 	is.read(reinterpret_cast<char*>(&G),sizeof(number));
+	is.read(reinterpret_cast<char*>(&B),sizeof(number));
+	is.read(reinterpret_cast<char*>(&T),sizeof(number));
 	is.read(reinterpret_cast<char*>(&Epsi),sizeof(number));
 	return is;
 }
@@ -233,7 +249,9 @@ void ParametersRange::load(const string& filename) {
 	is >> dross >> dross >> Min.Npsw >> dross >> Max.Npsw >> dross >> Steps[4] >> dross;
 	is >> dross >> dross >> Min.K >> dross >> Max.K >> dross >> Steps[5] >> dross;
 	is >> dross >> dross >> Min.G >> dross >> Max.G >> dross >> Steps[6] >> dross;
-	is >> dross >> dross >> Min.Epsi >> dross >> Max.Epsi >> dross >> Steps[7] >> dross;
+	is >> dross >> dross >> Min.B >> dross >> Max.B >> dross >> Steps[7] >> dross;
+	is >> dross >> dross >> Min.T >> dross >> Max.T >> dross >> Steps[8] >> dross;
+	is >> dross >> dross >> Min.Epsi >> dross >> Max.Epsi >> dross >> Steps[9] >> dross;
 	is.close();
 }
 
@@ -275,8 +293,12 @@ ostream& operator<<(ostream& os, const ParametersRange& pr) {
 						<< setw(12) << (pr.Max).K << " , " << setw(12) << (pr.Steps)[5] << " ]" << endl;
 	os << setw(20) << "G" << "[ " << setw(12) << (pr.Min).G << " , " \
 						<< setw(12) << (pr.Max).G << " , " << setw(12) << (pr.Steps)[6] << " ]" << endl;
+	os << setw(20) << "B" << "[ " << setw(12) << (pr.Min).B << " , " \
+						<< setw(12) << (pr.Max).B << " , " << setw(12) << (pr.Steps)[7] << " ]" << endl;
+	os << setw(20) << "T" << "[ " << setw(12) << (pr.Min).T << " , " \
+						<< setw(12) << (pr.Max).T << " , " << setw(12) << (pr.Steps)[8] << " ]" << endl;
 	os << setw(20) << "Epsi" << "[ " << setw(12) << (pr.Min).Epsi << " , " \
-						<< setw(12) << (pr.Max).Epsi << " , " << setw(12) << (pr.Steps)[7] << " ]" << endl;
+						<< setw(12) << (pr.Max).Epsi << " , " << setw(12) << (pr.Steps)[9] << " ]" << endl;
 	return os;
 }
 
