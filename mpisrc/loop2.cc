@@ -13,6 +13,7 @@
 #include <mpi.h>
 #include <gsl/gsl_sf_exp.h>
 #include <gsl/gsl_sf_trig.h>
+#include <gsl/gsl_sf_log.h>
 #include "folder.h"
 #include "genloop.h"
 #include "parameters.h"
@@ -49,6 +50,11 @@ pr.load("inputs");
 Parameters p = pr.Min;
 if (p.empty()) {
 	cerr << "Parameters empty: nothing in inputs file" << endl;
+	return 1;
+}
+if (p.G==0 || p.Nms==0 || p.Nsw==0 || p.Npsw==0 ) {
+	cerr << "trivial loop2 run due to parameters: " << endl;
+	cerr << p << endl;
 	return 1;
 }
 
@@ -108,7 +114,7 @@ else if (!dataChoice.empty()) {
 // parameter loops
 uint Npl = 1; // number of parameter loops
 Parameters::Label label = static_cast<Parameters::Label>(0);
-if (pr.toStep(label)) {
+if (pr.toStep(label) && label!=2) {
 	Npl = (pr.Steps)[label-1];
 	if (rank==root)
 		cout << "looping " << label << " over " << Npl << " steps" << endl;
@@ -119,10 +125,11 @@ if (pr.toStep(label)) {
 // these quantities can be calculated quickly and parallely
 uint Nr = 3; // number of different results desired
 uint Nq = 2*Nr; // total number of quantities to sum
-number *sums = NULL;
-number *temp = NULL; // as MPI_SUM doesn't store previous value
+number *avgs = NULL;
+number *weighting = NULL;
+number expCorrTime = 0.0, intCorrTime = 0.5;
 
-// distribution of quantity
+// full data for quantities
 number *data_s0 = NULL, *data_w = NULL, *data_v = NULL;
 
 /*----------------------------------------------------------------------------------------------------------------------------
@@ -136,155 +143,144 @@ for (uint pl=0; pl<Npl; pl++) {
 	if (pr.toStep(label) && pl>0)
 		p.step(pr);
 		
-	uint Npg = (uint)p.Nl/p.Ng; // Npg, number of loops per group
-	uint Npw = (uint)p.Nl/Nw; // Npw, number of loops per worker
-	uint Ngpw = (uint)p.Ng/Nw; // Ngpw, number of groups per worker
 	uint Np = pow(2,p.K); // Np, number of points per loop
 	
 	if (rank==root) {
-		// checking relevant ratios are integers
-		if (p.Nl%p.Ng!=0 || p.Nl%Nw!=0 || p.Ng%Nw!=0) {
-			cerr << "Relevant ratios are not all integers:" << endl;
-			cerr << "Nl = " << p.Nl << ", Ng = " << p.Ng << ", Nw = " << Nw << endl;
+		// checking Nl==Nw
+		if (p.Nl!=Nw) {
+			cerr << "Need Nl = Nw for loop2" << endl;
+			cerr << "Nl = " << Nl ", Nw = " << Nw << endl;
 			MPI_Abort(MPI_COMM_WORLD,1);
 		}
 		// allocating space for data in root
-		sums = new number[Nq](); // n.b. () is for initializing to zero
-		temp = new number[Nq]();
-		data_s0 = new number[p.Ng]();
-		data_w = new number[p.Ng]();
-		data_v = new number[p.Ng]();
+		avgs = new number[Nq](); // n.b. () is for initializing to zero
+		errorsSqrd = new number[Nq]();
+		data_s0 = new number[Nw*p.Nsw]();
+		data_w = new number[Nw*p.Nsw]();
+		data_v = new number[Nw*p.Nsw]();
 	}
 
 	/*----------------------------------------------------------------------------------------------------------------------------
 		4. coordinating files and data arrays
 	----------------------------------------------------------------------------------------------------------------------------*/
 	
-	uint loopMin = rank*Npw;
-	uint loopMax = (rank+1)*Npw-1;
-	
-	// constructing folders
-	FilenameAttributes faMin, faMax;
-	faMin.Directory = "data/loops/dim_"+nts<uint>(dim)+"/K_"+nts<uint>(p.K);
-	faMin.Timenumber = "";
-	faMax = faMin;
-	(faMin.Extras).push_back(StringPair("run",nts<uint>(loopMin)));
-	(faMax.Extras).push_back(StringPair("run",nts<uint>(loopMax)));
+	// loop file
+	Filename file = "data/gaussian/loops/dim_"+nts<uint>(dim)+"/K_"+nts<uint>(p.K)+"/loop_run_"+nts<uint>(rank)+".dat";
 
-	Folder folder(faMin,faMax);
-	if (folder.size()!=(loopMax-loopMin+1)) {
-		cerr << "error for processor " << rank << ":" << endl;
-		cerr << "folder.size() = " << folder.size() << ", loopMax-loopMin+1 = " << loopMax-loopMin+1 << endl;
-		return 1;
-	}
-	
 	// local data arrays
-	number *data_local_s0 = new number[Ngpw]();
-	number *data_local_w = new number[Ngpw]();
-	number *data_local_v = new number[Ngpw]();
+	number *data_local_s0 = new number[p.Nsw]();
+	number *data_local_w = new number[p.Nsw]();
+	number *data_local_v = new number[p.Nsw]();
+	number *autoCorr = new number[p.Nsw-1](); //note there are one fewer autocorrelations than sweeps
 
 	/*----------------------------------------------------------------------------------------------------------------------------
 		5. evaluating loop quantitites
 	----------------------------------------------------------------------------------------------------------------------------*/
 
 	uint Seed = time(NULL)+rank+2;
-	Loop<dim> l(p.K,Seed);
-	Metropolis<dim> met(l,p.K,++Seed);
+	Loop<dim> loop(p.K,Seed);
+	Metropolis<dim> met(loop,p.K,++Seed);
 	uint groupCounter = 0, id;
 	number s0, vz, z, w;
-	number *sums_local = new number[Nq]();
+	number *avgs_local = new number[Nq]();
 
-	for (uint j=0; j<Npw; j++) {
-		groupCounter++;
-		l.load(folder[j]);
-		
-		if (abs(p.G)>MIN_NUMBER && p.Nms>0) {
-			met.step(Nig*Np);
-			met.setSeed(time(NULL)+j*1000+rank+2);
-		}
-		
-		for (uint k=0; k<Nsw; k++) {
-		
-			if (abs(p.G)>MIN_NUMBER && p.Nms>0) {
-				met.step(Npsw*Np);
-				met.setSeed(time(NULL)+j*1000+rank+2);
-			}
-			
-			s0 = S0(l);
-			w = gsl_sf_cos(p.G*I0(l));
-			v = V0(l);
-			sums_local[0] += s0;
-			sums_local[2] += w;
-			sums_local[4] += v;
+	loop.load(file);
 	
-			if (groupCounter==Npg) {
-				for (uint l=0; l<Nr; k++) 
-					sums_local[2*l+1] = sums_local[2*l]*sums_local[2*l];
-				
-				id = ((j+1)/Npg-1); // for global id: +rank*(p.Ng/Nw)
-				
-				data_local_s0[id] = sums_local[0]/(number)Npg;
-				data_local_w[id] = sums_local[2]/(number)Npg;
-				data_local_v[id] = sums_local[4]/(number)Npg;
-	
-				MPI_Reduce(sums_local, temp, Nq, MPI_DOUBLE, MPI_SUM, root, MPI_COMM_WORLD);
-				if (rank==root) {
-					for (uint l=0; l<Nq; l++)
-						sums[l] += temp[l];
-				}
-				memset(sums_local,0,Nq*sizeof(number));
-				groupCounter = 0;
-			}
-		}
+	// doing dummy metropolis runs
+	if (abs(p.G)>MIN_NUMBER && p.Nsw>0) {
+		met.step(Nig*Np);
+		met.setSeed(time(NULL)+rank+2);
 	}
 	
-	delete[] sums_local;
+	for (uint k=0; k<Nsw; k++) {
 	
-	// gathering data
+		// metropolis runs per sweep
+		if (abs(p.G)>MIN_NUMBER && p.Nms>0) {
+			met.step(Npsw*Np);
+			met.setSeed(time(NULL)+k*1000+rank+2);
+		}
+		
+		s0 = S0(loop);
+		w = gsl_sf_cos(p.G*I0(loop));
+		v = V0(loop);
+		avgs_local[0] += s0;
+		avgs_local[2] += w;
+		avgs_local[4] += v;
+		for (uint l=0; l<Nr; l++) 
+			avgs_local[2*l+1] += avgs_local[2*l]*avgs_local[2*l];
+		
+		data_local_s0[k] = local[0];
+		data_local_w[k] = local[2];
+		data_local_v[k] = local[4];
+		
+	}
+	for (uint l=0; l<Nq; l++) 
+		avgs_local[l] /= (number)Nsw;
+	
+	// gathering data - do i really need all this data together?
 	MPI_Gather(data_local_s0, Ngpw, MPI_DOUBLE, data_s0, Ngpw, MPI_DOUBLE, root, MPI_COMM_WORLD);
 	MPI_Gather(data_local_w, Ngpw, MPI_DOUBLE, data_w, Ngpw, MPI_DOUBLE, root, MPI_COMM_WORLD);
 	MPI_Gather(data_local_v, Ngpw, MPI_DOUBLE, data_v, Ngpw, MPI_DOUBLE, root, MPI_COMM_WORLD);
-
+	
 	/*----------------------------------------------------------------------------------------------------------------------------
 		6. evaluating errors
 	----------------------------------------------------------------------------------------------------------------------------*/
 
+	// calculating (scaled) autocorrelations, using v
+	number scaling = avgs_local[5]-avgs_local[4]*avgs_local[4];
+	autoCorr[0] = 1.0;
+	
+	uint expCount = 0;
+	bool expBool = true;
+	
+	// n.b. expensive double sum, could be relegated to another analysis program
+	for (uint k=1; k<(Nsw-1); k++) {
+		for (uint l=0; l<(Nsw-k); l++)
+			autoCorr[k] += data_local_v[l]*data_local_v[l+k];
+		autoCorr[k] /= (number)(Nsw-1.0-k)
+		autoCorr[k] -= avgs_local[4]*avgs_local[4];
+		autoCorr[k] /= scaling;
+		
+		intCorrTime += autoCorr[k];
+		
+		if (autoCorr[k]>0 && autoCorr[k]<autoCorr[k-1] && expBool) {
+			expCount++;
+			expCorrTime += -(number)k/gsl_sf_log(autoCorr[k]);
+		}
+		else
+			expBool = false;
+	}
+	if (expCount!=0)
+		expCorrTime /= (number)expCount;
+
+	// calculating errors locally
+	number variance;
+	number *weighting_local = new number[Nr]();
+	// errors
+	for (uint j=0; j<Nr; j++) {
+		variance = avgs_local[2*j+1] - avgs_local[2*j]*avgs_local[2*j];
+		weighting_local[j] = (number)Nsw/intCorrTime/variance;
+		avgs_local[2*j] *= weighting_local[j];
+	}
+	
+	// gathering averages
+	MPI_Reduce(avgs_local, avgs, Nq, MPI_DOUBLE, MPI_SUM, root, MPI_COMM_WORLD);
+	MPI_Reduce(weighting_local, weighting, Nq, MPI_DOUBLE, MPI_SUM, root, MPI_COMM_WORLD);
 	if (rank==root) {
-		vector<number> averages(Nr);
-		vector<number> errors(Nr);
-		number average2, variance;
-		
-		// first, results not requiring auxilliary quantities, i.e. s0 and w
-		for (uint j=0; j<(Nr-Na); j++) {
-			averages[j] = sums[2*j]/(number)p.Nl;
-			average2 = sums[2*j+1]/(number)Npg/(number)p.Nl;
-			variance = average2-averages[j]*averages[j];
-			errors[j] = sqrt(variance/(p.Ng-1.0));
-		}
-		
-		// then the more complicated ones, v from vz and z
-		if (Na>0) {
-			number v, v2, z, z2, vz;
-			number sigma_vv, sigma_vz, sigma_zz;
-			
-			v = sums[2*(Nr-Na)]/(number)p.Nl;
-			v2 = sums[2*(Nr-Na)+1]/(number)Npg/(number)p.Nl;
-			z = sums[2*(Nr-Na+1)]/(number)p.Nl;
-			z2 = sums[2*(Nr-Na+1)+1]/(number)Npg/(number)p.Nl;
-			vz = sums[2*(Nr+Na)]/(number)Npg/(number)p.Nl;
-			sigma_vv = v2-v*v;
-			sigma_vz = vz-v*z;
-			sigma_zz = z2-z*z;
-			
-			averages[Nr-Na] = v/z;
-			errors[Nr-Na] = sqrt((sigma_vv - 2.0*v*sigma_vz/z + v*v*sigma_zz/z/z)/z/z);
-			
-		}
+		for (uint k=0; k<Nq; k++)
+			avgs[k] /= (number)weighting[k];
+	}
+	
+	delete[] avgs_local;
+	avgs_local = NULL;
+	delete[] weighting_local;
+	weighting_local = NULL;
 
 	/*----------------------------------------------------------------------------------------------------------------------------
 		7. printing results
 	----------------------------------------------------------------------------------------------------------------------------*/
 
+	if (rank==root) {
 		string timenumber = currentDateTime();	
 	
 		Filename rf = "results/loop_dim_"+nts<uint>(dim)+".dat";
@@ -318,16 +314,26 @@ for (uint pl=0; pl<Npl; pl++) {
 		printf("\n\n");
 		
 		// deleting space for data in root
-		delete[] sums;
-		sums = NULL;
-		delete[] temp;
-		temp = NULL;
-		delete[] data;
-		data = NULL;
+		delete[] avgs;
+		avgs = NULL;
+		delete[] weighting;
+		weighting = NULL;
+		delete[] data_s0;
+		data_s0 = NULL;
+		delete[] data_w;
+		data_w = NULL;
+		delete[] data_v;
+		data_v = NULL;
 	}
 	
-	delete[] data_local;
-	data_local = NULL;
+	delete[] data_local_s0;
+	delete[] data_local_w;
+	delete[] data_local_v
+	delete[] autoCorr;
+	data_local_s0 = NULL;
+	data_local_w = NULL;
+	data_local_v = NULL;
+	autoCorr = NULL;
 }
 
 MPI_Barrier(MPI_COMM_WORLD);
