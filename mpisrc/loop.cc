@@ -168,7 +168,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	
 	// constructing folders
 	FilenameAttributes faMin, faMax;
-	faMin.Directory = "data/loops/s0/dim_"+nts<uint>(dim)+"/K_"+nts<uint>(p.K);
+	faMin.Directory = "data/gaussian/loops/dim_"+nts<uint>(dim)+"/K_"+nts<uint>(p.K);
 	faMin.Timenumber = "";
 	faMax = faMin;
 	(faMin.Extras).push_back(StringPair("run",nts<uint>(loopMin)));
@@ -287,7 +287,7 @@ for (uint pl=0; pl<Npl; pl++) {
 
 		string timenumber = currentDateTime();	
 	
-		Filename rf = "results/loop_dim_"+nts<uint>(dim)+".dat";
+		Filename rf = "results/gaussian/loop_dim_"+nts<uint>(dim)+".dat";
 		rf.ID += "Cosmos";
 		FILE * ros;
 		ros = fopen(((string)rf).c_str(),"a");
@@ -299,7 +299,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		
 		cout << "results printed to " << rf << endl;
 		if (!dataChoice.empty()) {
-			rf = "data/"+timenumber+"loop_data_"+dataChoice+"_dim_"+nts<uint>(dim)+"_K_"+nts<uint>(p.K)+".dat";
+			rf = "data/gaussian/"+timenumber+"data_"+dataChoice+"_dim_"+nts<uint>(dim)+"_K_"+nts<uint>(p.K)+".dat";
 			ros = fopen(((string)rf).c_str(),"w");
 			for (uint j=0; j<p.Ng; j++) {
 				fprintf(ros,"%12s%5i%5i%8i%8i%8.5g%8.5g%8.5g%8i%13.5g\n",timenumber.c_str(),dim,p.K,p.Nl,p.Ng,p.G,p.B,p.T,j,data[j]);

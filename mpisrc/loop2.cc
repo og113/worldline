@@ -84,27 +84,12 @@ if (argc % 2 && argc>1) {
 	for (uint j=0; j<(uint)(argc/2); j++) {
 		string id = argv[2*j+1];
 		if (id[0]=='-') id = id.substr(1);
-		if (id.compare("data")==0 || id.compare("dataChoice")==0) dataChoice = (string)(argv[2*j+2]);
+		if (id.compare("data")==0 || id.compare("dataChoice")==0);
 		else {
 			cerr << "argv id " << id << " not understood" << endl;
 			MPI_Abort(MPI_COMM_WORLD,1);
 		}
 	}
-}
-
-// setting dataChoice to a standard form
-if (dataChoice.compare("S0")==0 || dataChoice.compare("s0")==0) {
-	dataChoice = "s0";
-}
-else if (dataChoice.compare("V")==0 || dataChoice.compare("v")==0) {
-	dataChoice = "v";
-}
-else if (dataChoice.compare("W")==0 || dataChoice.compare("w")==0) {
-	dataChoice = "w";
-}
-else if (!dataChoice.empty()) {
-	cerr << "dataChoice, " << dataChoice << ", not understood" << endl;
-	dataChoice = "";
 }
 
 /*----------------------------------------------------------------------------------------------------------------------------
@@ -165,7 +150,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	----------------------------------------------------------------------------------------------------------------------------*/
 	
 	// loop file
-	Filename file = "data/gaussian/loops/dim_"+nts<uint>(dim)+"/K_"+nts<uint>(p.K)+"/loop_run_"+nts<uint>(rank)+".dat";
+	Filename loadFile = "data/gaussian/loops/dim_"+nts<uint>(dim)+"/K_"+nts<uint>(p.K)+"/loop_run_"+nts<uint>(rank)+".dat";
 
 	// local data arrays
 	number *data_local_s0 = new number[p.Nsw]();
@@ -184,7 +169,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	number s0, vz, z, w;
 	number *avgs_local = new number[Nq]();
 
-	loop.load(file);
+	loop.load(loadFile);
 	
 	// doing dummy metropolis runs
 	if (abs(p.G)>MIN_NUMBER && p.Nsw>0) {
@@ -218,9 +203,27 @@ for (uint pl=0; pl<Npl; pl++) {
 		avgs_local[l] /= (number)Nsw;
 	
 	// gathering data - do i really need all this data together?
-	MPI_Gather(data_local_s0, Ngpw, MPI_DOUBLE, data_s0, Ngpw, MPI_DOUBLE, root, MPI_COMM_WORLD);
+	/*MPI_Gather(data_local_s0, Ngpw, MPI_DOUBLE, data_s0, Ngpw, MPI_DOUBLE, root, MPI_COMM_WORLD);
 	MPI_Gather(data_local_w, Ngpw, MPI_DOUBLE, data_w, Ngpw, MPI_DOUBLE, root, MPI_COMM_WORLD);
-	MPI_Gather(data_local_v, Ngpw, MPI_DOUBLE, data_v, Ngpw, MPI_DOUBLE, root, MPI_COMM_WORLD);
+	MPI_Gather(data_local_v, Ngpw, MPI_DOUBLE, data_v, Ngpw, MPI_DOUBLE, root, MPI_COMM_WORLD);*/
+	
+	/*----------------------------------------------------------------------------------------------------------------------------
+		6. printing results
+	----------------------------------------------------------------------------------------------------------------------------*/
+	
+	// printing loops
+	Filename saveFile = "results/metropolis/loops/dim_"+nts<uint>(dim)+"/K_"+nts<uint>(p.K)+"/loop_rank_"+nts<uint>(rank)+".dat";
+	loop.save(saveFile);
+	
+	// printing results
+	Filename s0File = "results/metropolis/s0_dim_"+nts<uint>(dim)+"K_"+nts<uint>(p.K)+"_rank_"+nts<uint>(rank)+".dat";
+	Filename wFile = s0File, vFile = s0File;
+	wFile.ID = "w";
+	vFile.ID = "v";
+	// to be honest, as there is hardly any real passing of stuff around here it would be preferable to use a proper class for the data with save and load capabilities, and that deletes the data at the end of it's lifetime.
+	// then, after saving the stuff to file, just print a couple of simple quantities, like the means, the means of the squares and the variances.
+	// all the real analysis will then take place in a separate analysis program.
+	// the data class could carry around with it a couple of simple quantities like the mean, the mean of the square etc.
 	
 	/*----------------------------------------------------------------------------------------------------------------------------
 		6. evaluating errors
@@ -283,7 +286,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	if (rank==root) {
 		string timenumber = currentDateTime();	
 	
-		Filename rf = "results/loop_dim_"+nts<uint>(dim)+".dat";
+		Filename rf = "results/metropolis/loop_dim_"+nts<uint>(dim)+".dat";
 		rf.ID += "Office";
 		FILE * ros;
 		ros = fopen(((string)rf).c_str(),"a");
@@ -295,7 +298,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		
 		cout << "results printed to " << rf << endl;
 		if (!dataChoice.empty()) {
-			rf = "data/"+timenumber+"loop_data_"+dataChoice+"_dim_"+nts<uint>(dim)+"_K_"+nts<uint>(p.K)+".dat";
+			rf = "data/metropolis/"+timenumber+"data_"+dataChoice+"_dim_"+nts<uint>(dim)+"_K_"+nts<uint>(p.K)+".dat";
 			ros = fopen(((string)rf).c_str(),"w");
 			for (uint j=0; j<p.Ng; j++) {
 				fprintf(ros,"%12s%5i%5i%8i%8i%8.2g%8i%13.5g\n",timenumber.c_str(),dim,p.K,p.Nl,p.Ng,p.G,j,data[j]);
