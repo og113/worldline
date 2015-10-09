@@ -193,7 +193,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	uint Seed = time(NULL)+rank+2;
 	Loop<dim> l(p.K,Seed);
 	uint counter = 0, id;
-	number s0, vz, z, I, f, lp = 1.0/p.G*p.B; // w, gbt = p.G*p.B*p.T; // n.b. mass=1, lp is large parameter for weak fields
+	number s0, vz, z, I, f, lp = 1.0/p.G/p.B; // w, gbt = p.G*p.B*p.T; // n.b. mass=1, lp is large parameter for weak fields
 	number *sums_local = new number[Nq]();
 
 	for (uint j=0; j<Npw; j++) {
@@ -205,8 +205,8 @@ for (uint pl=0; pl<Npl; pl++) {
 		z = gsl_sf_exp(-vz);
 		vz *= z;
 		//w = gsl_sf_cos(gbt*I0(l));
-		I = I0(l);
-		f = (abs(I)<lp? -pi*I*I/4.0: -(pi*lp/2.0)*(abs(I)-lp/2.0));
+		I = abs(I0(l));
+		f = (I<lp? -pi*I*I/4.0: -(pi*lp/2.0)*(I-lp/2.0));
 		sums_local[0] += s0;
 		sums_local[2] += f;
 		sums_local[4] += vz;
