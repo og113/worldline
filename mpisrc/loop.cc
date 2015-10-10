@@ -288,7 +288,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		string timenumber = currentDateTime();	
 	
 		Filename rf = "results/gaussian/loop_dim_"+nts<uint>(dim)+".dat";
-		rf.ID += "Cosmos";
+		rf.ID += "Laptop";
 		FILE * ros;
 		ros = fopen(((string)rf).c_str(),"a");
 		fprintf(ros,"%12s%5i%5i%8i%8i%8.5g%8.5g%8.5g",timenumber.c_str(),dim,p.K,p.Nl,p.Ng,p.G,p.B,p.T);
