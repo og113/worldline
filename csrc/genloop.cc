@@ -589,10 +589,28 @@ Metropolis<Dim>::Metropolis(Loop<Dim>& L, const Parameters& p, const uint& s): S
 	Generator = gsl_rng_alloc(gsl_rng_taus);
 }
 
+// constructor
+template <uint Dim>
+Metropolis<Dim>::Metropolis(const Parameters& p, const uint& s): Seed(s), Steps(0) {
+	LoopPtr = NULL;
+	P = &p;
+	G = P->G;
+	SOld = 0.0;
+
+	// setting generator
+	Generator = gsl_rng_alloc(gsl_rng_taus);
+}
+
 // destructor
 template <uint Dim>
 Metropolis<Dim>::~Metropolis() {
 	delete Generator;
+}
+
+// set loop
+template <uint Dim>
+void Metropolis<Dim>::setLoop(Loop<Dim>& L) {
+	LoopPtr = &L;
 }
 
 // set seed

@@ -1,6 +1,6 @@
 /*----------------------------------------------------------------------------------------------------------------------------
 	loop
-		program to calculate quantities about worldlines
+		program to calculate quantities about worldlines, using gaussian probability distribution
 ----------------------------------------------------------------------------------------------------------------------------*/
 
 #include <cstring>
@@ -96,14 +96,13 @@ else if (dataChoice.compare("V")==0 || dataChoice.compare("v")==0) {
 else if (dataChoice.compare("Z")==0 || dataChoice.compare("z")==0) {
 	dataChoice = "z";
 }
-else if (dataChoice.compare("W")==0 || dataChoice.compare("w")==0) {
-	dataChoice = "w";
+else if (dataChoice.compare("R")==0 || dataChoice.compare("r")==0) {
+	dataChoice = "r";
 }
 else if (!dataChoice.empty()) {
 	cerr << "dataChoice, " << dataChoice << ", not understood" << endl;
 	dataChoice = "";
 }
-
 
 /*----------------------------------------------------------------------------------------------------------------------------
 	3. defining basic quantitites	
@@ -169,7 +168,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	
 	// constructing folders
 	FilenameAttributes faMin, faMax;
-	faMin.Directory = "data/loops/dim_"+nts<uint>(dim)+"/K_"+nts<uint>(p.K);
+	faMin.Directory = "data/gaussian/loops/dim_"+nts<uint>(dim)+"/K_"+nts<uint>(p.K);
 	faMin.Timenumber = "";
 	faMax = faMin;
 	(faMin.Extras).push_back(StringPair("run",nts<uint>(loopMin)));
@@ -194,7 +193,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	uint Seed = time(NULL)+rank+2;
 	Loop<dim> l(p.K,Seed);
 	uint counter = 0, id;
-	number s0, vz, z, w;
+	number s0, vz, z, I, f, lp = 1.0/p.G/p.B; // w, gbt = p.G*p.B*p.T; // n.b. mass=1, lp is large parameter for weak fields
 	number *sums_local = new number[Nq]();
 
 	for (uint j=0; j<Npw; j++) {
@@ -202,12 +201,14 @@ for (uint pl=0; pl<Npl; pl++) {
 		l.load(folder[j]);
 
 		s0 = S0(l);
-		vz = V0(l);
+		vz = p.G*V0(l);
 		z = gsl_sf_exp(-vz);
 		vz *= z;
-		w = gsl_sf_cos(p.G*I0(l));
+		//w = gsl_sf_cos(gbt*I0(l));
+		I = abs(I0(l));
+		f = (I<lp? -pi*I*I/4.0: -(pi*lp/2.0)*(I-lp/2.0));
 		sums_local[0] += s0;
-		sums_local[2] += w;
+		sums_local[2] += f;
 		sums_local[4] += vz;
 		sums_local[6] += z;
 	
@@ -220,12 +221,12 @@ for (uint pl=0; pl<Npl; pl++) {
 				id = ((j+1)/Npg-1); // for global id: +rank*(p.Ng/Nw)
 				if (dataChoice.compare("s0")==0)
 					data_local[id] = sums_local[0]/(number)Npg;
-				else if (dataChoice.compare("v")==0)
-					data_local[id] = sums_local[1]/(number)Npg;
-				else if (dataChoice.compare("z")==0)
+				else if (dataChoice.compare("r")==0) 
 					data_local[id] = sums_local[2]/(number)Npg;
-				else if (dataChoice.compare("w")==0) 
-					data_local[id] = sums_local[3]/(number)Npg;
+				else if (dataChoice.compare("v")==0)
+					data_local[id] = sums_local[4]/sums_local[6];
+				else if (dataChoice.compare("z")==0)
+					data_local[id] = sums_local[4]/(number)Npg;
 			}
 			
 			MPI_Reduce(sums_local, temp, Nq, MPI_DOUBLE, MPI_SUM, root, MPI_COMM_WORLD);
@@ -286,10 +287,11 @@ for (uint pl=0; pl<Npl; pl++) {
 
 		string timenumber = currentDateTime();	
 	
-		Filename rf = "results/loop_dim_"+nts<uint>(dim)+".dat";
+		Filename rf = "results/gaussian/loop_dim_"+nts<uint>(dim)+".dat";
+		rf.ID += "Cosmos";
 		FILE * ros;
 		ros = fopen(((string)rf).c_str(),"a");
-		fprintf(ros,"%12s%5i%5i%8i%8i%8.2g",timenumber.c_str(),dim,p.K,p.Nl,p.Ng,p.G);
+		fprintf(ros,"%12s%5i%5i%8i%8i%8.5g%8.5g%8.5g",timenumber.c_str(),dim,p.K,p.Nl,p.Ng,p.G,p.B,p.T);
 		for (uint j=0; j<Nr; j++)
 			fprintf(ros,"%13.5g%13.5g",averages[j],errors[j]);
 		fprintf(ros,"\n");
@@ -297,10 +299,10 @@ for (uint pl=0; pl<Npl; pl++) {
 		
 		cout << "results printed to " << rf << endl;
 		if (!dataChoice.empty()) {
-			rf = "results/"+timenumber+"loop_data_"+dataChoice+"_dim_"+nts<uint>(dim)+"_K_"+nts<uint>(p.K)+".dat";
+			rf = "data/gaussian/"+timenumber+"data_"+dataChoice+"_dim_"+nts<uint>(dim)+"_K_"+nts<uint>(p.K)+".dat";
 			ros = fopen(((string)rf).c_str(),"w");
 			for (uint j=0; j<p.Ng; j++) {
-				fprintf(ros,"%12s%5i%5i%8i%8i%8.2g%8i%13.5g\n",timenumber.c_str(),dim,p.K,p.Nl,p.Ng,p.G,j,data[j]);
+				fprintf(ros,"%12s%5i%5i%8i%8i%8.5g%8.5g%8.5g%8i%13.5g\n",timenumber.c_str(),dim,p.K,p.Nl,p.Ng,p.G,p.B,p.T,j,data[j]);
 			}
 			fclose(ros);	
 			cout << "results printed to " << rf << endl;
@@ -308,9 +310,9 @@ for (uint pl=0; pl<Npl; pl++) {
 	
 		cout << "timenumber: " << timenumber << endl;
 		printf("\n");
-		printf("%8s%8s%8s%8s%8s%12s%12s%12s%12s%12s%12s\n","dim","Nl","Ng","K","G","S0",\
-			"%errorS0","W","%errorW","V","%errorV");
-		printf("%8i%8i%8i%8i%8.2g",dim,p.Nl,p.Ng,p.K,p.G);
+		printf("%8s%8s%8s%8s%8s%8s%8s%12s%12s%12s%12s%12s%12s\n","dim","Nl","Ng","K","G","B","T","S0",\
+			"%errorS0","F","%errorF","V","%errorV");
+		printf("%8i%8i%8i%8i%8.5g%8.5g%8.5g",dim,p.Nl,p.Ng,p.K,p.G,p.B,p.T);
 		for (uint j=0; j<Nr; j++)
 			printf("%12.4g%12.4g",averages[j],100.0*errors[j]/averages[j]);
 		printf("\n\n");
