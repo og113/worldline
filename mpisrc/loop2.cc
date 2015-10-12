@@ -14,9 +14,11 @@
 #include <gsl/gsl_sf_exp.h>
 #include <gsl/gsl_sf_trig.h>
 #include <gsl/gsl_sf_log.h>
+#include "analysis.h"
 #include "folder.h"
 #include "genloop.h"
 #include "parameters.h"
+#include "print.h"
 #include "simple.h"
 
 using namespace std;
@@ -24,42 +26,23 @@ using namespace std;
 /*----------------------------------------------------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------------------------------------------------
 	CONTENTS
-		0 - getting parameters
-		1 - initializing mpi
+		0 - initializing mpi
+		1 - getting parameters
 		2 - getting argv
-		2 - defining basic quantitites
-		3 - starting parameter loop
-		4 - coordinating files
-		5 - evaluating loop quantitites
-		6 - evaluating errors
-		7 - printing results
+		3 - defining basic quantitites
+		4 - starting parameter loop
+		5 - coordinating files
+		6 - evaluating loop quantitites
+		7 - printing data
+		8 - evaluating errors
+		9 - printing results
 ----------------------------------------------------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------------------------------------------------*/
 
 int main(int argc, char** argv) {
-/*----------------------------------------------------------------------------------------------------------------------------
-	0. getting parameters
-----------------------------------------------------------------------------------------------------------------------------*/
-
-//dimension
-#define dim 4
-
-// parameters
-ParametersRange pr;
-pr.load("inputs");
-Parameters p = pr.Min;
-if (p.empty()) {
-	cerr << "Parameters empty: nothing in inputs file" << endl;
-	return 1;
-}
-if (abs(p.G)<MIN_NUMBER || p.Nms==0 || p.Nsw==0 || p.Npsw==0 ) {
-	cerr << "trivial loop2 run due to parameters: " << endl;
-	cerr << p << endl;
-	return 1;
-}
 
 /*----------------------------------------------------------------------------------------------------------------------------
-	1. initializing mpi
+	0. initializing mpi
 ----------------------------------------------------------------------------------------------------------------------------*/
 
 int Nw, rank, root = 0; // Nw, number of workers
@@ -71,6 +54,30 @@ MPI_Comm_size(MPI_COMM_WORLD, &Nw);
 
 if (rank==root)
 	cout << "starting loop with " << Nw << " nodes" << endl;
+
+/*----------------------------------------------------------------------------------------------------------------------------
+	1. getting parameters
+----------------------------------------------------------------------------------------------------------------------------*/
+
+//dimension
+#define dim 4
+
+// parameters
+ParametersRange pr;
+pr.load("inputs");
+Parameters p = pr.Min;
+if (rank==root) {
+	if (p.empty()) {
+		cerr << "Parameters empty: nothing in inputs file" << endl;
+		MPI_Abort(MPI_COMM_WORLD,1);
+	}
+	if (abs(p.G)<MIN_NUMBER || p.Nsw==0 || p.Npsw==0 ) {
+		cerr << "trivial loop2 run due to parameters: " << endl;
+		cerr << p << endl;
+		MPI_Abort(MPI_COMM_WORLD,1);
+	}
+}
+MPI_Barrier(MPI_COMM_WORLD);
 	
 /*----------------------------------------------------------------------------------------------------------------------------
 	2. getting argv
@@ -109,11 +116,10 @@ if (pr.toStep(label) && label!=2) {
 // elements in sums are in pairs of (X,X^2): S0, V, W
 // these quantities can be calculated quickly and parallely
 uint Nr = 3; // number of different results desired
-uint Nq = 2*Nr; // total number of quantities to sum
 number mets_local, mets;
 
 /*----------------------------------------------------------------------------------------------------------------------------
-	3. starting parameter loop
+	4. starting parameter loop
 		- dealing with parameters
 		- initializing data arrays
 ----------------------------------------------------------------------------------------------------------------------------*/
@@ -129,23 +135,23 @@ for (uint pl=0; pl<Npl; pl++) {
 		// checking Nl==Nw
 		if (p.Nl!=Nw) {
 			cerr << "Need Nl = Nw for loop2" << endl;
-			cerr << "Nl = " << Nl ", Nw = " << Nw << endl;
+			cerr << "Nl = " << p.Nl << ", Nw = " << Nw << endl;
 			MPI_Abort(MPI_COMM_WORLD,1);
 		}
 	}
 
 	/*----------------------------------------------------------------------------------------------------------------------------
-		4. coordinating files and data arrays
+		5. coordinating files and data arrays
 	----------------------------------------------------------------------------------------------------------------------------*/
 	
 	// in files
 	Filename loadFile = "data/gaussian/loops/dim_"+nts<uint>(dim)+"/K_"+nts<uint>(p.K)+"/loop_run_"+nts<uint>(rank)+".dat";
 	
 	// out files
-	Filename loopFile = "results/metropolis/loops/dim_"+nts<uint>(dim)+"/K_"+nts<uint>(p.K)+"/loop_B_"+nts<uint>(B) \
-									+"_G_"+nts<uint>(G)+"_rank_"+nts<uint>(rank)+".dat";
-	Filename s0File = "results/metropolis/s0_dim_"+nts<uint>(dim)+"K_"+nts<uint>(p.K)+"/s0_B_"+nts<uint>(B) \				
-									+"_G_"+nts<uint>(G)+"_rank_"+nts<uint>(rank)+".dat";
+	Filename loopFile = "results/metropolis/loops/dim_"+nts<uint>(dim)+"/K_"+nts<uint>(p.K)+"/loop_B_"+nts<uint>(p.B)\
+									+"_G_"+nts<uint>(p.G)+"_rank_"+nts<uint>(rank)+".dat";
+	Filename s0File = "results/metropolis/s0_dim_"+nts<uint>(dim)+"K_"+nts<uint>(p.K)+"/s0_B_"+nts<uint>(p.B)\				
+									+"_G_"+nts<uint>(p.G)+"_rank_"+nts<uint>(rank)+".dat";
 	Filename wFile = s0File, vFile = s0File;
 	wFile.ID = "w";
 	vFile.ID = "v";
@@ -157,24 +163,24 @@ for (uint pl=0; pl<Npl; pl++) {
 		vector<number> v_data_local(p.Nsw,0.0);
 
 /*----------------------------------------------------------------------------------------------------------------------------
-			5. evaluating loop quantitites
+			6. evaluating loop quantitites
 ----------------------------------------------------------------------------------------------------------------------------*/
 
 		uint Seed = time(NULL)+rank+2;
 		Loop<dim> loop(p.K,Seed);
-		Metropolis<dim> met(loop,p.K,++Seed);
+		Metropolis<dim> met(loop,p,++Seed);
 		number s0, v, w;
 
 		loop.load(loadFile);
 	
 		// doing dummy metropolis runs
-		mets_local = met.step(Nig*Np);
+		mets_local = met.step(p.Nig*Np);
 		met.setSeed(time(NULL)+rank+2);
 	
-		for (uint k=0; k<Nsw; k++) {
+		for (uint k=0; k<p.Nsw; k++) {
 	
 			// metropolis runs per sweep
-			mets_local += met.step(Npsw*Np);
+			mets_local += met.step(p.Npsw*Np);
 			met.setSeed(time(NULL)+k*1000+rank+2);
 		
 			s0 = S0(loop);
@@ -188,27 +194,27 @@ for (uint pl=0; pl<Npl; pl++) {
 		}
 		
 		// calculating mets, average number of metropolis runs per accepted step
-		mets_local /= (1.0+Nsw);
+		mets_local /= (1.0+p.Nsw);
 		MPI_Reduce(&mets_local, &mets, 1, MPI_DOUBLE, MPI_SUM, root, MPI_COMM_WORLD);
 		if (rank==root)
 			mets /= (number)Nw;
 	
 /*----------------------------------------------------------------------------------------------------------------------------
-			6. printing results
+			7. printing data
 ----------------------------------------------------------------------------------------------------------------------------*/
 	
 		// printing loops
 		loop.save(loopFile);
 	
 		// printing results
-		saveVectorBinary(s0file,s0_data_local);
-		saveVectorBinary(wfile,w_data_local);
-		saveVectorBinary(vfile,v_data_local);
+		saveVectorBinary(s0File,s0_data_local);
+		saveVectorBinary(wFile,w_data_local);
+		saveVectorBinary(vFile,v_data_local);
 	
 	}
 	
 	/*----------------------------------------------------------------------------------------------------------------------------
-		7. loading results and evaluating errors
+		8. loading results and evaluating errors
 	----------------------------------------------------------------------------------------------------------------------------*/
 	
 	// quantities to calculate
@@ -220,7 +226,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	vector<number> errors;
 
 	// monte carlo data analysis (MCDA)
-	MonteCarloData s0MCDA(s0file), wMCDA(wfile), vMCDA(vfile);
+	MonteCarloData s0MCDA(s0File), wMCDA(wFile), vMCDA(vFile);
 	
 	// calculating averages
 	s0MCDA.calcMeans(avgs_local[0],avgsSqrd_local[0]);
@@ -229,8 +235,8 @@ for (uint pl=0; pl<Npl; pl++) {
 	
 	// calculating correlations
 	s0MCDA.calcCorrs(intCorrTime[0],expCorrTime[0],corrErrorSqrd[0]);
-	wMCDA.calcCorrs(intCorrTime[1],expCorrTime[1],corrErrorSqrd[1])
-	vMCDA.calcCorrs(intCorrTime[2],expCorrTime[2],corrErrorSqrd[2])
+	wMCDA.calcCorrs(intCorrTime[1],expCorrTime[1],corrErrorSqrd[1]);
+	vMCDA.calcCorrs(intCorrTime[2],expCorrTime[2],corrErrorSqrd[2]);
 	
 	// calculating errors
 	for (uint k=0; k<Nr; k++) 
@@ -263,7 +269,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	}
 
 	/*----------------------------------------------------------------------------------------------------------------------------
-		7. printing results
+		9. printing results
 	----------------------------------------------------------------------------------------------------------------------------*/
 
 	if (rank==root) {
@@ -273,7 +279,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		rf.ID += "Office";
 		FILE * ros;
 		ros = fopen(((string)rf).c_str(),"a");
-		fprintf(ros,"%12s%5i%5i%8i%8i%8.2g",timenumber.c_str(),dim,p.K,p.Nl,p.Ng,p.G);
+		fprintf(ros,"%12s%5i%5i%8i%8i%8.4g%8.4g",timenumber.c_str(),dim,p.K,p.Nl,p.Ng,p.G,p.B);
 		for (uint j=0; j<Nr; j++)
 			fprintf(ros,"%13.5g%13.5g%13.5g%13.5g",avgs[j],errors[j],intCorrTime[j],expCorrTime[j]);
 		fprintf(ros,"\n");
@@ -284,8 +290,8 @@ for (uint pl=0; pl<Npl; pl++) {
 		printf("\n");
 		printf("%8s%8s%8s%8s%8s%13s%13s%13s%13s\n","dim","Nl","Ng","K","G",\
 				"W","%errorW","T_int","T_exp");
-		printf("%8i%8i%8i%8i%8.2g",dim,p.Nl,p.Ng,p.K,p.G);
-		printf("%13.5g%13.5g%13.5g%13.5g",avgs[1],100.0*errors[1]/averages[1],intCorrTime[1],expCorrTime[1]);
+		printf("%8i%8i%8i%8i%8.4g%8.4g",dim,p.Nl,p.Ng,p.K,p.G,p.B);
+		printf("%13.5g%13.5g%13.5g%13.5g",avgs[1],100.0*errors[1]/avgs[1],intCorrTime[1],expCorrTime[1]);
 		printf("\n\n");
 		
 	}
