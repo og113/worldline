@@ -114,7 +114,7 @@ void MonteCarloData::calcMeans() {
 
 // calc Correlator and correlation times
 void MonteCarloData::calcCorrs(vector<number>& correlator, number& intCorrTime,\
-								 number& expCorrTime, number& corrError) {
+								 number& expCorrTime, number& corrErrorSqrd) {
 	if (Size==0) {
 		cerr << "MonteCarloData::calcCorrs error: no data" << endl;
 	}
@@ -137,18 +137,18 @@ void MonteCarloData::calcCorrs(vector<number>& correlator, number& intCorrTime,\
 	
 	IntCorrTime = 0.5;
 	// double sum to calculate correlator
-	for (uint k=1; k<(Size-1); k++) {
-		for (uint l=0; l<(Size-k); l++)
-			Correlator[k] += DataArray[l]*DataArray[l+k];
-		Correlator[k] /= (number)(Size-1.0-k);
-		Correlator[k] -= Mean*Mean;
-		Correlator[k] /= scaling;
+	for (uint t=1; t<(Size-1); t++) {
+		for (uint l=0; l<(Size-t); l++)
+			Correlator[t] += DataArray[l]*DataArray[l+t];
+		Correlator[t] /= (number)(Size-t);
+		Correlator[t] -= Mean*Mean;
+		Correlator[t] /= scaling;
 		
-		IntCorrTime += Correlator[k];
+		IntCorrTime += Correlator[t];
 		
-		if (Correlator[k]>0 && Correlator[k]<Correlator[k-1] && expBool) {
+		if (Correlator[t]>0 && Correlator[t]<Correlator[t-1] && expBool) {
 			expCount++;
-			ExpCorrTime += -(number)k/gsl_sf_log(Correlator[k]);
+			ExpCorrTime += -(number)t/gsl_sf_log(Correlator[t]);
 		}
 		else
 			expBool = false;
@@ -156,14 +156,13 @@ void MonteCarloData::calcCorrs(vector<number>& correlator, number& intCorrTime,\
 	if (expCount!=0)
 		ExpCorrTime /= (number)expCount;
 		
-	CorrError = 2.0*IntCorrTime*scaling/(number)(Size-1.0);
-	CorrError = sqrt(CorrError);
+	CorrErrorSqrd = 2.0*IntCorrTime*scaling/(number)(Size-1.0);
 	
 	// assigning results
 	intCorrTime = IntCorrTime;
 	expCorrTime = ExpCorrTime;
 	correlator = Correlator;
-	corrError = CorrError;
+	corrErrorSqrd = CorrErrorSqrd;
 	
 }
 
@@ -171,6 +170,12 @@ void MonteCarloData::calcCorrs(vector<number>& correlator, number& intCorrTime,\
 void MonteCarloData::calcCorrs(vector<number>& correlator) {
 	number dross1, dross2, dross3;
 	calcCorrs(correlator,dross1,dross2,dross3);
+}
+
+// calc Correlator and correlation times
+void MonteCarloData::calcCorrs(number& intCorrTime, number& expCorrTime, number& corrErrorSqrd) {
+	vector<number> drossVector;
+	calcCorrs(drossVector,intCorrTime,expCorrTime,corrErrorSqrd);
 }
 
 // calc Correlator and correlation times

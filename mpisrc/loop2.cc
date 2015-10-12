@@ -52,7 +52,7 @@ if (p.empty()) {
 	cerr << "Parameters empty: nothing in inputs file" << endl;
 	return 1;
 }
-if (p.G==0 || p.Nms==0 || p.Nsw==0 || p.Npsw==0 ) {
+if (abs(p.G)<MIN_NUMBER || p.Nms==0 || p.Nsw==0 || p.Npsw==0 ) {
 	cerr << "trivial loop2 run due to parameters: " << endl;
 	cerr << p << endl;
 	return 1;
@@ -110,12 +110,7 @@ if (pr.toStep(label) && label!=2) {
 // these quantities can be calculated quickly and parallely
 uint Nr = 3; // number of different results desired
 uint Nq = 2*Nr; // total number of quantities to sum
-number *avgs = NULL;
-number *weighting = NULL;
-number expCorrTime = 0.0, intCorrTime = 0.5;
-
-// full data for quantities
-number *data_s0 = NULL, *data_w = NULL, *data_v = NULL;
+number mets_local, mets;
 
 /*----------------------------------------------------------------------------------------------------------------------------
 	3. starting parameter loop
@@ -137,147 +132,135 @@ for (uint pl=0; pl<Npl; pl++) {
 			cerr << "Nl = " << Nl ", Nw = " << Nw << endl;
 			MPI_Abort(MPI_COMM_WORLD,1);
 		}
-		// allocating space for data in root
-		avgs = new number[Nq](); // n.b. () is for initializing to zero
-		errorsSqrd = new number[Nq]();
-		data_s0 = new number[Nw*p.Nsw]();
-		data_w = new number[Nw*p.Nsw]();
-		data_v = new number[Nw*p.Nsw]();
 	}
 
 	/*----------------------------------------------------------------------------------------------------------------------------
 		4. coordinating files and data arrays
 	----------------------------------------------------------------------------------------------------------------------------*/
 	
-	// loop file
+	// in files
 	Filename loadFile = "data/gaussian/loops/dim_"+nts<uint>(dim)+"/K_"+nts<uint>(p.K)+"/loop_run_"+nts<uint>(rank)+".dat";
-
-	// local data arrays
-	number *data_local_s0 = new number[p.Nsw]();
-	number *data_local_w = new number[p.Nsw]();
-	number *data_local_v = new number[p.Nsw]();
-	number *autoCorr = new number[p.Nsw-1](); //note there are one fewer autocorrelations than sweeps
-
-	/*----------------------------------------------------------------------------------------------------------------------------
-		5. evaluating loop quantitites
-	----------------------------------------------------------------------------------------------------------------------------*/
-
-	uint Seed = time(NULL)+rank+2;
-	Loop<dim> loop(p.K,Seed);
-	Metropolis<dim> met(loop,p.K,++Seed);
-	uint groupCounter = 0, id;
-	number s0, vz, z, w;
-	number *avgs_local = new number[Nq]();
-
-	loop.load(loadFile);
 	
-	// doing dummy metropolis runs
-	if (abs(p.G)>MIN_NUMBER && p.Nsw>0) {
-		met.step(Nig*Np);
-		met.setSeed(time(NULL)+rank+2);
-	}
-	
-	for (uint k=0; k<Nsw; k++) {
-	
-		// metropolis runs per sweep
-		if (abs(p.G)>MIN_NUMBER && p.Nms>0) {
-			met.step(Npsw*Np);
-			met.setSeed(time(NULL)+k*1000+rank+2);
-		}
-		
-		s0 = S0(loop);
-		w = gsl_sf_cos(p.G*I0(loop));
-		v = V0(loop);
-		avgs_local[0] += s0;
-		avgs_local[2] += w;
-		avgs_local[4] += v;
-		for (uint l=0; l<Nr; l++) 
-			avgs_local[2*l+1] += avgs_local[2*l]*avgs_local[2*l];
-		
-		data_local_s0[k] = local[0];
-		data_local_w[k] = local[2];
-		data_local_v[k] = local[4];
-		
-	}
-	for (uint l=0; l<Nq; l++) 
-		avgs_local[l] /= (number)Nsw;
-	
-	// gathering data - do i really need all this data together?
-	/*MPI_Gather(data_local_s0, Ngpw, MPI_DOUBLE, data_s0, Ngpw, MPI_DOUBLE, root, MPI_COMM_WORLD);
-	MPI_Gather(data_local_w, Ngpw, MPI_DOUBLE, data_w, Ngpw, MPI_DOUBLE, root, MPI_COMM_WORLD);
-	MPI_Gather(data_local_v, Ngpw, MPI_DOUBLE, data_v, Ngpw, MPI_DOUBLE, root, MPI_COMM_WORLD);*/
-	
-	/*----------------------------------------------------------------------------------------------------------------------------
-		6. printing results
-	----------------------------------------------------------------------------------------------------------------------------*/
-	
-	// printing loops
-	Filename saveFile = "results/metropolis/loops/dim_"+nts<uint>(dim)+"/K_"+nts<uint>(p.K)+"/loop_rank_"+nts<uint>(rank)+".dat";
-	loop.save(saveFile);
-	
-	// printing results
-	Filename s0File = "results/metropolis/s0_dim_"+nts<uint>(dim)+"K_"+nts<uint>(p.K)+"_rank_"+nts<uint>(rank)+".dat";
+	// out files
+	Filename loopFile = "results/metropolis/loops/dim_"+nts<uint>(dim)+"/K_"+nts<uint>(p.K)+"/loop_B_"+nts<uint>(B) \
+									+"_G_"+nts<uint>(G)+"_rank_"+nts<uint>(rank)+".dat";
+	Filename s0File = "results/metropolis/s0_dim_"+nts<uint>(dim)+"K_"+nts<uint>(p.K)+"/s0_B_"+nts<uint>(B) \				
+									+"_G_"+nts<uint>(G)+"_rank_"+nts<uint>(rank)+".dat";
 	Filename wFile = s0File, vFile = s0File;
 	wFile.ID = "w";
 	vFile.ID = "v";
-	// to be honest, as there is hardly any real passing of stuff around here it would be preferable to use a proper class for the data with save and load capabilities, and that deletes the data at the end of it's lifetime.
-	// then, after saving the stuff to file, just print a couple of simple quantities, like the means, the means of the squares and the variances.
-	// all the real analysis will then take place in a separate analysis program.
-	// the data class could carry around with it a couple of simple quantities like the mean, the mean of the square etc.
+	
+	{
+		// local data arrays
+		vector<number> s0_data_local(p.Nsw,0.0);
+		vector<number> w_data_local(p.Nsw,0.0);
+		vector<number> v_data_local(p.Nsw,0.0);
+
+/*----------------------------------------------------------------------------------------------------------------------------
+			5. evaluating loop quantitites
+----------------------------------------------------------------------------------------------------------------------------*/
+
+		uint Seed = time(NULL)+rank+2;
+		Loop<dim> loop(p.K,Seed);
+		Metropolis<dim> met(loop,p.K,++Seed);
+		number s0, v, w;
+
+		loop.load(loadFile);
+	
+		// doing dummy metropolis runs
+		mets_local = met.step(Nig*Np);
+		met.setSeed(time(NULL)+rank+2);
+	
+		for (uint k=0; k<Nsw; k++) {
+	
+			// metropolis runs per sweep
+			mets_local += met.step(Npsw*Np);
+			met.setSeed(time(NULL)+k*1000+rank+2);
+		
+			s0 = S0(loop);
+			w = gsl_sf_cos(p.G*I0(loop));
+			v = V0(loop);
+		
+			s0_data_local[k] = s0;
+			w_data_local[k] = w;
+			v_data_local[k] = v;
+		
+		}
+		
+		// calculating mets, average number of metropolis runs per accepted step
+		mets_local /= (1.0+Nsw);
+		MPI_Reduce(&mets_local, &mets, 1, MPI_DOUBLE, MPI_SUM, root, MPI_COMM_WORLD);
+		if (rank==root)
+			mets /= (number)Nw;
+	
+/*----------------------------------------------------------------------------------------------------------------------------
+			6. printing results
+----------------------------------------------------------------------------------------------------------------------------*/
+	
+		// printing loops
+		loop.save(loopFile);
+	
+		// printing results
+		saveVectorBinary(s0file,s0_data_local);
+		saveVectorBinary(wfile,w_data_local);
+		saveVectorBinary(vfile,v_data_local);
+	
+	}
 	
 	/*----------------------------------------------------------------------------------------------------------------------------
-		6. evaluating errors
+		7. loading results and evaluating errors
 	----------------------------------------------------------------------------------------------------------------------------*/
+	
+	// quantities to calculate
+	vector<number> avgs, avgs_local(Nr,0.0), avgsSqrd_local(Nr,0.0);
+	vector<number> weighting, weighting_local(Nr,0.0);
+	vector<number> intCorrTime_local(Nr,0.0), intCorrTime;
+	vector<number> expCorrTime_local(Nr,0.0), expCorrTime;
+	vector<number> corrErrorSqrd_local(Nr,0.0), corrErrorSqrd;
+	vector<number> errors;
 
-	// calculating (scaled) autocorrelations, using v
-	number scaling = avgs_local[5]-avgs_local[4]*avgs_local[4];
-	autoCorr[0] = 1.0;
+	// monte carlo data analysis (MCDA)
+	MonteCarloData s0MCDA(s0file), wMCDA(wfile), vMCDA(vfile);
 	
-	uint expCount = 0;
-	bool expBool = true;
+	// calculating averages
+	s0MCDA.calcMeans(avgs_local[0],avgsSqrd_local[0]);
+	wMCDA.calcMeans(avgs_local[1],avgsSqrd_local[1]);
+	vMCDA.calcMeans(avgs_local[2],avgsSqrd_local[2]);
 	
-	// n.b. expensive double sum, could be relegated to another analysis program
-	for (uint k=1; k<(Nsw-1); k++) {
-		for (uint l=0; l<(Nsw-k); l++)
-			autoCorr[k] += data_local_v[l]*data_local_v[l+k];
-		autoCorr[k] /= (number)(Nsw-1.0-k)
-		autoCorr[k] -= avgs_local[4]*avgs_local[4];
-		autoCorr[k] /= scaling;
-		
-		intCorrTime += autoCorr[k];
-		
-		if (autoCorr[k]>0 && autoCorr[k]<autoCorr[k-1] && expBool) {
-			expCount++;
-			expCorrTime += -(number)k/gsl_sf_log(autoCorr[k]);
-		}
-		else
-			expBool = false;
-	}
-	if (expCount!=0)
-		expCorrTime /= (number)expCount;
+	// calculating correlations
+	s0MCDA.calcCorrs(intCorrTime[0],expCorrTime[0],corrErrorSqrd[0]);
+	wMCDA.calcCorrs(intCorrTime[1],expCorrTime[1],corrErrorSqrd[1])
+	vMCDA.calcCorrs(intCorrTime[2],expCorrTime[2],corrErrorSqrd[2])
+	
+	// calculating errors
+	for (uint k=0; k<Nr; k++) 
+		weighting_local[k] = 1.0/corrErrorSqrd[k]; // n.b. this will change to jacknife or bootstrap once written
+	
+	// preparing to combine averages and errors
+	for (uint k=0; k<Nr; k++) 
+		avgs_local[k] *= weighting_local[k];
 
-	// calculating errors locally
-	number variance;
-	number *weighting_local = new number[Nr]();
-	// errors
-	for (uint j=0; j<Nr; j++) {
-		variance = avgs_local[2*j+1] - avgs_local[2*j]*avgs_local[2*j];
-		weighting_local[j] = (number)Nsw/intCorrTime/variance;
-		avgs_local[2*j] *= weighting_local[j];
-	}
-	
-	// gathering averages
-	MPI_Reduce(avgs_local, avgs, Nq, MPI_DOUBLE, MPI_SUM, root, MPI_COMM_WORLD);
-	MPI_Reduce(weighting_local, weighting, Nq, MPI_DOUBLE, MPI_SUM, root, MPI_COMM_WORLD);
 	if (rank==root) {
-		for (uint k=0; k<Nq; k++)
-			avgs[k] /= (number)weighting[k];
+		avgs.resize(Nr,0.0);
+		weighting.resize(Nr,0.0);
+		errors.resize(Nr,0.0);
+		intCorrTime.resize(Nr,0.0);
+		expCorrTime.resize(Nr,0.0);
 	}
 	
-	delete[] avgs_local;
-	avgs_local = NULL;
-	delete[] weighting_local;
-	weighting_local = NULL;
+	// gathering averages over workers
+	MPI_Reduce(&avgs_local[0], &avgs[0], Nr, MPI_DOUBLE, MPI_SUM, root, MPI_COMM_WORLD);
+	MPI_Reduce(&weighting_local[0], &weighting[0], Nr, MPI_DOUBLE, MPI_SUM, root, MPI_COMM_WORLD);
+	MPI_Reduce(&intCorrTime_local[0], &intCorrTime[0], Nr, MPI_DOUBLE, MPI_SUM, root, MPI_COMM_WORLD);
+	MPI_Reduce(&expCorrTime_local[0], &expCorrTime[0], Nr, MPI_DOUBLE, MPI_SUM, root, MPI_COMM_WORLD);
+	if (rank==root) {
+		for (uint k=0; k<Nr; k++) {
+			avgs[k] /= (number)weighting[k];
+			errors[k] = (Nw==1? sqrt(1.0/weighting[k]) : sqrt((number)(Nw-1.0)/weighting[k]) );
+			intCorrTime[k] /= (number)Nw;
+			expCorrTime[k] /= (number)Nw;
+		}
+	}
 
 	/*----------------------------------------------------------------------------------------------------------------------------
 		7. printing results
@@ -286,57 +269,27 @@ for (uint pl=0; pl<Npl; pl++) {
 	if (rank==root) {
 		string timenumber = currentDateTime();	
 	
-		Filename rf = "results/metropolis/loop_dim_"+nts<uint>(dim)+".dat";
+		Filename rf = "results/metropolis/loop2_dim_"+nts<uint>(dim)+".dat";
 		rf.ID += "Office";
 		FILE * ros;
 		ros = fopen(((string)rf).c_str(),"a");
 		fprintf(ros,"%12s%5i%5i%8i%8i%8.2g",timenumber.c_str(),dim,p.K,p.Nl,p.Ng,p.G);
 		for (uint j=0; j<Nr; j++)
-			fprintf(ros,"%13.5g%13.5g",averages[j],errors[j]);
+			fprintf(ros,"%13.5g%13.5g%13.5g%13.5g",avgs[j],errors[j],intCorrTime[j],expCorrTime[j]);
 		fprintf(ros,"\n");
-		fclose(ros);
-		
+		fclose(ros);		
 		cout << "results printed to " << rf << endl;
-		if (!dataChoice.empty()) {
-			rf = "data/metropolis/"+timenumber+"data_"+dataChoice+"_dim_"+nts<uint>(dim)+"_K_"+nts<uint>(p.K)+".dat";
-			ros = fopen(((string)rf).c_str(),"w");
-			for (uint j=0; j<p.Ng; j++) {
-				fprintf(ros,"%12s%5i%5i%8i%8i%8.2g%8i%13.5g\n",timenumber.c_str(),dim,p.K,p.Nl,p.Ng,p.G,j,data[j]);
-			}
-			fclose(ros);	
-			cout << "results printed to " << rf << endl;
-		}
 	
 		cout << "timenumber: " << timenumber << endl;
 		printf("\n");
-		printf("%8s%8s%8s%8s%8s%12s%12s%12s%12s%12s%12s\n","dim","Nl","Ng","K","G","S0",\
-			"%errorS0","W","%errorW","V","%errorV");
+		printf("%8s%8s%8s%8s%8s%13s%13s%13s%13s\n","dim","Nl","Ng","K","G",\
+				"W","%errorW","T_int","T_exp");
 		printf("%8i%8i%8i%8i%8.2g",dim,p.Nl,p.Ng,p.K,p.G);
-		for (uint j=0; j<Nr; j++)
-			printf("%12.4g%12.4g",averages[j],100.0*errors[j]/averages[j]);
+		printf("%13.5g%13.5g%13.5g%13.5g",avgs[1],100.0*errors[1]/averages[1],intCorrTime[1],expCorrTime[1]);
 		printf("\n\n");
 		
-		// deleting space for data in root
-		delete[] avgs;
-		avgs = NULL;
-		delete[] weighting;
-		weighting = NULL;
-		delete[] data_s0;
-		data_s0 = NULL;
-		delete[] data_w;
-		data_w = NULL;
-		delete[] data_v;
-		data_v = NULL;
 	}
 	
-	delete[] data_local_s0;
-	delete[] data_local_w;
-	delete[] data_local_v
-	delete[] autoCorr;
-	data_local_s0 = NULL;
-	data_local_w = NULL;
-	data_local_v = NULL;
-	autoCorr = NULL;
 }
 
 MPI_Barrier(MPI_COMM_WORLD);

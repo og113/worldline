@@ -38,8 +38,9 @@ public:
 	void					calcMeans(number& mean, number& meanSqrd);
 	void					calcMeans();
 	void					calcCorrs(vector<number>& correlator, number& intCorrTime, \
-									number& expCorrTime, number& corrError);
+									number& expCorrTime, number& corrErrorSqrd);
 	void					calcCorrs(vector<number>& correlator);
+	void					calcCorrs(number& intCorrTime, number& expCorrTime, number& corrErrorSqrd);
 	void					calcCorrs();
 	number					calcJacknife();
 	number					calcBootstrap(const uint& N, const uint& Seed);
@@ -50,7 +51,7 @@ private:
 	number MeanSqrd;
 	number IntCorrTime;
 	number ExpCorrTime;
-	number CorrError;
+	number CorrErrorSqrd;
 	number Jacknife;
 	number Bootstrap;
 	vector<number> DataArray;
