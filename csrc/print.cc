@@ -29,7 +29,7 @@ CONTENTS
 
 // save - saveVectorBinary
 template <class T>
-void saveVecBinary(const string& f,  const vector<T>& v) {
+void saveVectorBinary(const string& f,  const vector<T>& v) {
 	ofstream os;
 	os.open(f.c_str(),ios::binary);
 	const T* r;
@@ -60,7 +60,7 @@ void loadVectorBinary(const string& f, vector<T>& v) {
 	ifstream is;
 	is.open(f.c_str(),ios::binary);
 	if (is.good()) {
-		for (int j=0; j<lines; j++) {
+		for (uint j=0; j<lines; j++) {
 			is.read(reinterpret_cast<char*>(&t),sizeof(t));
 			v[j] = t;
 		}
@@ -78,7 +78,7 @@ void loadVectorBinary(const string& f, vector<T>& v) {
 -------------------------------------------------------------------------------------------------------------------------*/
 
 // save
-template void saveVectorBinary<number>(const string& f, vector<number>& v);
+template void saveVectorBinary<number>(const string& f, const vector<number>& v);
 
 // load
 template void loadVectorBinary<number>(const string& f, vector<number>& v);

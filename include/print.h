@@ -24,7 +24,7 @@ CONTENTS
 
 // save - saveVectorBinary
 template <class T>
-void saveVecBinary(const string& f,  const vector<T>& v);
+void saveVectorBinary(const string& f,  const vector<T>& v);
 
 /*-------------------------------------------------------------------------------------------------------------------------
 	2. load

@@ -621,13 +621,15 @@ void Metropolis<Dim>::setSeed(const uint& s) {
 
 // Step
 template <uint Dim>
-void Metropolis<Dim>::step(const uint& Num) {
+number Metropolis<Dim>::step(const uint& Num) {
 	gsl_rng_set(Generator,Seed);
 	// checking loop grown
 	if (!LoopPtr->Grown) {
 		cerr << "Metropolis error: cannot run Metropolis before loop is grown" << endl;
-		return;
+		return 0.0;
 	}
+	// counter
+	number counter = 0.0;
 	// initializing S0
 	SOld = S0(*LoopPtr);
 	if (abs(G)>MIN_NUMBER)
@@ -656,12 +658,14 @@ void Metropolis<Dim>::step(const uint& Num) {
 		// accepting new point according to acceptance probability
 		if (SChange<0.0) {
 			LoopPtr->Points[loc] = temp;
+			counter++;
 		}
 		else {
 			number acc_prob = gsl_sf_exp(-SChange);
 			number rand = gsl_rng_uniform(Generator);
 			if (rand<acc_prob) {
 				LoopPtr->Points[loc] = temp;
+				counter++;
 			}
 		}
 	
@@ -670,6 +674,7 @@ void Metropolis<Dim>::step(const uint& Num) {
 		Steps++;
 	}
 	LoopPtr->centre();
+	return (number)Num/counter;
 }
 
 
