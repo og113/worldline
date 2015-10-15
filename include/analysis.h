@@ -46,16 +46,16 @@ public:
 	number					calcBootstrap(const uint& N, const uint& Seed);
 	
 private:
-	uint Size;
-	number Mean;
-	number MeanSqrd;
-	number IntCorrTime;
-	number ExpCorrTime;
-	number CorrErrorSqrd;
-	number Jacknife;
-	number Bootstrap;
-	vector<number> DataArray;
-	vector<number> Correlator;
-	void		zeroNums();
+	uint 			Size;
+	number 			Mean;
+	number 			MeanSqrd;
+	number 			IntCorrTime;
+	number 			ExpCorrTime;
+	number 			CorrErrorSqrd;
+	number 			Jacknife;
+	number 			Bootstrap;
+	vector<number> 	DataArray;
+	vector<number> 	Correlator;
+	void			zeroNums();
 };
 #endif // __ANALYSIS_H_INCLUDED__

@@ -148,13 +148,14 @@ for (uint pl=0; pl<Npl; pl++) {
 	Filename loadFile = "data/gaussian/loops/dim_"+nts<uint>(dim)+"/K_"+nts<uint>(p.K)+"/loop_run_"+nts<uint>(rank)+".dat";
 	
 	// out files
-	Filename loopFile = "results/metropolis/loops/dim_"+nts<uint>(dim)+"/K_"+nts<uint>(p.K)+"/loop_B_"+nts<uint>(p.B)\
-									+"_G_"+nts<uint>(p.G)+"_rank_"+nts<uint>(rank)+".dat";
-	Filename s0File = "results/metropolis/s0_dim_"+nts<uint>(dim)+"K_"+nts<uint>(p.K)+"/s0_B_"+nts<uint>(p.B)\				
+	Filename loopFile = "data/metropolis/loops/s0+v/dim_"+nts<uint>(dim)+"/K_"+nts<uint>(p.K)+"/loop_B_"+nts<uint>(p.B)\
+										+"_G_"+nts<uint>(p.G)+"_rank_"+nts<uint>(rank)+".dat";
+	Filename s0File = "results/metropolis/s0_dim_"+nts<uint>(dim)+"_K_"+nts<uint>(p.K)+"_B_"+nts<uint>(p.B)\
 									+"_G_"+nts<uint>(p.G)+"_rank_"+nts<uint>(rank)+".dat";
 	Filename wFile = s0File, vFile = s0File;
 	wFile.ID = "w";
 	vFile.ID = "v";
+	
 	
 	{
 		// local data arrays
@@ -176,7 +177,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		// doing dummy metropolis runs
 		mets_local = met.step(p.Nig*Np);
 		met.setSeed(time(NULL)+rank+2);
-	
+	cout << s0File << endl;
 		for (uint k=0; k<p.Nsw; k++) {
 	
 			// metropolis runs per sweep
@@ -210,7 +211,6 @@ for (uint pl=0; pl<Npl; pl++) {
 		saveVectorBinary(s0File,s0_data_local);
 		saveVectorBinary(wFile,w_data_local);
 		saveVectorBinary(vFile,v_data_local);
-	
 	}
 	
 	/*----------------------------------------------------------------------------------------------------------------------------
@@ -234,13 +234,13 @@ for (uint pl=0; pl<Npl; pl++) {
 	vMCDA.calcMeans(avgs_local[2],avgsSqrd_local[2]);
 	
 	// calculating correlations
-	s0MCDA.calcCorrs(intCorrTime[0],expCorrTime[0],corrErrorSqrd[0]);
-	wMCDA.calcCorrs(intCorrTime[1],expCorrTime[1],corrErrorSqrd[1]);
-	vMCDA.calcCorrs(intCorrTime[2],expCorrTime[2],corrErrorSqrd[2]);
+	s0MCDA.calcCorrs(intCorrTime_local[0],expCorrTime_local[0],corrErrorSqrd_local[0]);
+	wMCDA.calcCorrs(intCorrTime_local[1],expCorrTime_local[1],corrErrorSqrd_local[1]);
+	vMCDA.calcCorrs(intCorrTime_local[2],expCorrTime_local[2],corrErrorSqrd_local[2]);
 	
 	// calculating errors
 	for (uint k=0; k<Nr; k++) 
-		weighting_local[k] = 1.0/corrErrorSqrd[k]; // n.b. this will change to jacknife or bootstrap once written
+		weighting_local[k] = (abs(corrErrorSqrd_local[k])>MIN_NUMBER? 1.0/corrErrorSqrd_local[k]: 1.0); // n.b. this will change to jacknife or bootstrap once written
 	
 	// preparing to combine averages and errors
 	for (uint k=0; k<Nr; k++) 
@@ -252,6 +252,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		errors.resize(Nr,0.0);
 		intCorrTime.resize(Nr,0.0);
 		expCorrTime.resize(Nr,0.0);
+		corrErrorSqrd.resize(Nr,0.0);
 	}
 	
 	// gathering averages over workers
@@ -259,10 +260,15 @@ for (uint pl=0; pl<Npl; pl++) {
 	MPI_Reduce(&weighting_local[0], &weighting[0], Nr, MPI_DOUBLE, MPI_SUM, root, MPI_COMM_WORLD);
 	MPI_Reduce(&intCorrTime_local[0], &intCorrTime[0], Nr, MPI_DOUBLE, MPI_SUM, root, MPI_COMM_WORLD);
 	MPI_Reduce(&expCorrTime_local[0], &expCorrTime[0], Nr, MPI_DOUBLE, MPI_SUM, root, MPI_COMM_WORLD);
+	MPI_Reduce(&corrErrorSqrd_local[0], &corrErrorSqrd[0], Nr, MPI_DOUBLE, MPI_SUM, root, MPI_COMM_WORLD);
 	if (rank==root) {
 		for (uint k=0; k<Nr; k++) {
 			avgs[k] /= (number)weighting[k];
-			errors[k] = (Nw==1? sqrt(1.0/weighting[k]) : sqrt((number)(Nw-1.0)/weighting[k]) );
+			if (abs(corrErrorSqrd[k])<MIN_NUMBER) {
+				errors[k] = 0.0;
+			}
+			else
+				errors[k] = (Nw==1? sqrt(1.0/weighting[k]) : sqrt((number)(Nw-1.0)/weighting[k]) );
 			intCorrTime[k] /= (number)Nw;
 			expCorrTime[k] /= (number)Nw;
 		}
@@ -288,14 +294,13 @@ for (uint pl=0; pl<Npl; pl++) {
 	
 		cout << "timenumber: " << timenumber << endl;
 		printf("\n");
-		printf("%8s%8s%8s%8s%8s%13s%13s%13s%13s\n","dim","Nl","Ng","K","G",\
+		printf("%8s%8s%8s%8s%8s%8s%13s%13s%13s%13s\n","dim","Nl","Ng","K","G","B",\
 				"W","%errorW","T_int","T_exp");
 		printf("%8i%8i%8i%8i%8.4g%8.4g",dim,p.Nl,p.Ng,p.K,p.G,p.B);
 		printf("%13.5g%13.5g%13.5g%13.5g",avgs[1],100.0*errors[1]/avgs[1],intCorrTime[1],expCorrTime[1]);
 		printf("\n\n");
 		
 	}
-	
 }
 
 MPI_Barrier(MPI_COMM_WORLD);
