@@ -267,15 +267,16 @@ for (uint pl=0; pl<Npl; pl++) {
 		if (Na>0) {
 			number v, v2, z, z2, vz;
 			number sigma_vv, sigma_vz, sigma_zz;
+			number denom = (p.Ng>1? (p.Ng-1.0): 1.0);
 			
 			v = sums[2*(Nr-Na)]/(number)p.Nl;
 			v2 = sums[2*(Nr-Na)+1]/(number)Npg/(number)p.Nl;
 			z = sums[2*(Nr-Na+1)]/(number)p.Nl;
 			z2 = sums[2*(Nr-Na+1)+1]/(number)Npg/(number)p.Nl;
 			vz = sums[2*(Nr+Na)]/(number)Npg/(number)p.Nl;
-			sigma_vv = v2-v*v;
-			sigma_vz = vz-v*z;
-			sigma_zz = z2-z*z;
+			sigma_vv = (v2-v*v)/denom;
+			sigma_vz = (vz-v*z)/denom;
+			sigma_zz = (z2-z*z)/denom;
 			
 			averages[Nr-Na] = v/z;
 			errors[Nr-Na] = sqrt((sigma_vv - 2.0*v*sigma_vz/z + v*v*sigma_zz/z/z)/z/z);
