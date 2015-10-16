@@ -621,13 +621,15 @@ void Metropolis<Dim>::setSeed(const uint& s) {
 
 // Step
 template <uint Dim>
-void Metropolis<Dim>::step(const uint& Num) {
+number Metropolis<Dim>::step(const uint& Num) {
 	gsl_rng_set(Generator,Seed);
 	// checking loop grown
 	if (!LoopPtr->Grown) {
 		cerr << "Metropolis error: cannot run Metropolis before loop is grown" << endl;
-		return;
+		return 0.0;
 	}
+	// counter
+	number counter = 0.0;
 	// initializing S0
 	SOld = S0(*LoopPtr);
 	if (abs(G)>MIN_NUMBER)
@@ -656,12 +658,14 @@ void Metropolis<Dim>::step(const uint& Num) {
 		// accepting new point according to acceptance probability
 		if (SChange<0.0) {
 			LoopPtr->Points[loc] = temp;
+			counter++;
 		}
 		else {
 			number acc_prob = gsl_sf_exp(-SChange);
 			number rand = gsl_rng_uniform(Generator);
 			if (rand<acc_prob) {
 				LoopPtr->Points[loc] = temp;
+				counter++;
 			}
 		}
 	
@@ -670,6 +674,7 @@ void Metropolis<Dim>::step(const uint& Num) {
 		Steps++;
 	}
 	LoopPtr->centre();
+	return (number)Num/counter;
 }
 
 
@@ -723,6 +728,20 @@ uint posj = 1;
 		result += (l[j])[1]*((l[posj])[2]-(l[j])[2]);
 	}
 	return result;
+}
+
+// V1
+template <> number V1<4> (const Loop<4>& l) {
+	number result = 2.0*Dot(l[2],l[1],l[1],l[0])/DistanceSquared(l[1],l[0]);
+	uint posj, posk;
+	for (uint j=2; j<l.size(); j++) {
+		posj = (j!=(l.size()-1)?j+1:0);
+		for (uint k=0; k<j; k++) {
+			posk = (k!=(l.size()-1)?k+1:0);
+			result += 2.0*Dot(l[posj],l[j],l[posk],l[k])/DistanceSquared(l[j],l[k]);
+		}
+	}
+	return result*l.size()/pow(l.size()-1.0,2);
 }
 
 // Dim=2

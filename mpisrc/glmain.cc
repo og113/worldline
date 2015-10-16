@@ -53,7 +53,7 @@ MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 MPI_Comm_size(MPI_COMM_WORLD, &Nw);
 
 if (rank==root)
-	cout << "starting loop with " << Nw << " nodes" << endl;
+	cout << "starting glmain with " << Nw << " nodes" << endl;
 
 /*-------------------------------------------------------------------------------------------------------------------------
 	2 - getting inputs from argv
@@ -144,7 +144,7 @@ for (uint pl=0; pl<Npl; pl++) {
 
 		for (uint j=0; j<Npw; j++) {
 			id = rank*Npw+j;
-			file = "data/loops/s0/dim_"+nts<uint>(dim)+"/K_"+nts<uint>(p.K)+"/loop_run_"+nts<uint>(id)+".dat";
+			file = "data/gaussian/loops/dim_"+nts<uint>(dim)+"/K_"+nts<uint>(p.K)+"/loop_run_"+nts<uint>(id)+".dat";
 			loop.grow();
 			loop.save(file);
 			loop.clear();

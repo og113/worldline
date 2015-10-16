@@ -168,7 +168,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	
 	// constructing folders
 	FilenameAttributes faMin, faMax;
-	faMin.Directory = "data/loops/s0/dim_"+nts<uint>(dim)+"/K_"+nts<uint>(p.K);
+	faMin.Directory = "data/gaussian/loops/dim_"+nts<uint>(dim)+"/K_"+nts<uint>(p.K);
 	faMin.Timenumber = "";
 	faMax = faMin;
 	(faMin.Extras).push_back(StringPair("run",nts<uint>(loopMin)));
@@ -193,7 +193,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	uint Seed = time(NULL)+rank+2;
 	Loop<dim> l(p.K,Seed);
 	uint counter = 0, id;
-	number s0, vz, z, I, f, lp = 1.0/p.G/p.B; // w, gbt = p.G*p.B*p.T; // n.b. mass=1, lp is large parameter for weak fields
+	number s0, vz, z, I, fr, lp = 1.0/p.G/p.B; // w, gbt = p.G*p.B*p.T; // n.b. mass=1, lp is large parameter for weak fields
 	number *sums_local = new number[Nq]();
 
 	for (uint j=0; j<Npw; j++) {
@@ -201,14 +201,15 @@ for (uint pl=0; pl<Npl; pl++) {
 		l.load(folder[j]);
 
 		s0 = S0(l);
-		vz = p.G*V0(l);
+		vz = p.G*V1(l);
 		z = gsl_sf_exp(-vz);
 		vz *= z;
 		//w = gsl_sf_cos(gbt*I0(l));
 		I = abs(I0(l));
-		f = (I<lp? -pi*I*I/4.0: -(pi*lp/2.0)*(I-lp/2.0));
+		//f = (I<lp? -pi*I*I/4.0: -(pi*lp/2.0)*(I-lp/2.0));
+		fr = (I<lp? 0.0: -(pi*lp/2.0)*(I-lp/2.0))+pi*I*I/4.0;
 		sums_local[0] += s0;
-		sums_local[2] += f;
+		sums_local[2] += fr;
 		sums_local[4] += vz;
 		sums_local[6] += z;
 	
@@ -287,8 +288,8 @@ for (uint pl=0; pl<Npl; pl++) {
 
 		string timenumber = currentDateTime();	
 	
-		Filename rf = "results/loop_dim_"+nts<uint>(dim)+".dat";
-		rf.ID += "Cosmos";
+		Filename rf = "results/gaussian/loop_dim_"+nts<uint>(dim)+".dat";
+		rf.ID += "Laptop";
 		FILE * ros;
 		ros = fopen(((string)rf).c_str(),"a");
 		fprintf(ros,"%12s%5i%5i%8i%8i%8.5g%8.5g%8.5g",timenumber.c_str(),dim,p.K,p.Nl,p.Ng,p.G,p.B,p.T);
@@ -299,7 +300,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		
 		cout << "results printed to " << rf << endl;
 		if (!dataChoice.empty()) {
-			rf = "data/"+timenumber+"loop_data_"+dataChoice+"_dim_"+nts<uint>(dim)+"_K_"+nts<uint>(p.K)+".dat";
+			rf = "data/gaussian/"+timenumber+"data_"+dataChoice+"_dim_"+nts<uint>(dim)+"_K_"+nts<uint>(p.K)+".dat";
 			ros = fopen(((string)rf).c_str(),"w");
 			for (uint j=0; j<p.Ng; j++) {
 				fprintf(ros,"%12s%5i%5i%8i%8i%8.5g%8.5g%8.5g%8i%13.5g\n",timenumber.c_str(),dim,p.K,p.Nl,p.Ng,p.G,p.B,p.T,j,data[j]);
