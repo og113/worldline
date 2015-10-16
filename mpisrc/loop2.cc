@@ -177,7 +177,6 @@ for (uint pl=0; pl<Npl; pl++) {
 		// doing dummy metropolis runs
 		mets_local = met.step(p.Nig*Np);
 		met.setSeed(time(NULL)+rank+2);
-	cout << s0File << endl;
 		for (uint k=0; k<p.Nsw; k++) {
 	
 			// metropolis runs per sweep
@@ -285,19 +284,20 @@ for (uint pl=0; pl<Npl; pl++) {
 		rf.ID += "Office";
 		FILE * ros;
 		ros = fopen(((string)rf).c_str(),"a");
-		fprintf(ros,"%12s%5i%5i%8i%8i%8.4g%8.4g",timenumber.c_str(),dim,p.K,p.Nl,p.Ng,p.G,p.B);
+		fprintf(ros,"%12s%5i%5i%8i%8i%8.4g%8.4g",timenumber.c_str(),dim,p.K,p.Nl,p.Nsw,p.G,p.B);
 		for (uint j=0; j<Nr; j++)
 			fprintf(ros,"%13.5g%13.5g%13.5g%13.5g",avgs[j],errors[j],intCorrTime[j],expCorrTime[j]);
+		fprintf(ros,"%13.5g",mets);
 		fprintf(ros,"\n");
 		fclose(ros);		
 		cout << "results printed to " << rf << endl;
 	
 		cout << "timenumber: " << timenumber << endl;
 		printf("\n");
-		printf("%8s%8s%8s%8s%8s%8s%13s%13s%13s%13s\n","dim","Nl","Ng","K","G","B",\
-				"W","%errorW","T_int","T_exp");
-		printf("%8i%8i%8i%8i%8.4g%8.4g",dim,p.Nl,p.Ng,p.K,p.G,p.B);
-		printf("%13.5g%13.5g%13.5g%13.5g",avgs[1],100.0*errors[1]/avgs[1],intCorrTime[1],expCorrTime[1]);
+		printf("%8s%8s%8s%8s%8s%8s%13s%13s%13s%13s%13s\n","dim","Nl","Nsw","K","G","B",\
+				"W","%errorW","T_int","T_exp","mets");
+		printf("%8i%8i%8i%8i%8.4g%8.4g",dim,p.Nl,p.Nsw,p.K,p.G,p.B);
+		printf("%13.5g%13.5g%13.5g%13.5g%13.5g",avgs[1],100.0*errors[1]/avgs[1],intCorrTime[1],expCorrTime[1],mets);
 		printf("\n\n");
 		
 	}

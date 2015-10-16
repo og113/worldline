@@ -730,6 +730,20 @@ uint posj = 1;
 	return result;
 }
 
+// V1
+template <> number V1<4> (const Loop<4>& l) {
+	number result = 2.0*Dot(l[2],l[1],l[1],l[0])/DistanceSquared(l[1],l[0]);
+	uint posj, posk;
+	for (uint j=2; j<l.size(); j++) {
+		posj = (j!=(l.size()-1)?j+1:0);
+		for (uint k=0; k<j; k++) {
+			posk = (k!=(l.size()-1)?k+1:0);
+			result += 2.0*Dot(l[posj],l[j],l[posk],l[k])/DistanceSquared(l[j],l[k]);
+		}
+	}
+	return result*l.size()/pow(l.size()-1.0,2);
+}
+
 // Dim=2
 template class Point<2>;
 template ostream& operator<< <2>(ostream& os,const Point<2>& p);
