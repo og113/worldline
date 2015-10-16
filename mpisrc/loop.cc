@@ -178,6 +178,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	if (folder.size()!=(loopMax-loopMin+1)) {
 		cerr << "error for processor " << rank << ":" << endl;
 		cerr << "folder.size() = " << folder.size() << ", loopMax-loopMin+1 = " << loopMax-loopMin+1 << endl;
+		cout << folder << endl;
 		return 1;
 	}
 	
@@ -291,6 +292,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	
 		Filename rf = "results/s0/loop_dim_"+nts<uint>(dim)+".dat";
 		rf.ID += "Laptop";
+//		rf.ID += "Cosmos";
 		FILE * ros;
 		ros = fopen(((string)rf).c_str(),"a");
 		fprintf(ros,"%12s%5i%5i%8i%8i%8.5g%8.5g%8.5g",timenumber.c_str(),dim,p.K,p.Nl,p.Ng,p.G,p.B,p.T);
@@ -301,7 +303,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		
 		cout << "results printed to " << rf << endl;
 		if (!dataChoice.empty()) {
-			rf = "data/s0/"+timenumber+"data_"+dataChoice+"_dim_"+nts<uint>(dim)+"_K_"+nts<uint>(p.K)+".dat";
+			rf = "data/s0/"+timenumber+dataChoice+"_dim_"+nts<uint>(dim)+"_K_"+nts<uint>(p.K)+".dat";
 			ros = fopen(((string)rf).c_str(),"w");
 			for (uint j=0; j<p.Ng; j++) {
 				fprintf(ros,"%12s%5i%5i%8i%8i%8.5g%8.5g%8.5g%8i%13.5g\n",timenumber.c_str(),dim,p.K,p.Nl,p.Ng,p.G,p.B,p.T,j,data[j]);

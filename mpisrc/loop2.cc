@@ -53,7 +53,7 @@ MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 MPI_Comm_size(MPI_COMM_WORLD, &Nw);
 
 if (rank==root)
-	cout << "starting loop with " << Nw << " nodes" << endl;
+	cout << "starting loop2 with " << Nw << " nodes" << endl;
 
 /*----------------------------------------------------------------------------------------------------------------------------
 	1. getting parameters
@@ -157,6 +157,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	vFile.ID = "v";
 	
 	
+	cout << "stage 1" << endl;
 	{
 		// local data arrays
 		vector<number> s0_data_local(p.Nsw,0.0);
@@ -177,6 +178,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		// doing dummy metropolis runs
 		mets_local = met.step(p.Nig*Np);
 		met.setSeed(time(NULL)+rank+2);
+		cout << "stage 2" << endl;
 		for (uint k=0; k<p.Nsw; k++) {
 	
 			// metropolis runs per sweep
@@ -192,6 +194,7 @@ for (uint pl=0; pl<Npl; pl++) {
 			v_data_local[k] = v;
 		
 		}
+		cout << "stage 3" << endl;
 		
 		// calculating mets, average number of metropolis runs per accepted step
 		mets_local /= (1.0+p.Nsw);
@@ -211,6 +214,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		saveVectorBinary(wFile,w_data_local);
 		saveVectorBinary(vFile,v_data_local);
 	}
+	cout << "stage 4" << endl;
 	
 	/*----------------------------------------------------------------------------------------------------------------------------
 		8. loading results and evaluating errors
@@ -232,10 +236,14 @@ for (uint pl=0; pl<Npl; pl++) {
 	wMCDA.calcMeans(avgs_local[1],avgsSqrd_local[1]);
 	vMCDA.calcMeans(avgs_local[2],avgsSqrd_local[2]);
 	
+	cout << "stage 5" << endl;
+	
 	// calculating correlations
 	s0MCDA.calcCorrs(intCorrTime_local[0],expCorrTime_local[0],corrErrorSqrd_local[0]);
 	wMCDA.calcCorrs(intCorrTime_local[1],expCorrTime_local[1],corrErrorSqrd_local[1]);
 	vMCDA.calcCorrs(intCorrTime_local[2],expCorrTime_local[2],corrErrorSqrd_local[2]);
+	
+	cout << "stage 6" << endl;
 	
 	// calculating errors
 	for (uint k=0; k<Nr; k++) 
@@ -272,6 +280,8 @@ for (uint pl=0; pl<Npl; pl++) {
 			expCorrTime[k] /= (number)Nw;
 		}
 	}
+	
+	cout << "stage 7" << endl;
 
 	/*----------------------------------------------------------------------------------------------------------------------------
 		9. printing results
