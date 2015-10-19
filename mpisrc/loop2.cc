@@ -229,7 +229,8 @@ for (uint pl=0; pl<Npl; pl++) {
 	vector<number> intCorrTime_local(Nr,0.0), intCorrTime;
 	vector<number> expCorrTime_local(Nr,0.0), expCorrTime;
 	vector<number> corrErrorSqrd_local(Nr,0.0), corrErrorSqrd;
-	vector<number> errors;
+	vector<number> errorSqrd_local(Nr,0.0), errors;
+
 
 	// monte carlo data analysis (MCDA)
 	MonteCarloData s0MCDA(s0File), wMCDA(wFile), vMCDA(vFile);
@@ -245,8 +246,17 @@ for (uint pl=0; pl<Npl; pl++) {
 	vMCDA.calcCorrs(intCorrTime_local[2],expCorrTime_local[2],corrErrorSqrd_local[2]);
 	
 	// calculating errors
-	for (uint k=0; k<Nr; k++) 
-		weighting_local[k] = (abs(corrErrorSqrd_local[k])>MIN_NUMBER? 1.0/corrErrorSqrd_local[k]: 1.0); // n.b. this will change to jacknife or bootstrap once written
+	uint boostraps = Nsw;
+	Seed = time(NULL)+rank+2;
+	errorSqrd_local[0] = s0MCDA.calcBootstrap(boostraps,Seed);
+	errorSqrd_local[1] = wMCDA.calcBootstrap(boostraps,Seed);
+	errorSqrd_local[2] = vMCDA.calcBootstrap(boostraps,Seed);
+	for (uint k=0; k<Nr; k++) {
+		if (abs(errorSqrd_local[k])>MIN_NUMBER)
+			weighting_local[k] = 1.0/errorSqrd_local[k];
+		else
+			cerr << "loop2 error: errorSqrd_local[" << k << "] = 0.0" << endl;
+	{
 	
 	// preparing to combine averages and errors
 	for (uint k=0; k<Nr; k++) 
@@ -258,7 +268,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		errors.resize(Nr,0.0);
 		intCorrTime.resize(Nr,0.0);
 		expCorrTime.resize(Nr,0.0);
-		corrErrorSqrd.resize(Nr,0.0);
+		errors.resize(Nr,0.0);
 	}
 	
 	// gathering averages over workers
@@ -266,15 +276,10 @@ for (uint pl=0; pl<Npl; pl++) {
 	MPI_Reduce(&weighting_local[0], &weighting[0], Nr, MPI_DOUBLE, MPI_SUM, root, MPI_COMM_WORLD);
 	MPI_Reduce(&intCorrTime_local[0], &intCorrTime[0], Nr, MPI_DOUBLE, MPI_SUM, root, MPI_COMM_WORLD);
 	MPI_Reduce(&expCorrTime_local[0], &expCorrTime[0], Nr, MPI_DOUBLE, MPI_SUM, root, MPI_COMM_WORLD);
-	MPI_Reduce(&corrErrorSqrd_local[0], &corrErrorSqrd[0], Nr, MPI_DOUBLE, MPI_SUM, root, MPI_COMM_WORLD);
 	if (rank==root) {
 		for (uint k=0; k<Nr; k++) {
 			avgs[k] /= (number)weighting[k];
-			if (abs(corrErrorSqrd[k])<MIN_NUMBER) {
-				errors[k] = 0.0;
-			}
-			else
-				errors[k] = (Nw==1? sqrt(1.0/weighting[k]) : sqrt((number)(Nw-1.0)/weighting[k]) );
+			errors[k] = (Nw==1? sqrt(1.0/weighting[k]) : sqrt((number)(Nw-1.0)/weighting[k]) );
 			intCorrTime[k] /= (number)Nw;
 			expCorrTime[k] /= (number)Nw;
 		}

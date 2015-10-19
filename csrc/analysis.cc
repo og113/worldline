@@ -198,7 +198,7 @@ number MonteCarloData::calcJacknife() {
 	return 0.0;	
 }
 
-// calcBootStrap
+// calcBootStrap - n.b. return square of error
 number MonteCarloData::calcBootstrap(const uint& N, const uint& Seed) {
 	if (abs(Mean)<MIN_NUMBER && abs(MeanSqrd)<MIN_NUMBER) {
 		calcMeans();
@@ -206,8 +206,7 @@ number MonteCarloData::calcBootstrap(const uint& N, const uint& Seed) {
 	gsl_rng_set(Generator,Seed);
 	number mean = 0.0, meanSqrd = 0.0;
 	number mean_local, meanSqrd_local;
-	uint bootstraps = N*Size;
-	for (uint j=0; j<bootstraps; j++) {
+	for (uint j=0; j<N; j++) {
 		mean_local = 0.0;
 		meanSqrd_local = 0.0;
 		for (uint j=0; j<Size; j++) {
@@ -218,9 +217,9 @@ number MonteCarloData::calcBootstrap(const uint& N, const uint& Seed) {
 		mean += mean_local;
 		meanSqrd += meanSqrd_local;
 	}
-	mean /= (number)(Size*bootstraps);
-	meanSqrd /= (number)(Size*bootstraps);
-	return sqrt(meanSqrd-mean*mean);	
+	mean /= (number)(Size*N);
+	meanSqrd /= (number)(Size*N);
+	return meanSqrd-mean*mean;	
 }
 
 
