@@ -134,7 +134,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	if (rank==root) {
 		// checking Nl==Nw
 		if (p.Nl!=Nw) {
-			cerr << "Need Nl = Nw for loop2" << endl;
+			cerr << "Loop2 error: Need Nl = Nw" << endl;
 			cerr << "Nl = " << p.Nl << ", Nw = " << Nw << endl;
 			MPI_Abort(MPI_COMM_WORLD,1);
 		}
@@ -145,17 +145,22 @@ for (uint pl=0; pl<Npl; pl++) {
 	----------------------------------------------------------------------------------------------------------------------------*/
 	
 	// in files
-	Filename loadFile = "data/gaussian/loops/dim_"+nts<uint>(dim)+"/K_"+nts<uint>(p.K)+"/loop_run_"+nts<uint>(rank)+".dat";
+	Filename loadFile = "data/s0/loops/dim_"+nts<uint>(dim)+"/K_"+nts<uint>(p.K)+"/loop_run_"+nts<uint>(rank)+".dat";
 	
+	// check if file exists
+	if (!loadFile.exists()) {
+		cerr << "Loop2 error: " << loadFile << " doesn't exist" << endl;
+		MPI_Abort(MPI_COMM_WORLD,1);
+	}
+
 	// out files
-	Filename loopFile = "data/metropolis/loops/s0+v/dim_"+nts<uint>(dim)+"/K_"+nts<uint>(p.K)+"/loop_B_"+nts<uint>(p.B)\
+	Filename loopFile = "data/s0+v/loops/dim_"+nts<uint>(dim)+"/K_"+nts<uint>(p.K)+"/loop_B_"+nts<uint>(p.B)\
 										+"_G_"+nts<uint>(p.G)+"_rank_"+nts<uint>(rank)+".dat";
-	Filename s0File = "results/metropolis/s0_dim_"+nts<uint>(dim)+"_K_"+nts<uint>(p.K)+"_B_"+nts<uint>(p.B)\
+	Filename s0File = "results/s0+v/s0_dim_"+nts<uint>(dim)+"_K_"+nts<uint>(p.K)+"_B_"+nts<uint>(p.B)\
 									+"_G_"+nts<uint>(p.G)+"_rank_"+nts<uint>(rank)+".dat";
 	Filename wFile = s0File, vFile = s0File;
 	wFile.ID = "w";
 	vFile.ID = "v";
-	
 	
 	{
 		// local data arrays
@@ -171,7 +176,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		Loop<dim> loop(p.K,Seed);
 		Metropolis<dim> met(loop,p,++Seed);
 		number s0, v, w;
-
+		
 		loop.load(loadFile);
 	
 		// doing dummy metropolis runs
@@ -215,7 +220,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	/*----------------------------------------------------------------------------------------------------------------------------
 		8. loading results and evaluating errors
 	----------------------------------------------------------------------------------------------------------------------------*/
-	
+
 	// quantities to calculate
 	vector<number> avgs, avgs_local(Nr,0.0), avgsSqrd_local(Nr,0.0);
 	vector<number> weighting, weighting_local(Nr,0.0);
@@ -273,6 +278,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		}
 	}
 
+
 	/*----------------------------------------------------------------------------------------------------------------------------
 		9. printing results
 	----------------------------------------------------------------------------------------------------------------------------*/
@@ -280,7 +286,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	if (rank==root) {
 		string timenumber = currentDateTime();	
 	
-		Filename rf = "results/metropolis/loop2_dim_"+nts<uint>(dim)+".dat";
+		Filename rf = "results/s0+v/loop2_dim_"+nts<uint>(dim)+".dat";
 		rf.ID += "Office";
 		FILE * ros;
 		ros = fopen(((string)rf).c_str(),"a");
@@ -301,6 +307,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		printf("\n\n");
 		
 	}
+
 }
 
 MPI_Barrier(MPI_COMM_WORLD);
