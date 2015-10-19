@@ -206,6 +206,7 @@ number MonteCarloData::calcBootstrap(const uint& N, const uint& Seed) {
 	gsl_rng_set(Generator,Seed);
 	number mean = 0.0, meanSqrd = 0.0;
 	number mean_local, meanSqrd_local;
+	uint loc;
 	for (uint j=0; j<N; j++) {
 		mean_local = 0.0;
 		meanSqrd_local = 0.0;

@@ -158,9 +158,10 @@ for (uint pl=0; pl<Npl; pl++) {
 										+"_G_"+nts<uint>(p.G)+"_rank_"+nts<uint>(rank)+".dat";
 	Filename s0File = "results/s0+v/s0_dim_"+nts<uint>(dim)+"_K_"+nts<uint>(p.K)+"_B_"+nts<uint>(p.B)\
 									+"_G_"+nts<uint>(p.G)+"_rank_"+nts<uint>(rank)+".dat";
-	Filename wFile = s0File, vFile = s0File;
+	Filename wFile = s0File, vFile = s0File, corrFile = s0File;
 	wFile.ID = "w";
 	vFile.ID = "v";
+	corrFile.ID = "wCorr";
 	
 	{
 		// local data arrays
@@ -244,10 +245,13 @@ for (uint pl=0; pl<Npl; pl++) {
 	s0MCDA.calcCorrs(intCorrTime_local[0],expCorrTime_local[0],corrErrorSqrd_local[0]);
 	wMCDA.calcCorrs(intCorrTime_local[1],expCorrTime_local[1],corrErrorSqrd_local[1]);
 	vMCDA.calcCorrs(intCorrTime_local[2],expCorrTime_local[2],corrErrorSqrd_local[2]);
+
+	// saving correlations, appending
+	wMCDA.saveCorrelator(corrFile);
 	
 	// calculating errors
-	uint boostraps = Nsw;
-	Seed = time(NULL)+rank+2;
+	uint boostraps = p.Nsw;
+	uint Seed = time(NULL)+rank+2;
 	errorSqrd_local[0] = s0MCDA.calcBootstrap(boostraps,Seed);
 	errorSqrd_local[1] = wMCDA.calcBootstrap(boostraps,Seed);
 	errorSqrd_local[2] = vMCDA.calcBootstrap(boostraps,Seed);
@@ -256,7 +260,7 @@ for (uint pl=0; pl<Npl; pl++) {
 			weighting_local[k] = 1.0/errorSqrd_local[k];
 		else
 			cerr << "loop2 error: errorSqrd_local[" << k << "] = 0.0" << endl;
-	{
+	}
 	
 	// preparing to combine averages and errors
 	for (uint k=0; k<Nr; k++) 

@@ -99,6 +99,7 @@ void loadVectorBinary(const string& f, vector<T>& v) {
 
 // save
 template void saveVectorBinary<number>(const string& f, const vector<number>& v);
+template void saveVectorBinaryAppend<number>(const string& f, const vector<number>& v);
 
 // load
 template void loadVectorBinary<number>(const string& f, vector<number>& v);
