@@ -9,6 +9,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <gsl/gsl_rng.h> 	// random number generators
 #include "simple.h"
 
 /*-------------------------------------------------------------------------------------------------------------------------
@@ -47,6 +48,7 @@ public:
 	
 private:
 	uint 			Size;
+	gsl_rng* 		Generator;
 	number 			Mean;
 	number 			MeanSqrd;
 	number 			IntCorrTime;
@@ -54,8 +56,8 @@ private:
 	number 			CorrErrorSqrd;
 	number 			Jacknife;
 	number 			Bootstrap;
-	vector<number> 	DataArray;
-	vector<number> 	Correlator;
+	vector<number> 		DataArray;
+	vector<number> 		Correlator;
 	void			zeroNums();
 };
 #endif // __ANALYSIS_H_INCLUDED__

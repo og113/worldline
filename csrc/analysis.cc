@@ -30,6 +30,7 @@ MonteCarloData::MonteCarloData(const string& f):
 	loadVectorBinary<number>(f,DataArray);
 	Size = DataArray.size();
 	Correlator.resize(Size,0.0);
+	Generator = gsl_rng_alloc(gsl_rng_taus);
 }
 
 // destructor
@@ -64,7 +65,7 @@ void MonteCarloData::saveCorrelator(const string& f) const {
 		cerr << "MonteCarloData::saveCorrelator error: correlator not calculated yet" << endl;
 		return;
 	}
-	saveVectorBinary<number>(f,Correlator);
+	saveVectorBinaryAppend<number>(f,Correlator);
 }
 
 // save Results
@@ -202,8 +203,24 @@ number MonteCarloData::calcBootstrap(const uint& N, const uint& Seed) {
 	if (abs(Mean)<MIN_NUMBER && abs(MeanSqrd)<MIN_NUMBER) {
 		calcMeans();
 	}
-	cerr << "MonteCarloData::Bootstrap error: haven't written function yet" << endl;
-	return 0.0;	
+	gsl_rng_set(Generator,Seed);
+	number mean = 0.0, meanSqrd = 0.0;
+	number mean_local, meanSqrd_local;
+	uint bootstraps = N*Size;
+	for (uint j=0; j<bootstraps; j++) {
+		mean_local = 0.0;
+		meanSqrd_local = 0.0;
+		for (uint j=0; j<Size; j++) {
+			loc = (uint)(gsl_rng_uniform (Generator)*N);
+			mean_local += DataArray[loc];
+			meanSqrd_local += DataArray[loc]*DataArray[loc];
+		}
+		mean += mean_local;
+		meanSqrd += meanSqrd_local;
+	}
+	mean /= (number)(Size*bootstraps);
+	meanSqrd /= (number)(Size*bootstraps);
+	return sqrt(meanSqrd-mean*mean);	
 }
 
 

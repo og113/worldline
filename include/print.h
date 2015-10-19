@@ -26,6 +26,10 @@ CONTENTS
 template <class T>
 void saveVectorBinary(const string& f,  const vector<T>& v);
 
+// save - saveVectorBinaryAppend
+template <class T>
+void saveVectorBinaryAppend(const string& f,  const vector<T>& v);
+
 /*-------------------------------------------------------------------------------------------------------------------------
 	2. load
 -------------------------------------------------------------------------------------------------------------------------*/

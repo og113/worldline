@@ -215,6 +215,8 @@ for (uint pl=0; pl<Npl; pl++) {
 		saveVectorBinary(s0File,s0_data_local);
 		saveVectorBinary(wFile,w_data_local);
 		saveVectorBinary(vFile,v_data_local);
+		if (rank==root)
+			cout << "data printed to: " << s0File << endl << wFile << endl << vFile << endl;
 	}
 	
 	/*----------------------------------------------------------------------------------------------------------------------------
@@ -287,7 +289,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		string timenumber = currentDateTime();	
 	
 		Filename rf = "results/s0+v/loop2_dim_"+nts<uint>(dim)+".dat";
-		rf.ID += "Office";
+		rf.ID += "Cosmos";
 		FILE * ros;
 		ros = fopen(((string)rf).c_str(),"a");
 		fprintf(ros,"%12s%5i%5i%8i%8i%8.4g%8.4g",timenumber.c_str(),dim,p.K,p.Nl,p.Nsw,p.G,p.B);

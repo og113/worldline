@@ -47,6 +47,26 @@ void saveVectorBinary(const string& f,  const vector<T>& v) {
 	}
 }
 
+// save - saveVectorBinaryAppend
+template <class T>
+void saveVectorBinaryAppend(const string& f,  const vector<T>& v) {
+	ofstream os;
+	os.open(f.c_str(),ios::binary | ios::app);
+	const T* r;
+	if (os.good()) {
+		for (uint j=0; j<v.size(); j++) {
+			r = &v[j];
+			os.write(reinterpret_cast<const char*>(r),sizeof(T));
+		}
+		os.close();
+	}
+	else {
+		cerr << "saveVectorBinaryAppend error: cannot write to " << f << endl;
+		os.close();
+		return;
+	}
+}
+
 /*-------------------------------------------------------------------------------------------------------------------------
 	2. load
 -------------------------------------------------------------------------------------------------------------------------*/
