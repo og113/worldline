@@ -635,20 +635,25 @@ number Metropolis<Dim>::step(const uint& Num) {
 	if (abs(G)>MIN_NUMBER)
 		SOld += G*V0(*LoopPtr);
 		
+	// defining some parameters
+	number sigma = 1.0/sqrt((number)LoopPtr->size());
+	uint loc, loc_pos, loc_neg;
+	number acc_prob, rand;
+	Point<Dim> temp;
+
+	
 	// starting metropolis loop
 	for (uint j=0; j<Num; j++) {
 	
 		// choosing location to change
-		uint loc = (uint)(gsl_rng_uniform (Generator)*LoopPtr->size());
+		loc = (uint)(gsl_rng_uniform (Generator)*LoopPtr->size());
 	
 		// calculating generation probability and generating new point
-		number sigma = 1.0/sqrt((number)LoopPtr->size());
-		uint loc_pos = (loc==(LoopPtr->size()-1)? 0: loc+1);
-		uint loc_neg = (loc==0? LoopPtr->size()-1: loc-1);
-		Point<Dim> temp = (LoopPtr->Points[loc_pos] + LoopPtr->Points[loc_neg])/2.0;
-		for (uint n=0; n<Dim; n++) {
+		loc_pos = (loc==(LoopPtr->size()-1)? 0: loc+1);
+		loc_neg = (loc==0? LoopPtr->size()-1: loc-1);
+		temp = (LoopPtr->Points[loc_pos] + LoopPtr->Points[loc_neg])/2.0;
+		for (uint n=0; n<Dim; n++)
 			temp[n] += gsl_ran_gaussian(Generator, sigma); //gsl_ran_gaussian_ziggurat is another option
-		}
 	
 		// calculating change in action
 		SChange = DS0<Dim>(*LoopPtr, temp, loc);
@@ -658,21 +663,21 @@ number Metropolis<Dim>::step(const uint& Num) {
 		// accepting new point according to acceptance probability
 		if (SChange<0.0) {
 			LoopPtr->Points[loc] = temp;
+			SOld += SChange;
 			counter++;
 		}
 		else {
-			number acc_prob = gsl_sf_exp(-SChange);
-			number rand = gsl_rng_uniform(Generator);
+			acc_prob = gsl_sf_exp(-SChange);
+			rand = gsl_rng_uniform(Generator);
 			if (rand<acc_prob) {
 				LoopPtr->Points[loc] = temp;
+				SOld += SChange;
 				counter++;
 			}
 		}
-	
-		// updating
-		SOld += SChange;
-		Steps++;
+		
 	}
+	Steps += counter;
 	LoopPtr->centre();
 	return (number)Num/counter;
 }

@@ -178,6 +178,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	if (folder.size()!=(loopMax-loopMin+1)) {
 		cerr << "error for processor " << rank << ":" << endl;
 		cerr << "folder.size() = " << folder.size() << ", loopMax-loopMin+1 = " << loopMax-loopMin+1 << endl;
+		cout << folder << endl;
 		return 1;
 	}
 	
@@ -290,7 +291,8 @@ for (uint pl=0; pl<Npl; pl++) {
 		string timenumber = currentDateTime();	
 	
 		Filename rf = "results/s0/loop_dim_"+nts<uint>(dim)+".dat";
-		rf.ID += "Cosmos";
+		rf.ID += "Laptop";
+//		rf.ID += "Cosmos";
 		FILE * ros;
 		ros = fopen(((string)rf).c_str(),"a");
 		fprintf(ros,"%12s%5i%5i%8i%8i%8.5g%8.5g%8.5g",timenumber.c_str(),dim,p.K,p.Nl,p.Ng,p.G,p.B,p.T);

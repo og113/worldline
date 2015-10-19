@@ -153,7 +153,7 @@ void MonteCarloData::calcCorrs(vector<number>& correlator, number& intCorrTime,\
 		else
 			expBool = false;
 	}
-	if (expCount!=0)
+	if (expCount>1)
 		ExpCorrTime /= (number)expCount;
 		
 	CorrErrorSqrd = 2.0*IntCorrTime*scaling/(number)(Size-1.0);

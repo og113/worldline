@@ -53,7 +53,7 @@ MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 MPI_Comm_size(MPI_COMM_WORLD, &Nw);
 
 if (rank==root)
-	cout << "starting loop with " << Nw << " nodes" << endl;
+	cout << "starting loop2 with " << Nw << " nodes" << endl;
 
 /*----------------------------------------------------------------------------------------------------------------------------
 	1. getting parameters
