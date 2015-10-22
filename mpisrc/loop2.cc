@@ -85,15 +85,12 @@ MPI_Barrier(MPI_COMM_WORLD);
 	2. getting argv
 ----------------------------------------------------------------------------------------------------------------------------*/
 
-// data to print
-string dataChoice = "";
-
 // getting argv
 if (argc % 2 && argc>1) {
 	for (uint j=0; j<(uint)(argc/2); j++) {
 		string id = argv[2*j+1];
 		if (id[0]=='-') id = id.substr(1);
-		if (id.compare("data")==0 || id.compare("dataChoice")==0);
+		if (id.compare("")==0);
 		else {
 			cerr << "argv id " << id << " not understood" << endl;
 			MPI_Abort(MPI_COMM_WORLD,1);
@@ -161,17 +158,17 @@ for (uint pl=0; pl<Npl; pl++) {
 										+"_G_"+nts<uint>(p.G)+"_rank_"+nts<uint>(rank)+".dat";
 	Filename s0File = "data/s0+v/local/"+timenumber+"s0_dim_"+nts<uint>(dim)+"_K_"+nts<uint>(p.K)+"_B_"+nts<uint>(p.B)\
 									+"_G_"+nts<uint>(p.G)+"_rank_"+nts<uint>(rank)+".dat";
-	Filename corrTotalFile = "data/s0+v/wCorrTotal_dim_"+nts<uint>(dim)+"_K_"+nts<uint>(p.K)+"_B_"+nts<uint>(p.B)\
+	Filename corrTotalFile = "data/s0+v/frCorrTotal_dim_"+nts<uint>(dim)+"_K_"+nts<uint>(p.K)+"_B_"+nts<uint>(p.B)\
 									+"_G_"+nts<uint>(p.G)+"_rank_"+nts<uint>(rank)+".dat";								
-	Filename wFile = s0File, vFile = s0File, corrFile = s0File;
-	wFile.ID = "w";
+	Filename frFile = s0File, vFile = s0File, corrFile = s0File;
+	frFile.ID = "fr";
 	vFile.ID = "v";
-	corrFile.ID = "wCorr";
+	corrFile.ID = "frCorr";
 	
 	{
 		// local data arrays
 		vector<number> s0_data_local(p.Nsw,0.0);
-		vector<number> w_data_local(p.Nsw,0.0);
+		vector<number> fr_data_local(p.Nsw,0.0);
 		vector<number> v_data_local(p.Nsw,0.0);
 
 /*----------------------------------------------------------------------------------------------------------------------------
@@ -181,7 +178,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		uint Seed = time(NULL)+rank+2;
 		Loop<dim> loop(p.K,Seed);
 		Metropolis<dim> met(loop,p,++Seed);
-		number s0, v, w;
+		number s0, v, I, fr, lp = 1.0/p.G/p.B;;
 		
 		loop.load(loadFile);
 	
@@ -195,11 +192,13 @@ for (uint pl=0; pl<Npl; pl++) {
 			met.setSeed(time(NULL)+k*1000+rank+2);
 		
 			s0 = S0(loop);
-			w = gsl_sf_cos(p.G*I0(loop));
-			v = V0(loop);
+			I = I0(loop);
+			//w = gsl_sf_cos(p.G*I0(loop));
+			v = V1(loop);
+			fr = (I<lp? 0.0: (-(pi*lp/2.0)*(I-lp/2.0))+pi*I*I/4.0)*gsl_sf_exp(-p.G*v);
 		
 			s0_data_local[k] = s0;
-			w_data_local[k] = w;
+			fr_data_local[k] = fr;
 			v_data_local[k] = v;
 		
 		}
@@ -219,10 +218,10 @@ for (uint pl=0; pl<Npl; pl++) {
 	
 		// printing results
 		saveVectorBinary(s0File,s0_data_local);
-		saveVectorBinary(wFile,w_data_local);
+		saveVectorBinary(frFile,fr_data_local);
 		saveVectorBinary(vFile,v_data_local);
 		if (rank==root)
-			cout << "data printed to: " << s0File << endl << wFile << endl << vFile << endl;
+			cout << "data printed to: " << s0File << endl << frFile << endl << vFile << endl;
 	}
 	
 	/*----------------------------------------------------------------------------------------------------------------------------
@@ -239,28 +238,27 @@ for (uint pl=0; pl<Npl; pl++) {
 
 
 	// monte carlo data analysis (MCDA)
-	MonteCarloData s0MCDA(s0File), wMCDA(wFile), vMCDA(vFile);
-	wMCDA.saveDataAscii("data/temp/mCDA.dat");
+	MonteCarloData s0MCDA(s0File), frMCDA(frFile), vMCDA(vFile);
 	
 	// calculating averages
 	s0MCDA.calcMeans(avgs_local[0],avgsSqrd_local[0]);
-	wMCDA.calcMeans(avgs_local[1],avgsSqrd_local[1]);
+	frMCDA.calcMeans(avgs_local[1],avgsSqrd_local[1]);
 	vMCDA.calcMeans(avgs_local[2],avgsSqrd_local[2]);
 	
 	// calculating correlations
 	s0MCDA.calcCorrs(intCorrTime_local[0],expCorrTime_local[0],corrErrorSqrd_local[0]);
-	wMCDA.calcCorrs(intCorrTime_local[1],expCorrTime_local[1],corrErrorSqrd_local[1]);
+	frMCDA.calcCorrs(intCorrTime_local[1],expCorrTime_local[1],corrErrorSqrd_local[1]);
 	vMCDA.calcCorrs(intCorrTime_local[2],expCorrTime_local[2],corrErrorSqrd_local[2]);
 
 	// saving correlations, appending
-	wMCDA.saveCorrelatorAscii(corrFile);
-	wMCDA.saveCorrelatorAppendAscii(corrTotalFile);
+	frMCDA.saveCorrelator(corrFile);
+	frMCDA.saveCorrelatorAppendAscii(corrTotalFile);
 	
 	// calculating errors
 	uint bootstraps = 10;
 	uint Seed = time(NULL)+rank+2;
 	errorSqrd_local[0] = s0MCDA.calcBootstrap(bootstraps,Seed);
-	errorSqrd_local[1] = wMCDA.calcBootstrap(bootstraps,Seed);
+	errorSqrd_local[1] = frMCDA.calcBootstrap(bootstraps,Seed);
 	errorSqrd_local[2] = vMCDA.calcBootstrap(bootstraps,Seed);
 	for (uint k=0; k<Nr; k++) {
 		if (abs(errorSqrd_local[k])>MIN_NUMBER)
