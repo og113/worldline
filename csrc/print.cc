@@ -27,6 +27,44 @@ CONTENTS
 	1. save
 -------------------------------------------------------------------------------------------------------------------------*/
 
+// save - saveVectorAscii
+template <class T>
+void saveVectorAscii(const string& f,  const vector<T>& v) {
+	ofstream os;
+	os.open(f.c_str());
+	if (os.good()) {
+		os << setprecision(16);
+		for (uint j=0; j<v.size(); j++) {
+			os << v[j] << endl;
+		}
+		os.close();
+	}
+	else {
+		cerr << "saveVectorAscii error: cannot write to " << f << endl;
+		os.close();
+		return;
+	}
+}
+
+// save - saveVectorAsciiAppend
+template <class T>
+void saveVectorAsciiAppend(const string& f,  const vector<T>& v) {
+	ofstream os;
+	os.open(f.c_str(), ios::app);
+	if (os.good()) {
+		os << setprecision(16);
+		for (uint j=0; j<v.size(); j++) {
+			os << v[j] << endl;
+		}
+		os.close();
+	}
+	else {
+		cerr << "saveVectorAsciiAppend error: cannot write to " << f << endl;
+		os.close();
+		return;
+	}
+}
+
 // save - saveVectorBinary
 template <class T>
 void saveVectorBinary(const string& f,  const vector<T>& v) {
@@ -71,6 +109,26 @@ void saveVectorBinaryAppend(const string& f,  const vector<T>& v) {
 	2. load
 -------------------------------------------------------------------------------------------------------------------------*/
 
+// loadVectorAscii
+template <class T>
+void loadVectorAscii(const string& f, vector<T>& v) {
+	uint lines = countLines(f);
+	v.resize(lines);
+	ifstream is;
+	is.open(f.c_str());
+	if (is.good()) {
+		for (uint j=0; j<lines; j++) {
+			is >> v[j];
+		}
+		is.close();
+	}
+	else {
+		cerr << "loadVectorAscii error: cannot read from " << f << endl;
+		is.close();
+		return;
+	}
+}
+
 // loadVectorBinary
 template <class T>
 void loadVectorBinary(const string& f, vector<T>& v) {
@@ -100,7 +158,10 @@ void loadVectorBinary(const string& f, vector<T>& v) {
 // save
 template void saveVectorBinary<number>(const string& f, const vector<number>& v);
 template void saveVectorBinaryAppend<number>(const string& f, const vector<number>& v);
+template void saveVectorAscii<number>(const string& f, const vector<number>& v);
+template void saveVectorAsciiAppend<number>(const string& f, const vector<number>& v);
 
 // load
 template void loadVectorBinary<number>(const string& f, vector<number>& v);
+template void loadVectorAscii<number>(const string& f, vector<number>& v);
 

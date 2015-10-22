@@ -54,6 +54,11 @@ void MonteCarloData::loadData(const string& f) {
 	zeroNums();
 }
 
+// load data ascii
+void MonteCarloData::loadDataAscii(const string& f) {
+	loadVectorAscii(f,DataArray);
+}
+
 // save Data
 void MonteCarloData::saveData(const string& f) const {
 	saveVectorBinary<number>(f,DataArray);
@@ -65,7 +70,39 @@ void MonteCarloData::saveCorrelator(const string& f) const {
 		cerr << "MonteCarloData::saveCorrelator error: correlator not calculated yet" << endl;
 		return;
 	}
+	saveVectorBinary<number>(f,Correlator);
+}
+
+// save Correlator Append
+void MonteCarloData::saveCorrelatorAppend(const string& f) const {
+	if (abs(IntCorrTime)<MIN_NUMBER && abs(ExpCorrTime)<MIN_NUMBER) {
+		cerr << "MonteCarloData::saveCorrelator error: correlator not calculated yet" << endl;
+		return;
+	}
 	saveVectorBinaryAppend<number>(f,Correlator);
+}
+
+// save Data ascii
+void MonteCarloData::saveDataAscii(const string& f) const {
+	saveVectorAscii<number>(f,DataArray);
+}
+
+// save Correlator ascii
+void MonteCarloData::saveCorrelatorAscii(const string& f) const {
+	if (abs(IntCorrTime)<MIN_NUMBER && abs(ExpCorrTime)<MIN_NUMBER) {
+		cerr << "MonteCarloData::saveCorrelator error: correlator not calculated yet" << endl;
+		return;
+	}
+	saveVectorAscii<number>(f,Correlator);
+}
+
+// save Correlator append ascii
+void MonteCarloData::saveCorrelatorAppendAscii(const string& f) const {
+	if (abs(IntCorrTime)<MIN_NUMBER && abs(ExpCorrTime)<MIN_NUMBER) {
+		cerr << "MonteCarloData::saveCorrelator error: correlator not calculated yet" << endl;
+		return;
+	}
+	saveVectorAsciiAppend<number>(f,Correlator);
 }
 
 // save Results
@@ -115,7 +152,7 @@ void MonteCarloData::calcMeans() {
 
 // calc Correlator and correlation times
 void MonteCarloData::calcCorrs(vector<number>& correlator, number& intCorrTime,\
-								 number& expCorrTime, number& corrErrorSqrd) {
+								 number& expCorrTime, number& corrErrorSqrd, uint start, uint end) {
 	if (Size==0) {
 		cerr << "MonteCarloData::calcCorrs error: no data" << endl;
 	}
@@ -136,6 +173,9 @@ void MonteCarloData::calcCorrs(vector<number>& correlator, number& intCorrTime,\
 	uint expCount = 0;
 	bool expBool = true;
 	
+	if (end==0)
+		end = Size-1;
+	
 	IntCorrTime = 0.5;
 	// double sum to calculate correlator
 	for (uint t=1; t<(Size-1); t++) {
@@ -145,7 +185,8 @@ void MonteCarloData::calcCorrs(vector<number>& correlator, number& intCorrTime,\
 		Correlator[t] -= Mean*Mean;
 		Correlator[t] /= scaling;
 		
-		IntCorrTime += Correlator[t];
+		if (t>start && t<end)
+			IntCorrTime += Correlator[t];
 		
 		if (Correlator[t]>0 && Correlator[t]<Correlator[t-1] && expBool) {
 			expCount++;
@@ -157,7 +198,7 @@ void MonteCarloData::calcCorrs(vector<number>& correlator, number& intCorrTime,\
 	if (expCount>1)
 		ExpCorrTime /= (number)expCount;
 		
-	CorrErrorSqrd = 2.0*IntCorrTime*scaling/(number)(Size-1.0);
+	CorrErrorSqrd = 2.0*IntCorrTime*scaling/(number)(end-start);
 	
 	// assigning results
 	intCorrTime = IntCorrTime;
@@ -168,19 +209,19 @@ void MonteCarloData::calcCorrs(vector<number>& correlator, number& intCorrTime,\
 }
 
 // calc Correlator and correlation times
-void MonteCarloData::calcCorrs(vector<number>& correlator) {
+void MonteCarloData::calcCorrs(vector<number>& correlator, uint start, uint end) {
 	number dross1, dross2, dross3;
 	calcCorrs(correlator,dross1,dross2,dross3);
 }
 
 // calc Correlator and correlation times
-void MonteCarloData::calcCorrs(number& intCorrTime, number& expCorrTime, number& corrErrorSqrd) {
+void MonteCarloData::calcCorrs(number& intCorrTime, number& expCorrTime, number& corrErrorSqrd, uint start, uint end) {
 	vector<number> drossVector;
 	calcCorrs(drossVector,intCorrTime,expCorrTime,corrErrorSqrd);
 }
 
 // calc Correlator and correlation times
-void MonteCarloData::calcCorrs() {
+void MonteCarloData::calcCorrs(uint start, uint end) {
 	number dross1, dross2, dross3;
 	vector<number> drossVector;
 	calcCorrs(drossVector,dross1,dross2,dross3);
@@ -199,10 +240,12 @@ number MonteCarloData::calcJacknife() {
 }
 
 // calcBootStrap - n.b. return square of error
-number MonteCarloData::calcBootstrap(const uint& N, const uint& Seed) {
+number MonteCarloData::calcBootstrap(uint N, const uint& Seed) {
 	if (abs(Mean)<MIN_NUMBER && abs(MeanSqrd)<MIN_NUMBER) {
 		calcMeans();
 	}
+	if (N==0)
+		N++;
 	gsl_rng_set(Generator,Seed);
 	number mean = 0.0, meanSqrd = 0.0;
 	number mean_local, meanSqrd_local;
@@ -211,7 +254,7 @@ number MonteCarloData::calcBootstrap(const uint& N, const uint& Seed) {
 		mean_local = 0.0;
 		meanSqrd_local = 0.0;
 		for (uint j=0; j<Size; j++) {
-			loc = (uint)(gsl_rng_uniform (Generator)*N);
+			loc = (uint)(gsl_rng_uniform (Generator)*Size);
 			mean_local += DataArray[loc];
 			meanSqrd_local += DataArray[loc]*DataArray[loc];
 		}

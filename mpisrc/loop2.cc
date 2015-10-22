@@ -45,12 +45,14 @@ int main(int argc, char** argv) {
 	0. initializing mpi
 ----------------------------------------------------------------------------------------------------------------------------*/
 
-int Nw, rank, root = 0; // Nw, number of workers
+int Nwi, rank, root = 0; // Nw, number of workers
+uint Nw;
 
 MPI_Init(&argc, &argv);
 
 MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-MPI_Comm_size(MPI_COMM_WORLD, &Nw);
+MPI_Comm_size(MPI_COMM_WORLD, &Nwi);
+Nw = Nwi;
 
 if (rank==root)
 	cout << "starting loop2 with " << Nw << " nodes" << endl;
@@ -154,10 +156,13 @@ for (uint pl=0; pl<Npl; pl++) {
 	}
 
 	// out files
+	string timenumber = currentDateTime();
 	Filename loopFile = "data/s0+v/loops/dim_"+nts<uint>(dim)+"/K_"+nts<uint>(p.K)+"/loop_B_"+nts<uint>(p.B)\
 										+"_G_"+nts<uint>(p.G)+"_rank_"+nts<uint>(rank)+".dat";
-	Filename s0File = "results/s0+v/s0_dim_"+nts<uint>(dim)+"_K_"+nts<uint>(p.K)+"_B_"+nts<uint>(p.B)\
+	Filename s0File = "data/s0+v/local/"+timenumber+"s0_dim_"+nts<uint>(dim)+"_K_"+nts<uint>(p.K)+"_B_"+nts<uint>(p.B)\
 									+"_G_"+nts<uint>(p.G)+"_rank_"+nts<uint>(rank)+".dat";
+	Filename corrTotalFile = "data/s0+v/wCorrTotal_dim_"+nts<uint>(dim)+"_K_"+nts<uint>(p.K)+"_B_"+nts<uint>(p.B)\
+									+"_G_"+nts<uint>(p.G)+"_rank_"+nts<uint>(rank)+".dat";								
 	Filename wFile = s0File, vFile = s0File, corrFile = s0File;
 	wFile.ID = "w";
 	vFile.ID = "v";
@@ -235,6 +240,7 @@ for (uint pl=0; pl<Npl; pl++) {
 
 	// monte carlo data analysis (MCDA)
 	MonteCarloData s0MCDA(s0File), wMCDA(wFile), vMCDA(vFile);
+	wMCDA.saveDataAscii("data/temp/mCDA.dat");
 	
 	// calculating averages
 	s0MCDA.calcMeans(avgs_local[0],avgsSqrd_local[0]);
@@ -247,14 +253,15 @@ for (uint pl=0; pl<Npl; pl++) {
 	vMCDA.calcCorrs(intCorrTime_local[2],expCorrTime_local[2],corrErrorSqrd_local[2]);
 
 	// saving correlations, appending
-	wMCDA.saveCorrelator(corrFile);
+	wMCDA.saveCorrelatorAscii(corrFile);
+	wMCDA.saveCorrelatorAppendAscii(corrTotalFile);
 	
 	// calculating errors
-	uint boostraps = p.Nsw;
+	uint bootstraps = 10;
 	uint Seed = time(NULL)+rank+2;
-	errorSqrd_local[0] = s0MCDA.calcBootstrap(boostraps,Seed);
-	errorSqrd_local[1] = wMCDA.calcBootstrap(boostraps,Seed);
-	errorSqrd_local[2] = vMCDA.calcBootstrap(boostraps,Seed);
+	errorSqrd_local[0] = s0MCDA.calcBootstrap(bootstraps,Seed);
+	errorSqrd_local[1] = wMCDA.calcBootstrap(bootstraps,Seed);
+	errorSqrd_local[2] = vMCDA.calcBootstrap(bootstraps,Seed);
 	for (uint k=0; k<Nr; k++) {
 		if (abs(errorSqrd_local[k])>MIN_NUMBER)
 			weighting_local[k] = 1.0/errorSqrd_local[k];
@@ -295,10 +302,9 @@ for (uint pl=0; pl<Npl; pl++) {
 	----------------------------------------------------------------------------------------------------------------------------*/
 
 	if (rank==root) {
-		string timenumber = currentDateTime();	
 	
 		Filename rf = "results/s0+v/loop2_dim_"+nts<uint>(dim)+".dat";
-		rf.ID += "Cosmos";
+		rf.ID += "Office";
 		FILE * ros;
 		ros = fopen(((string)rf).c_str(),"a");
 		fprintf(ros,"%12s%5i%5i%8i%8i%8.4g%8.4g",timenumber.c_str(),dim,p.K,p.Nl,p.Nsw,p.G,p.B);
@@ -314,7 +320,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		printf("%8s%8s%8s%8s%8s%8s%13s%13s%13s%13s%13s\n","dim","Nl","Nsw","K","G","B",\
 				"W","%errorW","T_int","T_exp","mets");
 		printf("%8i%8i%8i%8i%8.4g%8.4g",dim,p.Nl,p.Nsw,p.K,p.G,p.B);
-		printf("%13.5g%13.5g%13.5g%13.5g%13.5g",avgs[1],100.0*errors[1]/avgs[1],intCorrTime[1],expCorrTime[1],mets);
+		printf("%13.5g%13.5g%13.5g%13.5g%13.5g",avgs[1],100.0*errors[1]/abs(avgs[1]),intCorrTime[1],expCorrTime[1],mets);
 		printf("\n\n");
 		
 	}

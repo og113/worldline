@@ -29,22 +29,29 @@ public:
 	MonteCarloData(const string&);
 	~MonteCarloData();
 	
-	// save and load
+	// save and load binary
 	void loadData(const string&);
 	void saveData(const string&) const;
 	void saveCorrelator(const string&) const;
+	void saveCorrelatorAppend(const string&) const;
+	
+	// save and load ascii
 	void saveResults(const string&) const;
+	void loadDataAscii(const string&);
+	void saveDataAscii(const string&) const;
+	void saveCorrelatorAscii(const string&) const;
+	void saveCorrelatorAppendAscii(const string&) const;
 	
 	// calculations
 	void					calcMeans(number& mean, number& meanSqrd);
 	void					calcMeans();
 	void					calcCorrs(vector<number>& correlator, number& intCorrTime, \
-									number& expCorrTime, number& corrErrorSqrd);
-	void					calcCorrs(vector<number>& correlator);
-	void					calcCorrs(number& intCorrTime, number& expCorrTime, number& corrErrorSqrd);
-	void					calcCorrs();
+									number& expCorrTime, number& corrErrorSqrd, uint start=0, uint end=0);
+	void					calcCorrs(vector<number>& correlator, uint start=1, uint end=0);
+	void					calcCorrs(number& intCorrTime, number& expCorrTime, number& corrErrorSqrd, uint start=0, uint end=0);
+	void					calcCorrs(uint start=1, uint end=1);
 	number					calcJacknife();
-	number					calcBootstrap(const uint& N, const uint& Seed);
+	number					calcBootstrap(uint N, const uint& Seed);
 	
 private:
 	uint 			Size;
