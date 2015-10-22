@@ -144,22 +144,25 @@ for (uint pl=0; pl<Npl; pl++) {
 	----------------------------------------------------------------------------------------------------------------------------*/
 	
 	// in files
-	Filename loadFile = "data/s0/loops/dim_"+nts<uint>(dim)+"/K_"+nts<uint>(p.K)+"/loop_run_"+nts<uint>(rank)+".dat";
-	
+	Filename loadFile = "data/s0+v/loops/dim_"+nts<uint>(dim)+"/K_"+nts<uint>(p.K)+"/loop_G_"+nts<uint>(p.G)\
+										+"_B_"+nts<uint>(p.B)+"_rank_"+nts<uint>(rank)+".dat";	
 	// check if file exists
 	if (!loadFile.exists()) {
-		cerr << "Loop2 error: " << loadFile << " doesn't exist" << endl;
-		MPI_Abort(MPI_COMM_WORLD,1);
+		loadFile = "data/s0/loops/dim_"+nts<uint>(dim)+"/K_"+nts<uint>(p.K)+"/loop_run_"+nts<uint>(rank)+".dat";
+		if (!loadFile.exists()) {
+			cerr << "Loop2 error: " << loadFile << " doesn't exist" << endl;
+			MPI_Abort(MPI_COMM_WORLD,1);
+		}
 	}
 
 	// out files
 	string timenumber = currentDateTime();
-	Filename loopFile = "data/s0+v/loops/dim_"+nts<uint>(dim)+"/K_"+nts<uint>(p.K)+"/loop_B_"+nts<uint>(p.B)\
-										+"_G_"+nts<uint>(p.G)+"_rank_"+nts<uint>(rank)+".dat";
-	Filename s0File = "data/s0+v/local/"+timenumber+"s0_dim_"+nts<uint>(dim)+"_K_"+nts<uint>(p.K)+"_B_"+nts<uint>(p.B)\
-									+"_G_"+nts<uint>(p.G)+"_rank_"+nts<uint>(rank)+".dat";
-	Filename corrTotalFile = "data/s0+v/frCorrTotal_dim_"+nts<uint>(dim)+"_K_"+nts<uint>(p.K)+"_B_"+nts<uint>(p.B)\
-									+"_G_"+nts<uint>(p.G)+"_rank_"+nts<uint>(rank)+".dat";								
+	Filename loopFile = "data/s0+v/loops/dim_"+nts<uint>(dim)+"/K_"+nts<uint>(p.K)+"/loop_G_"+nts<uint>(p.G)\
+										+"_B_"+nts<uint>(p.B)+"_rank_"+nts<uint>(rank)+".dat";
+	Filename s0File = "data/s0+v/local/"+timenumber+"s0_dim_"+nts<uint>(dim)+"_K_"+nts<uint>(p.K)+"_G_"+nts<uint>(p.G)\
+									+"_B_"+nts<uint>(p.B)+"_rank_"+nts<uint>(rank)+".dat";
+	Filename corrTotalFile = "data/s0+v/frCorrTotal_dim_"+nts<uint>(dim)+"_K_"+nts<uint>(p.K)+"_G_"+nts<uint>(p.G)\
+									+"_B_"+nts<uint>(p.B)+"_rank_"+nts<uint>(rank)+".dat";								
 	Filename frFile = s0File, vFile = s0File, corrFile = s0File;
 	frFile.ID = "fr";
 	vFile.ID = "v";
@@ -302,7 +305,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	if (rank==root) {
 	
 		Filename rf = "results/s0+v/loop2_dim_"+nts<uint>(dim)+".dat";
-		rf.ID += "Office";
+		rf.ID += "Cosmos";
 		FILE * ros;
 		ros = fopen(((string)rf).c_str(),"a");
 		fprintf(ros,"%12s%5i%5i%8i%8i%8.4g%8.4g",timenumber.c_str(),dim,p.K,p.Nl,p.Nsw,p.G,p.B);
