@@ -178,6 +178,7 @@ public:
 	
 	// indexing
 	const Point<Dim>& operator[](const uint&) const;
+	Point<Dim>& operator[](const uint&);
 	
 	// stream <<, >>
 	friend ostream& operator<< <Dim>(ostream&,const Loop&);
@@ -188,6 +189,7 @@ public:
 	
 	// check length
 	number					checkLength() const;
+	void					setLength(const number&);
 	
 private:
 	uint					K;
@@ -255,7 +257,7 @@ public:
 	~Metropolis();
 	
 	// step
-	number				step(const uint&);
+	uint				step(const uint&);
 	
 	// set seed, loop
 	void 				setSeed(const uint&);

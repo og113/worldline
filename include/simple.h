@@ -47,6 +47,7 @@ CONTENTS
 		- number to string
 		- string to number
 		- isNumber
+		- string to bool
 -------------------------------------------------------------------------------------------------------------------------*/
 
 template <class T>

@@ -338,6 +338,12 @@ const Point<Dim>& Loop<Dim>::operator[](const uint& loc) const {
 	return Points.at(loc);
 }
 
+// indexing
+template <uint Dim>
+Point<Dim>& Loop<Dim>::operator[](const uint& loc) {
+	return Points.at(loc);
+}
+
 // save
 template <uint Dim>
 void Loop<Dim>::save(const string& f) const {
@@ -449,6 +455,20 @@ number Loop<Dim>::checkLength() const {
 	for (uint j=0; j<(Length-1); j++)
 		L += Distance(Points[j+1],Points[j]);
 	return L;
+}
+
+// setLength
+template <uint Dim>
+void Loop<Dim>::setLength(const number& L) {
+	number oldLength = checkLength();
+	if (oldLength>MIN_NUMBER) {
+		number ratio = L/oldLength;
+		for (uint j=0; j<Length; j++)
+			Points[j] *= ratio;
+	}
+	else {
+		cerr << "Loop::setLength error: oldLength = 0.0 " << endl;
+	}
 }
 
 // stream <<
@@ -621,7 +641,7 @@ void Metropolis<Dim>::setSeed(const uint& s) {
 
 // Step
 template <uint Dim>
-number Metropolis<Dim>::step(const uint& Num) {
+uint Metropolis<Dim>::step(const uint& Num) {
 	gsl_rng_set(Generator,Seed);
 	// checking loop grown
 	if (!LoopPtr->Grown) {
@@ -679,7 +699,7 @@ number Metropolis<Dim>::step(const uint& Num) {
 	}
 	Steps += counter;
 	LoopPtr->centre();
-	return (number)Num/counter;
+	return Steps;
 }
 
 

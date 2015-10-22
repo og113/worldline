@@ -85,12 +85,14 @@ MPI_Barrier(MPI_COMM_WORLD);
 	2. getting argv
 ----------------------------------------------------------------------------------------------------------------------------*/
 
+bool verbose = false;
+
 // getting argv
 if (argc % 2 && argc>1) {
 	for (uint j=0; j<(uint)(argc/2); j++) {
 		string id = argv[2*j+1];
 		if (id[0]=='-') id = id.substr(1);
-		if (id.compare("")==0);
+		if (id.compare("verbose")==0) verbose = (stn<uint>(argv[2*j+2])!=0);
 		else {
 			cerr << "argv id " << id << " not understood" << endl;
 			MPI_Abort(MPI_COMM_WORLD,1);
@@ -154,6 +156,9 @@ for (uint pl=0; pl<Npl; pl++) {
 			MPI_Abort(MPI_COMM_WORLD,1);
 		}
 	}
+	/*if (rank==root)
+		cout << "loading loops from:" << endl;
+	cout << loadFile << endl;*/
 
 	// out files
 	string timenumber = currentDateTime();
@@ -161,12 +166,12 @@ for (uint pl=0; pl<Npl; pl++) {
 										+"_B_"+nts<uint>(p.B)+"_rank_"+nts<uint>(rank)+".dat";
 	Filename s0File = "data/s0+v/local/"+timenumber+"s0_dim_"+nts<uint>(dim)+"_K_"+nts<uint>(p.K)+"_G_"+nts<uint>(p.G)\
 									+"_B_"+nts<uint>(p.B)+"_rank_"+nts<uint>(rank)+".dat";
-	Filename corrTotalFile = "data/s0+v/frCorrTotal_dim_"+nts<uint>(dim)+"_K_"+nts<uint>(p.K)+"_G_"+nts<uint>(p.G)\
+	Filename corrTotalFile = "data/s0+v/vCorrTotal_dim_"+nts<uint>(dim)+"_K_"+nts<uint>(p.K)+"_G_"+nts<uint>(p.G)\
 									+"_B_"+nts<uint>(p.B)+"_rank_"+nts<uint>(rank)+".dat";								
 	Filename frFile = s0File, vFile = s0File, corrFile = s0File;
 	frFile.ID = "fr";
 	vFile.ID = "v";
-	corrFile.ID = "frCorr";
+	corrFile.ID = "vCorr";
 	
 	{
 		// local data arrays
@@ -178,20 +183,27 @@ for (uint pl=0; pl<Npl; pl++) {
 			6. evaluating loop quantitites
 ----------------------------------------------------------------------------------------------------------------------------*/
 
-		uint Seed = time(NULL)+rank+2;
+		uint Seed = time(NULL)+rank+2, steps_local = 0;
 		Loop<dim> loop(p.K,Seed);
 		Metropolis<dim> met(loop,p,++Seed);
-		number s0, v, I, fr, lp = 1.0/p.G/p.B;;
+		number s0, v, I, fr, lp = 1.0/p.G/p.B;
 		
 		loop.load(loadFile);
 	
 		// doing dummy metropolis runs
-		mets_local = met.step(p.Nig*Np);
+		met.step(p.Nig*Np);
 		met.setSeed(time(NULL)+rank+2);
+		
+		if (rank==root && verbose)
+			printf("%8s%12s%12s%12s%12s\n","sweep","S0","V","I","Fr");
+		
 		for (uint k=0; k<p.Nsw; k++) {
 	
 			// metropolis runs per sweep
-			mets_local += met.step(p.Npsw*Np);
+			if (k==(p.Nsw-1))
+				steps_local = met.step(p.Npsw*Np);
+			else
+				met.step(p.Npsw*Np);
 			met.setSeed(time(NULL)+k*1000+rank+2);
 		
 			s0 = S0(loop);
@@ -203,11 +215,14 @@ for (uint pl=0; pl<Npl; pl++) {
 			s0_data_local[k] = s0;
 			fr_data_local[k] = fr;
 			v_data_local[k] = v;
+			
+			if (rank==root && verbose)
+				printf("%8i%12.5g%12.5g%12.5g%12.5g\n",k,s0,v,I,fr);
 		
 		}
 		
 		// calculating mets, average number of metropolis runs per accepted step
-		mets_local /= (1.0+p.Nsw);
+		mets_local = (p.Nig+p.Npsw*p.Nsw)*Np/(number)steps_local;
 		MPI_Reduce(&mets_local, &mets, 1, MPI_DOUBLE, MPI_SUM, root, MPI_COMM_WORLD);
 		if (rank==root)
 			mets /= (number)Nw;
@@ -224,7 +239,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		saveVectorBinary(frFile,fr_data_local);
 		saveVectorBinary(vFile,v_data_local);
 		if (rank==root)
-			cout << "data printed to: " << s0File << endl << frFile << endl << vFile << endl;
+			cout << "data printed to: " << endl << s0File << endl << frFile << endl << vFile << endl;
 	}
 	
 	/*----------------------------------------------------------------------------------------------------------------------------
@@ -253,9 +268,9 @@ for (uint pl=0; pl<Npl; pl++) {
 	frMCDA.calcCorrs(intCorrTime_local[1],expCorrTime_local[1],corrErrorSqrd_local[1]);
 	vMCDA.calcCorrs(intCorrTime_local[2],expCorrTime_local[2],corrErrorSqrd_local[2]);
 
-	// saving correlations, appending
-	frMCDA.saveCorrelator(corrFile);
-	frMCDA.saveCorrelatorAppendAscii(corrTotalFile);
+	// saving correlations
+	vMCDA.saveCorrelator(corrFile);
+	vMCDA.saveCorrelatorAppendAscii(corrTotalFile);
 	
 	// calculating errors
 	uint bootstraps = 10;
@@ -266,7 +281,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	for (uint k=0; k<Nr; k++) {
 		if (abs(errorSqrd_local[k])>MIN_NUMBER)
 			weighting_local[k] = 1.0/errorSqrd_local[k];
-		else
+		else if (abs(avgs_local[k])>MIN_NUMBER)
 			cerr << "loop2 error: errorSqrd_local[" << k << "] = 0.0" << endl;
 	}
 	
@@ -319,9 +334,9 @@ for (uint pl=0; pl<Npl; pl++) {
 		cout << "timenumber: " << timenumber << endl;
 		printf("\n");
 		printf("%8s%8s%8s%8s%8s%8s%13s%13s%13s%13s%13s\n","dim","Nl","Nsw","K","G","B",\
-				"W","%errorW","T_int","T_exp","mets");
+				"v","%v","T_int","T_exp","mets");
 		printf("%8i%8i%8i%8i%8.4g%8.4g",dim,p.Nl,p.Nsw,p.K,p.G,p.B);
-		printf("%13.5g%13.5g%13.5g%13.5g%13.5g",avgs[1],100.0*errors[1]/abs(avgs[1]),intCorrTime[1],expCorrTime[1],mets);
+		printf("%13.5g%13.5g%13.5g%13.5g%13.5g",avgs[2],100.0*errors[2]/abs(avgs[2]),intCorrTime[2],expCorrTime[2],mets);
 		printf("\n\n");
 		
 	}
