@@ -86,6 +86,7 @@ MPI_Barrier(MPI_COMM_WORLD);
 ----------------------------------------------------------------------------------------------------------------------------*/
 
 bool verbose = false;
+bool circle = false;
 
 // getting argv
 if (argc % 2 && argc>1) {
@@ -93,12 +94,16 @@ if (argc % 2 && argc>1) {
 		string id = argv[2*j+1];
 		if (id[0]=='-') id = id.substr(1);
 		if (id.compare("verbose")==0) verbose = (stn<uint>(argv[2*j+2])!=0);
+		if (id.compare("circle")==0) circle = (stn<uint>(argv[2*j+2])!=0);
 		else {
 			cerr << "argv id " << id << " not understood" << endl;
 			MPI_Abort(MPI_COMM_WORLD,1);
 		}
 	}
 }
+
+if (circle)
+	circle = (abs(p.G*p.B)>MIN_NUMBER);
 
 /*----------------------------------------------------------------------------------------------------------------------------
 	3. defining basic quantitites	
@@ -117,7 +122,7 @@ if (pr.toStep(label) && label!=2) {
 // elements in sums are in pairs of (X,X^2): S0, V, W
 // these quantities can be calculated quickly and parallely
 uint Nr = 3; // number of different results desired
-number mets_local, mets;
+number time_met;
 
 /*----------------------------------------------------------------------------------------------------------------------------
 	4. starting parameter loop
@@ -146,8 +151,11 @@ for (uint pl=0; pl<Npl; pl++) {
 	----------------------------------------------------------------------------------------------------------------------------*/
 	
 	// in files
-	Filename loadFile = "data/s0+v/loops/dim_"+nts<uint>(dim)+"/K_"+nts<uint>(p.K)+"/loop_G_"+nts<uint>(p.G)\
-										+"_B_"+nts<uint>(p.B)+"_rank_"+nts<uint>(rank)+".dat";	
+	Filename loadFile = (circle?\
+				"data/circle/loops/dim_"+nts<uint>(dim)+"/K_"+nts<uint>(p.K)+"/loop_R_"+nts<uint>(p.G*p.B)\
+										+"_rank_"+nts<uint>(rank)+".dat":\
+				"data/s0+v/loops/dim_"+nts<uint>(dim)+"/K_"+nts<uint>(p.K)+"/loop_G_"+nts<uint>(p.G)\
+										+"_B_"+nts<uint>(p.B)+"_rank_"+nts<uint>(rank)+".dat");
 	// check if file exists
 	if (!loadFile.exists()) {
 		loadFile = "data/s0/loops/dim_"+nts<uint>(dim)+"/K_"+nts<uint>(p.K)+"/loop_run_"+nts<uint>(rank)+".dat";
@@ -162,8 +170,9 @@ for (uint pl=0; pl<Npl; pl++) {
 
 	// out files
 	string timenumber = currentDateTime();
-	Filename loopFile = "data/s0+v/loops/dim_"+nts<uint>(dim)+"/K_"+nts<uint>(p.K)+"/loop_G_"+nts<uint>(p.G)\
-										+"_B_"+nts<uint>(p.B)+"_rank_"+nts<uint>(rank)+".dat";
+	Filename loopFile = (circle? (string)loadFile:\
+				"data/s0+v/loops/dim_"+nts<uint>(dim)+"/K_"+nts<uint>(p.K)+"/loop_G_"+nts<uint>(p.G)\
+										+"_B_"+nts<uint>(p.B)+"_rank_"+nts<uint>(rank)+".dat");
 	Filename s0File = "data/s0+v/local/"+timenumber+"s0_dim_"+nts<uint>(dim)+"_K_"+nts<uint>(p.K)+"_G_"+nts<uint>(p.G)\
 									+"_B_"+nts<uint>(p.B)+"_rank_"+nts<uint>(rank)+".dat";
 	Filename corrTotalFile = "data/s0+v/vCorrTotal_dim_"+nts<uint>(dim)+"_K_"+nts<uint>(p.K)+"_G_"+nts<uint>(p.G)\
@@ -183,10 +192,15 @@ for (uint pl=0; pl<Npl; pl++) {
 			6. evaluating loop quantitites
 ----------------------------------------------------------------------------------------------------------------------------*/
 
-		uint Seed = time(NULL)+rank+2, steps_local = 0;
+		uint Seed = time(NULL)+rank+2, steps_local = 0, steps;
 		Loop<dim> loop(p.K,Seed);
 		Metropolis<dim> met(loop,p,++Seed);
 		number s0, v, I, fr, lp = 1.0/p.G/p.B;
+		
+		// timing  metropolis
+		clock_t time_run = 0.0;
+		if (rank==root)
+			time_run = clock();
 		
 		loop.load(loadFile);
 	
@@ -221,11 +235,13 @@ for (uint pl=0; pl<Npl; pl++) {
 		
 		}
 		
-		// calculating mets, average number of metropolis runs per accepted step
-		mets_local = (p.Nig+p.Npsw*p.Nsw)*Np/(number)steps_local;
-		MPI_Reduce(&mets_local, &mets, 1, MPI_DOUBLE, MPI_SUM, root, MPI_COMM_WORLD);
-		if (rank==root)
-			mets /= (number)Nw;
+		// calculating time per successful metropolis step
+		MPI_Reduce(&steps_local, &steps, 1, MPI_DOUBLE, MPI_SUM, root, MPI_COMM_WORLD);
+		if (rank==root) {
+			time_run = clock()-time_run;
+			number realtime = time_run/1000000.0;
+			time_met = (number)Nw*realtime/steps;
+		}
 	
 /*----------------------------------------------------------------------------------------------------------------------------
 			7. printing data
@@ -271,6 +287,8 @@ for (uint pl=0; pl<Npl; pl++) {
 	// saving correlations
 	vMCDA.saveCorrelator(corrFile);
 	vMCDA.saveCorrelatorAppendAscii(corrTotalFile);
+	if (rank==root)
+			cout << "correlators printed to: " << endl << corrFile << endl << corrTotalFile << endl;
 	
 	// calculating errors
 	uint bootstraps = 10;
@@ -320,23 +338,23 @@ for (uint pl=0; pl<Npl; pl++) {
 	if (rank==root) {
 	
 		Filename rf = "results/s0+v/loop2_dim_"+nts<uint>(dim)+".dat";
-		rf.ID += "Cosmos";
+		rf.ID += "Office";
 		FILE * ros;
 		ros = fopen(((string)rf).c_str(),"a");
 		fprintf(ros,"%12s%5i%5i%8i%8i%8.4g%8.4g",timenumber.c_str(),dim,p.K,p.Nl,p.Nsw,p.G,p.B);
 		for (uint j=0; j<Nr; j++)
 			fprintf(ros,"%13.5g%13.5g%13.5g%13.5g",avgs[j],errors[j],intCorrTime[j],expCorrTime[j]);
-		fprintf(ros,"%13.5g",mets);
+		fprintf(ros,"%13.5g",time_met);
 		fprintf(ros,"\n");
 		fclose(ros);		
-		cout << "results printed to " << rf << endl;
+		cout << "results printed to:" << endl << rf << endl << endl;
 	
 		cout << "timenumber: " << timenumber << endl;
 		printf("\n");
 		printf("%8s%8s%8s%8s%8s%8s%13s%13s%13s%13s%13s\n","dim","Nl","Nsw","K","G","B",\
-				"v","%v","T_int","T_exp","mets");
+				"v","%v","T_int","T_exp","time_met");
 		printf("%8i%8i%8i%8i%8.4g%8.4g",dim,p.Nl,p.Nsw,p.K,p.G,p.B);
-		printf("%13.5g%13.5g%13.5g%13.5g%13.5g",avgs[2],100.0*errors[2]/abs(avgs[2]),intCorrTime[2],expCorrTime[2],mets);
+		printf("%13.5g%13.5g%13.5g%13.5g%13.5g",avgs[2],100.0*errors[2]/abs(avgs[2]),intCorrTime[2],expCorrTime[2],time_met);
 		printf("\n\n");
 		
 	}
