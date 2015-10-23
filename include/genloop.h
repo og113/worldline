@@ -236,6 +236,10 @@ number aprxDV0 (const Loop<Dim>& l, const Point<Dim>& p, const uint& loc);
 template <uint Dim>
 number V1 (const Loop<Dim>& l);
 
+// V1r
+template <uint Dim>
+number V1r (const Loop<Dim>& l, const number& epsi, const number& c);
+
 // DV1
 template <uint Dim>
 number DV1 (const Loop<Dim>& l, const Point<Dim>& p, const uint& loc);
