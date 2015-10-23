@@ -448,9 +448,9 @@ void Loop<Dim>::grow() {
 	Grown = true;
 }
 
-// checkLength
+// length
 template <uint Dim>
-number Loop<Dim>::checkLength() const {
+number Loop<Dim>::length() const {
 	number L = Distance(Points[Length-1],Points[0]);
 	for (uint j=0; j<(Length-1); j++)
 		L += Distance(Points[j+1],Points[j]);
@@ -460,7 +460,7 @@ number Loop<Dim>::checkLength() const {
 // setLength
 template <uint Dim>
 void Loop<Dim>::setLength(const number& L) {
-	number oldLength = checkLength();
+	number oldLength = length();
 	if (oldLength>MIN_NUMBER) {
 		number ratio = L/oldLength;
 		for (uint j=0; j<Length; j++)
@@ -572,16 +572,17 @@ number V1 (const Loop<Dim>& l) {
 // V1r
 template <uint Dim>
 number V1r (const Loop<Dim>& l, const number& a, const number& c) {
-	number result = 2.0*Dot(l[2],l[1],l[1],l[0])*pow(DistanceSquared(l[1],l[0])+a*a,(2.0-Dim)/2.0);
+	number result = 0.0;
 	uint posj, posk;
-	for (uint j=2; j<l.size(); j++) {
+	for (uint j=0; j<l.size(); j++) {
 		posj = (j!=(l.size()-1)?j+1:0);
 		for (uint k=0; k<j; k++) {
 			posk = (k!=(l.size()-1)?k+1:0);
 			result += 2.0*Dot(l[posj],l[j],l[posk],l[k])*pow(DistanceSquared(l[j],l[k])+a*a,(2.0-Dim)/2.0);
 		}
+		result += DistanceSquared(l[posj],l[j])*pow(a*a,(2.0-Dim)/2.0);
 	}
-	return result*l.size()/pow(l.size()-1.0,2)-c/a/a;
+	return result*l.size()/pow(l.size()-1.0,2)-c*l.length()/a;
 }
 
 // DV1
@@ -786,16 +787,17 @@ template <> number V1<4> (const Loop<4>& l) {
 
 // V1r
 template <> number V1r<4> (const Loop<4>& l, const number& a, const number& c) {
-	number result = 2.0*Dot(l[2],l[1],l[1],l[0])/(DistanceSquared(l[1],l[0])+a*a);
+	number result = 0.0;
 	uint posj, posk;
-	for (uint j=2; j<l.size(); j++) {
+	for (uint j=0; j<l.size(); j++) {
 		posj = (j!=(l.size()-1)?j+1:0);
 		for (uint k=0; k<j; k++) {
 			posk = (k!=(l.size()-1)?k+1:0);
 			result += 2.0*Dot(l[posj],l[j],l[posk],l[k])/(DistanceSquared(l[j],l[k])+a*a);
 		}
+		result += DistanceSquared(l[posj],l[j])/a/a;
 	}
-	return result*l.size()/pow(l.size()-1.0,2)-c/a/a;
+	return (result*l.size()/pow(l.size()-1.0,2)-c*l.length()/a);
 }
 
 // Dim=2

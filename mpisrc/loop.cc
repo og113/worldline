@@ -202,7 +202,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		l.load(folder[j]);
 
 		s0 = S0(l);
-		vz = p.G*V1r(l,p.Epsi,0.0);
+		vz = p.G*V1r(l,p.Epsi,pi);
 		z = gsl_sf_exp(-vz);
 		vz *= z;
 		//w = gsl_sf_cos(gbt*I0(l));
@@ -291,8 +291,8 @@ for (uint pl=0; pl<Npl; pl++) {
 		string timenumber = currentDateTime();	
 	
 		Filename rf = "results/s0/loop_dim_"+nts<uint>(dim)+".dat";
-		rf.ID += "Office";
-//		rf.ID += "Cosmos";
+//		rf.ID += "Office";
+		rf.ID += "Cosmos";
 		FILE * ros;
 		ros = fopen(((string)rf).c_str(),"a");
 		fprintf(ros,"%12s%5i%5i%8i%8i%8.5g%8.5g%8.5g",timenumber.c_str(),dim,p.K,p.Nl,p.Ng,p.G,p.B,p.T);

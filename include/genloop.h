@@ -188,7 +188,7 @@ public:
 	uint size() const;
 	
 	// check length
-	number					checkLength() const;
+	number					length() const;
 	void					setLength(const number&);
 	
 private:
