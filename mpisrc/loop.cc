@@ -124,9 +124,7 @@ if (pr.toStep(label)) {
 // elements in sums are in pairs of (X,X^2): S0, V, W
 // these quantities can be calculated quickly and parallely
 uint Nr = 3; // number of different results desired
-uint Na = 1; // number of auxialliary quantities to calculate
-uint Nct = 1; // number of cross terms to calculate
-uint Nq = 2*(Nr+Na)+Nct; // total number of quantities to sum
+uint Nq = 3*Nr+2; // total number of quantities to sum
 number *sums = NULL;
 number *temp = NULL; // as MPI_SUM doesn't store previous value
 
@@ -197,7 +195,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	uint Seed = time(NULL)+rank+2;
 	Loop<dim> l(p.K,Seed);
 	uint counter = 0, id;
-	number s0, vz, z, I, fr, lp = 1.0/p.G/p.B; // w, gbt = p.G*p.B*p.T; // n.b. mass=1, lp is large parameter for weak fields
+	number s0, v, z, I, f, lp = 1.0/p.G/p.B; // w, gbt = p.G*p.B*p.T; // n.b. mass=1, lp is large parameter for weak fields
 	number *sums_local = new number[Nq]();
 
 	for (uint j=0; j<Npw; j++) {
@@ -205,22 +203,23 @@ for (uint pl=0; pl<Npl; pl++) {
 		l.load(folder[j]);
 
 		s0 = S0(l);
-		vz = p.G*V1(l);
-		z = gsl_sf_exp(-vz);
-		vz *= z;
+		v = p.G*V0(l);
+		z = gsl_sf_exp(-v);
 		//w = gsl_sf_cos(gbt*I0(l));
 		I = abs(I0(l));
-		//f = (I<lp? -pi*I*I/4.0: -(pi*lp/2.0)*(I-lp/2.0));
-		fr = (I<lp? 0.0: -(pi*lp/2.0)*(I-lp/2.0))+pi*I*I/4.0;
+		f = (I<lp? -pi*I*I/4.0: -(pi*lp/2.0)*(I-lp/2.0));
+		s0 *= z; v *= z; f *= z;
+		//fr = (I<lp? 0.0: -(pi*lp/2.0)*(I-lp/2.0))+pi*I*I/4.0;
 		sums_local[0] += s0;
-		sums_local[2] += fr;
-		sums_local[4] += vz;
-		sums_local[6] += z;
+		sums_local[3] += f;
+		sums_local[6] += v;
+		sums_local[9] += z;
 	
 		if (counter==Npg) {
-			for (uint k=0; k<(Nr+Na); k++) 
-				sums_local[2*k+1] = sums_local[2*k]*sums_local[2*k];
-			sums_local[8] = sums_local[4]*sums_local[6];
+			for (uint k=0; k<(Nr+1); k++) 
+				sums_local[3*k+1] = sums_local[3*k]*sums_local[3*k];
+			for (uint k=0; k<Nr; k++) 
+				sums_local[3*k+2] = sums_local[3*k]*sums_local[9];
 			
 			if (!dataChoice.empty()) {
 				id = ((j+1)/Npg-1); // for global id: +rank*(p.Ng/Nw)
@@ -260,31 +259,35 @@ for (uint pl=0; pl<Npl; pl++) {
 		number average2, variance;
 		
 		// first, results not requiring auxilliary quantities, i.e. s0 and w
-		for (uint j=0; j<(Nr-Na); j++) {
+		/*for (uint j=0; j<(Nr-2); j++) {
 			averages[j] = sums[2*j]/(number)p.Nl;
 			average2 = sums[2*j+1]/(number)Npg/(number)p.Nl;
 			variance = average2-averages[j]*averages[j];
 			errors[j] = sqrt(variance/(p.Ng-1.0));
+		}*/
+		
+		// then those involving dividing by z
+		vector<number> expts(3*Nr), sigma(2*Nr);
+		number z, z2, sigma_z, denom = (p.Ng>1? (p.Ng-1.0): 1.0);
+		
+		for (uint k=0; k<Nr; k++) {
+			expts[3*k] = sums[3*k]/(number)p.Nl;
+			expts[3*k+1] = sums[3*k+1]/(number)Npg/(number)p.Nl;
+			expts[3*k+2] = sums[3*k+2]/(number)Npg/(number)p.Nl;
+		}
+
+		z = sums[9]/(number)p.Nl;
+		z2 = sums[10]/(number)p.Nl/(number)Npg;
+		sigma_z = (z2-z*z)/denom;
+		
+		for (uint k=0; k<Nr; k++) {
+			sigma[k] = (expts[3*k+1]-expts[3*k]*expts[3*k])/denom;
+			sigma[2*k] = (expts[3*k+2]-expts[3*k]*z)/denom;
 		}
 		
-		// then the more complicated ones, v from vz and z
-		if (Na>0) {
-			number v, v2, z, z2, vz;
-			number sigma_vv, sigma_vz, sigma_zz;
-			number denom = (p.Ng>1? (p.Ng-1.0): 1.0);
-			
-			v = sums[2*(Nr-Na)]/(number)p.Nl;
-			v2 = sums[2*(Nr-Na)+1]/(number)Npg/(number)p.Nl;
-			z = sums[2*(Nr-Na+1)]/(number)p.Nl;
-			z2 = sums[2*(Nr-Na+1)+1]/(number)Npg/(number)p.Nl;
-			vz = sums[2*(Nr+Na)]/(number)Npg/(number)p.Nl;
-			sigma_vv = (v2-v*v)/denom;
-			sigma_vz = (vz-v*z)/denom;
-			sigma_zz = (z2-z*z)/denom;
-			
-			averages[Nr-Na] = v/z;
-			errors[Nr-Na] = sqrt((sigma_vv - 2.0*v*sigma_vz/z + v*v*sigma_zz/z/z)/z/z);
-			
+		for (uint k=0; k<Nr; k++) {
+			averages[k] = expts[3*k]/z;
+			errors[k] = sqrt((sigma[2*k] - 2.0*expts[3*k]*sigma[2*k+1]/z + expts[3*k]*expts[3*k]*sigma_z/z/z)/z/z);
 		}
 
 	/*----------------------------------------------------------------------------------------------------------------------------
@@ -294,8 +297,8 @@ for (uint pl=0; pl<Npl; pl++) {
 		string timenumber = currentDateTime();	
 	
 		Filename rf = "results/s0/loop_dim_"+nts<uint>(dim)+".dat";
-//		rf.ID += "Office";
-		rf.ID += "Cosmos";
+		rf.ID += "Office";
+//		rf.ID += "Cosmos";
 		FILE * ros;
 		ros = fopen(((string)rf).c_str(),"a");
 		fprintf(ros,"%12s%5i%5i%8i%8i%8.5g%8.5g%8.5g",timenumber.c_str(),dim,p.K,p.Nl,p.Ng,p.G,p.B,p.T);

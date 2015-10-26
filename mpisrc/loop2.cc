@@ -179,7 +179,7 @@ for (uint pl=0; pl<Npl; pl++) {
 										+"_B_"+nts<uint>(p.B)+"_rank_"+nts<uint>(rank)+".dat");
 	Filename s0File = "data/s0+v/local/"+timenumber+"s0_dim_"+nts<uint>(dim)+"_K_"+nts<uint>(p.K)+"_G_"+nts<uint>(p.G)\
 									+"_B_"+nts<uint>(p.B)+"_rank_"+nts<uint>(rank)+".dat";
-	Filename corrTotalFile = "data/s0+v/vCorrTotal_dim_"+nts<uint>(dim)+"_K_"+nts<uint>(p.K)+"_G_"+nts<uint>(p.G)\
+	//Filename corrTotalFile = "data/s0+v/vCorrTotal_dim_"+nts<uint>(dim)+"_K_"+nts<uint>(p.K)+"_G_"+nts<uint>(p.G)\
 									+"_B_"+nts<uint>(p.B)+"_rank_"+nts<uint>(rank)+".dat";								
 	Filename frFile = s0File, vFile = s0File, corrFile = s0File;
 	frFile.ID = "fr";
@@ -227,8 +227,9 @@ for (uint pl=0; pl<Npl; pl++) {
 			s0 = S0(loop);
 			I = I0(loop);
 			//w = gsl_sf_cos(p.G*I0(loop));
-			v = V1(loop);
-			fr = (I<lp? 0.0: (-(pi*lp/2.0)*(I-lp/2.0))+pi*I*I/4.0)*gsl_sf_exp(-p.G*v);
+			v = p.G*V1(loop);
+			fr = (I<lp? 0.0: (-(pi*lp/2.0)*(I-lp/2.0))+pi*I*I/4.0)*gsl_sf_exp(-v);
+			//f = (I<lp? -pi*I*I/4.0: -(pi*lp/2.0)*(I-lp/2.0));
 		
 			s0_data_local[k] = s0;
 			fr_data_local[k] = fr;
@@ -290,9 +291,9 @@ for (uint pl=0; pl<Npl; pl++) {
 
 	// saving correlations
 	vMCDA.saveCorrelator(corrFile);
-	vMCDA.saveCorrelatorAppendAscii(corrTotalFile);
+	//vMCDA.saveCorrelatorAppendAscii(corrTotalFile);
 	if (rank==root)
-			cout << "correlators printed to: " << endl << corrFile << endl << corrTotalFile << endl;
+			cout << "correlators printed to: " << endl << corrFile << endl;// << corrTotalFile << endl;
 	
 	// calculating errors
 	uint bootstraps = 10;
