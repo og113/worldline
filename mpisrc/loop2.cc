@@ -27,8 +27,8 @@ using namespace std;
 ----------------------------------------------------------------------------------------------------------------------------
 	CONTENTS
 		0 - initializing mpi
-		1 - getting parameters
-		2 - getting argv
+		1 - getting argv
+		2 - getting parameters
 		3 - defining basic quantitites
 		4 - starting parameter loop
 		5 - coordinating files
@@ -57,8 +57,32 @@ Nw = Nwi;
 if (rank==root)
 	cout << "starting loop2 with " << Nw << " nodes" << endl;
 
+	
 /*----------------------------------------------------------------------------------------------------------------------------
-	1. getting parameters
+	1. getting argv
+----------------------------------------------------------------------------------------------------------------------------*/
+
+bool verbose = false;
+bool circle = false;
+string inputsFile = "inputs2";
+
+// getting argv
+if (argc % 2 && argc>1) {
+	for (uint j=0; j<(uint)(argc/2); j++) {
+		string id = argv[2*j+1];
+		if (id[0]=='-') id = id.substr(1);
+		if (id.compare("verbose")==0) verbose = (stn<uint>(argv[2*j+2])!=0);
+		else if (id.compare("circle")==0) circle = (stn<uint>(argv[2*j+2])!=0);
+		else if (id.compare("inputs")==0) inputsFile = (string)argv[2*j+2];
+		else {
+			cerr << "argv id " << id << " not understood" << endl;
+			MPI_Abort(MPI_COMM_WORLD,1);
+		}
+	}
+}
+
+/*----------------------------------------------------------------------------------------------------------------------------
+	2. getting parameters
 ----------------------------------------------------------------------------------------------------------------------------*/
 
 //dimension
@@ -66,7 +90,7 @@ if (rank==root)
 
 // parameters
 ParametersRange pr;
-pr.load("inputs2");
+pr.load(inputsFile);
 Parameters p = pr.Min;
 if (rank==root) {
 	if (p.empty()) {
@@ -79,31 +103,11 @@ if (rank==root) {
 		MPI_Abort(MPI_COMM_WORLD,1);
 	}
 }
-MPI_Barrier(MPI_COMM_WORLD);
-	
-/*----------------------------------------------------------------------------------------------------------------------------
-	2. getting argv
-----------------------------------------------------------------------------------------------------------------------------*/
-
-bool verbose = false;
-bool circle = false;
-
-// getting argv
-if (argc % 2 && argc>1) {
-	for (uint j=0; j<(uint)(argc/2); j++) {
-		string id = argv[2*j+1];
-		if (id[0]=='-') id = id.substr(1);
-		if (id.compare("verbose")==0) verbose = (stn<uint>(argv[2*j+2])!=0);
-		if (id.compare("circle")==0) circle = (stn<uint>(argv[2*j+2])!=0);
-		else {
-			cerr << "argv id " << id << " not understood" << endl;
-			MPI_Abort(MPI_COMM_WORLD,1);
-		}
-	}
-}
 
 if (circle)
 	circle = (abs(p.G*p.B)>MIN_NUMBER);
+
+MPI_Barrier(MPI_COMM_WORLD);
 
 /*----------------------------------------------------------------------------------------------------------------------------
 	3. defining basic quantitites	

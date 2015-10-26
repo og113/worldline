@@ -23,37 +23,22 @@ using namespace std;
 /*----------------------------------------------------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------------------------------------------------
 	CONTENTS
-		0 - getting parameters
-		1 - initializing mpi
-		2 - getting argv
-		2 - defining basic quantitites
-		3 - starting parameter loop
-		4 - coordinating files
-		5 - evaluating loop quantitites
-		6 - evaluating errors
-		7 - printing results
+		0 - initializing mpi
+		1 - getting argv
+		2 - getting parameters
+		3 - defining basic quantitites
+		4 - starting parameter loop
+		5 - coordinating files
+		6 - evaluating loop quantitites
+		7 - evaluating errors
+		8 - printing results
 ----------------------------------------------------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------------------------------------------------*/
 
 int main(int argc, char** argv) {
-/*----------------------------------------------------------------------------------------------------------------------------
-	0. getting parameters
-----------------------------------------------------------------------------------------------------------------------------*/
-
-//dimension
-#define dim 4
-
-// parameters
-ParametersRange pr;
-pr.load("inputs");
-Parameters p = pr.Min;
-if (p.empty()) {
-	cerr << "Parameters empty: nothing in inputs file" << endl;
-	return 1;
-}
 
 /*----------------------------------------------------------------------------------------------------------------------------
-	1. initializing mpi
+	0. initializing mpi
 ----------------------------------------------------------------------------------------------------------------------------*/
 
 int Nw, rank, root = 0; // Nw, number of workers
@@ -64,14 +49,15 @@ MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 MPI_Comm_size(MPI_COMM_WORLD, &Nw);
 
 if (rank==root)
-	cout << "starting loop with " << Nw << " nodes" << endl;
+	cout << "starting loop with " << Nw << " nodes" << endl;	
 	
 /*----------------------------------------------------------------------------------------------------------------------------
-	2. getting argv
+	1. getting argv
 ----------------------------------------------------------------------------------------------------------------------------*/
 
 // data to print
 string dataChoice = "";
+string inputsFolder = "inputs";
 
 // getting argv
 if (argc % 2 && argc>1) {
@@ -79,6 +65,7 @@ if (argc % 2 && argc>1) {
 		string id = argv[2*j+1];
 		if (id[0]=='-') id = id.substr(1);
 		if (id.compare("data")==0 || id.compare("dataChoice")==0) dataChoice = (string)(argv[2*j+2]);
+		else if (id.compare("inputs")==0) inputsFolder = (string)argv[2*j+2];
 		else {
 			cerr << "argv id " << id << " not understood" << endl;
 			MPI_Abort(MPI_COMM_WORLD,1);
@@ -102,6 +89,22 @@ else if (dataChoice.compare("R")==0 || dataChoice.compare("r")==0) {
 else if (!dataChoice.empty()) {
 	cerr << "dataChoice, " << dataChoice << ", not understood" << endl;
 	dataChoice = "";
+}
+
+/*----------------------------------------------------------------------------------------------------------------------------
+	2. getting parameters
+----------------------------------------------------------------------------------------------------------------------------*/
+
+//dimension
+#define dim 4
+
+// parameters
+ParametersRange pr;
+pr.load(inputsFolder);
+Parameters p = pr.Min;
+if (p.empty()) {
+	cerr << "Parameters empty: nothing in inputs file" << endl;
+	return 1;
 }
 
 /*----------------------------------------------------------------------------------------------------------------------------
