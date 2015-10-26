@@ -202,7 +202,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		l.load(folder[j]);
 
 		s0 = S0(l);
-		vz = p.G*V1r(l,p.Epsi,pi);
+		vz = p.G*V1(l);
 		z = gsl_sf_exp(-vz);
 		vz *= z;
 		//w = gsl_sf_cos(gbt*I0(l));

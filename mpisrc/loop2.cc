@@ -66,7 +66,7 @@ if (rank==root)
 
 // parameters
 ParametersRange pr;
-pr.load("inputs");
+pr.load("inputs2");
 Parameters p = pr.Min;
 if (rank==root) {
 	if (p.empty()) {
