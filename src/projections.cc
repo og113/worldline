@@ -32,6 +32,7 @@ int main(int argc, char** argv) {
 string inputsFile = "inputs";
 string loopFileIn = "data/s0/loops/dim_4/K_10/loop_run_0.dat";
 string loopFileOut = "data/temp/projections.dat";
+uint K = 10;
 
 if (argc % 2 && argc>1) {
 for (uint j=0; j<(uint)(argc/2); j++) {
@@ -40,6 +41,7 @@ for (uint j=0; j<(uint)(argc/2); j++) {
 		if (id.compare("inputs")==0) inputsFile = (string)argv[2*j+2];
 		else if (id.compare("fileIn")==0 || id.compare("fi")==0) loopFileIn = (string)argv[2*j+2];
 		else if (id.compare("fileOut")==0 || id.compare("fo")==0) loopFileOut = (string)argv[2*j+2];
+		else if (id.compare("K")==0 || id.compare("k")==0) K = stn<uint>(argv[2*j+2]);
 		else {
 			cerr << "input " << id << " unrecognized" << endl;
 			return 1;
@@ -51,15 +53,6 @@ for (uint j=0; j<(uint)(argc/2); j++) {
 	2 - defining basic quantities
 -------------------------------------------------------------------------------------------------------------------------*/
 
-ParametersRange pr;
-pr.load(inputsFile);
-if (pr.empty()) {
-	cerr << "Parameters empty: nothing in inputs file" << endl;
-	return 1;
-}
-Parameters p = pr.Min;
-uint Length = pow(2,p.K);
-
 cout << "forming 2d projections of loop from " << loopFileIn << endl;
 cout << "saving to " << loopFileOut << endl;
 
@@ -68,19 +61,9 @@ cout << "saving to " << loopFileOut << endl;
 -------------------------------------------------------------------------------------------------------------------------*/
 
 uint Seed = time(NULL);
-Loop<dim> loop(p.K,Seed);
+Loop<dim> loop(K,Seed);
 loop.load(loopFileIn);
-ofstream os;
-os.open(loopFileOut);
-	
-os << setprecision(16);
-for (uint j=0; j<Length; j++) {
-	for (uint k=0; k<dim; k++)
-		os << setw(24) << (loop[j])[k];
-	os << endl;
-}
-
-os.close();
+loop.saveAscii(loopFileOut);
 
 return 0;
 }
