@@ -11,7 +11,6 @@
 #include <stdlib.h>     /* srand, rand */
 #include <time.h>       /* time */
 #include <gsl/gsl_sf_exp.h>
-#include <gsl/gsl_sf_exp.h>
 #include "analysis.h"
 #include "simple.h"
 #include "print.h"
