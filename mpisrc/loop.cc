@@ -203,13 +203,17 @@ for (uint pl=0; pl<Npl; pl++) {
 		l.load(folder[j]);
 
 		s0 = S0(l);
+		//s0 = l.length();
 		v = p.G*V0(l);
 		z = gsl_sf_exp(-v);
 		//w = gsl_sf_cos(gbt*I0(l));
 		I = abs(I0(l));
-		f = (I<lp? -pi*I*I/4.0: -(pi*lp/2.0)*(I-lp/2.0));
+		if (abs(p.G)>MIN_NUMBER)
+			f = (I<lp? -pi*I*I/4.0: -(pi*lp/2.0)*(I-lp/2.0));
+			//fr = (I<lp? 0.0: -(pi*lp/2.0)*(I-lp/2.0))+pi*I*I/4.0;
+		else
+			f = 0.0;
 		s0 *= z; v *= z; f *= z;
-		//fr = (I<lp? 0.0: -(pi*lp/2.0)*(I-lp/2.0))+pi*I*I/4.0;
 		sums_local[0] += s0;
 		sums_local[3] += f;
 		sums_local[6] += v;
@@ -256,7 +260,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	if (rank==root) {
 		vector<number> averages(Nr);
 		vector<number> errors(Nr);
-		number average2, variance;
+		//number average2, variance;
 		
 		// first, results not requiring auxilliary quantities, i.e. s0 and w
 		/*for (uint j=0; j<(Nr-2); j++) {

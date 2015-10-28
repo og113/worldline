@@ -3,7 +3,7 @@
 #if you want to save directly to a file, use the following two lines of code
 if (exists("outFile")) \
 if (outFile ne 'gui') \
-set term png size 1600,800; \
+set term fig size 1600,800; \
 set output outFile; \
 
 file="data/temp/projections.dat"
