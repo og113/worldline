@@ -6,13 +6,17 @@
 #include <ctime>
 #include <iostream>
 #include <iomanip>
+#include <stdlib.h>
+#include <stdio.h>
 #include <gsl/gsl_sf_exp.h>
+#include <gsl/gsl_vector.h>
+#include <gsl/gsl_blas.h>
 #include <gsl/gsl_multifit_nlin.h>
 #include <fstream>
 #include <vector>
 #include "simple.h"
 #include "parameters.h"
-#include "genloop.h"
+#include "print.h"
 
 /*-------------------------------------------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------------------------------------------
@@ -143,14 +147,14 @@ if (p.empty()) {
 	3. loading data
 ----------------------------------------------------------------------------------------------------------------------------*/
 
-string Tfile = ;
-string Wfile = ;
-string weightsFile = ;
+string Tfile = "";
+string Wfile = "";
+string weightsFile = "";
 vector<number> T, W, weights;
 
-T.loadVectorBinary(Tfile);
-W.loadVectorBinary(Wfile);
-weights.loadVectorBinary(weightsfile);
+loadVectorBinary(Tfile,T);
+loadVectorBinary(Wfile,W);
+loadVectorBinary(weightsFile,weights);
 
 if (T.size()==W.size() && T.size()==weights.size()) {
 	Nt = T.size();
@@ -168,20 +172,45 @@ else {
 -------------------------------------------------------------------------------------------------------------------------*/
 
 size_t maxiter = 100;
-number epsabs = 1.0e-8;
-number epsrel = 1.0e-8;
-int info;
+number xtol = 1.0e-8;
+number gtol = 1.0e-8;
+number ftol = 0.0;
+int status, info;
 
-vector<number> ab(2*Nk,1.0);
+// struct for holding data
+struct data d;
+d.Nt = Nt;
+d.Nk = Nk;
+d.w = &W[0];
+
+// setting fdf function
+gsl_multifit_function_fdf f;
+f.f = &wt_f;
+f.df = &wt_df;   /* set to NULL for finite-difference Jacobian */
+f.n = Nt;
+f.p = 2*Nk;
+f.params = &d;
+
+// pick starting point
+vector<number> ab_init(2*Nk,1.0);
 for (uint k=0; k<Nk; k++) {
-	ab[Nk+k] += (number)k;
+	ab_init[Nk+k] += (number)k;
 }
 
-gsl_multifit_fdfsolver * solver = gsl_multifit_fdfsolver_alloc(gsl_multifit_fdfsolver_lmder, Nt, Nk);
-info = gsl_multifit_fdfsolver_wset(solver, wt_df, &ab[0], const gsl_vector * wts)
+// defining gsl vectors
+gsl_vector_view ab_gsl = gsl_vector_view_array (&ab_init[0], 2*Nk);
+gsl_vector_view weights_gsl = gsl_vector_view_array(&weights[0], Nt);
 
-info = gsl_multifit_fsolver_driver (solver, maxiter, epsabs, epsrel);
+// initializing solver
+gsl_multifit_fdfsolver *solver = gsl_multifit_fdfsolver_alloc(gsl_multifit_fdfsolver_lmder, Nt, 2*Nk);
 
+// initialize starting point and weights
+gsl_multifit_fdfsolver_wset(solver, &f, &ab_gsl.vector, &weights_gsl.vector);
+
+// solving for fit
+status = gsl_multifit_fdfsolver_driver(solver, maxiter, xtol, gtol, ftol, &info);
+
+// freeing solver
 gsl_multifit_fdfsolver_free (solver);
 
 /*----------------------------------------------------------------------------------------------------------------------------

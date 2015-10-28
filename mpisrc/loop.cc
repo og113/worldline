@@ -80,9 +80,6 @@ if (dataChoice.compare("S0")==0 || dataChoice.compare("s0")==0) {
 else if (dataChoice.compare("V")==0 || dataChoice.compare("v")==0) {
 	dataChoice = "v";
 }
-else if (dataChoice.compare("Z")==0 || dataChoice.compare("z")==0) {
-	dataChoice = "z";
-}
 else if (dataChoice.compare("R")==0 || dataChoice.compare("r")==0) {
 	dataChoice = "r";
 }
@@ -195,26 +192,30 @@ for (uint pl=0; pl<Npl; pl++) {
 	uint Seed = time(NULL)+rank+2;
 	Loop<dim> l(p.K,Seed);
 	uint counter = 0, id;
-	number s0, v, z, I, f, lp = 1.0/p.G/p.B; // w, gbt = p.G*p.B*p.T; // n.b. mass=1, lp is large parameter for weak fields
+	number w, v, z, I, f, lp = 1.0/p.G/p.B; // w, gbt = p.G*p.B*p.T; // n.b. mass=1, lp is large parameter for weak fields
 	number *sums_local = new number[Nq]();
 
 	for (uint j=0; j<Npw; j++) {
 		counter++;
 		l.load(folder[j]);
 
-		s0 = S0(l);
+		//s0 = S0(l);
 		//s0 = l.length();
+		I = abs(I0(l));
+		w = gsl_sf_exp(p.G*p.B*p.T*I);
+		w += 1.0/w;
+		w /= 2.0;
+		//w = gsl_sf_cos(gbt*I0(l));
 		v = p.G*V0(l);
 		z = gsl_sf_exp(-v);
-		//w = gsl_sf_cos(gbt*I0(l));
-		I = abs(I0(l));
 		if (abs(p.G)>MIN_NUMBER)
 			f = (I<lp? -pi*I*I/4.0: -(pi*lp/2.0)*(I-lp/2.0));
 			//fr = (I<lp? 0.0: -(pi*lp/2.0)*(I-lp/2.0))+pi*I*I/4.0;
 		else
 			f = 0.0;
-		s0 *= z; v *= z; f *= z;
-		sums_local[0] += s0;
+		w *= z; v *= z; f *= z;
+		
+		sums_local[0] += w;
 		sums_local[3] += f;
 		sums_local[6] += v;
 		sums_local[9] += z;
@@ -228,13 +229,11 @@ for (uint pl=0; pl<Npl; pl++) {
 			if (!dataChoice.empty()) {
 				id = ((j+1)/Npg-1); // for global id: +rank*(p.Ng/Nw)
 				if (dataChoice.compare("s0")==0)
-					data_local[id] = sums_local[0]/(number)Npg;
+					data_local[id] = sums_local[0]/sums_local[9];
 				else if (dataChoice.compare("r")==0) 
-					data_local[id] = sums_local[2]/(number)Npg;
+					data_local[id] = sums_local[3]/sums_local[9];
 				else if (dataChoice.compare("v")==0)
-					data_local[id] = sums_local[4]/sums_local[6];
-				else if (dataChoice.compare("z")==0)
-					data_local[id] = sums_local[4]/(number)Npg;
+					data_local[id] = sums_local[6]/sums_local[9];
 			}
 			
 			MPI_Reduce(sums_local, temp, Nq, MPI_DOUBLE, MPI_SUM, root, MPI_COMM_WORLD);
@@ -285,8 +284,8 @@ for (uint pl=0; pl<Npl; pl++) {
 		sigma_z = (z2-z*z)/denom;
 		
 		for (uint k=0; k<Nr; k++) {
-			sigma[k] = (expts[3*k+1]-expts[3*k]*expts[3*k])/denom;
-			sigma[2*k] = (expts[3*k+2]-expts[3*k]*z)/denom;
+			sigma[2*k] = (expts[3*k+1]-expts[3*k]*expts[3*k])/denom;
+			sigma[2*k+1] = (expts[3*k+2]-expts[3*k]*z)/denom;
 		}
 		
 		for (uint k=0; k<Nr; k++) {
