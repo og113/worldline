@@ -168,9 +168,10 @@ for (uint pl=0; pl<Npl; pl++) {
 			MPI_Abort(MPI_COMM_WORLD,1);
 		}
 	}
-	/*if (rank==root)
+	if (rank==root) {
 		cout << "loading loops from:" << endl;
-	cout << loadFile << endl;*/
+		cout << loadFile << endl;
+	}
 
 	// out files
 	string timenumber = currentDateTime();
