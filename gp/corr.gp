@@ -7,7 +7,7 @@ set term png size 1600,800; \
 set output outFile; \
 
 # file
-file="data/s0+v/vCorrTotal_dim_4_K_8_G_1_B_1_rank_0.dat"
+file="data/temp/corr.dat"
 
 unset log
 set key below
