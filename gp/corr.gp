@@ -7,7 +7,7 @@ set term png size 1600,800; \
 set output outFile; \
 
 # file
-file="data/temp/corr.dat"
+file="data/temp/corr0.dat"
 
 unset log
 set key below
