@@ -45,7 +45,7 @@ struct data {
 };
 
 // gsl function
-int wt_f (const gsl_vector * x, void *data, gsl_vector * f) {
+int wt_f (const gsl_vector *x, void *data, gsl_vector *f) {
 
 	size_t Nt = ((struct data *)data)->Nt;
 	size_t Nk = ((struct data *)data)->Nk;
@@ -58,12 +58,12 @@ int wt_f (const gsl_vector * x, void *data, gsl_vector * f) {
 		/* Model Yi = 1 + 2T^2 Sum[a_k * b_k/(T^2-b_k^2), k ] */
 		Yi = 1.0;
 		for (uint j=0; j<Nk; j++) {
-			a = gsl_vector_get (x,j);
-			b = gsl_vector_get (x,Nk+j);
+			a = gsl_vector_get(x,j);
+			b = gsl_vector_get(x,Nk+j);
 			t2 = t[i]*t[i];
 			Yi += 2.0*t2*a*b/(t2-b*b);
 		}
-		gsl_vector_set (f, i, (Yi - y[i])/sigma[i]);
+		gsl_vector_set(f, i, (Yi - y[i])/sigma[i]);
 	}
 
 	return GSL_SUCCESS;
@@ -173,6 +173,7 @@ size_t maxiter = 100, iter = 0;
 number res_tol = 1.0e-8, error = 1.0;
 gsl_vector *res = gsl_vector_calloc(Nt);
 gsl_vector *resw = gsl_vector_calloc(Nt);
+gsl_matrix *J = gsl_matrix_calloc(Nt,2*Nk);
 int status;
 
 // struct for holding data
@@ -192,14 +193,33 @@ f.p = 2*Nk;
 f.params = &d;
 
 // pick starting point
-vector<number> ab_init(2*Nk,1.0);
-for (uint k=0; k<Nk; k++) {
-	ab_init[Nk+k] += (number)k;
-}
+vector<number> ab_init(2*Nk,0.0);
+ab_init[0] = 1.0;
+ab_init[Nk] = 3.0;
 
 // defining gsl vectors
-gsl_vector_view ab_gsl = gsl_vector_view_array (&ab_init[0], 2*Nk);
+gsl_vector_view ab_gsl = gsl_vector_view_array(&ab_init[0], 2*Nk);
 gsl_vector_view sigma_gsl = gsl_vector_view_array(&Sigma[0], Nt);
+
+// test
+cout << "tests " << endl;
+cout << (d.t)[0] << endl;
+cout << (d.y)[0] << endl;
+cout << (d.sigma)[0] << endl;
+cout << ab_init[0] << endl;
+cout << endl;
+cout << gsl_blas_dnrm2(&ab_gsl.vector) << endl;
+cout << gsl_blas_dnrm2(resw) << endl;
+cout << wt_f(&ab_gsl.vector,&d,resw) << endl;
+cout << gsl_blas_dnrm2(&ab_gsl.vector) << endl;
+cout << gsl_blas_dnrm2(resw) << endl;
+cout << endl;
+cout << wt_df(&ab_gsl.vector,&d,J) << endl;
+cout << gsl_blas_dnrm2(&ab_gsl.vector) << endl;
+cout << endl;
+cout << f.n << endl;
+cout << f.p << endl;
+cout << endl;
 
 // initializing solver
 const gsl_multifit_fdfsolver_type * solverType = gsl_multifit_fdfsolver_lmder;
