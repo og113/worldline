@@ -50,4 +50,8 @@ void loadVectorBinary(const string& f, vector<T>& v);
 template <class T>
 void loadVectorAscii(const string& f, vector<T>& v);
 
+// loadVectorAsciiColumn
+template <class T>
+void loadVectorAsciiColumn(const string& f, vector<T>& v, const uint& col);
+
 #endif // __PRINT_H_INCLUDED__

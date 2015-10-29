@@ -151,6 +151,37 @@ void loadVectorBinary(const string& f, vector<T>& v) {
 	}
 }
 
+// loadVectorAsciiColumn
+template <class T>
+void loadVectorAsciiColumn(const string& f, vector<T>& v, const uint& col) {
+	uint cols = countColumns(f);
+	if (col>cols) {
+		cerr << "loadVectorAsciiColumn error: col(" << col << ")>cols(" << cols << ")" << endl;
+		return;
+	}
+	uint lines = countLines(f);
+	v.resize(lines);
+	ifstream is;
+	is.open(f.c_str());
+	if (is.good()) {
+		T dross;
+		string line;
+		for (uint j=0; j<lines; j++) {
+			getline(is,line);
+			stringstream ss(line);
+			for (uint k=0; k<(col-1); k++)
+				ss >> dross;
+			ss >> v[j];
+		}
+		is.close();
+	}
+	else {
+		cerr << "loadVectorAsciiColumn error: cannot read from " << f << endl;
+		is.close();
+		return;
+	}
+}
+
 /*-------------------------------------------------------------------------------------------------------------------------
 	3. explicit instantiation
 -------------------------------------------------------------------------------------------------------------------------*/
@@ -164,4 +195,5 @@ template void saveVectorAsciiAppend<number>(const string& f, const vector<number
 // load
 template void loadVectorBinary<number>(const string& f, vector<number>& v);
 template void loadVectorAscii<number>(const string& f, vector<number>& v);
+template void loadVectorAsciiColumn<number>(const string& f, vector<number>& v, const uint& col);
 

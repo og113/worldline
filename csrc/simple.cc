@@ -161,7 +161,7 @@ uint countLines(const string & file_to_count) {
 		getline(fin,line);
 		if(line.empty()) continue;
 		counter++;
-	}		
+	}	
 	fin.close();
     return counter;
 }

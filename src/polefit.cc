@@ -39,8 +39,9 @@
 struct data {
   size_t Nt;
   size_t Nk;
-  number * t;
-  number * w;
+  number * t; // variable of function
+  number * y; // function to fit
+  number * sigma; // sigma = 1/sqrt(weights)
 };
 
 // gsl function
@@ -49,19 +50,20 @@ int wt_f (const gsl_vector * x, void *data, gsl_vector * f) {
 	size_t Nt = ((struct data *)data)->Nt;
 	size_t Nk = ((struct data *)data)->Nk;
 	number *t = ((struct data *)data)->t;
-	number *w = ((struct data *)data)->w;
-	number a, b, t2, Wi;
+	number *y = ((struct data *)data)->y;
+	number *sigma = ((struct data *)data)->sigma;
+	number a, b, t2, Yi;
 
 	for (uint i=0; i<Nt; i++) {
-		/* Model Wi = 1 + 2T^2 Sum[a_k * b_k/(T^2-b_k^2), k ] */
-		Wi = 1.0;
+		/* Model Yi = 1 + 2T^2 Sum[a_k * b_k/(T^2-b_k^2), k ] */
+		Yi = 1.0;
 		for (uint j=0; j<Nk; j++) {
 			a = gsl_vector_get (x,j);
 			b = gsl_vector_get (x,Nk+j);
 			t2 = t[i]*t[i];
-			Wi += 2.0*t2*a*b/(t2-b*b);
+			Yi += 2.0*t2*a*b/(t2-b*b);
 		}
-		gsl_vector_set (f, i, Wi - w[i]);
+		gsl_vector_set (f, i, (Yi - y[i])/sigma[i]);
 	}
 
 	return GSL_SUCCESS;
@@ -74,20 +76,21 @@ int wt_df (const gsl_vector * x, void *data, gsl_matrix * J) {
 	size_t Nt = ((struct data *)data)->Nt;
 	size_t Nk = ((struct data *)data)->Nk;
 	number *t = ((struct data *)data)->t;
+	number *sigma = ((struct data *)data)->sigma;
 	number a, b, fract, t2;
 
 	for (uint i=0; i<Nt; i++) {
 	/* Jacobian matrix J(i,j) = dfi / dxj, */
-	/* where fi = (Wi - wi)/sigma[i],      */
-	/*       Wi = 1 + 2T^2 Sum[a_k * b_k/(T^2-b_k^2), k ]  */
+	/* where fi = (Yi - yi)/sigma[i],      */
+	/*       Yi = 1 + 2T^2 Sum[a_k * b_k/(T^2-b_k^2), k ]  */
 	/* and the xj are the parameters (a_k,b_k) where k=0,...,(Nk-1) */
 		for (uint j=0; j<Nk; j++) {
 			a = gsl_vector_get (x,j);
 			b = gsl_vector_get (x,Nk+j);
 			t2 = t[i]*t[i];
 			fract = 1.0/(t2-b*b);
-			gsl_matrix_set (J, i, j, 	2.0*t2*b*fract					);
-			gsl_matrix_set (J, i, Nk+j, 2.0*t2*a*fract*fract*(t2+b*b) 	);
+			gsl_matrix_set (J, i, j, 	(2.0*t2*b*fract					)/sigma[i]	);
+			gsl_matrix_set (J, i, Nk+j, (2.0*t2*a*fract*fract*(t2+b*b)	)/sigma[i] 	);
 		}
 	}
 	
@@ -101,8 +104,8 @@ int main(int argc, char** argv) {
 ----------------------------------------------------------------------------------------------------------------------------*/
 
 string inputsFolder = "inputs";
-string dataFile = "";
-uint Nk = 10, Nt = 0;
+string dataFile = "results/s0/WvsgBT.dat";
+uint Nk = 5, Nt = 0;
 
 // getting argv
 if (argc % 2 && argc>1) {
@@ -124,7 +127,8 @@ if (dataFile.empty()) {
 	return 1;
 }
 else {
-	cout << "fitting data from " << dataFile << " with " << Nk << " parameters" << endl;
+	Nt = countLines(dataFile);
+	cout << "fitting data from " << dataFile << " with " << Nk << " parameters and " << Nt << " data points" << endl;
 }
 
 /*----------------------------------------------------------------------------------------------------------------------------
@@ -147,21 +151,15 @@ if (p.empty()) {
 	3. loading data
 ----------------------------------------------------------------------------------------------------------------------------*/
 
-string Tfile = "";
-string Wfile = "";
-string weightsFile = "";
-vector<number> T, W, weights;
+vector<number> T, Y, Sigma;
 
-loadVectorBinary(Tfile,T);
-loadVectorBinary(Wfile,W);
-loadVectorBinary(weightsFile,weights);
+loadVectorAsciiColumn(dataFile,T,8);
+loadVectorAsciiColumn(dataFile,Y,9);
+loadVectorAsciiColumn(dataFile,Sigma,10);
 
-if (T.size()==W.size() && T.size()==weights.size()) {
-	Nt = T.size();
-}
-else {
-	cerr << "polefit error: data not all same size: T.size() = " << T.size() << ", W.size() = " << W.size()\
-				 << "weights.size() = " << weights.size() << endl;
+if (T.size()!=Y.size() || T.size()!=Sigma.size()) {
+	cerr << "polefit error: data not all same size: T.size() = " << T.size() << ", Y.size() = " << Y.size()\
+				 << "Sigma.size() = " << Sigma.size() << endl;
 	return 1;
 }
 
@@ -171,22 +169,24 @@ else {
 			for k=0,...,(Nk-1)
 -------------------------------------------------------------------------------------------------------------------------*/
 
-size_t maxiter = 100;
-number xtol = 1.0e-8;
-number gtol = 1.0e-8;
-number ftol = 0.0;
-int status, info;
+size_t maxiter = 100, iter = 0;
+number res_tol = 1.0e-8, error = 1.0;
+gsl_vector *res = gsl_vector_calloc(Nt);
+gsl_vector *resw = gsl_vector_calloc(Nt);
+int status;
 
 // struct for holding data
 struct data d;
 d.Nt = Nt;
 d.Nk = Nk;
-d.w = &W[0];
+d.t = &T[0];
+d.y = &Y[0];
+d.sigma = &Sigma[0];
 
 // setting fdf function
 gsl_multifit_function_fdf f;
 f.f = &wt_f;
-f.df = &wt_df;   /* set to NULL for finite-difference Jacobian */
+f.df = &wt_df;   // set to NULL for finite-difference Jacobian 
 f.n = Nt;
 f.p = 2*Nk;
 f.params = &d;
@@ -199,31 +199,58 @@ for (uint k=0; k<Nk; k++) {
 
 // defining gsl vectors
 gsl_vector_view ab_gsl = gsl_vector_view_array (&ab_init[0], 2*Nk);
-gsl_vector_view weights_gsl = gsl_vector_view_array(&weights[0], Nt);
+gsl_vector_view sigma_gsl = gsl_vector_view_array(&Sigma[0], Nt);
 
 // initializing solver
-gsl_multifit_fdfsolver *solver = gsl_multifit_fdfsolver_alloc(gsl_multifit_fdfsolver_lmder, Nt, 2*Nk);
+const gsl_multifit_fdfsolver_type * solverType = gsl_multifit_fdfsolver_lmder;
+gsl_multifit_fdfsolver *solver = gsl_multifit_fdfsolver_alloc(solverType, Nt, 2*Nk);
 
 // initialize starting point and weights
-gsl_multifit_fdfsolver_wset(solver, &f, &ab_gsl.vector, &weights_gsl.vector);
+status = gsl_multifit_fdfsolver_set(solver, &f, &ab_gsl.vector);
+if (status!=0) {
+	cerr << "gsl gsl_multifit_fdfsolver_set error: " << status << endl;
+	return 1;
+}
+res = (*solver).f;
+gsl_vector_mul(resw,&sigma_gsl.vector);
+error = gsl_blas_dnrm2(res);
+cout << "initial residual norm: " << error << endl;
 
 // solving for fit
-status = gsl_multifit_fdfsolver_driver(solver, maxiter, xtol, gtol, ftol, &info);
-
+/*while (error>res_tol || iter>maxiter) {
+	status = gsl_multifit_fdfsolver_iterate(solver);
+	if (status!=0) {
+		cerr << "gsl gsl_multifit_fdfsolver_iterate error: " << status << endl;
+		return 1;
+	}
+	res = (*solver).f;
+	gsl_vector_mul(resw,&sigma_gsl.vector);
+	error = gsl_blas_dnrm2(res);
+	iter++;
+}
+if (error>res_tol) {
+	cerr << "gsl fit failed to converge after " << maxiter << " iterations" << endl;
+	return 1;
+}
+else {
+	cout << "gsl fit converged after " << iter << " iterations" << endl;
+	cout << "final residual norm: " << error << endl;
+}
+*/
 // freeing solver
 gsl_multifit_fdfsolver_free (solver);
 
 /*----------------------------------------------------------------------------------------------------------------------------
 	5. printing results
 ----------------------------------------------------------------------------------------------------------------------------*/
-
+/*
 number rate = 0.0;
 
 for (uint k=0; k<Nk; k++) {
 	rate += gsl_sf_exp(-ab[Nk+k])*ab[k]/ab[Nk+k];
 }
 
-rate *= 1.0/16.0/pi/pi;
+rate *= 1.0/16.0/pi/pi;*/
 
 return 0;
 }
