@@ -571,18 +571,17 @@ number V1 (const Loop<Dim>& l) {
 
 // V1r
 template <uint Dim>
-number V1r (const Loop<Dim>& l, const number& a, const number& c) {
-	number result = 0.0;
+number V1r (const Loop<Dim>& l, const number& a) {
+	number result = 2.0*Dot(l[2],l[1],l[1],l[0])*pow(DistanceSquared(l[1],l[0])+a*a,(2.0-Dim)/2.0);
 	uint posj, posk;
-	for (uint j=0; j<l.size(); j++) {
+	for (uint j=2; j<l.size(); j++) {
 		posj = (j!=(l.size()-1)?j+1:0);
 		for (uint k=0; k<j; k++) {
 			posk = (k!=(l.size()-1)?k+1:0);
 			result += 2.0*Dot(l[posj],l[j],l[posk],l[k])*pow(DistanceSquared(l[j],l[k])+a*a,(2.0-Dim)/2.0);
 		}
-		result += DistanceSquared(l[posj],l[j])*pow(a*a,(2.0-Dim)/2.0);
 	}
-	return result*l.size()/pow(l.size()-1.0,2)-c*l.length()/a;
+	return result*l.size()/pow(l.size()-1.0,2);
 }
 
 // DV1
@@ -786,18 +785,17 @@ template <> number V1<4> (const Loop<4>& l) {
 }
 
 // V1r
-template <> number V1r<4> (const Loop<4>& l, const number& a, const number& c) {
-	number result = 0.0;
+template <> number V1r<4> (const Loop<4>& l, const number& a) {
+	number result = 2.0*Dot(l[2],l[1],l[1],l[0])/(DistanceSquared(l[1],l[0])+a*a);
 	uint posj, posk;
-	for (uint j=0; j<l.size(); j++) {
+	for (uint j=2; j<l.size(); j++) {
 		posj = (j!=(l.size()-1)?j+1:0);
 		for (uint k=0; k<j; k++) {
 			posk = (k!=(l.size()-1)?k+1:0);
 			result += 2.0*Dot(l[posj],l[j],l[posk],l[k])/(DistanceSquared(l[j],l[k])+a*a);
 		}
-		result += DistanceSquared(l[posj],l[j])/a/a;
 	}
-	return (result*l.size()/pow(l.size()-1.0,2)-c*l.length()/a);
+	return result*l.size()/pow(l.size()-1.0,2);
 }
 
 // Dim=2

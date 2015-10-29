@@ -343,7 +343,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	if (rank==root) {
 	
 		Filename rf = "results/s0+v/loop2_dim_"+nts<uint>(dim)+".dat";
-		rf.ID += "Office";
+		rf.ID += "Cosmos";
 		FILE * ros;
 		ros = fopen(((string)rf).c_str(),"a");
 		fprintf(ros,"%12s%5i%5i%8i%8i%8.4g%8.4g",timenumber.c_str(),dim,p.K,p.Nl,p.Nsw,p.G,p.B);

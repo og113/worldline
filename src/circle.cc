@@ -29,7 +29,7 @@ int main(int argc, char** argv) {
 #define dim 4
 
 ParametersRange pr;
-pr.load("inputs");
+pr.load("inputs2");
 if (pr.empty()) {
 	cerr << "Parameters empty: nothing in inputs file" << endl;
 	return 1;

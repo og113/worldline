@@ -238,7 +238,7 @@ number V1 (const Loop<Dim>& l);
 
 // V1r
 template <uint Dim>
-number V1r (const Loop<Dim>& l, const number& epsi, const number& c);
+number V1r (const Loop<Dim>& l, const number& epsi);
 
 // DV1
 template <uint Dim>
