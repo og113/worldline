@@ -57,7 +57,7 @@ if (rank==root)
 
 // data to print
 string dataChoice = "";
-string inputsFolder = "inputs";
+string inputsFile = "inputs";
 
 // getting argv
 if (argc % 2 && argc>1) {
@@ -65,7 +65,7 @@ if (argc % 2 && argc>1) {
 		string id = argv[2*j+1];
 		if (id[0]=='-') id = id.substr(1);
 		if (id.compare("data")==0 || id.compare("dataChoice")==0) dataChoice = (string)(argv[2*j+2]);
-		else if (id.compare("inputs")==0) inputsFolder = (string)argv[2*j+2];
+		else if (id.compare("inputs")==0) inputsFile = (string)argv[2*j+2];
 		else {
 			cerr << "argv id " << id << " not understood" << endl;
 			MPI_Abort(MPI_COMM_WORLD,1);
@@ -88,7 +88,8 @@ else if (!dataChoice.empty()) {
 	dataChoice = "";
 }
 
-cout << "using inputs file " << inputsFile << endl;
+if (rank==root)
+	cout << "using inputs file " << inputsFile << endl;
 
 /*----------------------------------------------------------------------------------------------------------------------------
 	2. getting parameters
@@ -99,7 +100,7 @@ cout << "using inputs file " << inputsFile << endl;
 
 // parameters
 ParametersRange pr;
-pr.load(inputsFolder);
+pr.load(inputsFile);
 Parameters p = pr.Min;
 if (p.empty()) {
 	cerr << "Parameters empty: nothing in inputs file" << endl;

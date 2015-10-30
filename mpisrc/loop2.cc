@@ -299,7 +299,7 @@ for (uint pl=0; pl<Npl; pl++) {
 			cout << "correlators printed to: " << endl << corrFile << endl;// << corrTotalFile << endl;
 	
 	// calculating errors
-	uint bootstraps = 10;
+	uint bootstraps = p.Nsw*1e2;
 	uint Seed = time(NULL)+rank+2;
 	errorSqrd_local[0] = s0MCDA.calcBootstrap(bootstraps,Seed);
 	errorSqrd_local[1] = frMCDA.calcBootstrap(bootstraps,Seed);

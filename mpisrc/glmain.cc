@@ -15,9 +15,9 @@
 /*-------------------------------------------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------------------------------------------
 	contents:
-		0 - getting parameters
-		1 - initializing mpi
-		2 - getting inputs from argv
+		0 - initializing mpi
+		1 - getting argv
+		2 - getting parameters
 		3 - checking if need to do anything
 		3 - if needed, constructing s0 loops
 -------------------------------------------------------------------------------------------------------------------------
@@ -26,23 +26,7 @@
 int main(int argc, char** argv) {
 
 /*----------------------------------------------------------------------------------------------------------------------------
-	0. getting parameters
-----------------------------------------------------------------------------------------------------------------------------*/
-
-//dimension
-#define dim 4
-
-// parameters
-ParametersRange pr;
-pr.load("inputs");
-Parameters p = pr.Min;
-if (p.empty()) {
-	cerr << "Parameters empty: nothing in inputs file" << endl;
-	return 1;
-}
-
-/*----------------------------------------------------------------------------------------------------------------------------
-	1. initializing mpi
+	0. initializing mpi
 ----------------------------------------------------------------------------------------------------------------------------*/
 
 int Nw, rank, root = 0; // Nw, number of workers
@@ -53,24 +37,45 @@ MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 MPI_Comm_size(MPI_COMM_WORLD, &Nw);
 
 if (rank==root)
-	cout << "starting glmain with " << Nw << " nodes" << endl;
+	cout << "starting glmain with " << Nw << " nodes" << endl;	
+	
+/*----------------------------------------------------------------------------------------------------------------------------
+	1. getting argv
+----------------------------------------------------------------------------------------------------------------------------*/
 
-/*-------------------------------------------------------------------------------------------------------------------------
-	2 - getting inputs from argv
--------------------------------------------------------------------------------------------------------------------------*/
+// data to print
+string inputsFile = "inputs";
 
-if (argc == 2) p.K = stringToNumber<uint>(argv[1]);
-else if (argc % 2 && argc>1) {
-for (uint j=0; j<(uint)(argc/2); j++) {
+// getting argv
+if (argc % 2 && argc>1) {
+	for (uint j=0; j<(uint)(argc/2); j++) {
 		string id = argv[2*j+1];
 		if (id[0]=='-') id = id.substr(1);
-		if (id.compare("k")==0 || id.compare("K")==0) p.K = stringToNumber<uint>(argv[2*j+2]);
-		else if (id.compare("l")==0 || id.compare("Nl")==0) p.Nl = stringToNumber<uint>(argv[2*j+2]);
+		if (id.compare("inputs")==0) inputsFile = (string)argv[2*j+2];
 		else {
-			cerr << "input " << id << " unrecognized" << endl;
+			cerr << "argv id " << id << " not understood" << endl;
 			MPI_Abort(MPI_COMM_WORLD,1);
 		}
 	}
+}
+
+if (rank==root)
+	cout << "using inputs file " << inputsFile << endl;
+
+/*----------------------------------------------------------------------------------------------------------------------------
+	2. getting parameters
+----------------------------------------------------------------------------------------------------------------------------*/
+
+//dimension
+#define dim 4
+
+// parameters
+ParametersRange pr;
+pr.load(inputsFile);
+Parameters p = pr.Min;
+if (p.empty()) {
+	cerr << "Parameters empty: nothing in inputs file" << endl;
+	return 1;
 }
 
 /*-------------------------------------------------------------------------------------------------------------------------

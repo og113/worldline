@@ -195,14 +195,14 @@ f.params = &d;
 // pick starting point
 vector<number> ab_init(2*Nk,0.0);
 ab_init[0] = 1.0;
-ab_init[Nk] = 3.0;
+ab_init[Nk] = 4.0;
 
 // defining gsl vectors
 gsl_vector_view ab_gsl = gsl_vector_view_array(&ab_init[0], 2*Nk);
 gsl_vector_view sigma_gsl = gsl_vector_view_array(&Sigma[0], Nt);
 
 // test
-cout << "tests " << endl;
+cout << "tests: " << endl;
 cout << (d.t)[0] << endl;
 cout << (d.y)[0] << endl;
 cout << (d.sigma)[0] << endl;
@@ -210,12 +210,15 @@ cout << ab_init[0] << endl;
 cout << endl;
 cout << gsl_blas_dnrm2(&ab_gsl.vector) << endl;
 cout << gsl_blas_dnrm2(resw) << endl;
-cout << wt_f(&ab_gsl.vector,&d,resw) << endl;
+cout << (*f.f)(&ab_gsl.vector,&d,resw) << endl;
 cout << gsl_blas_dnrm2(&ab_gsl.vector) << endl;
 cout << gsl_blas_dnrm2(resw) << endl;
 cout << endl;
-cout << wt_df(&ab_gsl.vector,&d,J) << endl;
+cout << (*f.df)(&ab_gsl.vector,&d,J) << endl;
 cout << gsl_blas_dnrm2(&ab_gsl.vector) << endl;
+cout << (d.t)[0] << endl;
+cout << (d.y)[0] << endl;
+cout << (d.sigma)[0] << endl;
 cout << endl;
 cout << f.n << endl;
 cout << f.p << endl;
