@@ -209,7 +209,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		w += 1.0/w;
 		w /= 2.0;
 		//w = gsl_sf_cos(gbt*I0(l));
-		v = p.G*V1(l);
+		v = p.G*V1r(l,p.Epsi);
 		z = gsl_sf_exp(-v);
 		if (abs(p.G)>MIN_NUMBER)
 			f = (I<lp? -pi*I*I/4.0: -(pi*lp/2.0)*(I-lp/2.0));
@@ -307,7 +307,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		rf.ID += "Cosmos";
 		FILE * ros;
 		ros = fopen(((string)rf).c_str(),"a");
-		fprintf(ros,"%12s%5i%5i%8i%8i%8.5g%8.5g%8.5g",timenumber.c_str(),dim,p.K,p.Nl,p.Ng,p.G,p.B,p.T);
+		fprintf(ros,"%12s%5i%5i%8i%8i%8.5g%8.5g%8.5g%8.5g",timenumber.c_str(),dim,p.K,p.Nl,p.Ng,p.G,p.B,p.T,p.Epsi);
 		for (uint j=0; j<Nr; j++)
 			fprintf(ros,"%13.5g%13.5g",averages[j],errors[j]);
 		fprintf(ros,"\n");

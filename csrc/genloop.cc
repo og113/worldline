@@ -602,6 +602,24 @@ number DV1 (const Loop<Dim>& l, const Point<Dim>& p, const uint& loc) {
 	return result/pow(l.size()-1.0,2);
 }
 
+// DV1r
+template <uint Dim>
+number DV1r (const Loop<Dim>& l, const Point<Dim>& p, const uint& loc, const number& a) {
+	number result = 0.0;
+	uint posj, posloc = (loc!=(l.size()-1)?loc+1:0);
+	for (uint j=0; j<l.size(); j++) {
+		if (j!=loc) {
+			posj = (j!=(l.size()-1)?j+1:0);
+			if (posj==loc)
+				result += 2.0*Dot(p,l[j],l[posloc],p)*pow(DistanceSquared(l[j],p)+a*a,(2.0-Dim)/2.0);
+			else
+				result += 2.0*Dot(l[posj],l[j],l[posloc],p)*pow(DistanceSquared(l[j],p)+a*a,(2.0-Dim)/2.0);
+			result -= 2.0*Dot(l[posj],l[j],l[posloc],l[loc])*pow(DistanceSquared(l[j],l[loc])+a*a,(2.0-Dim)/2.0);
+		}
+	}
+	return result/pow(l.size()-1.0,2);
+}
+
 // I0
 template <uint Dim>
 number I0 (const Loop<Dim>& l) {
@@ -668,7 +686,7 @@ uint Metropolis<Dim>::step(const uint& Num) {
 	// initializing S0
 	SOld = S0(*LoopPtr);
 	if (abs(G)>MIN_NUMBER)
-		SOld += G*V1(*LoopPtr);
+		SOld += G*V1r(*LoopPtr,(*P).Epsi);
 		
 	// defining some parameters
 	number sigma = 1.0/sqrt((number)LoopPtr->size());
@@ -693,7 +711,7 @@ uint Metropolis<Dim>::step(const uint& Num) {
 		// calculating change in action
 		SChange = DS0<Dim>(*LoopPtr, temp, loc);
 		if (abs(G)>MIN_NUMBER)
-			SChange += G*DV1<Dim>(*LoopPtr, temp, loc);	
+			SChange += G*DV1r<Dim>(*LoopPtr, temp, loc,(*P).Epsi);	
 	
 		// accepting new point according to acceptance probability
 		if (SChange<0.0) {
@@ -796,6 +814,42 @@ template <> number V1r<4> (const Loop<4>& l, const number& a) {
 		}
 	}
 	return result*l.size()/pow(l.size()-1.0,2);
+}
+
+// DV1
+template <> number DV1<4> (const Loop<4>& l, const Point<4>& p, const uint& loc) {
+	number result = 0.0;
+	uint posj, posloc = (loc!=(l.size()-1)?loc+1:0);
+
+	for (uint j=0; j<l.size(); j++) {
+		if (j!=loc) {
+			posj = (j!=(l.size()-1)?j+1:0);
+			if (posj==loc)
+				result += 2.0*Dot(p,l[j],l[posloc],p)/(DistanceSquared(l[j],p));
+			else
+				result += 2.0*Dot(l[posj],l[j],l[posloc],p)/(DistanceSquared(l[j],p));
+			result -= 2.0*Dot(l[posj],l[j],l[posloc],l[loc])/(DistanceSquared(l[j],l[loc]));
+		}
+	}
+	return result/pow(l.size()-1.0,2);
+}
+
+// DV1r
+template <> number DV1r<4> (const Loop<4>& l, const Point<4>& p, const uint& loc, const number& a) {
+	number result = 0.0;
+	uint posj, posloc = (loc!=(l.size()-1)?loc+1:0);
+
+	for (uint j=0; j<l.size(); j++) {
+		if (j!=loc) {
+			posj = (j!=(l.size()-1)?j+1:0);
+			if (posj==loc)
+				result += 2.0*Dot(p,l[j],l[posloc],p)/(DistanceSquared(l[j],p)+a*a);
+			else
+				result += 2.0*Dot(l[posj],l[j],l[posloc],p)/(DistanceSquared(l[j],p)+a*a);
+			result -= 2.0*Dot(l[posj],l[j],l[posloc],l[loc])/(DistanceSquared(l[j],l[loc])+a*a);
+		}
+	}
+	return result/pow(l.size()-1.0,2);
 }
 
 // Dim=2

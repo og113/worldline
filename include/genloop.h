@@ -274,7 +274,7 @@ private:
 	number				SOld;
 	number				SChange;
 	gsl_rng* 			Generator;
-	const Parameters*	P;
+	const Parameters*		P;
 	Loop<Dim>*			LoopPtr;
 };
 
