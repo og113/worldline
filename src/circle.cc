@@ -15,44 +15,50 @@
 /*-------------------------------------------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------------------------------------------
 	contents:
-		1 - defining basic quantities
-		2 - getting inputs from argv
+		1 - getting inputs from argv
+		2 - defining basic quantities
 		3 - initialising loops
 -------------------------------------------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------------------------------------------*/
 
 int main(int argc, char** argv) {
+
+/*----------------------------------------------------------------------------------------------------------------------------
+	1. getting argv
+----------------------------------------------------------------------------------------------------------------------------*/
+
+// data to print
+string inputsFile = "inputs";
+
+// getting argv
+if (argc % 2 && argc>1) {
+	for (uint j=0; j<(uint)(argc/2); j++) {
+		string id = argv[2*j+1];
+		if (id[0]=='-') id = id.substr(1);
+		if (id.compare("inputs")==0) inputsFile = (string)argv[2*j+2];
+		else {
+			cerr << "argv id " << id << " not understood" << endl;
+			return 1;
+		}
+	}
+}
+
+cout << "using inputs file " << inputsFile << endl;
+
 /*-------------------------------------------------------------------------------------------------------------------------
-	1 - defining basic quantities
+	2 - defining basic quantities
 -------------------------------------------------------------------------------------------------------------------------*/
 
 #define dim 4
 
 ParametersRange pr;
-pr.load("inputs2");
+pr.load(inputsFile);
 if (pr.empty()) {
 	cerr << "Parameters empty: nothing in inputs file" << endl;
 	return 1;
 }
 Parameters p = pr.Min;
 uint Length = pow(2,p.K);
-
-/*-------------------------------------------------------------------------------------------------------------------------
-	2 - getting inputs from argv
--------------------------------------------------------------------------------------------------------------------------*/
-
-if (argc == 2) p.K = stringToNumber<uint>(argv[1]);
-else if (argc % 2 && argc>1) {
-for (uint j=0; j<(uint)(argc/2); j++) {
-		string id = argv[2*j+1];
-		if (id[0]=='-') id = id.substr(1);
-		if (id.compare("")==0);
-		else {
-			cerr << "input " << id << " unrecognized" << endl;
-			return 1;
-		}
-	}
-}
 
 cout << "generating " << p.Nl << " circular unit loops each of " << Length << " points in " << dim << " dimensions" << endl;
 
@@ -70,7 +76,9 @@ if (abs(p.G)>MIN_NUMBER && abs(p.B)>MIN_NUMBER)
 	
 for (uint j=0; j<p.Nl; j++) {
 	file = "data/circle/loops/dim_"+nts<uint>(dim)+"/K_"+nts<uint>(p.K)+"/loop_R_"+nts<number>(R)\
-														+"_run_"+nts<uint>(j)+".dat";
+														+"_rank_"+nts<uint>(j)+".dat";
+	if (j==0)
+		cout << "printing to " << file << ", with runs from 0..." << p.Nl << endl;
 	for (uint k=0; k<Length; k++) {
 		point = p0;
 		point[2] += R*gsl_sf_cos(w*k);

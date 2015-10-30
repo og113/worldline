@@ -81,7 +81,8 @@ if (argc % 2 && argc>1) {
 	}
 }
 
-cout << "using inputs file " << inputsFile << endl;
+if (rank==root)
+	cout << "using inputs file " << inputsFile << endl;
 
 /*----------------------------------------------------------------------------------------------------------------------------
 	2. getting parameters
@@ -161,7 +162,13 @@ for (uint pl=0; pl<Npl; pl++) {
 				"data/circle/loops/dim_"+nts<uint>(dim)+"/K_"+nts<uint>(p.K)+"/loop_R_"+nts<uint>(p.G*p.B)\
 										+"_rank_"+nts<uint>(rank)+".dat":\
 				"data/s0+v/loops/dim_"+nts<uint>(dim)+"/K_"+nts<uint>(p.K)+"/loop_G_"+nts<uint>(p.G)\
-										+"_B_"+nts<uint>(p.B)+"_rank_"+nts<uint>(rank)+".dat");
+	
+									+"_B_"+nts<uint>(p.B)+"_rank_"+nts<uint>(rank)+".dat");
+	if (rank==root) {
+		cout << "circle " << circle << endl;
+		cout << loadFile << endl;
+		cout << loadFile.exists() << endl;
+	}
 	// check if file exists
 	if (!loadFile.exists()) {
 		loadFile = "data/s0/loops/dim_"+nts<uint>(dim)+"/K_"+nts<uint>(p.K)+"/loop_run_"+nts<uint>(rank)+".dat";
@@ -183,7 +190,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	Filename s0File = "data/s0+v/local/"+timenumber+"s0_dim_"+nts<uint>(dim)+"_K_"+nts<uint>(p.K)+"_G_"+nts<uint>(p.G)\
 									+"_B_"+nts<uint>(p.B)+"_rank_"+nts<uint>(rank)+".dat";
 	//Filename corrTotalFile = "data/s0+v/vCorrTotal_dim_"+nts<uint>(dim)+"_K_"+nts<uint>(p.K)+"_G_"+nts<uint>(p.G)\
-									+"_B_"+nts<uint>(p.B)+"_rank_"+nts<uint>(rank)+".dat";								
+									+"_B_"+nts<uint>(p.B)+"_rank_"+nts<uint>(rank)+".dat";
 	Filename frFile = s0File, vFile = s0File, corrFile = s0File;
 	frFile.ID = "fr";
 	vFile.ID = "v";
