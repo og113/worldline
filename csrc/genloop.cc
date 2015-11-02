@@ -381,6 +381,10 @@ void Loop<Dim>::saveAscii(const string& f) const {
 // load
 template <uint Dim>
 void Loop<Dim>::load(const string& f) {
+	if (!fileExists(f)) {
+		cerr << "Loop::load error: file, " << f << ", doesn't exist" << endl;
+		return;
+	}
 	uint fd = countDoubles(f);
 	if (fd!=Dim*Length) {
 		cerr << "load error: " << f << " contains " << fd << " doubles, loop requires " << Length*Dim << endl;
@@ -566,7 +570,7 @@ number V1 (const Loop<Dim>& l) {
 			result += 2.0*Dot(l[posj],l[j],l[posk],l[k])*pow(DistanceSquared(l[j],l[k]),(2.0-Dim)/2.0);
 		}
 	}
-	return result*l.size()/pow(l.size()-1.0,2);
+	return result;
 }
 
 // V1r
@@ -581,43 +585,47 @@ number V1r (const Loop<Dim>& l, const number& a) {
 			result += 2.0*Dot(l[posj],l[j],l[posk],l[k])*pow(DistanceSquared(l[j],l[k])+a*a,(2.0-Dim)/2.0);
 		}
 	}
-	return result*l.size()/pow(l.size()-1.0,2);
+	return result;
 }
 
 // DV1
 template <uint Dim>
 number DV1 (const Loop<Dim>& l, const Point<Dim>& p, const uint& loc) {
-	number result = 0.0;
 	uint posj, posloc = (loc!=(l.size()-1)?loc+1:0);
+	uint negloc = (loc!=0?loc-1:(l.size()-1));
+	
+	number result = Dot(l[posloc],p,p,l[negloc])*pow(DistanceSquared(l[negloc],p),(2.0-Dim)/2.0)\
+						- Dot(l[posloc],l[loc],l[loc],l[negloc])*pow(DistanceSquared(l[negloc],l[loc]),(2.0-Dim)/2.0);
+
 	for (uint j=0; j<l.size(); j++) {
-		if (j!=loc) {
+		if (j!=loc && j!=negloc) {
 			posj = (j!=(l.size()-1)?j+1:0);
-			if (posj==loc)
-				result += 2.0*Dot(p,l[j],l[posloc],p)*pow(DistanceSquared(l[j],p),(2.0-Dim)/2.0);
-			else
-				result += 2.0*Dot(l[posj],l[j],l[posloc],p)*pow(DistanceSquared(l[j],p),(2.0-Dim)/2.0);
-			result -= 2.0*Dot(l[posj],l[j],l[posloc],l[loc])*pow(DistanceSquared(l[j],l[loc]),(2.0-Dim)/2.0);
+			result += Dot(p,l[loc],l[posj],l[j])*pow(DistanceSquared(l[negloc],l[j]),(2.0-Dim)/2.0)\
+					+ Dot(l[posloc],p,l[posj],l[j])*pow(DistanceSquared(p,l[j]),(2.0-Dim)/2.0)\
+					- Dot(l[posloc],l[loc],l[posj],l[j])*pow(DistanceSquared(l[loc],l[j]),(2.0-Dim)/2.0);
 		}
 	}
-	return result/pow(l.size()-1.0,2);
+	return 2.0*result;
 }
 
 // DV1r
 template <uint Dim>
 number DV1r (const Loop<Dim>& l, const Point<Dim>& p, const uint& loc, const number& a) {
-	number result = 0.0;
 	uint posj, posloc = (loc!=(l.size()-1)?loc+1:0);
+	uint negloc = (loc!=0?loc-1:(l.size()-1));
+	
+	number result = Dot(l[posloc],p,p,l[negloc])*pow(DistanceSquared(l[negloc],p)+a*a,(2.0-Dim)/2.0)\
+						- Dot(l[posloc],l[loc],l[loc],l[negloc])*pow(DistanceSquared(l[negloc],l[loc])+a*a,(2.0-Dim)/2.0);
+
 	for (uint j=0; j<l.size(); j++) {
-		if (j!=loc) {
+		if (j!=loc && j!=negloc) {
 			posj = (j!=(l.size()-1)?j+1:0);
-			if (posj==loc)
-				result += 2.0*Dot(p,l[j],l[posloc],p)*pow(DistanceSquared(l[j],p)+a*a,(2.0-Dim)/2.0);
-			else
-				result += 2.0*Dot(l[posj],l[j],l[posloc],p)*pow(DistanceSquared(l[j],p)+a*a,(2.0-Dim)/2.0);
-			result -= 2.0*Dot(l[posj],l[j],l[posloc],l[loc])*pow(DistanceSquared(l[j],l[loc])+a*a,(2.0-Dim)/2.0);
+			result += Dot(p,l[loc],l[posj],l[j])*pow(DistanceSquared(l[negloc],l[j])+a*a,(2.0-Dim)/2.0)\
+					+ Dot(l[posloc],p,l[posj],l[j])*pow(DistanceSquared(p,l[j])+a*a,(2.0-Dim)/2.0)\
+					- Dot(l[posloc],l[loc],l[posj],l[j])*pow(DistanceSquared(l[loc],l[j])+a*a,(2.0-Dim)/2.0);
 		}
 	}
-	return result/pow(l.size()-1.0,2);
+	return 2.0*result;
 }
 
 // I0
@@ -754,7 +762,7 @@ template ostream& operator<< <4>(ostream& os,const Loop<4>& l);
 template number S0<4> (const Loop<4>& l);
 template class Metropolis<4>;
 
-// V, Dim=4, slightly changed for speed
+// V0, Dim=4, slightly changed for speed
 template <> number V0 <4>(const Loop<4>& l) {
 	number result = 2.0/DistanceSquared(l[1],l[0]);
 	for (uint j=2; j<l.size(); j++) {
@@ -765,7 +773,7 @@ template <> number V0 <4>(const Loop<4>& l) {
 	return result/pow(l.size()-1.0,2);
 }
 
-// DV, Dim=4, slightly changed for speed
+// DV0, Dim=4, slightly changed for speed
 template <> number DV0 <4>(const Loop<4>& l, const Point<4>& p, const uint& loc) {
 	number result = 0.0;
 	for (uint j=0; j<l.size(); j++) {
@@ -799,7 +807,7 @@ template <> number V1<4> (const Loop<4>& l) {
 			result += 2.0*Dot(l[posj],l[j],l[posk],l[k])/DistanceSquared(l[j],l[k]);
 		}
 	}
-	return result*l.size()/pow(l.size()-1.0,2);
+	return result;
 }
 
 // V1r
@@ -813,43 +821,45 @@ template <> number V1r<4> (const Loop<4>& l, const number& a) {
 			result += 2.0*Dot(l[posj],l[j],l[posk],l[k])/(DistanceSquared(l[j],l[k])+a*a);
 		}
 	}
-	return result*l.size()/pow(l.size()-1.0,2);
+	return result;
 }
 
 // DV1
 template <> number DV1<4> (const Loop<4>& l, const Point<4>& p, const uint& loc) {
-	number result = 0.0;
 	uint posj, posloc = (loc!=(l.size()-1)?loc+1:0);
+	uint negloc = (loc!=0?loc-1:(l.size()-1));
+	
+	number result = Dot(l[posloc],p,p,l[negloc])/DistanceSquared(l[negloc],p)\
+						- Dot(l[posloc],l[loc],l[loc],l[negloc])/DistanceSquared(l[negloc],l[loc]);
 
 	for (uint j=0; j<l.size(); j++) {
-		if (j!=loc) {
+		if (j!=loc && j!=negloc) {
 			posj = (j!=(l.size()-1)?j+1:0);
-			if (posj==loc)
-				result += 2.0*Dot(p,l[j],l[posloc],p)/(DistanceSquared(l[j],p));
-			else
-				result += 2.0*Dot(l[posj],l[j],l[posloc],p)/(DistanceSquared(l[j],p));
-			result -= 2.0*Dot(l[posj],l[j],l[posloc],l[loc])/(DistanceSquared(l[j],l[loc]));
+			result += Dot(p,l[loc],l[posj],l[j])/DistanceSquared(l[negloc],l[j])\
+					+ Dot(l[posloc],p,l[posj],l[j])/DistanceSquared(p,l[j])\
+					- Dot(l[posloc],l[loc],l[posj],l[j])/DistanceSquared(l[loc],l[j]);
 		}
 	}
-	return result/pow(l.size()-1.0,2);
+	return 2.0*result;
 }
 
 // DV1r
 template <> number DV1r<4> (const Loop<4>& l, const Point<4>& p, const uint& loc, const number& a) {
-	number result = 0.0;
 	uint posj, posloc = (loc!=(l.size()-1)?loc+1:0);
+	uint negloc = (loc!=0?loc-1:(l.size()-1));
+	
+	number result = Dot(l[posloc],p,p,l[negloc])/(DistanceSquared(l[negloc],p)+a*a)\
+						- Dot(l[posloc],l[loc],l[loc],l[negloc])/(DistanceSquared(l[negloc],l[loc])+a*a);
 
 	for (uint j=0; j<l.size(); j++) {
-		if (j!=loc) {
+		if (j!=loc && j!=negloc) {
 			posj = (j!=(l.size()-1)?j+1:0);
-			if (posj==loc)
-				result += 2.0*Dot(p,l[j],l[posloc],p)/(DistanceSquared(l[j],p)+a*a);
-			else
-				result += 2.0*Dot(l[posj],l[j],l[posloc],p)/(DistanceSquared(l[j],p)+a*a);
-			result -= 2.0*Dot(l[posj],l[j],l[posloc],l[loc])/(DistanceSquared(l[j],l[loc])+a*a);
+			result += Dot(p,l[loc],l[posj],l[j])/(DistanceSquared(l[negloc],l[j])+a*a)\
+					+ Dot(l[posloc],p,l[posj],l[j])/(DistanceSquared(p,l[j])+a*a)\
+					- Dot(l[posloc],l[loc],l[posj],l[j])/(DistanceSquared(l[loc],l[j])+a*a);
 		}
 	}
-	return result/pow(l.size()-1.0,2);
+	return 2.0*result;
 }
 
 // Dim=2

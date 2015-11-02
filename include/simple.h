@@ -34,7 +34,7 @@ CONTENTS
 	2 - absDiff
 	3 - factorial
 	4 - currentDateTime, currentPartSec
-	5 - copyFile
+	5 - copyFile, fileExists
 	6 - count in files
 	7 - smallestLoc
 	8 - randDouble
@@ -100,6 +100,9 @@ string currentPartSec();
 
 //copy a file
 void copyFile(const string & inputFile, const string & outputFile);
+
+// fileExists
+bool fileExists(const string& f);
 
 /*-------------------------------------------------------------------------------------------------------------------------
 	6. count in file

@@ -12,6 +12,7 @@ definitions of some very simple functions and classes
 #include <vector>
 #include <complex>
 #include <sys/time.h>
+#include <glob.h>
 #include "simple.h"
 
 using namespace std;
@@ -135,7 +136,7 @@ string currentPartSec() {
 }
 
 /*-------------------------------------------------------------------------------------------------------------------------
-	5. copyFile
+	5. copyFile, fileExists
 -------------------------------------------------------------------------------------------------------------------------*/
 
 //copy a file
@@ -143,6 +144,32 @@ void copyFile(const string & inputFile, const string & outputFile) {
 	ifstream  is(inputFile.c_str(), ios::binary);
 	ofstream  os(outputFile.c_str(), ios::binary);
 	os << is.rdbuf();
+}
+
+// fileExists
+bool fileExists(const string& f) {
+	glob_t globbuf;
+	int err = glob(f.c_str(), GLOB_NOSORT, NULL, &globbuf); // GLOB_NOSORT if doing sort elsewhere, otherwise set to zero
+	if(err == 0) {	
+		if(globbuf.gl_pathc>0)
+			globfree(&globbuf);
+		return true;
+	}
+	else if (err==GLOB_NOSPACE) {
+        	cerr << "Folder search error " << err << ", running out of memory" << endl;
+		return false;
+	}
+	else if (err==GLOB_ABORTED) {
+        	cerr << "Folder search error " << err << ", GLOB_ABORTED" << endl;
+		return false;
+	}
+	else if (err==GLOB_NOMATCH) {
+		return false;
+	}
+	else {
+		cerr << "Folder search error " << err << ", unknown" << endl;
+		return false;
+	}
 }
 
 /*-------------------------------------------------------------------------------------------------------------------------
