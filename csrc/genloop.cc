@@ -710,15 +710,16 @@ uint Metropolis<Dim>::step(const uint& Num) {
 	number counter = 0.0;
 	// initializing S0
 	SOld = S0(*LoopPtr);
-	if (abs(G)>MIN_NUMBER)
+	if (abs(G)>MIN_NUMBER) {
 		SOld += G*V1r(*LoopPtr,(*P).Epsi);
+		SOld -= (abs((*P).Epsi)>MIN_NUMBER? G*pi*L(*LoopPtr)/(*P).Epsi: 0.0);
+	}
 		
 	// defining some parameters
 	number sigma = 1.0/sqrt((number)LoopPtr->size());
 	uint loc, loc_pos, loc_neg;
 	number acc_prob, rand;
 	Point<Dim> temp;
-
 	
 	// starting metropolis loop
 	for (uint j=0; j<Num; j++) {
@@ -735,8 +736,10 @@ uint Metropolis<Dim>::step(const uint& Num) {
 	
 		// calculating change in action
 		SChange = DS0<Dim>(*LoopPtr, temp, loc);
-		if (abs(G)>MIN_NUMBER)
+		if (abs(G)>MIN_NUMBER) {
 			SChange += G*DV1r<Dim>(*LoopPtr, temp, loc,(*P).Epsi);	
+			SChange -= (abs((*P).Epsi)>MIN_NUMBER? G*pi*DL(*LoopPtr, temp, loc)/(*P).Epsi: 0.0);
+		}
 	
 		// accepting new point according to acceptance probability
 		if (SChange<0.0) {

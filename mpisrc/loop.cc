@@ -210,6 +210,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		w /= 2.0;
 		//w = gsl_sf_cos(gbt*I0(l));
 		v = p.G*V1r(l,p.Epsi);
+		v -= (abs(p.Epsi)>MIN_NUMBER? p.G*pi*L(l)/p.Epsi: 0.0);
 		z = gsl_sf_exp(-v);
 		if (abs(p.G)>MIN_NUMBER)
 			f = (I<lp? -pi*I*I/4.0: -(pi*lp/2.0)*(I-lp/2.0));
