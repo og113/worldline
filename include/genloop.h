@@ -206,11 +206,20 @@ private:
 
 /*----------------------------------------------------------------------------------------------------------------------------
 	4 - loop functions
+		- L
 		- S0
 		- DS0
 		- V0
 		- aprxDV0
 ----------------------------------------------------------------------------------------------------------------------------*/
+
+// L
+template <uint Dim>
+number L (const Loop<Dim>& l);
+
+// DL
+template <uint Dim>
+number DL (const Loop<Dim>& l, const Point<Dim>& p, const uint& loc);
 
 // S0
 template <uint Dim>

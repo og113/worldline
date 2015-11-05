@@ -502,6 +502,23 @@ istream& operator>> (istream& is, Loop<Dim>& l) {
 n.b. functions are defined for unit loops. for other loops the result must be multiplied by appropriate factors (depending on Dim) of T, the length of the loop.
 ----------------------------------------------------------------------------------------------------------------------------*/
 
+// L
+template <uint Dim>
+number L (const Loop<Dim>& l) {
+	number Len = Distance(l[l.size()-1],l[0]);
+	for (uint j=0; j<(l.size()-1); j++)
+		Len += Distance(l[j+1],l[j]);
+	return Len;
+}
+
+// DL
+template <uint Dim>
+number DL (const Loop<Dim>& l, const Point<Dim>& p, const uint& loc) {
+	uint pos = (loc==(l.size()-1)? 0 : loc+1);
+	uint neg = (loc==0? (l.size()-1) : loc-1);
+	return (Distance(l[pos],p) + Distance(p,l[neg]) - Distance(l[pos],l[loc]) - Distance(l[loc],l[neg]));
+}
+
 // S0
 template <uint Dim>
 number S0 (const Loop<Dim>& l) {
@@ -759,6 +776,8 @@ template bool operator^= <4>(const Point<4>& lhs, const Point<4>& rhs);
 template number Distance(const Point<4>&, const Point<4>&);
 template class Loop<4>;
 template ostream& operator<< <4>(ostream& os,const Loop<4>& l);
+template number L<4> (const Loop<4>& l);
+template number DL<4> (const Loop<4>& l, const Point<4>& p, const uint& loc);
 template number S0<4> (const Loop<4>& l);
 template class Metropolis<4>;
 
@@ -874,6 +893,8 @@ template bool operator^= <2>(const Point<2>& lhs, const Point<2>& rhs);
 template number Distance(const Point<2>&, const Point<2>&);
 template class Loop<2>;
 template ostream& operator<< <2>(ostream& os,const Loop<2>& l);
+template number L<2> (const Loop<2>& l);
+template number DL<2> (const Loop<2>& l, const Point<2>& p, const uint& loc);
 template number S0<2> (const Loop<2>& l);
 template class Metropolis<2>;
 
