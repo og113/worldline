@@ -747,7 +747,7 @@ uint Metropolis<Dim>::step(const uint& Num) {
 			SOld += SChange;
 			counter++;
 		}
-		else {
+		else if (SChange<-LOG_MIN_NUMBER) {
 			acc_prob = gsl_sf_exp(-SChange);
 			rand = gsl_rng_uniform(Generator);
 			if (rand<acc_prob) {
