@@ -238,6 +238,7 @@ for (uint pl=0; pl<Npl; pl++) {
 			I = I0(loop);
 			//w = gsl_sf_cos(p.G*I0(loop));
 			v = p.G*V1r(loop,p.Epsi);
+			v -= (abs(p.Epsi)>MIN_NUMBER? p.G*pi*L(l)/p.Epsi: 0.0);
 			fr = (I<lp? 0.0: (-(pi*lp/2.0)*(I-lp/2.0))+pi*I*I/4.0)*gsl_sf_exp(-v);
 			//f = (I<lp? -pi*I*I/4.0: -(pi*lp/2.0)*(I-lp/2.0));
 		
