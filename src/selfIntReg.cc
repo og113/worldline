@@ -19,7 +19,7 @@ int main(int argc, char** argv) {
 	1. getting argv
 ----------------------------------------------------------------------------------------------------------------------------*/
 
-uint min = 2, max = 10;
+uint min = 3, max = 10;
 number a = 0.0;
 
 // getting argv
@@ -41,27 +41,23 @@ if (argc % 2 && argc>1) {
 	2. calculating and printing
 ----------------------------------------------------------------------------------------------------------------------------*/
 
-number logFr, theta2, Fr2; //Fr = 0, theta
-uint N, m;
+number logFr, theta, Fr, theta0, result, diff = (abs(a)>MIN_NUMBER? 2.0*pi*pi/a:0.0);
+uint N;
 
-//printf("%20s%20s%20s%20s\n","K","N","Fr","log(Fr)");
+//printf("%20s%20s%20s%20s%20s\n","K","N","Fr","log(Fr)","result");
 for (uint n=min; n<=max; n++) {
 	N = pow(2,n);
-	//Fr = 0.0;
-	Fr2 = 0.0;
-	for (uint i=2; i<=N; i++) {
-		m = i-1;
-		theta2 = pi*(number)m/(number)N;
-		Fr2 += (number)(N-m)*gsl_sf_cos(theta2)/(1.0-gsl_sf_cos(theta2)+a*a);
-		/*for (uint j=1; j<i; j++) {
-			theta = pi*(number)(i-j)/(number)N;
-			Fr += gsl_sf_cos(theta)/(1.0-gsl_sf_cos(theta)+a*a);
-		}*/
+	Fr = 0.0;
+	theta0 = 2.0*pi/(number)N;
+	for (uint m=1; m<N; m++) {
+		theta = theta0*(number)m;
+		Fr += (number)(N-m)*gsl_sf_cos(theta)/(1.0-gsl_sf_cos(theta)+a*a/2.0);
 	}
-	//Fr *= 2.0*(1.0-gsl_sf_cos(pi/(number)N));
-	Fr2 *= 2.0*(1.0-gsl_sf_cos(pi/(number)N));
-	logFr = gsl_sf_log(Fr2)/gsl_sf_log(2.0);
-	printf("%20i%20i%20g%20g\n",n,N,Fr2,logFr);
+	//Fr += N/a/a;
+	Fr *= 2.0*(1.0-gsl_sf_cos(theta0));
+	logFr = gsl_sf_log(Fr)/gsl_sf_log(2.0);
+	result = (Fr-diff)/8.0/pi/pi;
+	printf("%20i%20i%20g%20g%20g\n",n,N,Fr,logFr,result);
 }
 
 return 0;
