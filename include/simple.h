@@ -21,6 +21,9 @@ using namespace std;
 #ifndef MIN_NUMBER
 #define MIN_NUMBER 1.0e-16
 #endif
+#ifndef LOG_MIN_NUMBER
+#define LOG_MIN_NUMBER -36.841361488 // calculated as ln(1.0e-16)
+#endif
 
 typedef double number;
 typedef unsigned int uint;
