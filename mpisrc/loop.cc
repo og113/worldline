@@ -201,6 +201,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	for (uint j=0; j<Npw; j++) {
 		counter++;
 		l.load(folder[j]);
+		//l.setLength(1.0);
 
 		//s0 = S0(l);
 		//s0 = l.length();
@@ -210,7 +211,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		w /= 2.0;
 		//w = gsl_sf_cos(gbt*I0(l));
 		len = L(l);
-		ren = (abs(p.Epsi)>MIN_NUMBER? p.G*pi*len/p.Epsi: 0.0);
+		ren = 0.0;//(abs(p.Epsi)>MIN_NUMBER? p.G*pi*len/p.Epsi: 0.0);
 		v = p.G*V1r(l,p.Epsi);
 		v -= ren;
 		z = gsl_sf_exp(-v);
@@ -329,9 +330,9 @@ for (uint pl=0; pl<Npl; pl++) {
 	
 		cout << "timenumber: " << timenumber << endl;
 		printf("\n");
-		printf("%8s%8s%8s%8s%8s%8s%8s%12s%12s%12s%12s%12s%12s\n","dim","Nl","Ng","K","G","B","T","S0",\
+		printf("%4s%8s%8s%8s%8s%8s%8s%8s%12s%12s%12s%12s%12s%12s\n","dim","Nl","Ng","K","G","B","T","Epsi","S0",\
 			"%errorS0","F","%errorF","V","%errorV");
-		printf("%8i%8i%8i%8i%8.5g%8.5g%8.5g",dim,p.Nl,p.Ng,p.K,p.G,p.B,p.T);
+		printf("%4i%8i%8i%8i%8.5g%8.5g%8.5g%8.5g",dim,p.Nl,p.Ng,p.K,p.G,p.B,p.T,p.Epsi);
 		for (uint j=0; j<Nr; j++)
 			printf("%12.4g%12.4g",averages[j],100.0*errors[j]/abs(averages[j]));
 		printf("\n\n");

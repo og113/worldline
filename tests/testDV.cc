@@ -21,6 +21,7 @@ cout << "testDV" << endl;
 uint K=8, Length = pow(2,K);
 uint Seed = 1;
 string file = "data/s0/loops/dim_"+nts<uint>(dim)+"/K_"+nts<uint>(K)+"/loop_run_0.dat";
+//string file = "data/circle/loops/dim_"+nts<uint>(dim)+"/K_"+nts<uint>(K)+"/loop_R_1_rank_0.dat";
 
 cout << "loading from " << file << endl;
 
@@ -40,6 +41,7 @@ loop_new[loc] = p;
 
 number c = V1(loop_new)-V1(loop);
 number d = DV1(loop,p,loc);
+cout << "V1 = " << V1(loop) << endl;
 cout << "V1'-V1 = " << c << endl;
 cout << "DV1 = " << d << endl;
 cout << "difference = " << c-d << endl << endl;
@@ -47,12 +49,14 @@ cout << "difference = " << c-d << endl << endl;
 number a = 0.01;
 c = V1r(loop_new,a)-V1r(loop,a);
 d = DV1r(loop,p,loc,a);
+cout << "V1r = " << V1r(loop,a) << endl;
 cout << "V1r'-V1r = " << c << endl;
 cout << "DV1r = " << d << endl;
 cout << "difference = " << c-d << endl << endl;
 
 c = V0(loop_new)-V0(loop);
 d = DV0(loop,p,loc);
+cout << "V0 = " << V0(loop) << endl;
 cout << "V0'-V0 = " << c << endl;
 cout << "DV0 = " << d << endl;
 cout << "aprxDV0 = " << aprxDV0(loop,p,loc) << endl;
@@ -60,6 +64,7 @@ cout << "difference = " << c-d << endl << endl;
 
 c = Sm(loop_new)-Sm(loop);
 d = DSm(loop,p,loc);
+cout << "Sm = " << Sm(loop) << endl;
 cout << "Sm'-Sm = " << c << endl;
 cout << "DSm = " << d << endl;
 cout << "difference = " << c-d << endl << endl;

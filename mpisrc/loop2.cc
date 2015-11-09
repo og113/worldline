@@ -209,7 +209,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		uint Seed = time(NULL)+rank+2, steps_local = 0, steps;
 		Loop<dim> loop(p.K,Seed);
 		Metropolis<dim> met(loop,p,++Seed);
-		number s0, v, I, fr, lp = 1.0/p.G/p.B;
+		number s0, v, I, fr, lp = 1.0/p.G/p.B, len=0.0, smooth = 0.0;
 		
 		// timing  metropolis
 		clock_t time_run = 0.0;
@@ -223,7 +223,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		met.setSeed(time(NULL)+rank+2);
 		
 		if (rank==root && verbose)
-			printf("%8s%12s%12s%12s%12s\n","sweep","S0","V","I","Fr");
+			printf("%8s%12s%12s%12s%12s%12s%12s\n","sweep","S0","V","I","Fr","L","Sm");
 		
 		for (uint k=0; k<p.Nsw; k++) {
 	
@@ -247,8 +247,11 @@ for (uint pl=0; pl<Npl; pl++) {
 			fr_data_local[k] = fr;
 			v_data_local[k] = v;
 			
-			if (rank==root && verbose)
-				printf("%8i%12.5g%12.5g%12.5g%12.5g\n",k,s0,v,I,fr);
+			if (rank==root && verbose) {
+				len = L(loop);
+				smooth = Sm(Loop);
+				printf("%8i%12.5g%12.5g%12.5g%12.5g%12.5g%12.5g\n",k,s0,v,I,fr,len,smooth);
+			}
 		
 		}
 		

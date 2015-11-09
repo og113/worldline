@@ -7,20 +7,20 @@ set term png size 1600,800; \
 set output outFile; \
 
 # file
-file="results/VvsK_dim_4.dat"
+file="results/s0/v1VsK_fixed_L_a_0.dat"
 
 unset log
 unset label
 set autoscale
 set xtic auto
 set ytic auto
-set title "v vs log_2(N)"
+set title "v1 vs log_2(N), a=0, fixed length"
 set xlabel "log_2(N)"
 set ylabel "v"
 f(x) = a+b*x
-fit f(x) file using 3:11 via a, b
+fit f(x) file using 3:14 via a, b
 set key below
-plot file using 3:11:12 with yerrorbars, \
+plot file using 3:14:15 with yerrorbars, \
 	f(x) title sprintf("f(x) = %3.4f+%3.4f*x",a,b) with lines
 
 pause -1
