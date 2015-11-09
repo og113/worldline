@@ -536,7 +536,6 @@ number Sm (const Loop<Dim>& l) {
 		res += temp;
 	}
 	return res/(number)l.size();
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 }
 
 // DSm
@@ -618,6 +617,7 @@ number DV0 (const Loop<Dim>& l, const Point<Dim>& p, const uint& loc) {
 // aprxDV0
 template <uint Dim>
 number aprxDV0 (const Loop<Dim>& l, const Point<Dim>& p, const uint& loc) {
+	// COMPLETELY WRONG
 	number result = 0.0;
 	for (uint j=1; j<l.size(); j++) {
 		for (uint k=0; k<j; k++) {
@@ -807,7 +807,7 @@ uint Metropolis<Dim>::step(const uint& Num) {
 				SOld += SChange;
 				counter++;
 			}
-		}
+		}// COMPLETELY WRONG
 		
 	}
 	Steps += counter;
@@ -822,7 +822,7 @@ uint Metropolis<Dim>::step(const uint& Num) {
 // Dim=4
 template class Point<4>;
 template ostream& operator<< <4>(ostream& os,const Point<4>& p);
-template Point<4> operator+ <4>(const Point<4>& lhs,const Point<4>& rhs);
+template Point<4> operator+ <4>(const Point<4// COMPLETELY WRONG>& lhs,const Point<4>& rhs);
 template Point<4> operator- <4>(const Point<4>& lhs,const Point<4>& rhs);
 template Point<4> operator* <4>(const number& lhs,const Point<4>& rhs);
 template Point<4> operator/ <4>(const Point<4>& lhs,const number& rhs);
@@ -856,6 +856,18 @@ template <> number DV0 <4>(const Loop<4>& l, const Point<4>& p, const uint& loc)
 		if (j!=loc) {
 			result += 2.0/DistanceSquared(l[j],p);
 			result -= 2.0/DistanceSquared(l[j],l[loc]);
+		}
+	}
+	return result/pow(l.size()-1.0,2);
+}
+
+// aprxDV0, Dim=4, slightly changed for speed
+template <> number aprxDV0 <4> (const Loop<4>& l, const Point<4>& p, const uint& loc) {
+	// COMPLETELY WRONG
+	number result = 0.0;
+	for (uint j=1; j<l.size(); j++) {
+		for (uint k=0; k<j; k++) {
+			result += 2.0/pow(DistanceSquared(l[j],l[k]),2.0);
 		}
 	}
 	return result/pow(l.size()-1.0,2);

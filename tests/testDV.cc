@@ -55,6 +55,7 @@ c = V0(loop_new)-V0(loop);
 d = DV0(loop,p,loc);
 cout << "V0'-V0 = " << c << endl;
 cout << "DV0 = " << d << endl;
+cout << "aprxDV0 = " << aprxDV0(loop,p,loc) << endl;
 cout << "difference = " << c-d << endl << endl;
 
 c = Sm(loop_new)-Sm(loop);
