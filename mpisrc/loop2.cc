@@ -165,8 +165,8 @@ for (uint pl=0; pl<Npl; pl++) {
 	
 									+"_B_"+nts<uint>(p.B)+"_rank_"+nts<uint>(rank)+".dat");
 	if (rank==(Nw-1)) {
-		cout << "circle " << circle << endl;
-		cout << loadFile << endl;
+		//cout << "circle " << circle << endl;
+		//cout << loadFile << endl;
 		//cout << loadFile.exists() << endl;
 	}
 	// check if file exists
