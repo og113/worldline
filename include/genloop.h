@@ -221,6 +221,14 @@ number L (const Loop<Dim>& l);
 template <uint Dim>
 number DL (const Loop<Dim>& l, const Point<Dim>& p, const uint& loc);
 
+// Sm
+template <uint Dim>
+number Sm (const Loop<Dim>& l);
+
+// DSm
+template <uint Dim>
+number DSm (const Loop<Dim>& l, const Point<Dim>& p, const uint& loc);
+
 // S0
 template <uint Dim>
 number S0 (const Loop<Dim>& l);

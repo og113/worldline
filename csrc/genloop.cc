@@ -519,6 +519,58 @@ number DL (const Loop<Dim>& l, const Point<Dim>& p, const uint& loc) {
 	return (Distance(l[pos],p) + Distance(p,l[neg]) - Distance(l[pos],l[loc]) - Distance(l[loc],l[neg]));
 }
 
+// Sm
+template <uint Dim>
+number Sm (const Loop<Dim>& l) {
+	uint pos, neg;
+	Point<Dim> pp;
+	number res = 0.0, temp;
+	for (uint j=0; j<l.size(); j++) {
+		pos = (j==(l.size()-1)? 0 : j+1);
+		neg = (j==0? (l.size()-1) : j-1);
+		pp = l[j];
+		pp *= 2.0;
+		pp -= l[neg];
+		temp = Dot(l[pos],pp,l[pos],l[j]);
+		temp /= DistanceSquared(l[pos],l[j]);
+		res += temp;
+	}
+	return res/(number)l.size();
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+}
+
+// DSm
+template <uint Dim>
+number DSm (const Loop<Dim>& l, const Point<Dim>& p, const uint& loc) {
+	uint pos1 = (loc==(l.size()-1)? 0 : loc+1);
+	uint pos2 = (pos1==(l.size()-1)? 0 : pos1+1);
+	uint neg1 = (loc==0? (l.size()-1) : loc-1);
+	uint neg2 = (neg1==0? (l.size()-1) : neg1-1);
+	Point<Dim> pp = l[neg1];
+	pp *= 2.0;
+	pp -= l[neg2];
+	number res = Dot(p,pp,p,l[neg1]);
+	res /= DistanceSquared(p,l[neg1]);
+	number temp = Dot(l[loc],pp,l[loc],l[neg1]);
+	temp /= DistanceSquared(l[loc],l[neg1]);
+	res -= temp;
+	temp = Dot(p,l[loc],l[pos2],l[pos1]);
+	temp /= DistanceSquared(l[pos2],l[pos1]);
+	res += temp;
+	pp = l[pos1];
+	pp += l[neg1];
+	pp /= 2.0;
+	temp = Dot(pp,p,l[pos1],p);
+	temp /= DistanceSquared(l[pos1],p);
+	temp *= 2.0;
+	res += temp;
+	temp = Dot(pp,l[loc],l[pos1],l[loc]);
+	temp /= DistanceSquared(l[pos1],l[loc]);
+	temp *= 2.0;
+	res -= temp;
+	return res/(number)l.size();
+}
+
 // S0
 template <uint Dim>
 number S0 (const Loop<Dim>& l) {
@@ -781,6 +833,8 @@ template class Loop<4>;
 template ostream& operator<< <4>(ostream& os,const Loop<4>& l);
 template number L<4> (const Loop<4>& l);
 template number DL<4> (const Loop<4>& l, const Point<4>& p, const uint& loc);
+template number Sm<4> (const Loop<4>& l);
+template number DSm<4> (const Loop<4>& l, const Point<4>& p, const uint& loc);
 template number S0<4> (const Loop<4>& l);
 template class Metropolis<4>;
 
