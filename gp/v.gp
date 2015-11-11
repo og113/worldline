@@ -12,9 +12,9 @@ set output outFile; \
 #file3="data/s0/151016145527r_dim_4_K_10.dat"
 
 # files for v1
-file1="data/s0/151109184127v_dim_4_K_4.dat"
-file2="data/s0/151109184128v_dim_4_K_5.dat"
-file3="data/s0/151109184131v_dim_4_K_6.dat"
+file1="data/s0/151110162856v_dim_4_K_4.dat"
+file2="data/s0/151110162900v_dim_4_K_6.dat"
+file3="data/s0/151110162940v_dim_4_K_8.dat"
 
 # finding mean
 #mean1(x) = a1
@@ -25,7 +25,7 @@ file3="data/s0/151109184131v_dim_4_K_6.dat"
 #fit mean3(x) file3 using 9:10 via a3
 
 #histogram stuff
-n=10 #number of intervals
+n=50 #number of intervals
 max=200.00 #max value
 min=0.00 #min value
 width=(max-min)/n #interval width
@@ -44,7 +44,7 @@ set autoscale
 #set logscale y
 set xtic auto
 set ytic auto
-set title "v distribution, length fixed, a=0"
+set title "v distribution, a=0.1"
 set xlabel "v"
 set ylabel "no. of groups"
 

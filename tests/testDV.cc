@@ -69,5 +69,12 @@ cout << "Sm'-Sm = " << c << endl;
 cout << "DSm = " << d << endl;
 cout << "difference = " << c-d << endl << endl;
 
+c = I0(loop_new)-I0(loop);
+d = DI0(loop,p,loc);
+cout << "I0 = " << I0(loop) << endl;
+cout << "I0'-I0 = " << c << endl;
+cout << "DI0 = " << d << endl;
+cout << "difference = " << c-d << endl << endl;
+
 return 0;
 }

@@ -703,6 +703,12 @@ number I0 (const Loop<Dim>& l) {
 	return 0;
 }
 
+// DI0
+template <uint Dim>
+number DI0 (const Loop<Dim>& l, const Point<Dim>& p, const uint& loc) {
+	return 0;
+}
+
 /*----------------------------------------------------------------------------------------------------------------------------
 	5 - Metropolis
 ----------------------------------------------------------------------------------------------------------------------------*/
@@ -765,6 +771,7 @@ uint Metropolis<Dim>::step(const uint& Num) {
 	if (abs(G)>MIN_NUMBER) {
 		SOld += G*V1r(*LoopPtr,(*P).Epsi);
 		SOld -= (abs((*P).Epsi)>MIN_NUMBER? G*pi*L(*LoopPtr)/(*P).Epsi: 0.0);
+		SOld -= G*(*P).B*(*P).T*I0(*LoopPtr);
 	}
 		
 	// defining some parameters
@@ -873,14 +880,24 @@ template <> number aprxDV0 <4> (const Loop<4>& l, const Point<4>& p, const uint&
 	return result/pow(l.size()-1.0,2);
 }
 
-// I, for Dim=4
+// I0, for Dim=4
 template <> number I0 <4>(const Loop<4>& l) {
-uint posj = 1;
-	number result = (l[0])[1]*((l[1])[2]-(l[0])[2]);
+	uint posj = 1;
+	number result = (l[0])[2]*((l[posj])[3]-(l[0])[3]);
 	for (uint j=1; j<l.size(); j++) {
 		posj = (j==(l.size()-1)?0:j+1);
-		result += (l[j])[1]*((l[posj])[2]-(l[j])[2]);
+		result += (l[j])[2]*((l[posj])[3]-(l[j])[3]);
 	}
+	return result;
+}
+
+// DI0, for Dim=4
+template <> number DI0 <4>(const Loop<4>& l, const Point<4>& p, const uint& loc) {
+	uint pos = (loc==(l.size()-1)? 0: loc+1);
+	uint neg = (loc==0? (l.size()-1):loc-1);
+	number result = p[2]*((l[pos])[3]-p[3]);
+	result -= (l[loc])[2]*((l[pos])[3]-(l[loc])[3]);
+	result += (l[neg])[2]*(p[3]-(l[loc])[3]);
 	return result;
 }
 

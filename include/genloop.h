@@ -269,6 +269,10 @@ number DV1r (const Loop<Dim>& l, const Point<Dim>& p, const uint& loc, const num
 template <uint Dim>
 number I0 (const Loop<Dim>& l);
 
+// DI0
+template <uint Dim>
+number DI0 (const Loop<Dim>& l, const Point<Dim>& p, const uint& loc);
+
 /*----------------------------------------------------------------------------------------------------------------------------
 	5 - Metropolis
 ----------------------------------------------------------------------------------------------------------------------------*/
