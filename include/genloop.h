@@ -229,6 +229,10 @@ number Sm (const Loop<Dim>& l);
 template <uint Dim>
 number DSm (const Loop<Dim>& l, const Point<Dim>& p, const uint& loc);
 
+// KG
+template <uint Dim>
+number KG (const Loop<Dim>& l);
+
 // S0
 template <uint Dim>
 number S0 (const Loop<Dim>& l);
@@ -286,7 +290,7 @@ public:
 	~Metropolis();
 	
 	// step
-	uint				step(const uint&, const bool& isNew);
+	uint				step(const uint&, const bool& firstStep);
 	
 	// set seed, loop
 	void 				setSeed(const uint&);

@@ -100,7 +100,7 @@ if (rank==root) {
 		cerr << "Parameters empty: nothing in inputs file" << endl;
 		MPI_Abort(MPI_COMM_WORLD,1);
 	}
-	if (abs(p.G)<MIN_NUMBER || p.Nsw==0 || p.Npsw==0 ) {
+	if (p.Nsw==0 || p.Npsw==0 ) {//abs(p.G)<MIN_NUMBER ||
 		cerr << "trivial loop2 run due to parameters: " << endl;
 		cerr << p << endl;
 		MPI_Abort(MPI_COMM_WORLD,1);
@@ -209,7 +209,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		uint Seed = time(NULL)+rank+2, steps_local = 0, steps;
 		Loop<dim> loop(p.K,Seed);
 		Metropolis<dim> met(loop,p,++Seed);
-		number s0, v, I, fr, lp = 1.0/p.G/p.B, len=0.0, smooth = 0.0;
+		number s0, v, I, fr, lp = 1.0/p.G/p.B, len, smooth, kg;
 		
 		// timing  metropolis
 		clock_t time_run = 0.0;
@@ -223,7 +223,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		met.setSeed(time(NULL)+rank+2);
 		
 		if (rank==root && verbose) {
-			printf("%8s%12s%12s%12s%12s%12s%12s\n","sweep","S0","V","I","Fr","L","Sm");
+			printf("%8s%12s%12s%12s%12s%12s%12s%12s\n","sweep","S0","V","I","Fr","L","Sm","KG");
 			len = L(loop);
 			s0 = S0(loop);
 			I = I0(loop);
@@ -234,7 +234,8 @@ for (uint pl=0; pl<Npl; pl++) {
 			fr = (I<lp? 0.0: (-(pi*lp/2.0)*(I-lp/2.0))+pi*I*I/4.0);
 			//f = (I<lp? -pi*I*I/4.0: -(pi*lp/2.0)*(I-lp/2.0));
 			smooth = Sm(loop);
-			printf("%8i%12.5g%12.5g%12.5g%12.5g%12.5g%12.5g\n",-1,s0,v,I,fr,len,smooth);
+			kg = KG(loop);
+			printf("%8i%12.5g%12.5g%12.5g%12.5g%12.5g%12.5g%12.5g\n",-1,s0,v,I,fr,len,smooth,kg);
 		}
 		
 		for (uint k=0; k<p.Nsw; k++) {
@@ -262,7 +263,8 @@ for (uint pl=0; pl<Npl; pl++) {
 			
 			if (rank==root && verbose) {
 				smooth = Sm(loop);
-				printf("%8i%12.5g%12.5g%12.5g%12.5g%12.5g%12.5g\n",k,s0,v,I,fr,len,smooth);
+				kg = KG(loop);
+				printf("%8i%12.5g%12.5g%12.5g%12.5g%12.5g%12.5g%12.5g\n",-1,s0,v,I,fr,len,smooth,kg);
 			}
 		
 		}
@@ -317,7 +319,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	vMCDA.calcCorrs(intCorrTime_local[2],expCorrTime_local[2],corrErrorSqrd_local[2]);
 
 	// saving correlations
-	vMCDA.saveCorrelator(corrFile);
+	s0MCDA.saveCorrelator(corrFile);
 	//vMCDA.saveCorrelatorAppendAscii(corrTotalFile);
 	if (rank==root)
 			cout << "correlators printed to: " << endl << corrFile << endl;// << corrTotalFile << endl;

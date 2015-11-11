@@ -27,8 +27,8 @@ if (argc % 2 && argc>1) {
 	for (uint j=0; j<(uint)(argc/2); j++) {
 		string id = argv[2*j+1];
 		if (id[0]=='-') id = id.substr(1);
-		if (id.compare("b")==0 || id.compare("binary")==0) binaryFile = (string)argv[2*j+2];
-		else if (id.compare("a")==0 || id.compare("ascii")==0) asciiFile = (string)argv[2*j+2];
+		if (id.compare("b")==0 || id.compare("binary")==0 || id.compare("fi")==0) binaryFile = (string)argv[2*j+2];
+		else if (id.compare("a")==0 || id.compare("ascii")==0 || id.compare("fo")==0) asciiFile = (string)argv[2*j+2];
 		else {
 			cerr << "argv id " << id << " not understood" << endl;
 			return 1;

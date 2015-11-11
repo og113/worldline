@@ -570,6 +570,26 @@ number DSm (const Loop<Dim>& l, const Point<Dim>& p, const uint& loc) {
 	return res/(number)l.size();
 }
 
+// KG
+template <uint Dim>
+number KG (const Loop<Dim>& l) {
+	uint pos1, pos2;
+	Point<Dim> pp;
+	number res = 0.0, t_sqrd, t_dot_sqrd, t_t_dot;
+	for (uint j=0; j<l.size(); j++) {
+		pos1 = (j==(l.size()-1)? 0 : j+1);
+		pos2 = (pos1==(l.size()-1)? 0 : pos1+1);
+		pp = l[pos1];
+		pp *= 2.0;
+		pp -= l[pos2];
+		t_sqrd = DistanceSquared(l[pos1],l[j]);
+		t_dot_sqrd = DistanceSquared(l[j],pp);
+		t_t_dot = Dot(l[j],pp,l[pos1],l[j]);
+		res += sqrt((t_dot_sqrd-t_t_dot*t_t_dot/t_sqrd)/t_sqrd);
+	}
+	return res; // multiply and divide by N for dt and for averaging respectively
+}
+
 // S0
 template <uint Dim>
 number S0 (const Loop<Dim>& l) {
@@ -757,7 +777,7 @@ void Metropolis<Dim>::setSeed(const uint& s) {
 
 // Step
 template <uint Dim>
-uint Metropolis<Dim>::step(const uint& Num, const bool& isNew) {
+uint Metropolis<Dim>::step(const uint& Num, const bool& firstStep) {
 	gsl_rng_set(Generator,Seed);
 	// checking loop grown
 	if (!LoopPtr->Grown) {
@@ -766,7 +786,7 @@ uint Metropolis<Dim>::step(const uint& Num, const bool& isNew) {
 	}
 	// counter
 	number counter = 0.0;
-	if (isNew) {
+	if (firstStep) {
 		// initializing S0
 		SOld = S0(*LoopPtr);
 		if (abs(G)>MIN_NUMBER) {
@@ -817,7 +837,7 @@ uint Metropolis<Dim>::step(const uint& Num, const bool& isNew) {
 				SOld += SChange;
 				counter++;
 			}
-		}// COMPLETELY WRONG
+		}
 		
 	}
 	Steps += counter;
@@ -845,6 +865,7 @@ template number L<4> (const Loop<4>& l);
 template number DL<4> (const Loop<4>& l, const Point<4>& p, const uint& loc);
 template number Sm<4> (const Loop<4>& l);
 template number DSm<4> (const Loop<4>& l, const Point<4>& p, const uint& loc);
+template number KG<4> (const Loop<4>& l);
 template number S0<4> (const Loop<4>& l);
 template class Metropolis<4>;
 
