@@ -286,7 +286,7 @@ public:
 	~Metropolis();
 	
 	// step
-	uint				step(const uint&);
+	uint				step(const uint&, const bool& isNew);
 	
 	// set seed, loop
 	void 				setSeed(const uint&);

@@ -219,26 +219,39 @@ for (uint pl=0; pl<Npl; pl++) {
 		loop.load(loadFile);
 	
 		// doing dummy metropolis runs
-		met.step(p.Nig*Np);
+		met.step(p.Nig*Np,true);
 		met.setSeed(time(NULL)+rank+2);
 		
-		if (rank==root && verbose)
+		if (rank==root && verbose) {
 			printf("%8s%12s%12s%12s%12s%12s%12s\n","sweep","S0","V","I","Fr","L","Sm");
+			len = L(loop);
+			s0 = S0(loop);
+			I = I0(loop);
+			//w = gsl_sf_cos(p.G*I0(loop));
+			v = p.G*V1r(loop,p.Epsi);
+			v -= (abs(p.Epsi)>MIN_NUMBER? p.G*pi*len/p.Epsi: 0.0);
+			//z = (v>-LOG_MIN_NUMBER? 0.0: gsl_sf_exp(-v));
+			fr = (I<lp? 0.0: (-(pi*lp/2.0)*(I-lp/2.0))+pi*I*I/4.0);
+			//f = (I<lp? -pi*I*I/4.0: -(pi*lp/2.0)*(I-lp/2.0));
+			smooth = Sm(loop);
+			printf("%8i%12.5g%12.5g%12.5g%12.5g%12.5g%12.5g\n",-1,s0,v,I,fr,len,smooth);
+		}
 		
 		for (uint k=0; k<p.Nsw; k++) {
 	
 			// metropolis runs per sweep
 			if (k==(p.Nsw-1))
-				steps_local = met.step(p.Npsw*Np);
+				steps_local = met.step(p.Npsw*Np,false);
 			else
-				met.step(p.Npsw*Np);
+				met.step(p.Npsw*Np,false);
 			met.setSeed(time(NULL)+k*1000+rank+2);
 		
+			len = L(loop);
 			s0 = S0(loop);
 			I = I0(loop);
 			//w = gsl_sf_cos(p.G*I0(loop));
 			v = p.G*V1r(loop,p.Epsi);
-			v -= (abs(p.Epsi)>MIN_NUMBER? p.G*pi*L(loop)/p.Epsi: 0.0);
+			v -= (abs(p.Epsi)>MIN_NUMBER? p.G*pi*len/p.Epsi: 0.0);
 			//z = (v>-LOG_MIN_NUMBER? 0.0: gsl_sf_exp(-v));
 			fr = (I<lp? 0.0: (-(pi*lp/2.0)*(I-lp/2.0))+pi*I*I/4.0);
 			//f = (I<lp? -pi*I*I/4.0: -(pi*lp/2.0)*(I-lp/2.0));
@@ -248,8 +261,7 @@ for (uint pl=0; pl<Npl; pl++) {
 			v_data_local[k] = v;
 			
 			if (rank==root && verbose) {
-				len = L(loop);
-				smooth = Sm(Loop);
+				smooth = Sm(loop);
 				printf("%8i%12.5g%12.5g%12.5g%12.5g%12.5g%12.5g\n",k,s0,v,I,fr,len,smooth);
 			}
 		

@@ -757,7 +757,7 @@ void Metropolis<Dim>::setSeed(const uint& s) {
 
 // Step
 template <uint Dim>
-uint Metropolis<Dim>::step(const uint& Num) {
+uint Metropolis<Dim>::step(const uint& Num, const bool& isNew) {
 	gsl_rng_set(Generator,Seed);
 	// checking loop grown
 	if (!LoopPtr->Grown) {
@@ -766,12 +766,14 @@ uint Metropolis<Dim>::step(const uint& Num) {
 	}
 	// counter
 	number counter = 0.0;
-	// initializing S0
-	SOld = S0(*LoopPtr);
-	if (abs(G)>MIN_NUMBER) {
-		SOld += G*V1r(*LoopPtr,(*P).Epsi);
-		SOld -= (abs((*P).Epsi)>MIN_NUMBER? G*pi*L(*LoopPtr)/(*P).Epsi: 0.0);
-		SOld -= G*(*P).B*(*P).T*I0(*LoopPtr);
+	if (isNew) {
+		// initializing S0
+		SOld = S0(*LoopPtr);
+		if (abs(G)>MIN_NUMBER) {
+			SOld += G*V1r(*LoopPtr,(*P).Epsi);
+			SOld -= (abs((*P).Epsi)>MIN_NUMBER? G*pi*L(*LoopPtr)/(*P).Epsi: 0.0);
+			//SOld -= G*(*P).B*(*P).T*I0(*LoopPtr);
+		}
 	}
 		
 	// defining some parameters
@@ -798,6 +800,7 @@ uint Metropolis<Dim>::step(const uint& Num) {
 		if (abs(G)>MIN_NUMBER) {
 			SChange += G*DV1r<Dim>(*LoopPtr, temp, loc,(*P).Epsi);	
 			SChange -= (abs((*P).Epsi)>MIN_NUMBER? G*pi*DL(*LoopPtr, temp, loc)/(*P).Epsi: 0.0);
+			//SChange -= G*(*P).B*(*P).T*DI0(*LoopPtr, temp, loc);
 		}
 	
 		// accepting new point according to acceptance probability
