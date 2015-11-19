@@ -6,12 +6,15 @@
 #include <stdlib.h>
 #include <iostream>
 #include <vector>
+#include <ctime>
 //#include <cmath>
+#include <gsl/gsl_randist.h> 	// Distributions of random numbers
 #include <gsl/gsl_math.h>
 #include <gsl/gsl_monte.h>
 #include <gsl/gsl_monte_plain.h>
 #include <gsl/gsl_monte_miser.h>
 #include <gsl/gsl_monte_vegas.h>
+#include "simple.h"
 
 using namespace std;
 
@@ -36,10 +39,10 @@ double g (double *k, size_t dim, void *params) {
 	double x0 = 0.0, x1 = 0.0, dx0 = 0.0, dx1 = 0.0;
 	vector<double>& fcr = p->fcoeffs;
 	for (size_t i=0; i<(p->N); i++) {
-		x0 += fcr[2*i]*cos(2.0*M_PI*i*k[0]) + fcr[2*i+1]*sin(2.0*M_PI*i*k[0]);
-		x1 += fcr[2*i]*cos(2.0*M_PI*i*k[1]) + fcr[2*i+1]*sin(2.0*M_PI*i*k[1]);
-		dx0 += 2.0*M_PI*i*(-fcr[2*i]*sin(2.0*M_PI*i*k[0]) + fcr[2*i+1]*cos(2.0*M_PI*i*k[0]));
-		dx1 += 2.0*M_PI*i*(-fcr[2*i]*sin(2.0*M_PI*i*k[1]) + fcr[2*i+1]*cos(2.0*M_PI*i*k[1]));
+		x0 += fcr[2*i]*cos(2.0*M_PI*(i+1.0)*k[0]) + fcr[2*i+1]*sin(2.0*M_PI*(i+1.0)*k[0]);
+		x1 += fcr[2*i]*cos(2.0*M_PI*(i+1.0)*k[1]) + fcr[2*i+1]*sin(2.0*M_PI*(i+1.0)*k[1]);
+		dx0 += 2.0*pi*i*(-fcr[2*i]*sin(2.0*pi*(i+1.0)*k[0]) + fcr[2*i+1]*cos(2.0*pi*(i+1.0)*k[0]));
+		dx1 += 2.0*pi*i*(-fcr[2*i]*sin(2.0*pi*(i+1.0)*k[1]) + fcr[2*i+1]*cos(2.0*pi*(i+1.0)*k[1]));
 	}
 	denom += pow(x0-x1,2);
 	return dx0*dx1/denom;
@@ -60,19 +63,30 @@ int main () {
   const gsl_rng_type *T;
   gsl_rng *r;
   
+  size_t N = 32;
+  double a = 0.1;
+  vector<double> fcoeffs(2*N);
+  
+  uint Seed = time(NULL);
+  gsl_rng* Generator = gsl_rng_alloc(gsl_rng_taus);
+  gsl_rng_set(Generator,Seed);
+  number sigma = SQRT2/pi;
+  
+  for (size_t i=0; i<N; i++) {
+  	fcoeffs[2*i] = gsl_ran_gaussian (Generator, sigma); //gsl_ran_gaussian_ziggurat is another option
+  	fcoeffs[2*i+1] = gsl_ran_gaussian (Generator, sigma); //gsl_ran_gaussian_ziggurat is another option
+  }
+  
+  delete Generator;
+
   GSLMonteParams gslParams;
-  gslParams.N = 2;
-  gslParams.a = 0.1;
-  vector<double> fcoeffs(2*gslParams.N);
-  fcoeffs[0] = 0.488116;
-  fcoeffs[1] = 0.189921;
-  fcoeffs[2] = 0.0172342;
-  fcoeffs[3] = 0.267224;
+  gslParams.N = N;
+  gslParams.a = a;
   gslParams.fcoeffs = fcoeffs;
 
   gsl_monte_function G = { &g, 2, &gslParams };
 
-  size_t calls = 1e5;
+  size_t calls = 1e6;
 
   gsl_rng_env_setup ();
 
