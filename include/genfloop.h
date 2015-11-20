@@ -174,8 +174,8 @@ public:
 	FCoeff<Dim>& operator[](const uint&);
 	
 	// getting spatial coord
-	const Point<Dim>& X(const number& t) const;
-	Point<Dim>& X(const number& t);
+	const Point<Dim> X(const number& t) const;
+	Point<Dim> X(const number& t);
 	
 	// stream <<, >>
 	friend ostream& operator<< <Dim>(ostream&,const Floop&);

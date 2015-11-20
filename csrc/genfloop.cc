@@ -5,8 +5,10 @@
 #include <iostream>
 #include <iomanip>
 #include <fstream>
-#include <cmath>
+#include <gsl/gsl_math.h>
+#include <gsl/gsl_randist.h> 
 #include "simple.h"
+#include "genloop.h"
 #include "genfloop.h"
 
 /*----------------------------------------------------------------------------------------------------------------------------
@@ -377,6 +379,35 @@ void Floop<Dim>::grow() {
 	Grown = true;
 }
 
+// getting spatial coord
+template <uint Dim>
+const Point<Dim> Floop<Dim>::X(const number& t) const {
+	Point<Dim> x;
+	double wt = 2.0*pi*t, wti;
+	for (uint i=0; i<Size; i++) {
+		wti = wt*(number)(i+1.0);
+		for (uint j=0; j<Dim; j++) {
+			x[j] += (FCoeffs[i])[2*j]*cos(wti) + (FCoeffs[i])[2*j+1]*sin(wti);
+		}
+	}
+	return x;
+}
+
+// getting spatial coord
+template <uint Dim>
+Point<Dim> Floop<Dim>::X(const number& t) {
+	Point<Dim> x;
+	double wt = 2.0*pi*t, wti;
+	for (uint i=0; i<Size; i++) {
+		wti = wt*(number)(i+1.0);
+		for (uint j=0; j<Dim; j++) {
+			x[j] += (FCoeffs[i])[2*j]*cos(wti) + (FCoeffs[i])[2*j+1]*sin(wti);
+		}
+	}
+	return x;
+}
+
+
 // stream <<
 template <uint Dim>
 ostream& operator<< (ostream& os,const Floop<Dim>& l) {
@@ -411,5 +442,26 @@ istream& operator>> (istream& is, Floop<Dim>& l) {
 /*----------------------------------------------------------------------------------------------------------------------------
 	6 - explicit template instantiation
 ----------------------------------------------------------------------------------------------------------------------------*/
-// Dim=4
+// Dim=2
+template class FCoeff<2>;
+template ostream& operator<< <2>(ostream& os,const FCoeff<2>& p);
+template FCoeff<2> operator+ <2>(const FCoeff<2>& lhs,const FCoeff<2>& rhs);
+template FCoeff<2> operator- <2>(const FCoeff<2>& lhs,const FCoeff<2>& rhs);
+template FCoeff<2> operator* <2>(const number& lhs,const FCoeff<2>& rhs);
+template FCoeff<2> operator/ <2>(const FCoeff<2>& lhs,const number& rhs);
+template bool operator== <2>(const FCoeff<2>& lhs, const FCoeff<2>& rhs);
+template bool operator^= <2>(const FCoeff<2>& lhs, const FCoeff<2>& rhs);
+template class Floop<2>;
+template ostream& operator<< <2>(ostream& os,const Floop<2>& l);
 
+// Dim=4
+template class FCoeff<4>;
+template ostream& operator<< <4>(ostream& os,const FCoeff<4>& p);
+template FCoeff<4> operator+ <4>(const FCoeff<4>& lhs,const FCoeff<4>& rhs);
+template FCoeff<4> operator- <4>(const FCoeff<4>& lhs,const FCoeff<4>& rhs);
+template FCoeff<4> operator* <4>(const number& lhs,const FCoeff<4>& rhs);
+template FCoeff<4> operator/ <4>(const FCoeff<4>& lhs,const number& rhs);
+template bool operator== <4>(const FCoeff<4>& lhs, const FCoeff<4>& rhs);
+template bool operator^= <4>(const FCoeff<4>& lhs, const FCoeff<4>& rhs);
+template class Floop<4>;
+template ostream& operator<< <4>(ostream& os,const Floop<4>& l);
