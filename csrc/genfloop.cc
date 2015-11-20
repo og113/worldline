@@ -6,7 +6,11 @@
 #include <iomanip>
 #include <fstream>
 #include <gsl/gsl_math.h>
-#include <gsl/gsl_randist.h> 
+#include <gsl/gsl_randist.h>
+#include <gsl/gsl_monte.h>
+//#include <gsl/gsl_monte_plain.h>
+//#include <gsl/gsl_monte_miser.h>
+#include <gsl/gsl_monte_vegas.h>
 #include "simple.h"
 #include "genloop.h"
 #include "genfloop.h"
@@ -496,10 +500,8 @@ istream& operator>> (istream& is, FLoop<Dim>& l) {
 
 // argL
 template <uint Dim>
-static number argL(const FLoop<Dim>& fl, const number& a, const number& t) {
-	number denom = a*a, result = 0.0;
-	//denom += DistanceSquared(fl.X
-	return result;
+static number argL(const FLoop<Dim>& fl, const number& t) {
+	return Dot(fl.dX(t),fl.dX(t));
 }
 
 // L
@@ -517,8 +519,7 @@ number S0 (const FLoop<Dim>& fl) {
 			result += (fl[i])[j]*(fl[i])[j];
 		}
 	}
-	result *= pi*pi/2.0;
-	return result;
+	return result*pi*pi/2.0;
 }
 
 // argV1r
