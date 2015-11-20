@@ -14,7 +14,7 @@
 #include <gsl/gsl_monte_plain.h>
 #include <gsl/gsl_monte_miser.h>
 #include <gsl/gsl_monte_vegas.h>
-#include "simple.h"
+//#include "simple.h"
 
 using namespace std;
 
@@ -41,8 +41,8 @@ double g (double *k, size_t dim, void *params) {
 	for (size_t i=0; i<(p->N); i++) {
 		x0 += fcr[2*i]*cos(2.0*M_PI*(i+1.0)*k[0]) + fcr[2*i+1]*sin(2.0*M_PI*(i+1.0)*k[0]);
 		x1 += fcr[2*i]*cos(2.0*M_PI*(i+1.0)*k[1]) + fcr[2*i+1]*sin(2.0*M_PI*(i+1.0)*k[1]);
-		dx0 += 2.0*pi*i*(-fcr[2*i]*sin(2.0*pi*(i+1.0)*k[0]) + fcr[2*i+1]*cos(2.0*pi*(i+1.0)*k[0]));
-		dx1 += 2.0*pi*i*(-fcr[2*i]*sin(2.0*pi*(i+1.0)*k[1]) + fcr[2*i+1]*cos(2.0*pi*(i+1.0)*k[1]));
+		dx0 += 2.0*M_PI*i*(-fcr[2*i]*sin(2.0*M_PI*(i+1.0)*k[0]) + fcr[2*i+1]*cos(2.0*M_PI*(i+1.0)*k[0]));
+		dx1 += 2.0*M_PI*i*(-fcr[2*i]*sin(2.0*M_PI*(i+1.0)*k[1]) + fcr[2*i+1]*cos(2.0*M_PI*(i+1.0)*k[1]));
 	}
 	denom += pow(x0-x1,2);
 	return dx0*dx1/denom;
@@ -63,18 +63,18 @@ int main () {
   const gsl_rng_type *T;
   gsl_rng *r;
   
-  size_t N = 32;
+  size_t N = 16;
   double a = 0.1;
   vector<double> fcoeffs(2*N);
   
-  uint Seed = time(NULL);
+  unsigned int Seed = time(NULL);
   gsl_rng* Generator = gsl_rng_alloc(gsl_rng_taus);
   gsl_rng_set(Generator,Seed);
-  number sigma = SQRT2/pi;
+  double sigma = M_SQRT2/M_PI;
   
   for (size_t i=0; i<N; i++) {
-  	fcoeffs[2*i] = gsl_ran_gaussian (Generator, sigma); //gsl_ran_gaussian_ziggurat is another option
-  	fcoeffs[2*i+1] = gsl_ran_gaussian (Generator, sigma); //gsl_ran_gaussian_ziggurat is another option
+  	fcoeffs[2*i] = gsl_ran_gaussian(Generator, sigma/(i+1.0)); //gsl_ran_gaussian_ziggurat is another option
+  	fcoeffs[2*i+1] = gsl_ran_gaussian(Generator, sigma/(i+1.0));
   }
   
   delete Generator;

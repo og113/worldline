@@ -1,5 +1,7 @@
 /*
 	header file for to generate fourier representation of unit loops in D dimensions for use in worldline programs.
+	
+		should really have had these representations and the representation as spatial points being related by inheritance.
 */
  
 #ifndef __GENFLOOP_H_INCLUDED__
@@ -123,6 +125,73 @@ private:
 /*----------------------------------------------------------------------------------------------------------------------------
 	3 - FLoop class
 ----------------------------------------------------------------------------------------------------------------------------*/
+
+template <uint Dim>
+class Floop;
+
+// stream <<
+template <uint Dim>
+ostream& operator<< (ostream&,const Floop<Dim>&);
+
+// stream>>
+template <uint Dim>
+istream& operator>>(istream&,Floop<Dim>&);
+
+// Metropolis
+template <uint Dim>
+class Metropolis;
+
+// Floop class
+template <uint Dim>
+class Floop {
+public:
+	// initialization and destruction
+	Floop(const uint& k, const uint& seed);
+	~Floop();
+	
+	// grow loop
+	void grow();
+	
+	// Metropolis
+	friend class Metropolis<Dim>;
+	
+	// clear
+	void clear();
+	
+	// set seed
+	void setSeed(const uint&);
+	
+	// save
+	void save(const string& file) const;
+	void saveAscii(const string& file) const;
+	
+	// load
+	void load(const string& file);
+	void loadAscii(const string& file);
+	
+	// indexing
+	const FCoeff<Dim>& operator[](const uint&) const;
+	FCoeff<Dim>& operator[](const uint&);
+	
+	// getting spatial coord
+	const Point<Dim>& X(const number& t) const;
+	Point<Dim>& X(const number& t);
+	
+	// stream <<, >>
+	friend ostream& operator<< <Dim>(ostream&,const Floop&);
+	friend istream& operator>> <Dim>(istream&, Floop&);
+	
+	// size
+	uint size() const;
+	
+private:
+	uint					K;
+	uint					Seed;
+	uint					Size;
+	vector< FCoeff<Dim> >	FCoeffs;
+  	gsl_rng* 				Generator;
+  	bool					Grown;
+};
 
 /*----------------------------------------------------------------------------------------------------------------------------
 	4 - FLoop functions	
