@@ -128,6 +128,10 @@ number Distance(const Point<Dim>&, const Point<Dim>&);
 
 // Dot
 template <uint Dim>
+number Dot(const Point<Dim>&, const Point<Dim>&);
+
+// Dot
+template <uint Dim>
 number Dot(const Point<Dim>&, const Point<Dim>&, const Point<Dim>&, const Point<Dim>&);
 
 /*----------------------------------------------------------------------------------------------------------------------------

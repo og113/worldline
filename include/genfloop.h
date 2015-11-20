@@ -127,27 +127,27 @@ private:
 ----------------------------------------------------------------------------------------------------------------------------*/
 
 template <uint Dim>
-class Floop;
+class FLoop;
 
 // stream <<
 template <uint Dim>
-ostream& operator<< (ostream&,const Floop<Dim>&);
+ostream& operator<< (ostream&,const FLoop<Dim>&);
 
 // stream>>
 template <uint Dim>
-istream& operator>>(istream&,Floop<Dim>&);
+istream& operator>>(istream&,FLoop<Dim>&);
 
 // Metropolis
 template <uint Dim>
 class Metropolis;
 
-// Floop class
+// FLoop class
 template <uint Dim>
-class Floop {
+class FLoop {
 public:
 	// initialization and destruction
-	Floop(const uint& k, const uint& seed);
-	~Floop();
+	FLoop(const uint& k, const uint& seed);
+	~FLoop();
 	
 	// grow loop
 	void grow();
@@ -177,9 +177,17 @@ public:
 	const Point<Dim> X(const number& t) const;
 	Point<Dim> X(const number& t);
 	
+	// getting d(spatial coord)
+	const Point<Dim> dX(const number& t) const;
+	Point<Dim> dX(const number& t);
+	
+	// getting dd(spatial coord)
+	const Point<Dim> ddX(const number& t) const;
+	Point<Dim> ddX(const number& t);
+	
 	// stream <<, >>
-	friend ostream& operator<< <Dim>(ostream&,const Floop&);
-	friend istream& operator>> <Dim>(istream&, Floop&);
+	friend ostream& operator<< <Dim>(ostream&,const FLoop&);
+	friend istream& operator>> <Dim>(istream&, FLoop&);
 	
 	// size
 	uint size() const;
@@ -197,7 +205,17 @@ private:
 	4 - FLoop functions	
 ----------------------------------------------------------------------------------------------------------------------------*/
 
+// L
+template <uint Dim>
+number L (const FLoop<Dim>& l);
 
+// S0
+template <uint Dim>
+number S0 (const FLoop<Dim>& l);
+
+// V1r
+template <uint Dim>
+number V1r (const FLoop<Dim>& l, const number& a);
 
 /*----------------------------------------------------------------------------------------------------------------------------
 	5 - FMetropolis

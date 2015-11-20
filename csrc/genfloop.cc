@@ -223,7 +223,7 @@ bool operator^=(const FCoeff<Dim>& lhs, const FCoeff<Dim>& rhs) {
 
 // minimal initialiser
 template <uint Dim>
-Floop<Dim>::Floop(const uint& k, const uint& seed): 
+FLoop<Dim>::FLoop(const uint& k, const uint& seed): 
 		K(k), Seed(seed), Size(pow(2,k)), Grown(false) {
 	FCoeffs.resize(Size);
 	(FCoeffs[0]).zero();
@@ -232,45 +232,45 @@ Floop<Dim>::Floop(const uint& k, const uint& seed):
 
 // destructor
 template <uint Dim>
-Floop<Dim>::~Floop() {
+FLoop<Dim>::~FLoop() {
 	//gsl_rng_free(Generator);
 	delete Generator;
 }
 
 // size
 template <uint Dim>
-uint Floop<Dim>::size() const {
+uint FLoop<Dim>::size() const {
 	return Size;
 }	
 
 // clear
 template <uint Dim>
-void Floop<Dim>::clear() {
+void FLoop<Dim>::clear() {
 	for (uint j=0; j<Size; j++)
 		FCoeffs[j].zero();
 }
 
 // set seed
 template <uint Dim>
-void Floop<Dim>::setSeed(const uint& s) {
+void FLoop<Dim>::setSeed(const uint& s) {
 	Seed = s;
 }
 
 // indexing
 template <uint Dim>
-const FCoeff<Dim>& Floop<Dim>::operator[](const uint& loc) const {
+const FCoeff<Dim>& FLoop<Dim>::operator[](const uint& loc) const {
 	return FCoeffs.at(loc);
 }
 
 // indexing
 template <uint Dim>
-FCoeff<Dim>& Floop<Dim>::operator[](const uint& loc) {
+FCoeff<Dim>& FLoop<Dim>::operator[](const uint& loc) {
 	return FCoeffs.at(loc);
 }
 
 // save
 template <uint Dim>
-void Floop<Dim>::save(const string& f) const {
+void FLoop<Dim>::save(const string& f) const {
 	ofstream os;
 	os.open(f.c_str(),ios::binary);
 	if (os.good()) {
@@ -280,7 +280,7 @@ void Floop<Dim>::save(const string& f) const {
 		os.close();
 	}
 	else {
-		cerr << "Floop::save error: cannot write to " << f << endl;
+		cerr << "FLoop::save error: cannot write to " << f << endl;
 		os.close();
 		return;
 	}
@@ -288,7 +288,7 @@ void Floop<Dim>::save(const string& f) const {
 
 // saveAscii
 template <uint Dim>
-void Floop<Dim>::saveAscii(const string& f) const {
+void FLoop<Dim>::saveAscii(const string& f) const {
 	ofstream os;
 	os.open(f.c_str());
 	if (os.good()) {
@@ -296,7 +296,7 @@ void Floop<Dim>::saveAscii(const string& f) const {
 		os.close();
 	}
 	else {
-		cerr << "Floop::save error: cannot write to " << f << endl;
+		cerr << "FLoop::save error: cannot write to " << f << endl;
 		os.close();
 		return;
 	}
@@ -304,14 +304,14 @@ void Floop<Dim>::saveAscii(const string& f) const {
 
 // load
 template <uint Dim>
-void Floop<Dim>::load(const string& f) {
+void FLoop<Dim>::load(const string& f) {
 	if (!fileExists(f)) {
-		cerr << "Floop::load error: file, " << f << ", doesn't exist" << endl;
+		cerr << "FLoop::load error: file, " << f << ", doesn't exist" << endl;
 		return;
 	}
 	uint fd = countDoubles(f);
 	if (fd!=2*Dim*Size) {
-		cerr << "Floop::load error: " << f << " contains " << fd << " doubles, floop requires " << 2*Size*Dim << endl;
+		cerr << "FLoop::load error: " << f << " contains " << fd << " doubles, floop requires " << 2*Size*Dim << endl;
 		return;
 	}
 	else {	
@@ -324,7 +324,7 @@ void Floop<Dim>::load(const string& f) {
 			is.close();
 		}
 		else {
-			cerr << "Floop::load error: cannot read from " << f << endl;
+			cerr << "FLoop::load error: cannot read from " << f << endl;
 			is.close();
 			return;
 		}
@@ -334,15 +334,15 @@ void Floop<Dim>::load(const string& f) {
 
 // loadAscii
 template <uint Dim>
-void Floop<Dim>::loadAscii(const string& f) {
+void FLoop<Dim>::loadAscii(const string& f) {
 	uint fl = countLines(f);
 	uint fc = countColumns(f);
 	if (fl!=Size) {
-		cerr << "Floop::load error: " << f << " contains " << fl << " lines, floop requires " << Size << endl;
+		cerr << "FLoop::load error: " << f << " contains " << fl << " lines, floop requires " << Size << endl;
 		return;
 	}
 	else if (fc!=2*Dim) {
-		cerr << "Floop::load error: " << f << " contains " << fc << " columns, floop requires " << 2*Dim << endl;
+		cerr << "FLoop::load error: " << f << " contains " << fc << " columns, floop requires " << 2*Dim << endl;
 		return;
 	}
 	else {	
@@ -353,7 +353,7 @@ void Floop<Dim>::loadAscii(const string& f) {
 			is.close();
 		}
 		else {
-			cerr << "Floop::load error: cannot read from " << f << endl;
+			cerr << "FLoop::load error: cannot read from " << f << endl;
 			is.close();
 			return;
 		}
@@ -363,7 +363,7 @@ void Floop<Dim>::loadAscii(const string& f) {
 
 // grow
 template <uint Dim>
-void Floop<Dim>::grow() {
+void FLoop<Dim>::grow() {
 	Generator = gsl_rng_alloc(gsl_rng_taus);
 	gsl_rng_set(Generator,Seed);
 	double sigma = SQRT2/pi;
@@ -381,7 +381,7 @@ void Floop<Dim>::grow() {
 
 // getting spatial coord
 template <uint Dim>
-const Point<Dim> Floop<Dim>::X(const number& t) const {
+const Point<Dim> FLoop<Dim>::X(const number& t) const {
 	Point<Dim> x;
 	double wt = 2.0*pi*t, wti;
 	for (uint i=0; i<Size; i++) {
@@ -395,7 +395,7 @@ const Point<Dim> Floop<Dim>::X(const number& t) const {
 
 // getting spatial coord
 template <uint Dim>
-Point<Dim> Floop<Dim>::X(const number& t) {
+Point<Dim> FLoop<Dim>::X(const number& t) {
 	Point<Dim> x;
 	double wt = 2.0*pi*t, wti;
 	for (uint i=0; i<Size; i++) {
@@ -407,10 +407,74 @@ Point<Dim> Floop<Dim>::X(const number& t) {
 	return x;
 }
 
+// getting d(spatial coord)
+template <uint Dim>
+const Point<Dim> FLoop<Dim>::dX(const number& t) const {
+	Point<Dim> dx;
+	double c = 2.0*pi;
+	double wt = c*t, wti;
+	for (uint i=0; i<Size; i++) {
+		wti = wt*(number)(i+1.0);
+		for (uint j=0; j<Dim; j++) {
+			dx[j] += c*(i+1.0)*(-(FCoeffs[i])[2*j]*cos(wti) + (FCoeffs[i])[2*j+1]*sin(wti));
+		}
+	}
+	return dx;
+}
+
+// getting d(spatial coord)
+template <uint Dim>
+Point<Dim> FLoop<Dim>::dX(const number& t) {
+	Point<Dim> dx;
+	double c = 2.0*pi;
+	double wt = c*t, wti;
+	for (uint i=0; i<Size; i++) {
+		wti = wt*(number)(i+1.0);
+		for (uint j=0; j<Dim; j++) {
+			dx[j] += c*(i+1.0)*(-(FCoeffs[i])[2*j]*cos(wti) + (FCoeffs[i])[2*j+1]*sin(wti));
+		}
+	}
+	return dx;
+}
+
+// getting dd(spatial coord)
+template <uint Dim>
+const Point<Dim> FLoop<Dim>::ddX(const number& t) const {
+	Point<Dim> ddx;
+	double c = 2.0*pi, ci;
+	double wt = c*t, wti;
+	c *= c;
+	for (uint i=0; i<Size; i++) {
+		wti = wt*(number)(i+1.0);
+		ci = c*(i+1.0)*(i+1.0);
+		for (uint j=0; j<Dim; j++) {
+			ddx[j] += -ci*((FCoeffs[i])[2*j]*cos(wti) + (FCoeffs[i])[2*j+1]*sin(wti));
+		}
+	}
+	return ddx;
+}
+
+// getting d(spatial coord)
+template <uint Dim>
+Point<Dim> FLoop<Dim>::ddX(const number& t) {
+	Point<Dim> ddx;
+	double c = 2.0*pi, ci;
+	double wt = c*t, wti;
+	c *= c;
+	for (uint i=0; i<Size; i++) {
+		wti = wt*(number)(i+1.0);
+		ci = c*(i+1.0)*(i+1.0);
+		for (uint j=0; j<Dim; j++) {
+			ddx[j] += -ci*((FCoeffs[i])[2*j]*cos(wti) + (FCoeffs[i])[2*j+1]*sin(wti));
+		}
+	}
+	return ddx;
+}
+
 
 // stream <<
 template <uint Dim>
-ostream& operator<< (ostream& os,const Floop<Dim>& l) {
+ostream& operator<< (ostream& os,const FLoop<Dim>& l) {
 	for (uint j=0; j<l.Size; j++)
 		os << l.FCoeffs[j] << endl;
 	return os;
@@ -418,7 +482,7 @@ ostream& operator<< (ostream& os,const Floop<Dim>& l) {
 
 // stream >>
 template <uint Dim>
-istream& operator>> (istream& is, Floop<Dim>& l) {
+istream& operator>> (istream& is, FLoop<Dim>& l) {
 	for (uint j=0; j<l.Size; j++)
 		is >> l.FCoeffs[j];
 	l.Grown = true;
@@ -427,12 +491,50 @@ istream& operator>> (istream& is, Floop<Dim>& l) {
 
 /*----------------------------------------------------------------------------------------------------------------------------
 	4 - FLoop functions
-		- S0
-		- DS0
-		- V0
-		- aprxDV0
 		
 ----------------------------------------------------------------------------------------------------------------------------*/
+
+// argL
+template <uint Dim>
+static number argL(const FLoop<Dim>& fl, const number& a, const number& t) {
+	number denom = a*a, result = 0.0;
+	//denom += DistanceSquared(fl.X
+	return result;
+}
+
+// L
+template <uint Dim>
+number L (const FLoop<Dim>& fl) {
+	return 0.0;
+}
+
+// S0
+template <uint Dim>
+number S0 (const FLoop<Dim>& fl) {
+	number result = 0.0;
+	for (uint i=0; i<fl.size(); i++) {
+		for (uint j=0; j<Dim; j++) {
+			result += (fl[i])[j]*(fl[i])[j];
+		}
+	}
+	result *= pi*pi/2.0;
+	return result;
+}
+
+// argV1r
+template <uint Dim>
+static number argV1(const FLoop<Dim>& fl, const number& a, const number& t, const number& s) {
+	number denom = a*a, result;
+	denom += DistanceSquared(fl.X(t),fl.X(s));
+	result = Dot(fl.dX(t),fl.dX(s));
+	return result/denom;
+}
+
+// V1r
+template <uint Dim>
+number V1r (const FLoop<Dim>& fl, const number& a) {
+	return 0.0;
+}
 
 /*----------------------------------------------------------------------------------------------------------------------------
 	5 - FMetropolis
@@ -451,8 +553,9 @@ template FCoeff<2> operator* <2>(const number& lhs,const FCoeff<2>& rhs);
 template FCoeff<2> operator/ <2>(const FCoeff<2>& lhs,const number& rhs);
 template bool operator== <2>(const FCoeff<2>& lhs, const FCoeff<2>& rhs);
 template bool operator^= <2>(const FCoeff<2>& lhs, const FCoeff<2>& rhs);
-template class Floop<2>;
-template ostream& operator<< <2>(ostream& os,const Floop<2>& l);
+template class FLoop<2>;
+template ostream& operator<< <2>(ostream& os,const FLoop<2>& l);
+template number S0<2> (const FLoop<2>& l);
 
 // Dim=4
 template class FCoeff<4>;
@@ -463,5 +566,6 @@ template FCoeff<4> operator* <4>(const number& lhs,const FCoeff<4>& rhs);
 template FCoeff<4> operator/ <4>(const FCoeff<4>& lhs,const number& rhs);
 template bool operator== <4>(const FCoeff<4>& lhs, const FCoeff<4>& rhs);
 template bool operator^= <4>(const FCoeff<4>& lhs, const FCoeff<4>& rhs);
-template class Floop<4>;
-template ostream& operator<< <4>(ostream& os,const Floop<4>& l);
+template class FLoop<4>;
+template ostream& operator<< <4>(ostream& os,const FLoop<4>& l);
+template number S0<4> (const FLoop<4>& l);

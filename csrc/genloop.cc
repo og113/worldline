@@ -232,6 +232,16 @@ number Distance(const Point<Dim>& p1, const Point<Dim>& p2) {
 
 // Dot
 template <uint Dim>
+number Dot(const Point<Dim>& p1, const Point<Dim>& p2) {
+	number d = p1[0]*p2[0];
+	for (uint j=1; j<Dim; j++) {
+		d += p1[j]*p2[j];
+	}
+	return d;
+}
+
+// Dot
+template <uint Dim>
 number Dot(const Point<Dim>& p1, const Point<Dim>& p2, const Point<Dim>& q1, const Point<Dim>& q2) {
 	number d = (p1[0]-p2[0])*(q1[0]-q2[0]);
 	for (uint j=1; j<Dim; j++) {
