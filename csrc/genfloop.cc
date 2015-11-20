@@ -524,7 +524,7 @@ number S0 (const FLoop<Dim>& fl) {
 
 // argV1r
 template <uint Dim>
-static number argV1(const FLoop<Dim>& fl, const number& a, const number& t, const number& s) {
+static number argV1r(const FLoop<Dim>& fl, const number& a, const number& t, const number& s) {
 	number denom = a*a, result;
 	denom += DistanceSquared(fl.X(t),fl.X(s));
 	result = Dot(fl.dX(t),fl.dX(s));
