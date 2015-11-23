@@ -598,11 +598,13 @@ number S0 (const Loop<Dim>& l) {
 // DS0
 template <uint Dim>
 number DS0 (const Loop<Dim>& l, const Point<Dim>& p, const uint& loc) {
-	uint loc_pos = (loc==(l.size()-1)? 0: loc);
-	uint loc_neg = (loc==0? (l.size()-1): loc);
-	Point<Dim> a = l[loc_neg]+l[loc_pos]-l[loc];
-	number result = Dot(p,l[loc],p,a);
-	return result*(number)l.size()/2.0;
+	uint loc_pos = (loc==(l.size()-1)? 0: loc+1);
+	uint loc_neg = (loc==0? (l.size()-1): loc-1);
+	number result = DistanceSquared(p,l[loc_neg]);
+	result += DistanceSquared(l[loc_pos],p);
+	result -= DistanceSquared(l[loc],l[loc_neg]);
+	result -= DistanceSquared(l[loc_pos],l[loc]);
+	return result*(number)l.size()/4.0;
 }
 
 // V0
@@ -773,11 +775,9 @@ number DFGamma (const Loop<Dim>& l, const Point<Dim>& p, const uint& loc) {
 
 // constructor
 template <uint Dim>
-Metropolis<Dim>::Metropolis(Loop<Dim>& L, const Parameters& p, const uint& s): Seed(s), Steps(0) {
+Metropolis<Dim>::Metropolis(Loop<Dim>& L, const Parameters& p, const uint& s): Seed(s), Steps(0), Data(), DataChange() {
 	LoopPtr = &L;
 	P = &p;
-	G = P->G;
-	SOld = 0.0;
 
 	// setting generator
 	Generator = gsl_rng_alloc(gsl_rng_taus);
@@ -785,11 +785,9 @@ Metropolis<Dim>::Metropolis(Loop<Dim>& L, const Parameters& p, const uint& s): S
 
 // constructor
 template <uint Dim>
-Metropolis<Dim>::Metropolis(const Parameters& p, const uint& s): Seed(s), Steps(0) {
+Metropolis<Dim>::Metropolis(const Parameters& p, const uint& s): Seed(s), Steps(0), Data(), DataChange() {
 	LoopPtr = NULL;
 	P = &p;
-	G = P->G;
-	SOld = 0.0;
 
 	// setting generator
 	Generator = gsl_rng_alloc(gsl_rng_taus);
@@ -811,17 +809,11 @@ void Metropolis<Dim>::setLoop(Loop<Dim>& L) {
 template <uint Dim>
 void Metropolis<Dim>::setSeed(const uint& s) {
 	Seed = s;
-}// FGamma = gamma*cot(gamma)-1
-template <uint Dim>
-number FGamma (const Loop<Dim>& l);
-
-// DFGamma
-template <uint Dim>
-number DFGamma (const Loop<Dim>& l, const Point<Dim>& p, const uint& loc);
+}
 
 // Step
 template <uint Dim>
-uint Metropolis<Dim>::step(const uint& Num, const bool& firstStep) {
+uint Metropolis<Dim>::step(const uint& Num, const bool& firstStep, MetropolisData& data) {
 	gsl_rng_set(Generator,Seed);
 	// checking loop grown
 	if (!LoopPtr->Grown) {
@@ -829,19 +821,27 @@ uint Metropolis<Dim>::step(const uint& Num, const bool& firstStep) {
 		return 0.0;
 	}
 	// counter
-	number counter = 0.0;
+	number counter = 0.0, epsi = P->Epsi, g = P->G, b = P->B, t = P->T;
+	uint size = LoopPtr->size();
 	if (firstStep) {
-		// initializing S0
-		SOld = S0(*LoopPtr);
-		if (abs(G)>MIN_NUMBER) {
-			SOld += G*V1r(*LoopPtr,(*P).Epsi);
-			SOld -= (abs((*P).Epsi)>MIN_NUMBER? G*pi*L(*LoopPtr)/(*P).Epsi: 0.0);
-			//SOld -= G*(*P).B*(*P).T*I0(*LoopPtr);
+		// initializing Data
+		Data.L = L(*LoopPtr);
+		Data.S0 = S0(*LoopPtr);
+		Data.S = Data.S0;
+		Data.Sm = Sm(*LoopPtr);
+		if (abs(g)>MIN_NUMBER) {
+			Data.Vr = V1r(*LoopPtr,epsi);
+			Data.S += g*Data.Vr;
+			Data.S -= (abs(epsi)>MIN_NUMBER? g*pi*Data.L/epsi: 0.0);
+			Data.FGamma = (abs(epsi)>MIN_NUMBER? FGamma(*LoopPtr): 0.0);
+			Data.S -= (abs(epsi)>MIN_NUMBER? g*Data.FGamma*log(Data.L/epsi): 0.0);
+			Data.I0 = I0(*LoopPtr);
+			Data.S -= g*b*t*Data.I0;
 		}
 	}
 		
 	// defining some parameters
-	number sigma = 1.0/sqrt((number)LoopPtr->size());
+	number sigma = 1.0/sqrt((number)size);
 	uint loc, loc_pos, loc_neg;
 	number acc_prob, rand;
 	Point<Dim> temp;
@@ -850,35 +850,55 @@ uint Metropolis<Dim>::step(const uint& Num, const bool& firstStep) {
 	for (uint j=0; j<Num; j++) {
 	
 		// choosing location to change
-		loc = (uint)(gsl_rng_uniform (Generator)*LoopPtr->size());
+		loc = (uint)(gsl_rng_uniform (Generator)*size);
 	
 		// calculating generation probability and generating new point
-		loc_pos = (loc==(LoopPtr->size()-1)? 0: loc+1);
-		loc_neg = (loc==0? LoopPtr->size()-1: loc-1);
+		loc_pos = (loc==(size-1)? 0: loc+1);
+		loc_neg = (loc==0? size-1: loc-1);
 		temp = (LoopPtr->Points[loc_pos] + LoopPtr->Points[loc_neg])/2.0;
 		for (uint n=0; n<Dim; n++)
 			temp[n] += gsl_ran_gaussian(Generator, sigma); //gsl_ran_gaussian_ziggurat is another option
 	
 		// calculating change in action
-		SChange = DS0<Dim>(*LoopPtr, temp, loc);
-		if (abs(G)>MIN_NUMBER) {
-			SChange += G*DV1r<Dim>(*LoopPtr, temp, loc,(*P).Epsi);	
-			SChange -= (abs((*P).Epsi)>MIN_NUMBER? G*pi*DL(*LoopPtr, temp, loc)/(*P).Epsi: 0.0);
-			//SChange -= G*(*P).B*(*P).T*DI0(*LoopPtr, temp, loc);
+		DataChange.S0 = DS0(*LoopPtr, temp, loc);
+		DataChange.S = DataChange.S0;
+		DataChange.Sm = DSm(*LoopPtr, temp, loc);
+		if (abs(g)>MIN_NUMBER) {
+			DataChange.Vr = DV1r<Dim>(*LoopPtr, temp, loc, epsi);	
+			DataChange.S += g*DataChange.Vr;
+			DataChange.S += (abs(epsi)>MIN_NUMBER? Data.FGamma*log(Data.L/epsi): 0.0);
+			DataChange.L = DL(*LoopPtr, temp, loc);
+			DataChange.FGamma = (abs(epsi)>MIN_NUMBER? DFGamma(*LoopPtr, temp, loc): 0.0);
+			DataChange.S -= (abs(epsi)>MIN_NUMBER? g*pi*DataChange.L/epsi: 0.0);
+			DataChange.S -= (abs(epsi)>MIN_NUMBER? g*(Data.FGamma+DataChange.FGamma)*log((Data.L+DataChange.L)/epsi): 0.0);
+			DataChange.I0 = DI0(*LoopPtr, temp, loc);
+			DataChange.S -= g*b*t*DataChange.I0;
 		}
 	
 		// accepting new point according to acceptance probability
-		if (SChange<0.0) {
+		if (DataChange.S<0.0) {
 			LoopPtr->Points[loc] = temp;
-			SOld += SChange;
+			Data.S += DataChange.S;
+			Data.L += DataChange.L;
+			Data.S0 += DataChange.S0;
+			Data.Vr += DataChange.Vr;
+			Data.FGamma += DataChange.FGamma;
+			Data.I0 += DataChange.I0;
+			Data.Sm += DataChange.Sm;
 			counter++;
 		}
-		else if (SChange<-LOG_MIN_NUMBER) {
-			acc_prob = gsl_sf_exp(-SChange);
+		else if (DataChange.S<-LOG_MIN_NUMBER) {
+			acc_prob = gsl_sf_exp(-DataChange.S);
 			rand = gsl_rng_uniform(Generator);
 			if (rand<acc_prob) {
 				LoopPtr->Points[loc] = temp;
-				SOld += SChange;
+				Data.S += DataChange.S;
+				Data.L += DataChange.L;
+				Data.S0 += DataChange.S0;
+				Data.Vr += DataChange.Vr;
+				Data.FGamma += DataChange.FGamma;
+				Data.I0 += DataChange.I0;
+				Data.Sm += DataChange.Sm;
 				counter++;
 			}
 		}
@@ -886,7 +906,16 @@ uint Metropolis<Dim>::step(const uint& Num, const bool& firstStep) {
 	}
 	Steps += counter;
 	LoopPtr->centre();
+	data = Data;
 	return Steps;
+}
+
+
+// Step
+template <uint Dim>
+uint Metropolis<Dim>::step(const uint& Num, const bool& firstStep) {
+	MetropolisData dross;
+	return step(Num,firstStep,dross);
 }
 
 
@@ -910,6 +939,7 @@ template number Sm<4> (const Loop<4>& l);
 template number DSm<4> (const Loop<4>& l, const Point<4>& p, const uint& loc);
 template number KG<4> (const Loop<4>& l);
 template number S0<4> (const Loop<4>& l);
+template number DS0<4> (const Loop<4>& l, const Point<4>& p, const uint& loc);
 template number FGamma<4> (const Loop<4>& l);
 template number DFGamma<4> (const Loop<4>& l, const Point<4>& p, const uint& loc);
 template class Metropolis<4>;
@@ -1021,16 +1051,17 @@ template <> number DV1<4> (const Loop<4>& l, const Point<4>& p, const uint& loc)
 template <> number DV1r<4> (const Loop<4>& l, const Point<4>& p, const uint& loc, const number& a) {
 	uint posj, posloc = (loc!=(l.size()-1)?loc+1:0);
 	uint negloc = (loc!=0?loc-1:(l.size()-1));
+	number a2 = a*a;
 	
-	number result = Dot(l[posloc],p,p,l[negloc])/(DistanceSquared(l[negloc],p)+a*a)\
-						- Dot(l[posloc],l[loc],l[loc],l[negloc])/(DistanceSquared(l[negloc],l[loc])+a*a);
+	number result = Dot(l[posloc],p,p,l[negloc])/(DistanceSquared(l[negloc],p)+a2)\
+						- Dot(l[posloc],l[loc],l[loc],l[negloc])/(DistanceSquared(l[negloc],l[loc])+a2);
 
 	for (uint j=0; j<l.size(); j++) {
 		if (j!=loc && j!=negloc) {
 			posj = (j!=(l.size()-1)?j+1:0);
-			result += Dot(p,l[loc],l[posj],l[j])/(DistanceSquared(l[negloc],l[j])+a*a)\
-					+ Dot(l[posloc],p,l[posj],l[j])/(DistanceSquared(p,l[j])+a*a)\
-					- Dot(l[posloc],l[loc],l[posj],l[j])/(DistanceSquared(l[loc],l[j])+a*a);
+			result += Dot(p,l[loc],l[posj],l[j])/(DistanceSquared(l[negloc],l[j])+a2)\
+					+ Dot(l[posloc],p,l[posj],l[j])/(DistanceSquared(p,l[j])+a2)\
+					- Dot(l[posloc],l[loc],l[posj],l[j])/(DistanceSquared(l[loc],l[j])+a2);
 		}
 	}
 	return 2.0*result;
