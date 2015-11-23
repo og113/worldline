@@ -18,10 +18,10 @@ cout << "testDV" << endl;
 
 #define dim 4
 
-uint K=8, Length = pow(2,K);
+uint K=4, Length = pow(2,K);
 uint Seed = 1;
-string file = "data/s0/loops/dim_"+nts<uint>(dim)+"/K_"+nts<uint>(K)+"/loop_run_0.dat";
-//string file = "data/circle/loops/dim_"+nts<uint>(dim)+"/K_"+nts<uint>(K)+"/loop_R_1_rank_0.dat";
+//string file = "data/s0/loops/dim_"+nts<uint>(dim)+"/K_"+nts<uint>(K)+"/loop_run_0.dat";
+string file = "data/circle/loops/dim_"+nts<uint>(dim)+"/K_"+nts<uint>(K)+"/loop_R_1_rank_0.dat";
 
 cout << "loading from " << file << endl;
 
@@ -78,6 +78,17 @@ cout << "difference = " << c-d << endl << endl;
 
 c = FGamma(loop_new)-FGamma(loop);
 d = DFGamma(loop,p,loc);
+number gamma = 2.0*pi/(number)loop.size();
+number temp, cot_gamma;
+temp = Dot(loop[2],loop[1],loop[1],loop[0]);
+cot_gamma = DistanceSquared(loop[2],loop[1])*DistanceSquared(loop[1],loop[0]) - temp*temp;
+cot_gamma = temp/sqrt(cot_gamma);
+
+cout << "gamma for circle = " << gamma << ", " << atan(1.0/cot_gamma) << endl;
+cout << "FGamma per site = " << (gamma/tan(gamma)-1.0) << ", " << cot_gamma*atan(1.0/cot_gamma)-1.0 << endl;
+cout << "FGamma for circle = " << loop.size()*(gamma/tan(gamma)-1.0) << ", ";
+cout << loop.size()*(cot_gamma*atan(1.0/cot_gamma)-1.0) << endl << endl;
+
 cout << "FGamma = " << FGamma(loop) << endl;
 cout << "FGamma'-FGamma = " << c << endl;
 cout << "DFGamma = " << d << endl;

@@ -732,7 +732,7 @@ number FGamma (const Loop<Dim>& l) {
 	uint posj = 1, negj = l.size()-1;
 	for (uint j=0; j<l.size(); j++) {	
 		temp = Dot(l[posj],l[j],l[j],l[negj]);
-		cot_gamma = Distance(l[posj],l[j])*Distance(l[j],l[negj]) - temp;
+		cot_gamma = DistanceSquared(l[posj],l[j])*DistanceSquared(l[j],l[negj]) - temp*temp;
 		cot_gamma = temp/sqrt(cot_gamma);
 		result += cot_gamma*atan(1.0/cot_gamma);
 		posj = ((j+1)!=(l.size()-1)?j+2:0);
@@ -751,12 +751,12 @@ number DFGamma (const Loop<Dim>& l, const Point<Dim>& p, const uint& loc) {
 	
 	for (uint k=0; k<3; k++) {
 		temp = Dot(l[pj],l[j],l[j],l[nj]);
-		cot_gamma = Distance(l[pj],l[j])*Distance(l[j],l[nj]) - temp;
+		cot_gamma = DistanceSquared(l[pj],l[j])*DistanceSquared(l[j],l[nj]) - temp*temp;
 		cot_gamma = temp/sqrt(cot_gamma);
 		result -= cot_gamma*atan(1.0/cot_gamma);
 		
 		temp = Dot((pj==loc?p:l[pj]),(j==loc?p:l[j]),(j==loc?p:l[j]),(nj==loc?p:l[nj]));
-		cot_gamma = Distance((pj==loc?p:l[pj]),(j==loc?p:l[j]))*Distance((j==loc?p:l[j]),(nj==loc?p:l[nj])) - temp;
+		cot_gamma = DistanceSquared((pj==loc?p:l[pj]),(j==loc?p:l[j]))*DistanceSquared((j==loc?p:l[j]),(nj==loc?p:l[nj])) - temp*temp;
 		cot_gamma = temp/sqrt(cot_gamma);
 		result += cot_gamma*atan(1.0/cot_gamma);
 		
