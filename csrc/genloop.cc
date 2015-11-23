@@ -738,7 +738,7 @@ number FGamma (const Loop<Dim>& l) {
 		posj = ((j+1)!=(l.size()-1)?j+2:0);
 		negj = j;
 	}
-	return result;
+	return result; // CHECK THAT THIS IS RIGHT!!!!!
 }
 
 // DFGamma
