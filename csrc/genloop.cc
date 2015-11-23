@@ -378,7 +378,8 @@ void Loop<Dim>::saveAscii(const string& f) const {
 	ofstream os;
 	os.open(f.c_str());
 	if (os.good()) {
-		os << *this;
+		for (uint j=0; j<size(); j++)
+			os << Points[j] << endl;
 		os.close();
 	}
 	else {
@@ -435,7 +436,9 @@ void Loop<Dim>::loadAscii(const string& f) {
 		ifstream is;
 		is.open(f.c_str());
 		if (is.good()) {
-			is >> *this;
+			for (uint j=0; j<size(); j++)
+				is >> Points[j];
+			Grown = true;
 			is.close();
 		}
 		else {
@@ -483,23 +486,6 @@ void Loop<Dim>::setLength(const number& L) {
 	else {
 		cerr << "Loop::setLength error: oldLength = 0.0 " << endl;
 	}
-}
-
-// stream <<
-template <uint Dim>
-ostream& operator<< (ostream& os,const Loop<Dim>& l) {
-	for (uint j=0; j<l.Length; j++)
-		os << l.Points[j] << endl;
-	return os;
-}
-
-// stream >>
-template <uint Dim>
-istream& operator>> (istream& is, Loop<Dim>& l) {
-	for (uint j=0; j<l.Length; j++)
-		is >> l.Points[j];
-	l.Grown = true;
-	return is;
 }
 
 /*----------------------------------------------------------------------------------------------------------------------------
@@ -739,6 +725,48 @@ number DI0 (const Loop<Dim>& l, const Point<Dim>& p, const uint& loc) {
 	return 0;
 }
 
+// FGamma = gamma*cot(gamma)-1
+template <uint Dim>
+number FGamma (const Loop<Dim>& l) {
+	number result = -(number)l.size(), cot_gamma, temp;
+	uint posj = 1, negj = l.size()-1;
+	for (uint j=0; j<l.size(); j++) {	
+		temp = Dot(l[posj],l[j],l[j],l[negj]);
+		cot_gamma = Distance(l[posj],l[j])*Distance(l[j],l[negj]) - temp;
+		cot_gamma = temp/sqrt(cot_gamma);
+		result += cot_gamma*atan(1.0/cot_gamma);
+		posj = ((j+1)!=(l.size()-1)?j+2:0);
+		negj = j;
+	}
+	return result;
+}
+
+// DFGamma
+template <uint Dim>
+number DFGamma (const Loop<Dim>& l, const Point<Dim>& p, const uint& loc) {
+	uint j = (loc!=0?loc-1:(l.size()-1));
+	uint nj = (j!=0?j-1:(l.size()-1));
+	uint pj = loc;
+	number temp, cot_gamma, result = 0.0;
+	
+	for (uint k=0; k<3; k++) {
+		temp = Dot(l[pj],l[j],l[j],l[nj]);
+		cot_gamma = Distance(l[pj],l[j])*Distance(l[j],l[nj]) - temp;
+		cot_gamma = temp/sqrt(cot_gamma);
+		result -= cot_gamma*atan(1.0/cot_gamma);
+		
+		temp = Dot((pj==loc?p:l[pj]),(j==loc?p:l[j]),(j==loc?p:l[j]),(nj==loc?p:l[nj]));
+		cot_gamma = Distance((pj==loc?p:l[pj]),(j==loc?p:l[j]))*Distance((j==loc?p:l[j]),(nj==loc?p:l[nj])) - temp;
+		cot_gamma = temp/sqrt(cot_gamma);
+		result += cot_gamma*atan(1.0/cot_gamma);
+		
+		nj = (nj==(l.size()-1)? 0 : nj+1);
+		j = (j==(l.size()-1)? 0 : j+1);
+		pj = (pj==(l.size()-1)? 0 : pj+1);
+	}
+	return result;
+}
+
 /*----------------------------------------------------------------------------------------------------------------------------
 	5 - Metropolis
 ----------------------------------------------------------------------------------------------------------------------------*/
@@ -783,7 +811,13 @@ void Metropolis<Dim>::setLoop(Loop<Dim>& L) {
 template <uint Dim>
 void Metropolis<Dim>::setSeed(const uint& s) {
 	Seed = s;
-}
+}// FGamma = gamma*cot(gamma)-1
+template <uint Dim>
+number FGamma (const Loop<Dim>& l);
+
+// DFGamma
+template <uint Dim>
+number DFGamma (const Loop<Dim>& l, const Point<Dim>& p, const uint& loc);
 
 // Step
 template <uint Dim>
@@ -870,13 +904,14 @@ template bool operator== <4>(const Point<4>& lhs, const Point<4>& rhs);
 template bool operator^= <4>(const Point<4>& lhs, const Point<4>& rhs);
 template number Distance(const Point<4>&, const Point<4>&);
 template class Loop<4>;
-template ostream& operator<< <4>(ostream& os,const Loop<4>& l);
 template number L<4> (const Loop<4>& l);
 template number DL<4> (const Loop<4>& l, const Point<4>& p, const uint& loc);
 template number Sm<4> (const Loop<4>& l);
 template number DSm<4> (const Loop<4>& l, const Point<4>& p, const uint& loc);
 template number KG<4> (const Loop<4>& l);
 template number S0<4> (const Loop<4>& l);
+template number FGamma<4> (const Loop<4>& l);
+template number DFGamma<4> (const Loop<4>& l, const Point<4>& p, const uint& loc);
 template class Metropolis<4>;
 
 // V0, Dim=4, slightly changed for speed
@@ -1012,7 +1047,6 @@ template bool operator== <2>(const Point<2>& lhs, const Point<2>& rhs);
 template bool operator^= <2>(const Point<2>& lhs, const Point<2>& rhs);
 template number Distance(const Point<2>&, const Point<2>&);
 template class Loop<2>;
-template ostream& operator<< <2>(ostream& os,const Loop<2>& l);
 template number L<2> (const Loop<2>& l);
 template number DL<2> (const Loop<2>& l, const Point<2>& p, const uint& loc);
 template number S0<2> (const Loop<2>& l);

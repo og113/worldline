@@ -76,5 +76,12 @@ cout << "I0'-I0 = " << c << endl;
 cout << "DI0 = " << d << endl;
 cout << "difference = " << c-d << endl << endl;
 
+c = FGamma(loop_new)-FGamma(loop);
+d = DFGamma(loop,p,loc);
+cout << "FGamma = " << FGamma(loop) << endl;
+cout << "FGamma'-FGamma = " << c << endl;
+cout << "DFGamma = " << d << endl;
+cout << "difference = " << c-d << endl << endl;
+
 return 0;
 }

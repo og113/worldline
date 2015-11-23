@@ -28,6 +28,7 @@ fl.grow();
 
 cout << S0(fl) << endl;
 
+cout << pi/2.0-atan(100000) << endl;
 
 return 0;
 }

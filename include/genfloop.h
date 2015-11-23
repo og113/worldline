@@ -207,7 +207,7 @@ private:
 
 // L
 template <uint Dim>
-number L (const FLoop<Dim>& l);
+number L (const FLoop<Dim>& l, const number& tol, number& error);
 
 // S0
 template <uint Dim>
@@ -215,7 +215,7 @@ number S0 (const FLoop<Dim>& l);
 
 // V1r
 template <uint Dim>
-number V1r (const FLoop<Dim>& l, const number& a);
+number V1r (const FLoop<Dim>& l, const number& a, const number& tol, number& error);
 
 /*----------------------------------------------------------------------------------------------------------------------------
 	5 - FMetropolis

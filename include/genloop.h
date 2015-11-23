@@ -140,14 +140,6 @@ number Dot(const Point<Dim>&, const Point<Dim>&, const Point<Dim>&, const Point<
 template <uint Dim>
 class Loop;
 
-// stream <<
-template <uint Dim>
-ostream& operator<< (ostream&,const Loop<Dim>&);
-
-// stream>>
-template <uint Dim>
-istream& operator>>(istream&,Loop<Dim>&);
-
 // Metropolis
 template <uint Dim>
 class Metropolis;
@@ -183,10 +175,6 @@ public:
 	// indexing
 	const Point<Dim>& operator[](const uint&) const;
 	Point<Dim>& operator[](const uint&);
-	
-	// stream <<, >>
-	friend ostream& operator<< <Dim>(ostream&,const Loop&);
-	friend istream& operator>> <Dim>(istream&, Loop&);
 	
 	// size
 	uint size() const;
@@ -280,6 +268,15 @@ number I0 (const Loop<Dim>& l);
 // DI0
 template <uint Dim>
 number DI0 (const Loop<Dim>& l, const Point<Dim>& p, const uint& loc);
+
+// FGamma = gamma*cot(gamma)-1
+template <uint Dim>
+number FGamma (const Loop<Dim>& l);
+
+// DFGamma
+template <uint Dim>
+number DFGamma (const Loop<Dim>& l, const Point<Dim>& p, const uint& loc);
+
 
 /*----------------------------------------------------------------------------------------------------------------------------
 	5 - Metropolis
