@@ -209,7 +209,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		uint Seed = time(NULL)+rank+2, steps_local = 0, steps;
 		Loop<dim> loop(p.K,Seed);
 		Metropolis<dim> met(loop,p,++Seed);
-		number fr, lp = 1.0/p.G/p.B;
+		number fr, vr, lp = 1.0/p.G/p.B;
 		MetropolisData md;
 		
 		// timing  metropolis
@@ -224,10 +224,11 @@ for (uint pl=0; pl<Npl; pl++) {
 		met.setSeed(time(NULL)+rank+2);
 		
 		if (rank==root && verbose) {
-			printf("%8s%12s%12s%12s%12s%12s%12s%12s%12s\n","sweep","S","Fr","S0","V","I","L","FGamma","Sm");
+			printf("%8s%12s%12s%12s%12s%12s%12s%12s%12s%12s\n","sweep","S","Fr","S0","V","Vr","I","L","FGamma","Sm");
 			fr = (md.I0<lp? 0.0: (-(pi*lp/2.0)*(md.I0-lp/2.0))+pi*md.I0*md.I0/4.0);
 			//f = (md.I0<lp? -pi*md.I0*md.I0/4.0: -(pi*lp/2.0)*(md.I0-lp/2.0));
-			printf("%8i%12.5g%12.5g%12.5g%12.5g%12.5g%12.5g%12.5g%12.5g\n",-1,md.S,fr,md.S0,md.Vr,md.I0,md.L,md.FGamma,md.Sm);
+			vr = md.V - pi*md.L/p.Epsi - md.FGamma*log(md.L/p.Epsi);
+			printf("%8i%12.5g%12.5g%12.5g%12.5g%12.5g%12.5g%12.5g%12.5g%12.5g\n",-1,md.S,fr,md.S0,md.V,vr,md.I0,md.L,md.FGamma,md.Sm);
 		}
 		
 		for (uint k=0; k<p.Nsw; k++) {
@@ -241,13 +242,14 @@ for (uint pl=0; pl<Npl; pl++) {
 		
 			fr = (md.I0<lp? 0.0: (-(pi*lp/2.0)*(md.I0-lp/2.0))+pi*md.I0*md.I0/4.0);
 			//f = (md.I0<lp? -pi*md.I0*md.I0/4.0: -(pi*lp/2.0)*(md.I0-lp/2.0));
+			vr = md.V - pi*md.L/p.Epsi - md.FGamma*log(md.L/p.Epsi);
 		
 			s0_data_local[k] = md.S0;
 			fr_data_local[k] = fr;
-			v_data_local[k] = md.Vr - pi*md.L/p.Epsi - md.FGamma*log(md.L/p.Epsi);
+			v_data_local[k] = vr;
 			
-			if (rank==root && verbose) {
-				printf("%8i%12.5g%12.5g%12.5g%12.5g%12.5g%12.5g%12.5g%12.5g\n",k,md.S,fr,md.S0,md.Vr,md.I0,md.L,md.FGamma,md.Sm);
+			if (rank==root && verbose) {	
+				printf("%8i%12.5g%12.5g%12.5g%12.5g%12.5g%12.5g%12.5g%12.5g%12.5g\n",k,md.S,fr,md.S0,md.V,vr,md.I0,md.L,md.FGamma,md.Sm);
 			}
 		
 		}

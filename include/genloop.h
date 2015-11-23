@@ -287,7 +287,7 @@ struct MetropolisData {
 	number L;
 	number S0;
 	number I0;
-	number Vr;
+	number V;
 	number FGamma;
 	number S;
 	number Sm;
