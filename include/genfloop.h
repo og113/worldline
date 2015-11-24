@@ -14,6 +14,7 @@
 #include <gsl/gsl_sf_exp.h> 	// Exponential functions
 #include <gsl/gsl_sf_log.h>		// Logarithm functions
 //#include <gsl/gsl_sf_gamma.h>   // Gamma functions
+#include <gsl/gsl_integration.h>
 #include "simple.h"
 #include "parameters.h"
 #include "genloop.h"
@@ -207,7 +208,12 @@ private:
 
 // L
 template <uint Dim>
-number L (const FLoop<Dim>& l, const number& tol, number& error);
+number L (FLoop<Dim>& l, \
+			const number& tol, const uint& wsize, gsl_integration_workspace* ws, number& error);
+			
+// L
+template <uint Dim>
+number L (FLoop<Dim>& l, number& error);
 
 // S0
 template <uint Dim>
@@ -215,7 +221,12 @@ number S0 (const FLoop<Dim>& l);
 
 // V1r
 template <uint Dim>
-number V1r (const FLoop<Dim>& l, const number& a, const number& tol, number& error);
+number V1r (const FLoop<Dim>& l, const number& a,\
+			 const number& tol, const uint& calls, number& error);
+			 
+// V1r
+template <uint Dim>
+number V1r (const FLoop<Dim>& l, const number& a, number& error);
 
 /*----------------------------------------------------------------------------------------------------------------------------
 	5 - FMetropolis

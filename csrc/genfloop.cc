@@ -500,14 +500,32 @@ istream& operator>> (istream& is, FLoop<Dim>& l) {
 
 // argL
 template <uint Dim>
-static number argL(const FLoop<Dim>& fl, const number& t) {
-	return Dot(fl.dX(t),fl.dX(t));
+static number argL(number t, void* void_fl) {
+	FLoop<Dim>* fl = (FLoop<Dim> *) void_fl;
+	return Dot(fl->dX(t),fl->dX(t));
 }
 
 // L
 template <uint Dim>
-number L (const FLoop<Dim>& fl) {
-	return 0.0;
+number L (FLoop<Dim>& l, \
+			const number& tol, const uint& wsize, gsl_integration_workspace* ws, number& error) {
+	gsl_function F;
+	F.function = &argL<Dim>;
+	F.params = &l;
+	number result;
+	gsl_integration_qags (&F, 0.0, 1.0, 0.0, tol, wsize, ws, &result, &error); 
+	return result;
+}
+			
+// L
+template <uint Dim>
+number L (FLoop<Dim>& l, number& error) {
+	number tol = 1.0e-7;
+	uint wsize = 1e3;
+	gsl_integration_workspace* ws = gsl_integration_workspace_alloc (wsize);;
+	number result = L(l,tol,wsize,ws,error);
+	gsl_integration_workspace_free(ws);
+	return result;
 }
 
 // S0
@@ -533,8 +551,15 @@ static number argV1r(const FLoop<Dim>& fl, const number& a, const number& t, con
 
 // V1r
 template <uint Dim>
-number V1r (const FLoop<Dim>& fl, const number& a) {
-	return 0.0;
+number V1r (const FLoop<Dim>& l, const number& a,\
+			 const number& tol, const uint& calls, number& error);
+			 
+// V1r
+template <uint Dim>
+number V1r (const FLoop<Dim>& l, const number& a, number& error) {
+	number tol = 1.0e-2;
+	uint calls = 1e5;
+	return V1r(l,a,tol,calls,error);
 }
 
 /*----------------------------------------------------------------------------------------------------------------------------
@@ -557,6 +582,9 @@ template bool operator^= <2>(const FCoeff<2>& lhs, const FCoeff<2>& rhs);
 template class FLoop<2>;
 template ostream& operator<< <2>(ostream& os,const FLoop<2>& l);
 template number S0<2> (const FLoop<2>& l);
+template number argL<2>(number t, void* void_fl);
+template number L<2>(FLoop<2>& l, number& error);
+template number L<2>(FLoop<2>& l, const number& tol, const uint& wsize, gsl_integration_workspace* ws, number& error);
 
 // Dim=4
 template class FCoeff<4>;
@@ -570,3 +598,6 @@ template bool operator^= <4>(const FCoeff<4>& lhs, const FCoeff<4>& rhs);
 template class FLoop<4>;
 template ostream& operator<< <4>(ostream& os,const FLoop<4>& l);
 template number S0<4> (const FLoop<4>& l);
+template number argL<4>(number t, void* void_fl);
+template number L<4>(FLoop<4>& l, number& error);
+template number L<4>(FLoop<4>& l, const number& tol, const uint& wsize, gsl_integration_workspace* ws, number& error);

@@ -11,6 +11,7 @@
 #include <time.h>       /* time */
 #include <gsl/gsl_sf_exp.h>
 #include "genfloop.h"
+#include "genloop.h"
 #include "simple.h"
 
 
@@ -26,9 +27,10 @@ FLoop<2> fl(K,Seed);
 
 fl.grow();
 
-cout << S0(fl) << endl;
+number error;
 
-cout << pi/2.0-atan(100000) << endl;
+cout << S0(fl) << endl;
+cout << L(fl,error) << ", error = " << error << endl;
 
 return 0;
 }
