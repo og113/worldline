@@ -18,7 +18,7 @@ cout << "testDV" << endl;
 
 #define dim 4
 
-uint K=8, Length = pow(2,K);
+uint K=10, Length = pow(2,K);
 uint Seed = 1;
 string file = "data/s0/loops/dim_"+nts<uint>(dim)+"/K_"+nts<uint>(K)+"/loop_run_0.dat";
 //string file = "data/circle/loops/dim_"+nts<uint>(dim)+"/K_"+nts<uint>(K)+"/loop_R_1_rank_0.dat";
@@ -39,24 +39,27 @@ cout << "to point: "<< endl << p << endl << endl;
 	
 loop_new[loc] = p;
 
-number c = V1(loop_new)-V1(loop);
+number v1 = V1(loop);
+number c = V1(loop_new)-v1;
 number d = DV1(loop,p,loc);
-cout << "V1 = " << V1(loop) << endl;
+cout << "V1 = " << v1 << endl;
 cout << "V1'-V1 = " << c << endl;
 cout << "DV1 = " << d << endl;
 cout << "difference = " << c-d << endl << endl;
 
-number a = 0.01;
-c = V1r(loop_new,a)-V1r(loop,a);
+number a = 0.1;
+number v1r = V1r(loop,a);
+c = V1r(loop_new,a)-v1r;
 d = DV1r(loop,p,loc,a);
-cout << "V1r = " << V1r(loop,a) << endl;
+cout << "V1r = " << v1r << endl;
 cout << "V1r'-V1r = " << c << endl;
 cout << "DV1r = " << d << endl;
 cout << "difference = " << c-d << endl << endl;
 
-c = V0(loop_new)-V0(loop);
+number v0 = V0(loop);
+c = V0(loop_new)-v0;
 d = DV0(loop,p,loc);
-cout << "V0 = " << V0(loop) << endl;
+cout << "V0 = " << v0 << endl;
 cout << "V0'-V0 = " << c << endl;
 cout << "DV0 = " << d << endl;
 cout << "aprxDV0 = " << aprxDV0(loop,p,loc) << endl;
@@ -78,10 +81,33 @@ cout << "difference = " << c-d << endl << endl;
 
 c = FGamma(loop_new)-FGamma(loop);
 d = DFGamma(loop,p,loc);
+number gamma = 2.0*pi/(number)loop.size();
+number temp, cot_gamma;
+temp = Dot(loop[2],loop[1],loop[1],loop[0]);
+cot_gamma = DistanceSquared(loop[2],loop[1])*DistanceSquared(loop[1],loop[0]) - temp*temp;
+cot_gamma = temp/sqrt(cot_gamma);
+
+cout << "gamma for circle = " << gamma << ", " << atan(1.0/cot_gamma) << endl;
+cout << "FGamma per site = " << (gamma/tan(gamma)-1.0) << ", " << cot_gamma*atan(1.0/cot_gamma)-1.0 << endl;
+cout << "FGamma for circle = " << loop.size()*(gamma/tan(gamma)-1.0) << ", ";
+cout << loop.size()*(cot_gamma*atan(1.0/cot_gamma)-1.0) << endl << endl;
+
 cout << "FGamma = " << FGamma(loop) << endl;
 cout << "FGamma'-FGamma = " << c << endl;
 cout << "DFGamma = " << d << endl;
 cout << "difference = " << c-d << endl << endl;
+
+c = S0(loop_new)-S0(loop);
+d = DS0(loop,p,loc);
+cout << "S0 = " << S0(loop) << endl;
+cout << "S0'-S0 = " << c << endl;
+cout << "DS0 = " << d << endl;
+cout << "difference = " << c-d << endl << endl;
+
+cout << "DeltaGamma = " << FGamma(loop)*log(L(loop)/a) << endl;
+cout << "DeltaSelfErg = " << pi*L(loop)/a << endl;
+cout << "V1r - Deltas = " << v1r-pi*L(loop)/a-FGamma(loop)*log(L(loop)/a) << endl;
+cout << "2*pi*pi = " << -2.0*pi*pi << endl;
 
 return 0;
 }

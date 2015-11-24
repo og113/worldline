@@ -282,6 +282,17 @@ number DFGamma (const Loop<Dim>& l, const Point<Dim>& p, const uint& loc);
 	5 - Metropolis
 ----------------------------------------------------------------------------------------------------------------------------*/
 
+// Metropolis Data
+struct MetropolisData {
+	number L;
+	number S0;
+	number I0;
+	number V;
+	number FGamma;
+	number S;
+	number Sm;
+};
+
 // Metropolis
 template <uint Dim>
 class Metropolis {
@@ -292,6 +303,7 @@ public:
 	
 	// step
 	uint				step(const uint&, const bool& firstStep);
+	uint				step(const uint&, const bool& firstStep, MetropolisData& data);
 	
 	// set seed, loop
 	void 				setSeed(const uint&);
@@ -300,9 +312,8 @@ public:
 private:
 	uint				Seed;
 	uint				Steps;
-	number				G;
-	number				SOld;
-	number				SChange;
+	MetropolisData		Data;
+	MetropolisData		DataChange;
 	gsl_rng* 			Generator;
 	const Parameters*		P;
 	Loop<Dim>*			LoopPtr;

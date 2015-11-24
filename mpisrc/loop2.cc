@@ -209,7 +209,8 @@ for (uint pl=0; pl<Npl; pl++) {
 		uint Seed = time(NULL)+rank+2, steps_local = 0, steps;
 		Loop<dim> loop(p.K,Seed);
 		Metropolis<dim> met(loop,p,++Seed);
-		number s0, v, I, fr, lp = 1.0/p.G/p.B, len, smooth, kg;
+		number fr, vr, lp = 1.0/p.G/p.B;
+		MetropolisData md;
 		
 		// timing  metropolis
 		clock_t time_run = 0.0;
@@ -219,52 +220,36 @@ for (uint pl=0; pl<Npl; pl++) {
 		loop.load(loadFile);
 	
 		// doing dummy metropolis runs
-		met.step(p.Nig*Np,true);
+		met.step(p.Nig*Np,true,md);
 		met.setSeed(time(NULL)+rank+2);
 		
 		if (rank==root && verbose) {
-			printf("%8s%12s%12s%12s%12s%12s%12s%12s\n","sweep","S0","V","I","Fr","L","Sm","KG");
-			len = L(loop);
-			s0 = S0(loop);
-			I = I0(loop);
-			//w = gsl_sf_cos(p.G*I0(loop));
-			v = p.G*V1r(loop,p.Epsi);
-			v -= (abs(p.Epsi)>MIN_NUMBER? p.G*pi*len/p.Epsi: 0.0);
-			//z = (v>-LOG_MIN_NUMBER? 0.0: gsl_sf_exp(-v));
-			fr = (I<lp? 0.0: (-(pi*lp/2.0)*(I-lp/2.0))+pi*I*I/4.0);
-			//f = (I<lp? -pi*I*I/4.0: -(pi*lp/2.0)*(I-lp/2.0));
-			smooth = Sm(loop);
-			kg = KG(loop);
-			printf("%8i%12.5g%12.5g%12.5g%12.5g%12.5g%12.5g%12.5g\n",-1,s0,v,I,fr,len,smooth,kg);
+			printf("%8s%12s%12s%12s%12s%12s%12s%12s%12s%12s\n","sweep","S","Fr","S0","V","Vr","I","L","FGamma","Sm");
+			fr = (md.I0<lp? 0.0: (-(pi*lp/2.0)*(md.I0-lp/2.0))+pi*md.I0*md.I0/4.0);
+			//f = (md.I0<lp? -pi*md.I0*md.I0/4.0: -(pi*lp/2.0)*(md.I0-lp/2.0));
+			vr = md.V - pi*md.L/p.Epsi - md.FGamma*log(md.L/p.Epsi);
+			printf("%8i%12.5g%12.5g%12.5g%12.5g%12.5g%12.5g%12.5g%12.5g%12.5g\n",-1,md.S,fr,md.S0,md.V,vr,md.I0,md.L,md.FGamma,md.Sm);
 		}
 		
 		for (uint k=0; k<p.Nsw; k++) {
 	
 			// metropolis runs per sweep
 			if (k==(p.Nsw-1))
-				steps_local = met.step(p.Npsw*Np,false);
+				steps_local = met.step(p.Npsw*Np,false,md);
 			else
-				met.step(p.Npsw*Np,false);
+				met.step(p.Npsw*Np,false,md);
 			met.setSeed(time(NULL)+k*1000+rank+2);
 		
-			len = L(loop);
-			s0 = S0(loop);
-			I = I0(loop);
-			//w = gsl_sf_cos(p.G*I0(loop));
-			v = p.G*V1r(loop,p.Epsi);
-			v -= (abs(p.Epsi)>MIN_NUMBER? p.G*pi*len/p.Epsi: 0.0);
-			//z = (v>-LOG_MIN_NUMBER? 0.0: gsl_sf_exp(-v));
-			fr = (I<lp? 0.0: (-(pi*lp/2.0)*(I-lp/2.0))+pi*I*I/4.0);
-			//f = (I<lp? -pi*I*I/4.0: -(pi*lp/2.0)*(I-lp/2.0));
+			fr = (md.I0<lp? 0.0: (-(pi*lp/2.0)*(md.I0-lp/2.0))+pi*md.I0*md.I0/4.0);
+			//f = (md.I0<lp? -pi*md.I0*md.I0/4.0: -(pi*lp/2.0)*(md.I0-lp/2.0));
+			vr = md.V - pi*md.L/p.Epsi - md.FGamma*log(md.L/p.Epsi);
 		
-			s0_data_local[k] = s0;
+			s0_data_local[k] = md.S0;
 			fr_data_local[k] = fr;
-			v_data_local[k] = v;
+			v_data_local[k] = vr;
 			
-			if (rank==root && verbose) {
-				smooth = Sm(loop);
-				kg = KG(loop);
-				printf("%8i%12.5g%12.5g%12.5g%12.5g%12.5g%12.5g%12.5g\n",-1,s0,v,I,fr,len,smooth,kg);
+			if (rank==root && verbose) {	
+				printf("%8i%12.5g%12.5g%12.5g%12.5g%12.5g%12.5g%12.5g%12.5g%12.5g\n",k,md.S,fr,md.S0,md.V,vr,md.I0,md.L,md.FGamma,md.Sm);
 			}
 		
 		}
