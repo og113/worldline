@@ -221,12 +221,12 @@ number S0 (const FLoop<Dim>& l);
 
 // V1r
 template <uint Dim>
-number V1r (const FLoop<Dim>& l, const number& a,\
+number V1r (FLoop<Dim>& l, const number& a,\
 			 const number& tol, const uint& calls, number& error);
 			 
 // V1r
 template <uint Dim>
-number V1r (const FLoop<Dim>& l, const number& a, number& error);
+number V1r (FLoop<Dim>& l, const number& a, number& error);
 
 /*----------------------------------------------------------------------------------------------------------------------------
 	5 - FMetropolis

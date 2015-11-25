@@ -154,9 +154,9 @@ FCoeff<Dim> operator/(const FCoeff<Dim>& lhs,const number& rhs) {
 // operator<<
 template <uint Dim>
 ostream& operator<<(ostream& os,const FCoeff<Dim>& p) {
-	os << left;
+	os << left << setprecision(16);
 	for (uint j=0; j<2*Dim; j++)
-		os << setw(15) << p[j];
+		os << setw(24) << p[j];
 	return os;
 }
 
@@ -435,7 +435,7 @@ Point<Dim> FLoop<Dim>::dX(const number& t) {
 	for (uint i=0; i<Size; i++) {
 		wti = wt*(number)(i+1.0);
 		for (uint j=0; j<Dim; j++) {
-			dx[j] += c*(i+1.0)*(-(FCoeffs[i])[2*j]*cos(wti) + (FCoeffs[i])[2*j+1]*sin(wti));
+			dx[j] += c*(i+1.0)*(-(FCoeffs[i])[2*j]*sin(wti) + (FCoeffs[i])[2*j+1]*cos(wti));
 		}
 	}
 	return dx;
@@ -502,23 +502,23 @@ istream& operator>> (istream& is, FLoop<Dim>& l) {
 template <uint Dim>
 static number argL(number t, void* void_fl) {
 	FLoop<Dim>* fl = (FLoop<Dim> *) void_fl;
-	return Dot(fl->dX(t),fl->dX(t));
+	return sqrt(Dot(fl->dX(t),fl->dX(t)));
 }
 
 // L
-template <uint Dim>
-number L (FLoop<Dim>& l, \
+template <uint Dim> //agrees with evaluation on mathematica
+number L (FLoop<Dim>& fl, \
 			const number& tol, const uint& wsize, gsl_integration_workspace* ws, number& error) {
 	gsl_function F;
 	F.function = &argL<Dim>;
-	F.params = &l;
+	F.params = &fl;
 	number result;
-	gsl_integration_qags (&F, 0.0, 1.0, 0.0, tol, wsize, ws, &result, &error); 
+	gsl_integration_qags(&F, 0.0, 1.0, 0.0, tol, wsize, ws, &result, &error); 
 	return result;
 }
 			
 // L
-template <uint Dim>
+template <uint Dim> //agrees with evaluation on mathematica
 number L (FLoop<Dim>& l, number& error) {
 	number tol = 1.0e-7;
 	uint wsize = 1e3;
@@ -529,37 +529,76 @@ number L (FLoop<Dim>& l, number& error) {
 }
 
 // S0
-template <uint Dim>
+template <uint Dim> //agrees with evaluation on mathematica
 number S0 (const FLoop<Dim>& fl) {
 	number result = 0.0;
 	for (uint i=0; i<fl.size(); i++) {
-		for (uint j=0; j<Dim; j++) {
+		for (uint j=0; j<2*Dim; j++) {
 			result += (fl[i])[j]*(fl[i])[j];
 		}
 	}
 	return result*pi*pi/2.0;
 }
 
+// paramsV1r
+template <uint Dim>
+struct paramsV1r {
+	FLoop<Dim>* fl;
+	number a;
+};
+
 // argV1r
 template <uint Dim>
-static number argV1r(const FLoop<Dim>& fl, const number& a, const number& t, const number& s) {
+static number argV1r(number* t, size_t dim, void* params) {
+	(void)(dim); /* avoid unused parameter warnings */
+	struct paramsV1r<Dim> *p = (struct paramsV1r<Dim> *) params;
+	number a = p->a;
+	FLoop<Dim>* fl = p->fl;
 	number denom = a*a, result;
-	denom += DistanceSquared(fl.X(t),fl.X(s));
-	result = Dot(fl.dX(t),fl.dX(s));
+	denom += DistanceSquared(fl->X(t[0]),fl->X(t[1]));
+	result = Dot(fl->dX(t[0]),fl->dX(t[1]));
 	return result/denom;
 }
 
 // V1r
 template <uint Dim>
-number V1r (const FLoop<Dim>& l, const number& a,\
-			 const number& tol, const uint& calls, number& error);
+number V1r (FLoop<Dim>& fl, const number& a, const number& tol, const uint& calls, number& error) {
+	number result;
+
+	number tl[2] = {0.0,0.0}, tu[2] = {1.0,1.0};
+	gsl_rng *Generator = gsl_rng_alloc(gsl_rng_taus); // could also use gsl_rng_default
+
+	paramsV1r<Dim> params;
+	params.a = a;
+	params.fl = &fl;	
+	gsl_monte_function gmcf = { &argV1r<Dim>, 2, &params };
+
+	gsl_rng_env_setup ();
+	
+	gsl_monte_vegas_state *s = gsl_monte_vegas_alloc (2);
+
+	gsl_monte_vegas_integrate (&gmcf, tl, tu, 2, calls/10, Generator, s, &result, &error);
+
+	uint counter = 0;
+	do {
+		gsl_monte_vegas_integrate (&gmcf, tl, tu, 2, calls/10, Generator, s, &result, &error);
+		counter++;
+	}
+	while (abs(gsl_monte_vegas_chisq(s) - 1.0) > 0.1 && counter<9);
+
+	gsl_monte_vegas_free (s);
+
+	gsl_rng_free(Generator);
+	
+	return result;			 
+}
 			 
 // V1r
 template <uint Dim>
-number V1r (const FLoop<Dim>& l, const number& a, number& error) {
+number V1r (FLoop<Dim>& fl, const number& a, number& error) {
 	number tol = 1.0e-2;
 	uint calls = 1e5;
-	return V1r(l,a,tol,calls,error);
+	return V1r(fl,a,tol,calls,error);
 }
 
 /*----------------------------------------------------------------------------------------------------------------------------
@@ -585,6 +624,10 @@ template number S0<2> (const FLoop<2>& l);
 template number argL<2>(number t, void* void_fl);
 template number L<2>(FLoop<2>& l, number& error);
 template number L<2>(FLoop<2>& l, const number& tol, const uint& wsize, gsl_integration_workspace* ws, number& error);
+template struct paramsV1r<2>;
+template number argV1r<2>(number* t, size_t dim, void* void_fl);
+template number V1r<2>(FLoop<2>& fl, const number& a, const number& tol, const uint& calls, number& error);
+template number V1r<2>(FLoop<2>& fl, const number& a, number& error);
 
 // Dim=4
 template class FCoeff<4>;
@@ -601,3 +644,7 @@ template number S0<4> (const FLoop<4>& l);
 template number argL<4>(number t, void* void_fl);
 template number L<4>(FLoop<4>& l, number& error);
 template number L<4>(FLoop<4>& l, const number& tol, const uint& wsize, gsl_integration_workspace* ws, number& error);
+template struct paramsV1r<4>;
+template number argV1r<4>(number* t, size_t dim, void* void_fl);
+template number V1r<4>(FLoop<4>& fl, const number& a, const number& tol, const uint& calls, number& error);
+template number V1r<4>(FLoop<4>& fl, const number& a, number& error);
