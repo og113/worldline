@@ -19,8 +19,8 @@ set title "<W>(TeB)"
 set xlabel "TeB"
 set ylabel "<W>
 
-set xrange [0.0000001:16]    
-plot "results/WvsgBT.dat" u 8:(($11-1-$8**2/6.0)):12 with yerrorbars ls 1, \
+set xrange [0:10]    
+plot "results/s0/floopOffice_dim_4.dat" u 8:(($11-1-$8**2/6.0)):12 with yerrorbars ls 1, \
 	p(x) with lines
 
 pause -1

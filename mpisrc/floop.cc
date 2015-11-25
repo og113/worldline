@@ -196,7 +196,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	uint Seed = time(NULL)+rank+2;
 	FLoop<dim> l(p.K,Seed);
 	uint counter = 0, id;
-	number w, v, z, I, f, lp = 1.0/p.G/p.B, ren, len, errorl, s0; // w, gbt = p.G*p.B*p.T; // n.b. mass=1, lp is large parameter for weak fields
+	number w, v, z, I, f, lp = 1.0/p.G/p.B, ren, len, errorl, s0, errorv, gbt = p.G*p.B*p.T; // n.b. mass=1, lp is large parameter for weak fields
 	number *sums_local = new number[Nq]();
 
 	for (uint j=0; j<Npw; j++) {
@@ -207,21 +207,23 @@ for (uint pl=0; pl<Npl; pl++) {
 		s0 = S0(l);
 		//s0 = l.length();
 		I = abs(I0(l));
-		//w = gsl_sf_exp(p.G*p.B*p.T*I);
+		//w = exp(p.G*p.B*p.T*I);
 		//w += 1.0/w;
 		//w /= 2.0;
-		//w = gsl_sf_cos(gbt*I0(l));
+		//w = cos(gbt*I0(l));
 		len = L(l,errorl); //doing nothing with errorl
-		ren = 0.0;//(abs(p.Epsi)>MIN_NUMBER? p.G*pi*len/p.Epsi: 0.0);
-		//v = p.G*V1r(l,p.Epsi);
+		ren = (abs(p.Epsi)>MIN_NUMBER? p.G*pi*len/p.Epsi: 0.0);
+		v = p.G*V1r(l,p.Epsi,errorv);
 		v -= ren;
 		z = gsl_sf_exp(-v);
+		v = 0.0;
+		z = 1.0;
 		if (abs(p.G)>MIN_NUMBER)
-			f = (I<lp? -pi*I*I/4.0: -(pi*lp/2.0)*(I-lp/2.0));
-			//fr = (I<lp? 0.0: -(pi*lp/2.0)*(I-lp/2.0))+pi*I*I/4.0;
+			//f = (I<lp? -pi*I*I/4.0: -(pi*lp/2.0)*(I-lp/2.0));
+			f = (I<lp? 0.0: -(pi*lp/2.0)*(I-lp/2.0))+pi*I*I/4.0;
 		else
 			f = 0.0;
-		//w *= z; v *= z; f *= z;
+		w *= z; v *= z; f *= z;
 		
 		sums_local[0] += s0;
 		sums_local[3] += f;
