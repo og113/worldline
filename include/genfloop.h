@@ -219,6 +219,10 @@ number L (FLoop<Dim>& l, number& error);
 template <uint Dim>
 number S0 (const FLoop<Dim>& l);
 
+// I0
+template <uint Dim>
+number I0 (const FLoop<Dim>& l);
+
 // V1r
 template <uint Dim>
 number V1r (FLoop<Dim>& l, const number& a,\

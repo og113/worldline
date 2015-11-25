@@ -179,7 +179,7 @@ ostream& FCoeff<Dim>::writeBinary(ostream& os) const {
 // readBinary
 template <uint Dim>
 istream& FCoeff<Dim>::readBinary(istream& is) {
-	for (uint j=0; j<Dim; j++)
+	for (uint j=0; j<2*Dim; j++)
 		is.read(reinterpret_cast<char*>(&(Coeffs[j])),sizeof(number));
 	return is;
 }	
@@ -370,7 +370,7 @@ template <uint Dim>
 void FLoop<Dim>::grow() {
 	Generator = gsl_rng_alloc(gsl_rng_taus);
 	gsl_rng_set(Generator,Seed);
-	double sigma = SQRT2/pi;
+	double sigma = 1.0/pi;
 		
 	for (uint i=0; i<Size; i++) {
 		for (uint j=0; j<Dim; j++) {
@@ -534,10 +534,16 @@ number S0 (const FLoop<Dim>& fl) {
 	number result = 0.0;
 	for (uint i=0; i<fl.size(); i++) {
 		for (uint j=0; j<2*Dim; j++) {
-			result += (fl[i])[j]*(fl[i])[j];
+			result += (i+1.0)*(i+1.0)*(fl[i])[j]*(fl[i])[j];
 		}
 	}
 	return result*pi*pi/2.0;
+}
+
+// I0
+template <uint Dim>
+number I0 (const FLoop<Dim>& fl) {
+	return 0.0;
 }
 
 // paramsV1r
@@ -648,3 +654,12 @@ template struct paramsV1r<4>;
 template number argV1r<4>(number* t, size_t dim, void* void_fl);
 template number V1r<4>(FLoop<4>& fl, const number& a, const number& tol, const uint& calls, number& error);
 template number V1r<4>(FLoop<4>& fl, const number& a, number& error);
+
+// I0, for Dim=4
+template <> number I0 <4>(const FLoop<4>& fl) {
+	number result = 0.0;
+	for (uint i=0; i<fl.size(); i++) {
+		result += (i+1.0)*((fl[i])[2*3+1]*(fl[i])[2*2]-(fl[i])[2*2+1]*(fl[i])[2*3]);
+	}
+	return result*pi;
+}

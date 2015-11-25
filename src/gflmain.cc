@@ -8,7 +8,7 @@
 #include <fstream>
 #include "simple.h"
 #include "folder.h"
-#include "genloop.h"
+#include "genfloop.h"
 #include "parameters.h"
 
 /*-------------------------------------------------------------------------------------------------------------------------
@@ -114,7 +114,7 @@ for (uint pl=0; pl<Npl; pl++) {
 
 		string file;
 		uint Seed = time(NULL), id;
-		Loop<dim> loop(p.K,Seed);
+		FLoop<dim> loop(p.K,Seed);
 
 		for (uint j=0; j<p.Nl; j++) {
 			id = j;
@@ -134,7 +134,7 @@ for (uint pl=0; pl<Npl; pl++) {
 			4 - printing one loop in ascii
 -------------------------------------------------------------------------------------------------------------------------*/
 
-	bool asciiPrint = true;
+	bool asciiPrint = false;
 	if (asciiPrint) {
 		string asciiFile = "data/temp/floopAscii.dat";
 		uint Seed = time(NULL)+p.Nl;
