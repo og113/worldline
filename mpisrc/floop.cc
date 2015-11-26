@@ -219,8 +219,8 @@ for (uint pl=0; pl<Npl; pl++) {
 		v = 0.0;
 		z = 1.0;
 		if (abs(p.G)>MIN_NUMBER)
-			//f = (I<lp? -pi*I*I/4.0: -(pi*lp/2.0)*(I-lp/2.0));
-			f = (I<lp? 0.0: -(pi*lp/2.0)*(I-lp/2.0))+pi*I*I/4.0;
+			f = (I<lp? -pi*I*I/4.0: -(pi*lp/2.0)*(I-lp/2.0));
+			//f = (I<lp? 0.0: -(pi*lp/2.0)*(I-lp/2.0))+pi*I*I/4.0;
 		else
 			f = 0.0;
 		//w *= z; v *= z; f *= z;
