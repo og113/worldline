@@ -20,7 +20,7 @@ set xlabel "TeB"
 set ylabel "<W>
 
 set xrange [0:10]    
-plot "results/s0/floopOffice_dim_4.dat" u 8:(($11-1-$8**2/6.0)):12 with yerrorbars ls 1, \
+plot "results/s0/floopOffice_dim_4.dat" u 8:(($13-1-$8**2/6.0)):14 with yerrorbars ls 1, \
 	p(x) with lines
 
 pause -1
