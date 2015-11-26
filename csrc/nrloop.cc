@@ -1,9 +1,6 @@
 /*
 	definitions for solving classical equations of motion for monopole worldline via newton-raphson method
 */
- 
-#ifndef __NRLOOP_H_INCLUDED__
-#define __NRLOOP_H_INCLUDED__
 
 #include <string>
 #include <vector>
@@ -18,6 +15,7 @@
 ----------------------------------------------------------------------------------------------------------------------------
 	contents:
 		1 - nr vector and matrix generation functions
+		2 - explicit instatiation
 ----------------------------------------------------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------------------------------------------------*/
 
@@ -100,4 +98,18 @@ void ddI_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const 
 	}
 }
 
-#endif // __NRLOOP_H_INCLUDED__
+/*----------------------------------------------------------------------------------------------------------------------------
+	2 - explicit instantiation
+----------------------------------------------------------------------------------------------------------------------------*/
+
+// dim 2
+template dI_nr<2>(const uint& j, const uint& mu, const Loop<2>& l, vec& v);
+template ddI_nr<2>(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<2>& l, mat& m);
+template dL_nr<2>(const uint& j, const uint& mu, const Loop<2>& l, vec& v);
+template ddL_nr<2>(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<2>& l, mat& m);
+
+// dim 4
+template dI_nr<4>(const uint& j, const uint& mu, const Loop<4>& l, vec& v);
+template ddI_nr<4>(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<4>& l, mat& m);
+template dL_nr<4>(const uint& j, const uint& mu, const Loop<4>& l, vec& v);
+template ddL_nr<4>(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<4>& l, mat& m);
