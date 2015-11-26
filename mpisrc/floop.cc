@@ -15,6 +15,7 @@
 #include <gsl/gsl_sf_trig.h>
 #include "folder.h"
 #include "genloop.h"
+#include "genfloop.h"
 #include "parameters.h"
 #include "simple.h"
 
@@ -57,7 +58,7 @@ if (rank==root)
 
 // data to print
 string dataChoice = "";
-string inputsFile = "inputs";
+string inputsFile = "inputs3";
 
 // getting argv
 if (argc % 2 && argc>1) {
@@ -169,7 +170,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	
 	// constructing folders
 	FilenameAttributes faMin, faMax;
-	faMin.Directory = "data/s0/loops/dim_"+nts<uint>(dim)+"/K_"+nts<uint>(p.K);
+	faMin.Directory = "data/s0/floops/dim_"+nts<uint>(dim)+"/K_"+nts<uint>(p.K);
 	faMin.Timenumber = "";
 	faMax = faMin;
 	(faMin.Extras).push_back(StringPair("run",nts<uint>(loopMin)));
@@ -193,9 +194,9 @@ for (uint pl=0; pl<Npl; pl++) {
 	----------------------------------------------------------------------------------------------------------------------------*/
 
 	uint Seed = time(NULL)+rank+2;
-	Loop<dim> l(p.K,Seed);
+	FLoop<dim> l(p.K,Seed);
 	uint counter = 0, id;
-	number w, v, z, I, f, lp = 1.0/p.G/p.B, ren, len, s0; // w, gbt = p.G*p.B*p.T; // n.b. mass=1, lp is large parameter for weak fields
+	number w, v, z, I, f, lp = 1.0/p.G/p.B, ren, len, errorl, s0, errorv, gbt = p.G*p.B*p.T; // n.b. mass=1, lp is large parameter for weak fields
 	number *sums_local = new number[Nq]();
 
 	for (uint j=0; j<Npw; j++) {
@@ -206,21 +207,23 @@ for (uint pl=0; pl<Npl; pl++) {
 		s0 = S0(l);
 		//s0 = l.length();
 		I = abs(I0(l));
-		//w = gsl_sf_exp(p.G*p.B*p.T*I);
+		//w = exp(p.G*p.B*p.T*I);
 		//w += 1.0/w;
 		//w /= 2.0;
-		//w = gsl_sf_cos(gbt*I0(l));
-		len = L(l);
-		ren = 0.0;//(abs(p.Epsi)>MIN_NUMBER? p.G*pi*len/p.Epsi: 0.0);
-		//v = p.G*V1r(l,p.Epsi);
+		//w = cos(gbt*I0(l));
+		len = L(l,errorl); //doing nothing with errorl
+		ren = (abs(p.Epsi)>MIN_NUMBER? p.G*pi*len/p.Epsi: 0.0);
+		v = p.G*V1r(l,p.Epsi,errorv);
 		v -= ren;
 		z = gsl_sf_exp(-v);
+		v = 0.0;
+		z = 1.0;
 		if (abs(p.G)>MIN_NUMBER)
-			f = (I<lp? -pi*I*I/4.0: -(pi*lp/2.0)*(I-lp/2.0));
-			//fr = (I<lp? 0.0: -(pi*lp/2.0)*(I-lp/2.0))+pi*I*I/4.0;
+			//f = (I<lp? -pi*I*I/4.0: -(pi*lp/2.0)*(I-lp/2.0));
+			f = (I<lp? 0.0: -(pi*lp/2.0)*(I-lp/2.0))+pi*I*I/4.0;
 		else
 			f = 0.0;
-		//w *= z; v *= z; f *= z;
+		w *= z; v *= z; f *= z;
 		
 		sums_local[0] += s0;
 		sums_local[3] += f;
@@ -306,7 +309,7 @@ for (uint pl=0; pl<Npl; pl++) {
 
 		string timenumber = currentDateTime();	
 	
-		Filename rf = "results/s0/loop_dim_"+nts<uint>(dim)+".dat";
+		Filename rf = "results/s0/floop_dim_"+nts<uint>(dim)+".dat";
 		rf.ID += "Office";
 //		rf.ID += "Cosmos";
 		FILE * ros;
@@ -319,7 +322,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		
 		cout << "results printed to " << rf << endl;
 		if (!dataChoice.empty()) {
-			rf = "data/s0/"+timenumber+dataChoice+"_dim_"+nts<uint>(dim)+"_K_"+nts<uint>(p.K)+".dat";
+			rf = "data/s0/local/"+timenumber+dataChoice+"_dim_"+nts<uint>(dim)+"_K_"+nts<uint>(p.K)+".dat";
 			ros = fopen(((string)rf).c_str(),"w");
 			for (uint j=0; j<p.Ng; j++) {
 				fprintf(ros,"%12s%5i%5i%8i%8i%8.5g%8.5g%8.5g%8i%13.5g\n",timenumber.c_str(),dim,p.K,p.Nl,p.Ng,p.G,p.B,p.T,j,data[j]);
