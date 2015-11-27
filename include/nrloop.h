@@ -34,18 +34,26 @@ typedef Eigen::MatrixXd mat;
 
 // dL_nr
 template<uint Dim>
-void dL_nr(const uint& j, const uint& mu, const Loop<Dim>& l, vec& v);
+void dL_nr(const uint& j, const uint& mu, const Loop<Dim>& l, const Parameters& p, vec& v);
 
 // ddL_nr
 template<uint Dim>
-void ddL_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l, mat& m);
+void ddL_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Parameters& p, const Loop<Dim>& l, mat& m);
 
 // dI_nr
 template<uint Dim>
-void dI_nr(const uint& j, const uint& mu, const Loop<Dim>& l, vec& v);
+void dI_nr(const uint& j, const uint& mu, const Loop<Dim>& l, const Parameters& p, vec& v);
 
 // ddI_nr
 template<uint Dim>
-void ddI_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l, mat& m);
+void ddI_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l, const Parameters& p, mat& m);
+
+// dS0_nr
+template<uint Dim>
+void dS0_nr(const uint& j, const uint& mu, const Loop<Dim>& l, const Parameters& p, vec& v);
+
+// ddS0_nr
+template<uint Dim>
+void ddS0_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l, const Parameters& p, mat& m);
 
 #endif // __NRLOOP_H_INCLUDED__

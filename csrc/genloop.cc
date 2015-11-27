@@ -832,7 +832,7 @@ uint Metropolis<Dim>::step(const uint& Num, const bool& firstStep, MetropolisDat
 		if (abs(g)>MIN_NUMBER) {
 			Data.V = V1r(*LoopPtr,epsi);
 			Data.S += g*Data.V;
-			Data.S -= (abs(epsi)>MIN_NUMBER? g*pi*Data.L/epsi: 0.0);
+			Data.S -= (abs(epsi)>MIN_NUMBER? g*PI*Data.L/epsi: 0.0);
 			Data.FGamma = (abs(epsi)>MIN_NUMBER? FGamma(*LoopPtr): 0.0);
 			Data.S -= (abs(epsi)>MIN_NUMBER? g*Data.FGamma*log(Data.L/epsi): 0.0);
 			Data.I0 = I0(*LoopPtr);
@@ -869,7 +869,7 @@ uint Metropolis<Dim>::step(const uint& Num, const bool& firstStep, MetropolisDat
 			DataChange.S += (abs(epsi)>MIN_NUMBER? Data.FGamma*log(Data.L/epsi): 0.0);
 			DataChange.L = DL(*LoopPtr, temp, loc);
 			DataChange.FGamma = (abs(epsi)>MIN_NUMBER? DFGamma(*LoopPtr, temp, loc): 0.0);
-			DataChange.S -= (abs(epsi)>MIN_NUMBER? g*pi*DataChange.L/epsi: 0.0);
+			DataChange.S -= (abs(epsi)>MIN_NUMBER? g*PI*DataChange.L/epsi: 0.0);
 			DataChange.S -= (abs(epsi)>MIN_NUMBER? g*(Data.FGamma+DataChange.FGamma)*log((Data.L+DataChange.L)/epsi): 0.0);
 			DataChange.I0 = DI0(*LoopPtr, temp, loc);
 			DataChange.S -= g*b*t*DataChange.I0;
@@ -1087,7 +1087,7 @@ template number DL<2> (const Loop<2>& l, const Point<2>& p, const uint& loc);
 template number S0<2> (const Loop<2>& l);
 template class Metropolis<2>;
 
-// V0, Dim=2, logarithmic, GF(x,y) = log(|x-y|)/2/pi
+// V0, Dim=2, logarithmic, GF(x,y) = log(|x-y|)/2/PI
 template <> number V0 <2>(const Loop<2>& l) {
 	number result = 2.0/DistanceSquared(l[1],l[0]);
 	for (uint j=2; j<l.size(); j++) {
@@ -1098,7 +1098,7 @@ template <> number V0 <2>(const Loop<2>& l) {
 	return result/pow(l.size()-1.0,2);
 }
 
-// DV0, Dim=2, logarithmic, GF(x,y) = log(|x-y|)/2/pi
+// DV0, Dim=2, logarithmic, GF(x,y) = log(|x-y|)/2/PI
 template <> number DV0 <2>(const Loop<2>& l, const Point<2>& p, const uint& loc) {
 	number result = 0.0;
 	for (uint j=0; j<l.size(); j++) {

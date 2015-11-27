@@ -225,9 +225,9 @@ for (uint pl=0; pl<Npl; pl++) {
 		
 		if (rank==root && verbose) {
 			printf("%8s%12s%12s%12s%12s%12s%12s%12s%12s%12s\n","sweep","S","Fr","S0","V","Vr","I","L","FGamma","Sm");
-			fr = (md.I0<lp? 0.0: (-(pi*lp/2.0)*(md.I0-lp/2.0))+pi*md.I0*md.I0/4.0);
-			//f = (md.I0<lp? -pi*md.I0*md.I0/4.0: -(pi*lp/2.0)*(md.I0-lp/2.0));
-			vr = md.V - pi*md.L/p.Epsi - md.FGamma*log(md.L/p.Epsi);
+			fr = (md.I0<lp? 0.0: (-(PI*lp/2.0)*(md.I0-lp/2.0))+PI*md.I0*md.I0/4.0);
+			//f = (md.I0<lp? -PI*md.I0*md.I0/4.0: -(PI*lp/2.0)*(md.I0-lp/2.0));
+			vr = md.V - PI*md.L/p.Epsi - md.FGamma*log(md.L/p.Epsi);
 			printf("%8i%12.5g%12.5g%12.5g%12.5g%12.5g%12.5g%12.5g%12.5g%12.5g\n",-1,md.S,fr,md.S0,md.V,vr,md.I0,md.L,md.FGamma,md.Sm);
 		}
 		
@@ -240,9 +240,9 @@ for (uint pl=0; pl<Npl; pl++) {
 				met.step(p.Npsw*Np,false,md);
 			met.setSeed(time(NULL)+k*1000+rank+2);
 		
-			fr = (md.I0<lp? 0.0: (-(pi*lp/2.0)*(md.I0-lp/2.0))+pi*md.I0*md.I0/4.0);
-			//f = (md.I0<lp? -pi*md.I0*md.I0/4.0: -(pi*lp/2.0)*(md.I0-lp/2.0));
-			vr = md.V - pi*md.L/p.Epsi - md.FGamma*log(md.L/p.Epsi);
+			fr = (md.I0<lp? 0.0: (-(PI*lp/2.0)*(md.I0-lp/2.0))+PI*md.I0*md.I0/4.0);
+			//f = (md.I0<lp? -PI*md.I0*md.I0/4.0: -(PI*lp/2.0)*(md.I0-lp/2.0));
+			vr = md.V - PI*md.L/p.Epsi - md.FGamma*log(md.L/p.Epsi);
 		
 			s0_data_local[k] = md.S0;
 			fr_data_local[k] = fr;

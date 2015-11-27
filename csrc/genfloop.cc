@@ -370,7 +370,7 @@ template <uint Dim>
 void FLoop<Dim>::grow() {
 	Generator = gsl_rng_alloc(gsl_rng_taus);
 	gsl_rng_set(Generator,Seed);
-	double sigma = 1.0/pi;
+	double sigma = 1.0/PI;
 		
 	for (uint i=0; i<Size; i++) {
 		for (uint j=0; j<Dim; j++) {
@@ -387,7 +387,7 @@ void FLoop<Dim>::grow() {
 template <uint Dim>
 const Point<Dim> FLoop<Dim>::X(const number& t) const {
 	Point<Dim> x;
-	double wt = 2.0*pi*t, wti;
+	double wt = 2.0*PI*t, wti;
 	for (uint i=0; i<Size; i++) {
 		wti = wt*(number)(i+1.0);
 		for (uint j=0; j<Dim; j++) {
@@ -401,7 +401,7 @@ const Point<Dim> FLoop<Dim>::X(const number& t) const {
 template <uint Dim>
 Point<Dim> FLoop<Dim>::X(const number& t) {
 	Point<Dim> x;
-	double wt = 2.0*pi*t, wti;
+	double wt = 2.0*PI*t, wti;
 	for (uint i=0; i<Size; i++) {
 		wti = wt*(number)(i+1.0);
 		for (uint j=0; j<Dim; j++) {
@@ -415,7 +415,7 @@ Point<Dim> FLoop<Dim>::X(const number& t) {
 template <uint Dim>
 const Point<Dim> FLoop<Dim>::dX(const number& t) const {
 	Point<Dim> dx;
-	double c = 2.0*pi;
+	double c = 2.0*PI;
 	double wt = c*t, wti;
 	for (uint i=0; i<Size; i++) {
 		wti = wt*(number)(i+1.0);
@@ -430,7 +430,7 @@ const Point<Dim> FLoop<Dim>::dX(const number& t) const {
 template <uint Dim>
 Point<Dim> FLoop<Dim>::dX(const number& t) {
 	Point<Dim> dx;
-	double c = 2.0*pi;
+	double c = 2.0*PI;
 	double wt = c*t, wti;
 	for (uint i=0; i<Size; i++) {
 		wti = wt*(number)(i+1.0);
@@ -445,7 +445,7 @@ Point<Dim> FLoop<Dim>::dX(const number& t) {
 template <uint Dim>
 const Point<Dim> FLoop<Dim>::ddX(const number& t) const {
 	Point<Dim> ddx;
-	double c = 2.0*pi, ci;
+	double c = 2.0*PI, ci;
 	double wt = c*t, wti;
 	c *= c;
 	for (uint i=0; i<Size; i++) {
@@ -462,7 +462,7 @@ const Point<Dim> FLoop<Dim>::ddX(const number& t) const {
 template <uint Dim>
 Point<Dim> FLoop<Dim>::ddX(const number& t) {
 	Point<Dim> ddx;
-	double c = 2.0*pi, ci;
+	double c = 2.0*PI, ci;
 	double wt = c*t, wti;
 	c *= c;
 	for (uint i=0; i<Size; i++) {
@@ -537,7 +537,7 @@ number S0 (const FLoop<Dim>& fl) {
 			result += (i+1.0)*(i+1.0)*(fl[i])[j]*(fl[i])[j];
 		}
 	}
-	return result*pi*pi/2.0;
+	return result*PI*PI/2.0;
 }
 
 // I0
@@ -661,5 +661,5 @@ template <> number I0 <4>(const FLoop<4>& fl) {
 	for (uint i=0; i<fl.size(); i++) {
 		result += (i+1.0)*((fl[i])[2*3+1]*(fl[i])[2*2]-(fl[i])[2*2+1]*(fl[i])[2*3]);
 	}
-	return result*pi;
+	return result*PI;
 }

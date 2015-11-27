@@ -12,8 +12,8 @@ declarations of some very simple functions and classes
 
 using namespace std;
 
-#ifndef pi
-#define pi 3.1415926535897932
+#ifndef PI
+#define PI 3.1415926535897932
 #endif
 #ifndef SQRT2
 #define SQRT2 1.4142135623730950
