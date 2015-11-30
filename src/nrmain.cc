@@ -243,12 +243,12 @@ for (uint pl=0; pl<Npl; pl++) {
 			Filename early = "data/temp/"+timenumber+"xEarly1_K_"+nts(p.K)+"_G_"+nts(p.G)+"_B_"+nts(p.B)+"_run_"+nts(runsCount)+".dat";
 			if (po==PrintOptions::x || po==PrintOptions::all) {
 				printAsLoop(early,dim,x);
-				printf("%12s%40s\n","x:",((string)early).c_str());
+				printf("%12s50\n","x:",((string)early).c_str());
 			}
 			if (po==PrintOptions::mds || po==PrintOptions::all) {
 				early.ID = "mdsEarly1";
 				printAsLoop(early,dim,mds);
-				printf("%12s%40s\n","mds:",((string)early).c_str());
+				printf("%12s50\n","mds:",((string)early).c_str());
 			}
 			
 		}
@@ -282,12 +282,12 @@ for (uint pl=0; pl<Npl; pl++) {
 			Filename early = "data/temp/"+timenumber+"xEarly2_K_"+nts(p.K)+"_G_"+nts(p.G)+"_B_"+nts(p.B)+"_run_"+nts(runsCount)+".dat";
 			if (po==PrintOptions::x || po==PrintOptions::all) {
 				printAsLoop(early,dim,x);
-				printf("%12s%40s\n","x:",((string)early).c_str());
+				printf("%12s50\n","x:",((string)early).c_str());
 			}
 			if (po==PrintOptions::mds || po==PrintOptions::all) {
 				early.ID = "mdsEarly2";
 				printAsLoop(early,dim,mds);
-				printf("%12s%40s\n","mds:",((string)early).c_str());
+				printf("%12s50\n","mds:",((string)early).c_str());
 			}
 		}
 
@@ -354,12 +354,12 @@ for (uint pl=0; pl<Npl; pl++) {
 		fprintf(ros,"%12s%8i%8i%8g%8g%8g%16.6g%16.6g%16.6g%12.4g\n",\
 					timenumber.c_str(),pl,p.K,p.G,p.B,p.Epsi,len,i0,s,checkSol.back());
 		fclose(ros);
-		printf("%12s%40s\n","results:",resFile.c_str());
+		printf("%12s50\n","results:",resFile.c_str());
 		
 		// printing loop to file
 		string loopRes = "data/nr/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_G_"+nts(p.G)+"_B_"+nts(p.B)+".dat";
 		saveVectorBinary(loopRes,x);
-		printf("%12s%40s\n","x:",loopRes.c_str());
+		printf("%12s50\n","x:",loopRes.c_str());
 		
 	}	
 
@@ -368,12 +368,12 @@ for (uint pl=0; pl<Npl; pl++) {
 		Filename file = "data/temp/"+timenumber+"x_K_"+nts(p.K)+"_G_"+nts(p.G)+"_B_"+nts(p.B)+"_run_"+nts(runsCount)+".dat";
 		if (po==PrintOptions::x || po==PrintOptions::all) {
 			saveVectorAscii(file,x);
-			printf("%12s%40s\n","x:",((string)file).c_str());
+			printf("%12s50\n","x:",((string)file).c_str());
 		}
 		else if (po==PrintOptions::mds || po==PrintOptions::all) {
 			file.ID = "mds";
 			saveVectorAscii(file,mds);
-			printf("%12s%40s\n","mds:",((string)file).c_str());
+			printf("%12s50\n","mds:",((string)file).c_str());
 		}
 	}
 

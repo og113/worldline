@@ -6,7 +6,7 @@ if (outFile ne 'gui') \
 set term fig size 1600,800; \
 set output outFile; \
 
-file="data/temp/projections.dat"
+file="data/temp/151130175433xEarly1_K_4_G_1_B_1_run_1.dat"
 
 unset log
 unset label
@@ -14,7 +14,7 @@ unset key
 set autoscale
 set xtic auto
 set ytic auto
-set title "2d loop"
+set title "4d loop"
 
 set multiplot layout 2,3 rowsfirst
 
