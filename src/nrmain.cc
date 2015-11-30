@@ -43,7 +43,7 @@ int main(int argc, char** argv) {
 
 // inputs file
 bool verbose = true;
-bool circle = false;
+bool circle = true;
 string printOpts = "";
 string inputsFile = "inputs3";
 
@@ -242,12 +242,15 @@ for (uint pl=0; pl<Npl; pl++) {
 		if (po!=PrintOptions::none) {
 			Filename early = "data/temp/"+timenumber+"xEarly1_K_"+nts(p.K)+"_G_"+nts(p.G)+"_B_"+nts(p.B)+"_run_"+nts(runsCount)+".dat";
 			if (po==PrintOptions::x || po==PrintOptions::all) {
-				saveVectorAscii(early,x);
+				printAsLoop(early,dim,x);
+				printf("%12s%40s\n","x:",((string)early).c_str());
 			}
-			else if (po==PrintOptions::mds || po==PrintOptions::all) {
+			if (po==PrintOptions::mds || po==PrintOptions::all) {
 				early.ID = "mdsEarly1";
-				saveVectorAscii(early,mds);
+				printAsLoop(early,dim,mds);
+				printf("%12s%40s\n","mds:",((string)early).c_str());
 			}
+			
 		}
 		
 /*----------------------------------------------------------------------------------------------------------------------------
@@ -278,11 +281,13 @@ for (uint pl=0; pl<Npl; pl++) {
 		if (po!=PrintOptions::none) {
 			Filename early = "data/temp/"+timenumber+"xEarly2_K_"+nts(p.K)+"_G_"+nts(p.G)+"_B_"+nts(p.B)+"_run_"+nts(runsCount)+".dat";
 			if (po==PrintOptions::x || po==PrintOptions::all) {
-				saveVectorAscii(early,x);
+				printAsLoop(early,dim,x);
+				printf("%12s%40s\n","x:",((string)early).c_str());
 			}
-			else if (po==PrintOptions::mds || po==PrintOptions::all) {
+			if (po==PrintOptions::mds || po==PrintOptions::all) {
 				early.ID = "mdsEarly2";
-				saveVectorAscii(early,mds);
+				printAsLoop(early,dim,mds);
+				printf("%12s%40s\n","mds:",((string)early).c_str());
 			}
 		}
 
@@ -329,32 +334,46 @@ for (uint pl=0; pl<Npl; pl++) {
 
 	//stopping clock
 	time = clock() - time;
-	double realtime = time/1000000.0;
+	number realtime = time/1000000.0;
 	
 	// printing results to terminal
-	///////////////////////////////////////////////////////////////////////////////////
+	printf("\n");
+	printf("%8s%8s%8s%8s%8s%8s%14s%14s%14s\n","runs","time","K","G","B","a","len",\
+		"i0","s");
+	printf("%8i%8g%8i%8g%8g%8g%14.5g%14.5g%14.5g\n",\
+		runsCount,realtime,p.K,p.G,p.B,p.Epsi,len,i0,s);
+	printf("\n");
 	
-	// printing results to file
-	string resFile = "results/nr/nrmain.dat";
-	///////////////////////////////////////////////////////////////////////////////////
-	printf("%12s%30s\n","results:",resFile.c_str());
 	
-	// printing loop to file
-	string loopRes = "data/nr/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_G_"+nts(p.G)+"_B_"+nts(p.B)+".dat";
-	saveVectorBinary(loopRes,x);
-	printf("%12s%30s\n","x:",loopRes.c_str());
+	if (checkDelta.good()) {
+	
+		// printing results to file	
+		string resFile = "results/nr/nrmain.dat";
+		FILE* ros;
+		ros = fopen(resFile.c_str(),"a");
+		fprintf(ros,"%12s%8i%8i%8g%8g%8g%16.6g%16.6g%16.6g%12.4g\n",\
+					timenumber.c_str(),pl,p.K,p.G,p.B,p.Epsi,len,i0,s,checkSol.back());
+		fclose(ros);
+		printf("%12s%40s\n","results:",resFile.c_str());
+		
+		// printing loop to file
+		string loopRes = "data/nr/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_G_"+nts(p.G)+"_B_"+nts(p.B)+".dat";
+		saveVectorBinary(loopRes,x);
+		printf("%12s%40s\n","x:",loopRes.c_str());
+		
+	}	
 
 	// printing extras to ascii files
 	if (po!=PrintOptions::none) {
 		Filename file = "data/temp/"+timenumber+"x_K_"+nts(p.K)+"_G_"+nts(p.G)+"_B_"+nts(p.B)+"_run_"+nts(runsCount)+".dat";
 		if (po==PrintOptions::x || po==PrintOptions::all) {
 			saveVectorAscii(file,x);
-			printf("%12s%30s\n","x:",file.c_str());
+			printf("%12s%40s\n","x:",((string)file).c_str());
 		}
 		else if (po==PrintOptions::mds || po==PrintOptions::all) {
-			early.ID = "mds";
+			file.ID = "mds";
 			saveVectorAscii(file,mds);
-			printf("%12s%30s\n","mds:",file.c_str());
+			printf("%12s%40s\n","mds:",((string)file).c_str());
 		}
 	}
 

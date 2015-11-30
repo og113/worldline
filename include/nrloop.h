@@ -69,5 +69,8 @@ void loopToVector(const Loop<Dim>& l, vec& v);
 template<uint Dim>
 void vectorToLoop(const vec& v, Loop<Dim>& l);
 
+// printAsLoop
+void printAsLoop(const string& f, const uint& Dim, const vec& v);
+
 
 #endif // __NRLOOP_H_INCLUDED__

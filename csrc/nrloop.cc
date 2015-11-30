@@ -6,6 +6,8 @@
 #include <vector>
 #include <Eigen/Dense>
 #include <iostream>
+#include <fstream>
+#include <iomanip>
 #include "simple.h"
 #include "parameters.h"
 #include "genloop.h"
@@ -148,6 +150,26 @@ void vectorToLoop(const vec& v, Loop<Dim>& l) {
 	for (j=0; j<l.size(); j++) {
 		for (k=0; k<Dim; k++)
 			(l[j])[k] = v[j*Dim+k];
+	}
+}
+
+// printAsLoop
+void printAsLoop(const string& f, const uint& Dim, const vec& v) {
+	if (v.size()%Dim==0) {
+		uint N = v.size()/Dim, mu;
+		ofstream os;
+		os.open(f.c_str());
+		os << left << setprecision(16);
+		for (uint j=0; j<N; j++) {
+			for (mu=0; mu<Dim; mu++) {
+				os << setw(24) << v[j*Dim+mu];
+			}
+			os << endl;
+		}
+		os.close();
+	}
+	else {
+		cerr << "printAsLoop error: v.size()%Dim!=0" << endl;
 	}
 }
 
