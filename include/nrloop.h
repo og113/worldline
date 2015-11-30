@@ -17,7 +17,8 @@
 ----------------------------------------------------------------------------------------------------------------------------
 	contents:
 		0 - typedefs
-		1 - nr vector and matrix generation functions
+		1 - nr loop functions
+		2 - loopToVector, vectorToLoop
 ----------------------------------------------------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------------------------------------------------*/
 
@@ -29,31 +30,44 @@ typedef Eigen::VectorXd vec;
 typedef Eigen::MatrixXd mat;
 
 /*----------------------------------------------------------------------------------------------------------------------------
-	1 - nr problem generation functions
+	1 - nr loop functions
 ----------------------------------------------------------------------------------------------------------------------------*/
 
-// dL_nr
+// mdL_nr
 template<uint Dim>
-void dL_nr(const uint& j, const uint& mu, const Loop<Dim>& l, const Parameters& p, vec& v);
+void mdL_nr(const uint& j, const uint& mu, const Loop<Dim>& l, const number& f, vec& v);
 
 // ddL_nr
 template<uint Dim>
-void ddL_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Parameters& p, const Loop<Dim>& l, mat& m);
+void ddL_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l, const number& f, mat& m);
 
-// dI_nr
+// mdI_nr
 template<uint Dim>
-void dI_nr(const uint& j, const uint& mu, const Loop<Dim>& l, const Parameters& p, vec& v);
+void mdI_nr(const uint& j, const uint& mu, const Loop<Dim>& l, const number& f, vec& v);
 
 // ddI_nr
 template<uint Dim>
-void ddI_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l, const Parameters& p, mat& m);
+void ddI_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l, const number& f, mat& m);
 
-// dS0_nr
+// mdS0_nr
 template<uint Dim>
-void dS0_nr(const uint& j, const uint& mu, const Loop<Dim>& l, const Parameters& p, vec& v);
+void mdS0_nr(const uint& j, const uint& mu, const Loop<Dim>& l, const number& f, vec& v);
 
 // ddS0_nr
 template<uint Dim>
-void ddS0_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l, const Parameters& p, mat& m);
+void ddS0_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l, const number& f, mat& m);
+
+/*----------------------------------------------------------------------------------------------------------------------------
+	2 - loopToVector, vectorToLoop
+----------------------------------------------------------------------------------------------------------------------------*/
+
+// loopToVector
+template<uint Dim>
+void loopToVector(const Loop<Dim>& l, vec& v);
+
+// vectorToLoop
+template<uint Dim>
+void vectorToLoop(const vec& v, Loop<Dim>& l);
+
 
 #endif // __NRLOOP_H_INCLUDED__
