@@ -67,16 +67,15 @@ cout << "using inputs file " << inputsFile << endl;
 
 PrintOptions::Option po = PrintOptions::none;
 if (!printOpts.empty()) {
-	if (printOpts.compare("all"))
+	if (printOpts.compare("all")==0)
 		po = PrintOptions::all;
-	else if (printOpts.compare("x"))
+	else if (printOpts.compare("x")==0)
 		po = PrintOptions::x;
-	else if (printOpts.compare("mds"))
+	else if (printOpts.compare("mds")==0)
 		po = PrintOptions::mds;
 	else
 		cerr << "print options not understood: " << printOpts << endl;
 }
-
 //dimension
 #define dim 4
 
@@ -158,6 +157,10 @@ for (uint pl=0; pl<Npl; pl++) {
 	// loading x
 	loadVectorBinary(loadFile,x);
 	x.conservativeResize(NT);
+	x[N*dim-4] = 0.001;
+	x[N*dim-3] = 0.001;
+	x[N*dim-2] = 0.001;
+	x[N*dim-1] = 0.001;
 	x[N*dim] = 1.0;
 	x[N*dim+1] = 1.0;
 	x[N*dim+2] = 1.0;
@@ -195,14 +198,16 @@ for (uint pl=0; pl<Npl; pl++) {
 		for (j=0; j<N; j++) {
 			for (mu=0; mu<dim; mu++) {
 			
-				mdL_nr(j,mu,xLoop,1.0,mds);
-				mdI_nr(j,mu,xLoop,gb,mds);
+				mdS0_nr(j,mu,xLoop,1.0,mds);
+				//mdL_nr(j,mu,xLoop,1.0,mds);
+				mdI_nr(j,mu,xLoop,-gb,mds);
 				
 				for (k=0; k<N; k++) {
 					for (nu=0; nu<dim; nu++) { // doing a full second loop for v
 					
-						ddL_nr(j,mu,k,nu,xLoop,1.0,dds); // check symmetry in (j,mu)<->(k,nu)
-						ddI_nr(j,mu,k,nu,xLoop,gb,dds);
+						ddS0_nr(j,mu,k,nu,xLoop,1.0,dds);
+						//ddL_nr(j,mu,k,nu,xLoop,1.0,dds); // check symmetry in (j,mu)<->(k,nu)
+						ddI_nr(j,mu,k,nu,xLoop,-gb,dds);
 						
 					}
 				}
@@ -243,12 +248,12 @@ for (uint pl=0; pl<Npl; pl++) {
 			Filename early = "data/temp/"+timenumber+"xEarly1_K_"+nts(p.K)+"_G_"+nts(p.G)+"_B_"+nts(p.B)+"_run_"+nts(runsCount)+".dat";
 			if (po==PrintOptions::x || po==PrintOptions::all) {
 				printAsLoop(early,dim,x);
-				printf("%12s50\n","x:",((string)early).c_str());
+				printf("%12s%50s\n","x:",((string)early).c_str());
 			}
 			if (po==PrintOptions::mds || po==PrintOptions::all) {
 				early.ID = "mdsEarly1";
 				printAsLoop(early,dim,mds);
-				printf("%12s50\n","mds:",((string)early).c_str());
+				printf("%12s%50s\n","mds:",((string)early).c_str());
 			}
 			
 		}
@@ -282,12 +287,12 @@ for (uint pl=0; pl<Npl; pl++) {
 			Filename early = "data/temp/"+timenumber+"xEarly2_K_"+nts(p.K)+"_G_"+nts(p.G)+"_B_"+nts(p.B)+"_run_"+nts(runsCount)+".dat";
 			if (po==PrintOptions::x || po==PrintOptions::all) {
 				printAsLoop(early,dim,x);
-				printf("%12s50\n","x:",((string)early).c_str());
+				printf("%12s%50s\n","x:",((string)early).c_str());
 			}
 			if (po==PrintOptions::mds || po==PrintOptions::all) {
 				early.ID = "mdsEarly2";
 				printAsLoop(early,dim,mds);
-				printf("%12s50\n","mds:",((string)early).c_str());
+				printf("%12s%50s\n","mds:",((string)early).c_str());
 			}
 		}
 
@@ -354,12 +359,12 @@ for (uint pl=0; pl<Npl; pl++) {
 		fprintf(ros,"%12s%8i%8i%8g%8g%8g%16.6g%16.6g%16.6g%12.4g\n",\
 					timenumber.c_str(),pl,p.K,p.G,p.B,p.Epsi,len,i0,s,checkSol.back());
 		fclose(ros);
-		printf("%12s50\n","results:",resFile.c_str());
+		printf("%12s%50s\n","results:",resFile.c_str());
 		
 		// printing loop to file
 		string loopRes = "data/nr/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_G_"+nts(p.G)+"_B_"+nts(p.B)+".dat";
 		saveVectorBinary(loopRes,x);
-		printf("%12s50\n","x:",loopRes.c_str());
+		printf("%12s%50s\n","x:",loopRes.c_str());
 		
 	}	
 
@@ -368,12 +373,12 @@ for (uint pl=0; pl<Npl; pl++) {
 		Filename file = "data/temp/"+timenumber+"x_K_"+nts(p.K)+"_G_"+nts(p.G)+"_B_"+nts(p.B)+"_run_"+nts(runsCount)+".dat";
 		if (po==PrintOptions::x || po==PrintOptions::all) {
 			saveVectorAscii(file,x);
-			printf("%12s50\n","x:",((string)file).c_str());
+			printf("%12s%50s\n","x:",((string)file).c_str());
 		}
 		else if (po==PrintOptions::mds || po==PrintOptions::all) {
 			file.ID = "mds";
 			saveVectorAscii(file,mds);
-			printf("%12s50\n","mds:",((string)file).c_str());
+			printf("%12s%50s\n","mds:",((string)file).c_str());
 		}
 	}
 
