@@ -332,10 +332,11 @@ for (uint pl=0; pl<Npl; pl++) {
 	double realtime = time/1000000.0;
 	
 	// printing results to terminal
+	///////////////////////////////////////////////////////////////////////////////////
 	
 	// printing results to file
 	string resFile = "results/nr/nrmain.dat";
-	
+	///////////////////////////////////////////////////////////////////////////////////
 	printf("%12s%30s\n","results:",resFile.c_str());
 	
 	// printing loop to file
