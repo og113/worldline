@@ -6,7 +6,7 @@ if (outFile ne 'gui') \
 set term fig size 1600,800; \
 set output outFile; \
 
-file="data/temp/151201145956xEarly1_K_8_G_1_B_1_run_38.dat"
+file="data/temp/151201162640mdsEarly1_K_8_G_1_B_1_run_1.dat"
 
 unset log
 unset label

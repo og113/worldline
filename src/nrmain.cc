@@ -158,7 +158,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	loadVectorBinary(loadFile,x);
 	x.conservativeResize(NT);
 	for (uint mu=0; mu<zm; mu++)
-		x[N*dim+mu] = 1.0;
+		x[N*dim+mu] = 0.1;
 	
 	//defining some quantities used to stop n-r loop
 	uint runsCount = 0;
