@@ -111,7 +111,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	else if (pr.toStep(label) && label==Parameters::nl)
 		p.Nl = (pr.Max).Nl;
 	uint N = pow(2,p.K);
-	uint zm = 4;
+	uint zm = dim;
 	uint NT = N*dim+zm;
 		
 /*----------------------------------------------------------------------------------------------------------------------------
@@ -127,7 +127,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	Check checkSolMax("solution max",1.0e-6);
 	Check checkDelta("delta",1.0);
 	Check checkSm("smoothness",1.0);
-	Check checkInv("inverse",1.0e-16*NT);
+	Check checkInv("inverse",1.0e-16*NT*NT);
 	
 	// defining scalar quantities
 	number len, i0, s, sm;
@@ -157,15 +157,8 @@ for (uint pl=0; pl<Npl; pl++) {
 	// loading x
 	loadVectorBinary(loadFile,x);
 	x.conservativeResize(NT);
-	x[N*dim-4] = 0.001;
-	x[N*dim-3] = 0.001;
-	x[N*dim-2] = 0.001;
-	x[N*dim-1] = 0.001;
-	x[N*dim] = 1.0;
-	x[N*dim+1] = 1.0;
-	x[N*dim+2] = 1.0;
-	x[N*dim+3] = 1.0;
-	
+	for (uint mu=0; mu<zm; mu++)
+		x[N*dim+mu] = 1.0;
 	
 	//defining some quantities used to stop n-r loop
 	uint runsCount = 0;
@@ -266,7 +259,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		vec delta(NT);
 		
 		// solving for delta = DDS^{-1}*mdS
-		delta = dds.ldlt().solve(mds);
+		delta = dds.partialPivLu().solve(mds);
 		
 		
 		//independent check on whether calculation worked		
@@ -288,11 +281,6 @@ for (uint pl=0; pl<Npl; pl++) {
 			if (po==PrintOptions::x || po==PrintOptions::all) {
 				printAsLoop(early,dim,x);
 				printf("%12s%50s\n","x:",((string)early).c_str());
-			}
-			if (po==PrintOptions::mds || po==PrintOptions::all) {
-				early.ID = "mdsEarly2";
-				printAsLoop(early,dim,mds);
-				printf("%12s%50s\n","mds:",((string)early).c_str());
 			}
 		}
 

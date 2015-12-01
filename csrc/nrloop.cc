@@ -106,7 +106,7 @@ template<uint Dim>
 void mdS0_nr(const uint& j, const uint& mu, const Loop<Dim>& l, const number& f, vec& v) {
 	uint pj = (j==(l.size()-1)? 0: j+1);
 	uint nj = (j==0? (l.size()-1): j-1);
-	v[j*Dim+mu] += -f*(2.0*(l[j])[mu] - (l[nj])[mu] - (l[pj])[mu])/2.0;
+	v[j*Dim+mu] += -f*(2.0*(l[j])[mu] - (l[nj])[mu] - (l[pj])[mu])*(number)l.size()/2.0;
 }
 
 // ddS0_nr
@@ -114,13 +114,13 @@ template<uint Dim>
 void ddS0_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l, const number& f, mat& m) {
 	if (mu==nu) {
 		if (k==j) {
-			m(j*Dim+mu,j*Dim+mu) += f;
+			m(j*Dim+mu,j*Dim+mu) += f*(number)l.size();
 		}
 		else if (k==(j-1)) {
-			m(j*Dim+mu,k*Dim+mu) -= f*0.5;
+			m(j*Dim+mu,k*Dim+mu) -= f*0.5*(number)l.size();
 		}
 		else if (k==(j+1)) {
-			m(j*Dim+mu,k*Dim+mu) -= f*0.5;
+			m(j*Dim+mu,k*Dim+mu) -= f*0.5*(number)l.size();
 		}
 	}
 }
@@ -156,7 +156,7 @@ void vectorToLoop(const vec& v, Loop<Dim>& l) {
 // printAsLoop
 void printAsLoop(const string& f, const uint& Dim, const vec& v) {
 	if (v.size()%Dim==0) {
-		uint N = v.size()/Dim, mu;
+		uint N = v.size()/Dim-1, mu;
 		ofstream os;
 		os.open(f.c_str());
 		os << left << setprecision(16);
