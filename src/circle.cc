@@ -29,6 +29,7 @@ int main(int argc, char** argv) {
 
 // data to print
 string inputsFile = "inputs";
+bool extend = false;
 
 // getting argv
 if (argc % 2 && argc>1) {
@@ -36,6 +37,7 @@ if (argc % 2 && argc>1) {
 		string id = argv[2*j+1];
 		if (id[0]=='-') id = id.substr(1);
 		if (id.compare("inputs")==0) inputsFile = (string)argv[2*j+2];
+		else if (id.compare("extend")==0) extend = (stn<uint>(argv[2*j+2])!=0);
 		else {
 			cerr << "argv id " << id << " not understood" << endl;
 			return 1;
@@ -70,12 +72,16 @@ uint Seed = time(NULL);
 Loop<dim> loop(p.K,Seed);
 Metropolis<dim> met(loop,p,Seed);
 Point<dim> p0, point;
-number R = 1.0, w = 2.0*pi/(number)Length;
-if (abs(p.G)>MIN_NUMBER && abs(p.B)>MIN_NUMBER)
+number R = 1.0, R0 = 1.0, w = 2.0*PI/(number)Length;
+if (abs(p.G)>MIN_NUMBER && abs(p.B)>MIN_NUMBER) {
 	R =  1.0/p.G/p.B;
+	R0 = R;
+}
+if (abs(p.Epsi)>MIN_NUMBER && extend)
+	R += p.Epsi;
 	
 for (uint j=0; j<p.Nl; j++) {
-	file = "data/circle/loops/dim_"+nts<uint>(dim)+"/K_"+nts<uint>(p.K)+"/loop_R_"+nts<number>(R)\
+	file = "data/circle/loops/dim_"+nts<uint>(dim)+"/K_"+nts<uint>(p.K)+"/loop_R_"+nts<number>(R0)\
 														+"_rank_"+nts<uint>(j)+".dat";
 	if (j==0)
 		cout << "printing to " << file << ", with runs from 0..." << p.Nl << endl;

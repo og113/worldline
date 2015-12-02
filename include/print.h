@@ -6,6 +6,7 @@
 #define __PRINT_H_INCLUDED__
 
 #include "simple.h"
+#include <Eigen/Dense>
 
 using namespace std;
 
@@ -38,6 +39,12 @@ void saveVectorBinary(const string& f,  const T& v);
 // save - saveVectorBinaryAppend
 template <class T>
 void saveVectorBinaryAppend(const string& f,  const T& v);
+
+// save - saveMatrixBinary
+void saveMatrixBinary(const string& f, const Eigen::MatrixXd& m);
+
+// saveMatrixAscii
+void saveMatrixAscii(const string& f, const Eigen::MatrixXd& m);
 
 /*-------------------------------------------------------------------------------------------------------------------------
 	2. load

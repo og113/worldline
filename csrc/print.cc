@@ -106,6 +106,44 @@ void saveVectorBinaryAppend(const string& f,  const T& v) {
 	}
 }
 
+
+// save mat - binary
+void saveMatrixBinary(const string& f, const Eigen::MatrixXd& m) {
+	ofstream os;
+	os.open(f.c_str(),ios::binary);
+	if (!os.good()) {
+		cerr << "save error: stream not good for " << f << endl;
+		return;
+	}
+	const double* d;
+	for (uint j=0; j<m.rows(); j++) {
+		for (uint k=0; k<m.cols(); k++) {
+			d = &m(j,k);
+			os.write(reinterpret_cast<const char*>(d),sizeof(double));
+		}
+	}
+	os.close();
+}
+
+// save mat - ascii
+void saveMatrixAscii(const string& f, const Eigen::MatrixXd& m) {
+	ofstream F;
+	F.open(f.c_str());
+	if (!F.good()) {
+		cerr << "save error: stream not good for " << f << endl;
+		return;
+	}
+	F << left << setprecision(16);
+	for (uint j=0; j<m.rows(); j++) {
+		for (uint k=0; k<m.cols(); k++) {
+			F << setw(24) << m(j,k);
+		}
+		F << endl;
+	}
+	F.close();
+}
+
+
 /*-------------------------------------------------------------------------------------------------------------------------
 	2. load
 -------------------------------------------------------------------------------------------------------------------------*/

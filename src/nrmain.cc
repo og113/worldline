@@ -33,7 +33,7 @@ using namespace std;
 ----------------------------------------------------------------------------------------------------------------------------*/
 
 struct PrintOptions {
-	enum Option { none, all, x, mds};
+	enum Option { none, all, x, mds, dds, delta};
 };
 
 int main(int argc, char** argv) {
@@ -73,6 +73,10 @@ if (!printOpts.empty()) {
 		po = PrintOptions::x;
 	else if (printOpts.compare("mds")==0)
 		po = PrintOptions::mds;
+	else if (printOpts.compare("dds")==0)
+		po = PrintOptions::dds;
+	else if (printOpts.compare("delta")==0)
+		po = PrintOptions::delta;
 	else
 		cerr << "print options not understood: " << printOpts << endl;
 }
@@ -157,8 +161,8 @@ for (uint pl=0; pl<Npl; pl++) {
 	// loading x
 	loadVectorBinary(loadFile,x);
 	x.conservativeResize(NT);
-	for (uint mu=0; mu<zm; mu++)
-		x[N*dim+mu] = 0.1;
+	for (uint j=0; j<zm; j++)
+		x[N*dim+j] = 0.01;
 	
 	//defining some quantities used to stop n-r loop
 	uint runsCount = 0;
@@ -240,13 +244,18 @@ for (uint pl=0; pl<Npl; pl++) {
 		if (po!=PrintOptions::none) {
 			Filename early = "data/temp/"+timenumber+"xEarly1_K_"+nts(p.K)+"_G_"+nts(p.G)+"_B_"+nts(p.B)+"_run_"+nts(runsCount)+".dat";
 			if (po==PrintOptions::x || po==PrintOptions::all) {
-				printAsLoop(early,dim,x);
+				printAsLoop(early,dim,x,N*dim);
 				printf("%12s%50s\n","x:",((string)early).c_str());
 			}
 			if (po==PrintOptions::mds || po==PrintOptions::all) {
 				early.ID = "mdsEarly1";
-				printAsLoop(early,dim,mds);
+				printAsLoop(early,dim,mds,N*dim);
 				printf("%12s%50s\n","mds:",((string)early).c_str());
+			}
+			if (po==PrintOptions::dds || po==PrintOptions::all) {
+				early.ID = "ddsEarly1";
+				saveMatrixAscii(early,dds);
+				printf("%12s%50s\n","dds:",((string)early).c_str());
 			}
 			
 		}
@@ -259,15 +268,18 @@ for (uint pl=0; pl<Npl; pl++) {
 		vec delta(NT);
 		
 		// solving for delta = DDS^{-1}*mdS
-		delta = dds.partialPivLu().solve(mds);
-		
+		delta = dds.partialPivLu().solve(mds);	
 		
 		//independent check on whether calculation worked		
 		number invError = (dds*delta - mds).norm();
 		checkInv.add(invError);
 		checkInv.checkMessage();
-		if (!checkInv.good())
+		if (!checkInv.good()) {
+			cerr << "determinant = " << dds.determinant() << endl;
+			cerr << "determinant of block without lagrange multiplier terms = "\
+						 << (dds.block(0,0,N*dim,N*dim)).determinant() << endl;
 			return 1;
+		}
 
 		//assigning values to x
 		x += delta;
@@ -277,10 +289,10 @@ for (uint pl=0; pl<Npl; pl++) {
 ----------------------------------------------------------------------------------------------------------------------------*/	
 
 		if (po!=PrintOptions::none) {
-			Filename early = "data/temp/"+timenumber+"xEarly2_K_"+nts(p.K)+"_G_"+nts(p.G)+"_B_"+nts(p.B)+"_run_"+nts(runsCount)+".dat";
-			if (po==PrintOptions::x || po==PrintOptions::all) {
-				printAsLoop(early,dim,x);
-				printf("%12s%50s\n","x:",((string)early).c_str());
+			Filename early = "data/temp/"+timenumber+"deltaEarly2_K_"+nts(p.K)+"_G_"+nts(p.G)+"_B_"+nts(p.B)+"_run_"+nts(runsCount)+".dat";
+			if (po==PrintOptions::delta || po==PrintOptions::all) {
+				printAsLoop(early,dim,delta,N*dim);
+				printf("%12s%50s\n","delta:",((string)early).c_str());
 			}
 		}
 
@@ -307,6 +319,9 @@ for (uint pl=0; pl<Npl; pl++) {
 		// checking delta
 		checkDelta.checkMessage();
 		if (!checkDelta.good()) {
+			cerr << "determinant of dds = " << dds.determinant() << endl;
+			cerr << "determinant of block without lagrange multiplier terms = "\
+						 << (dds.block(0,0,N*dim,N*dim)).determinant() << endl;
 			break;
 		}
 	

@@ -86,15 +86,15 @@ void mdI_nr(const uint& j, const uint& mu, const Loop<Dim>& l, const number& f, 
 template<uint Dim>
 void ddI_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l, const number& f, mat& m) {
 	if (mu==3 && nu==2) {
-		uint pj = (j==(l.size()-1)? 0: j+1);
-		if (k==pj)
+		uint nj = (j==0? (l.size()-1): j-1);
+		if (k==nj)
 			m(j*Dim+mu,k*Dim+nu) += f;
 		else if (k==j)
 			m(j*Dim+mu,k*Dim+nu) -= f;
 	}
 	else if (mu==2 && nu==3) {
-		uint nj = (j==0? (l.size()-1): j-1);
-		if (k==nj)
+		uint pj = (j==(l.size()-1)? 0: j+1);
+		if (k==pj)
 			m(j*Dim+mu,k*Dim+nu) += f;
 		else if (k==j)
 			m(j*Dim+mu,k*Dim+nu) -= f;
@@ -113,13 +113,15 @@ void mdS0_nr(const uint& j, const uint& mu, const Loop<Dim>& l, const number& f,
 template<uint Dim>
 void ddS0_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l, const number& f, mat& m) {
 	if (mu==nu) {
+		uint pj = (j==(l.size()-1)? 0: j+1);
+		uint nj = (j==0? (l.size()-1): j-1);
 		if (k==j) {
 			m(j*Dim+mu,j*Dim+mu) += f*(number)l.size();
 		}
-		else if (k==(j-1)) {
+		else if (k==nj) {
 			m(j*Dim+mu,k*Dim+mu) -= f*0.5*(number)l.size();
 		}
-		else if (k==(j+1)) {
+		else if (k==pj) {
 			m(j*Dim+mu,k*Dim+mu) -= f*0.5*(number)l.size();
 		}
 	}
@@ -156,7 +158,7 @@ void vectorToLoop(const vec& v, Loop<Dim>& l) {
 // printAsLoop
 void printAsLoop(const string& f, const uint& Dim, const vec& v) {
 	if (v.size()%Dim==0) {
-		uint N = v.size()/Dim-1, mu;
+		uint N = v.size()/Dim, mu;
 		ofstream os;
 		os.open(f.c_str());
 		os << left << setprecision(16);
@@ -172,6 +174,27 @@ void printAsLoop(const string& f, const uint& Dim, const vec& v) {
 		cerr << "printAsLoop error: v.size()%Dim!=0" << endl;
 	}
 }
+
+// printAsLoop
+void printAsLoop(const string& f, const uint& Dim, const vec& v, const uint len) {
+	if (len%Dim==0) {
+		uint N = len/Dim, mu;
+		ofstream os;
+		os.open(f.c_str());
+		os << left << setprecision(16);
+		for (uint j=0; j<N; j++) {
+			for (mu=0; mu<Dim; mu++) {
+				os << setw(24) << v[j*Dim+mu];
+			}
+			os << endl;
+		}
+		os.close();
+	}
+	else {
+		cerr << "printAsLoop error: len%Dim!=0" << endl;
+	}
+}
+
 
 /*----------------------------------------------------------------------------------------------------------------------------
 	3 - explicit instantiation
