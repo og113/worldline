@@ -161,8 +161,8 @@ for (uint pl=0; pl<Npl; pl++) {
 	// loading x
 	loadVectorBinary(loadFile,x);
 	x.conservativeResize(NT);
-	for (uint j=0; j<zm; j++)
-		x[N*dim+j] = 0.01;
+	for (uint mu=0; mu<zm; mu++)
+		x[N*dim+mu] = 0.01;
 	
 	//defining some quantities used to stop n-r loop
 	uint runsCount = 0;
@@ -275,9 +275,14 @@ for (uint pl=0; pl<Npl; pl++) {
 		checkInv.add(invError);
 		checkInv.checkMessage();
 		if (!checkInv.good()) {
-			cerr << "determinant = " << dds.determinant() << endl;
-			cerr << "determinant of block without lagrange multiplier terms = "\
-						 << (dds.block(0,0,N*dim,N*dim)).determinant() << endl;
+			cerr << "dds.determinant():" << dds.determinant() << endl;
+			cerr << "dds.sum():        " << dds.sum()       << endl;
+			cerr << "dds.prod():       " << dds.prod()      << endl;
+			cerr << "dds.mean():       " << dds.mean()      << endl;
+			cerr << "dds.minCoeff():   " << dds.minCoeff()  << endl;
+			cerr << "dds.maxCoeff():   " << dds.maxCoeff()  << endl;
+			cerr << "dds.trace():      " << dds.trace()     << endl;
+			cerr << "dds.norm():       " << dds.norm() << endl;
 			return 1;
 		}
 
@@ -319,9 +324,14 @@ for (uint pl=0; pl<Npl; pl++) {
 		// checking delta
 		checkDelta.checkMessage();
 		if (!checkDelta.good()) {
-			cerr << "determinant of dds = " << dds.determinant() << endl;
-			cerr << "determinant of block without lagrange multiplier terms = "\
-						 << (dds.block(0,0,N*dim,N*dim)).determinant() << endl;
+			cerr << "dds.determinant():" << dds.determinant() << endl;
+			cerr << "dds.sum():        " << dds.sum()       << endl;
+			cerr << "dds.prod():       " << dds.prod()      << endl;
+			cerr << "dds.mean():       " << dds.mean()      << endl;
+			cerr << "dds.minCoeff():   " << dds.minCoeff()  << endl;
+			cerr << "dds.maxCoeff():   " << dds.maxCoeff()  << endl;
+			cerr << "dds.trace():      " << dds.trace()     << endl;
+			cerr << "dds.norm():       " << dds.norm() << endl;
 			break;
 		}
 	
