@@ -26,6 +26,40 @@
 	1 - nr loop functions
 ----------------------------------------------------------------------------------------------------------------------------*/
 
+// L
+template <uint Dim>
+void L (const uint& j, const Loop<Dim>& l, const number& f, number& result) {
+	uint pos = (j==(l.size()-1)? 0: j+1);
+	result += f*Distance(l[pos],l[j]);
+}
+
+// Sm
+template <uint Dim>
+void Sm (const uint& j, const Loop<Dim>& l, const number& f, number& result) {
+	uint pj = (j==(l.size()-1)? 0: j+1);
+	uint nj = (j==0? (l.size()-1): j-1);
+	Point<Dim> pp;
+	pp = l[j];
+	pp *= 2.0;
+	pp -= l[nj];
+	number temp = Dot(l[pj],pp,l[pj],l[j]);
+	temp /= DistanceSquared(l[pj],l[j]);
+	result += f*temp/(number)l.size();
+}
+
+// S0
+template <uint Dim>
+void S0 (const uint& j, const Loop<Dim>& l, const number& f, number& result) {
+	uint pos = (j==(l.size()-1)? 0: j+1);
+	result += f*DistanceSquared(l[pos],l[j])/4.0;
+}
+
+// I0
+template <uint Dim>
+void I0 (const uint& j, const Loop<Dim>& l, const number& f, number& result) {
+	cerr << "mdI_nr error: not defined for dim = " << Dim << endl;
+}
+
 // mdL_nr
 template<uint Dim>
 void mdL_nr(const uint& j, const uint& mu, const Loop<Dim>& l, const number& f, vec& v) {
@@ -72,33 +106,13 @@ void ddL_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const 
 // mdI_nr
 template<uint Dim>
 void mdI_nr(const uint& j, const uint& mu, const Loop<Dim>& l, const number& f, vec& v) {
-	if (mu==3) {
-		uint nj = (j==0? (l.size()-1): j-1);
-		v[j*Dim+mu] += -f*((l[nj])[2]-(l[j])[2]);
-	}
-	else if (mu==2) {
-		uint pj = (j==(l.size()-1)? 0: j+1);
-		v[j*Dim+mu] += -f*((l[pj])[3]-(l[j])[3]);
-	}
+	cerr << "mdI_nr error: not defined for dim = " << Dim << endl;
 }
 
 // ddI_nr
 template<uint Dim>
 void ddI_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l, const number& f, mat& m) {
-	if (mu==3 && nu==2) {
-		uint nj = (j==0? (l.size()-1): j-1);
-		if (k==nj)
-			m(j*Dim+mu,k*Dim+nu) += f;
-		else if (k==j)
-			m(j*Dim+mu,k*Dim+nu) -= f;
-	}
-	else if (mu==2 && nu==3) {
-		uint pj = (j==(l.size()-1)? 0: j+1);
-		if (k==pj)
-			m(j*Dim+mu,k*Dim+nu) += f;
-		else if (k==j)
-			m(j*Dim+mu,k*Dim+nu) -= f;
-	}
+	cerr << "ddI_nr error: not defined for dim = " << Dim << endl;
 }
 
 // mdS0_nr
@@ -201,8 +215,9 @@ void printAsLoop(const string& f, const uint& Dim, const vec& v, const uint len)
 ----------------------------------------------------------------------------------------------------------------------------*/
 
 // dim 2
-template void mdI_nr<2>(const uint& j, const uint& mu, const Loop<2>& l, const number& p, vec& v);
-template void ddI_nr<2>(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<2>& l, const number& p, mat& m);
+template void L<2>(const uint& j, const Loop<2>& l, const number& f, number& result);
+template void S0<2>(const uint& j, const Loop<2>& l, const number& f, number& result);
+template void Sm<2>(const uint& j, const Loop<2>& l, const number& f, number& result);
 template void mdL_nr<2>(const uint& j, const uint& mu, const Loop<2>& l, const number& p, vec& v);
 template void ddL_nr<2>(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<2>& l, const number& p, mat& m);
 template void mdS0_nr<2>(const uint& j, const uint& mu, const Loop<2>& l, const number& p, vec& v);
@@ -210,12 +225,88 @@ template void ddS0_nr<2>(const uint& j, const uint& mu, const uint& k, const uin
 template void loopToVector<2>(const Loop<2>&,vec&);
 template void vectorToLoop<2>(const vec&, Loop<2>&);
 
+// mdI_nr<2>
+template <> void mdI_nr<2>(const uint& j, const uint& mu, const Loop<2>& l, const number& f, vec& v) {
+	if (mu==1) {
+		uint nj = (j==0? (l.size()-1): j-1);
+		v[j*2+mu] += -f*((l[nj])[0]-(l[j])[0]);
+	}
+	else if (mu==0) {
+		uint pj = (j==(l.size()-1)? 0: j+1);
+		v[j*2+mu] += -f*((l[pj])[1]-(l[j])[1]);
+	}
+}
+
+// ddI_nr<2>
+template <> void ddI_nr<2>(const uint& j, const uint& mu, const uint& k, const uint& nu, \
+							const Loop<2>& l, const number& f, mat& m) {
+	if (mu==1 && nu==0) {
+		uint nj = (j==0? (l.size()-1): j-1);
+		if (k==nj)
+			m(j*2+mu,k*2+nu) += f;
+		else if (k==j)
+			m(j*2+mu,k*2+nu) -= f;
+	}
+	else if (mu==0 && nu==1) {
+		uint pj = (j==(l.size()-1)? 0: j+1);
+		if (k==pj)
+			m(j*2+mu,k*2+nu) += f;
+		else if (k==j)
+			m(j*2+mu,k*2+nu) -= f;
+	}
+}	
+
+// I0<2>
+template <> void I0<2> (const uint& j, const Loop<2>& l, const number& f, number& result) {
+	uint pj = (j==(l.size()-1)? 0: j+1);
+	result += f*(l[j])[0]*((l[pj])[1]-(l[j])[1]);
+}	
+
 // dim 4
-template void mdI_nr<4>(const uint& j, const uint& mu, const Loop<4>& l, const number& p, vec& v);
-template void ddI_nr<4>(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<4>& l, const number& p, mat& m);
+template void L<4>(const uint& j, const Loop<4>& l, const number& f, number& result);
+template void S0<4>(const uint& j, const Loop<4>& l, const number& f, number& result);
+template void Sm<4>(const uint& j, const Loop<4>& l, const number& f, number& result);
 template void mdL_nr<4>(const uint& j, const uint& mu, const Loop<4>& l, const number& p, vec& v);
 template void ddL_nr<4>(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<4>& l, const number& p, mat& m);
 template void mdS0_nr<4>(const uint& j, const uint& mu, const Loop<4>& l, const number& p, vec& v);
 template void ddS0_nr<4>(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<4>& l, const number& p, mat& m);
 template void loopToVector<4>(const Loop<4>&,vec&);
 template void vectorToLoop<4>(const vec&, Loop<4>&);
+
+// mdI_nr<4>
+template <> void mdI_nr<4>(const uint& j, const uint& mu, const Loop<4>& l, const number& f, vec& v) {
+	if (mu==3) {
+		uint nj = (j==0? (l.size()-1): j-1);
+		v[j*4+mu] += -f*((l[nj])[2]-(l[j])[2]);
+	}
+	else if (mu==2) {
+		uint pj = (j==(l.size()-1)? 0: j+1);
+		v[j*4+mu] += -f*((l[pj])[3]-(l[j])[3]);
+	}
+}
+
+// ddI_nr<4>
+template <> void ddI_nr<4>(const uint& j, const uint& mu, const uint& k, const uint& nu, \
+							const Loop<4>& l, const number& f, mat& m) {
+	if (mu==3 && nu==2) {
+		uint nj = (j==0? (l.size()-1): j-1);
+		if (k==nj)
+			m(j*4+mu,k*4+nu) += f;
+		else if (k==j)
+			m(j*4+mu,k*4+nu) -= f;
+	}
+	else if (mu==2 && nu==3) {
+		uint pj = (j==(l.size()-1)? 0: j+1);
+		if (k==pj)
+			m(j*4+mu,k*4+nu) += f;
+		else if (k==j)
+			m(j*4+mu,k*4+nu) -= f;
+	}
+}	
+
+// I0<4>
+template <> void I0<4> (const uint& j, const Loop<4>& l, const number& f, number& result) {
+	uint pj = (j==(l.size()-1)? 0: j+1);
+	result += f*(l[j])[2]*((l[pj])[3]-(l[j])[3]);
+}					
+		

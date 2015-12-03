@@ -33,6 +33,22 @@ typedef Eigen::MatrixXd mat;
 	1 - nr loop functions
 ----------------------------------------------------------------------------------------------------------------------------*/
 
+// L
+template <uint Dim>
+void L (const uint& j, const Loop<Dim>& l, const number& f, number& result);
+
+// Sm
+template <uint Dim>
+void Sm (const uint& j, const Loop<Dim>& l, const number& f, number& result);
+
+// S0
+template <uint Dim>
+void S0 (const uint& j, const Loop<Dim>& l, const number& f, number& result);
+
+// I0
+template <uint Dim>
+void I0 (const uint& j, const Loop<Dim>& l, const number& f, number& result);
+
 // mdL_nr
 template<uint Dim>
 void mdL_nr(const uint& j, const uint& mu, const Loop<Dim>& l, const number& f, vec& v);

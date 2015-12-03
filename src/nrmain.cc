@@ -190,21 +190,26 @@ for (uint pl=0; pl<Npl; pl++) {
 		// some simple scalars
 		uint j, k, mu, nu;
 		number gb = p.G*p.B;
-		number s0norm = (p.T>MIN_NUMBER? 1.0/p.T: 2.0);
+		//number s0norm = (p.T>MIN_NUMBER? 1.0/p.T: 2.0);
 		
 		// bulk
 		for (j=0; j<N; j++) {
+		
+			//S0(j, xLoop, s0norm, s0norm);
+			L(j, xLoop, 1.0, len);
+			I0(j, xLoop, -gb, i0);
+		
 			for (mu=0; mu<dim; mu++) {
 			
-				mdS0_nr(j,mu,xLoop,s0norm,mds);
-				//mdL_nr(j,mu,xLoop,1.0,mds);
+				//mdS0_nr(j,mu,xLoop,s0norm,mds);
+				mdL_nr(j,mu,xLoop,1.0,mds);
 				mdI_nr(j,mu,xLoop,-gb,mds);
 				
 				for (k=0; k<N; k++) {
 					for (nu=0; nu<dim; nu++) { // doing a full second loop for v
 					
-						ddS0_nr(j,mu,k,nu,xLoop,s0norm,dds);
-						//ddL_nr(j,mu,k,nu,xLoop,1.0,dds); // check symmetry in (j,mu)<->(k,nu)
+						//ddS0_nr(j,mu,k,nu,xLoop,s0norm,dds);
+						ddL_nr(j,mu,k,nu,xLoop,1.0,dds); // check symmetry in (j,mu)<->(k,nu)
 						ddI_nr(j,mu,k,nu,xLoop,-gb,dds);
 						
 					}
@@ -225,9 +230,7 @@ for (uint pl=0; pl<Npl; pl++) {
 			}
 		}
 		
-		// assigning scalar quantities - messier than it should be, better to be in sync with the previous loops
-		len = L(xLoop);
-		i0 = -gb*I0(xLoop);
+		// assigning scalar quantities
 		s = len + i0;
 	
 /*----------------------------------------------------------------------------------------------------------------------------
