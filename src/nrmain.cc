@@ -162,7 +162,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	loadVectorBinary(loadFile,x);
 	x.conservativeResize(NT);
 	for (uint mu=0; mu<zm; mu++)
-		x[N*dim+mu] = 0.01;
+		x[N*dim+mu] = 1.0e-6;
 	
 	//defining some quantities used to stop n-r loop
 	uint runsCount = 0;
@@ -280,7 +280,12 @@ for (uint pl=0; pl<Npl; pl++) {
 		checkInv.add(invError);
 		checkInv.checkMessage();
 		if (!checkInv.good()) {
+			number x_end = 0.0;
+			for (j=0; j<dim; j++)
+				x_end += pow(x[N*dim+j],2);
+			x_end = sqrt(x_end);
 			cerr << endl << "x.norm()         " << x.norm() << endl;
+			cerr << "x_end.norm()     " << x_end << endl;
 			cerr << "mds.norm()       " << mds.norm() << endl;
 			cerr << "mds.maxCoeff()   " << mds.maxCoeff() << endl;
 			cerr << "mds.minCoeff()   " << mds.minCoeff() << endl;
@@ -335,7 +340,12 @@ for (uint pl=0; pl<Npl; pl++) {
 		// checking delta
 		checkDelta.checkMessage();
 		if (!checkDelta.good()) {
+			number x_end = 0.0;
+			for (j=0; j<dim; j++)
+				x_end += pow(x[N*dim+j],2);
+			x_end = sqrt(x_end);
 			cerr << endl << "x.norm()         " << x.norm() << endl;
+			cerr << "x_end.norm()     " << x_end << endl;
 			cerr << "mds.norm()       " << mds.norm() << endl;
 			cerr << "mds.maxCoeff()   " << mds.maxCoeff() << endl;
 			cerr << "mds.minCoeff()   " << mds.minCoeff() << endl;
