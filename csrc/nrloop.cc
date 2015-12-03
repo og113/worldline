@@ -99,7 +99,7 @@ void ddL_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const 
 		number norm = Distance(l[pj],l[j]), temp = 0.0;
 		if (mu==nu)
 			temp -= 1.0/norm;
-		temp = ((l[j])[mu]-(l[pj])[mu])*((l[j])[nu]-(l[pj])[nu])/pow(norm,3);
+		temp += ((l[j])[mu]-(l[pj])[mu])*((l[j])[nu]-(l[pj])[nu])/pow(norm,3);
 		m(j*Dim+mu,k*Dim+nu) += f*temp;
 	}
 }
