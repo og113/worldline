@@ -102,7 +102,7 @@ string timenumber = currentDateTime();
 // parameter loops
 uint Npl = 1; // number of parameter loops
 Parameters::Label label = static_cast<Parameters::Label>(0);
-if (pr.toStep(label) && label==Parameters::k) {
+if (pr.toStep(label)) {
 	Npl = (pr.Steps)[label-1];
 	cout << "looping " << label << " over " << Npl << " steps" << endl;
 }
@@ -147,7 +147,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	
 	// x file
 	Filename loadFile = (circle?\
-				"data/circle/loops/dim_"+nts<uint>(dim)+"/K_"+nts<uint>(p.K)+"/loop_R_"+nts<uint>(p.G*p.B)\
+				"data/circle/loops/dim_"+nts<uint>(dim)+"/K_"+nts<uint>(p.K)+"/loop_R_"+nts<uint>(abs(p.G*p.B))\
 										+"_rank_0.dat":\
 				"data/s0/loops/dim_"+nts<uint>(dim)+"/K_"+nts<uint>(p.K)+"/loop_run_0.dat");
 	// check if file exists
@@ -190,19 +190,20 @@ for (uint pl=0; pl<Npl; pl++) {
 		// some simple scalars
 		uint j, k, mu, nu;
 		number gb = p.G*p.B;
+		number s0norm = (p.T>MIN_NUMBER? 1.0/p.T: 2.0);
 		
 		// bulk
 		for (j=0; j<N; j++) {
 			for (mu=0; mu<dim; mu++) {
 			
-				mdS0_nr(j,mu,xLoop,1.0,mds);
+				mdS0_nr(j,mu,xLoop,s0norm,mds);
 				//mdL_nr(j,mu,xLoop,1.0,mds);
 				mdI_nr(j,mu,xLoop,-gb,mds);
 				
 				for (k=0; k<N; k++) {
 					for (nu=0; nu<dim; nu++) { // doing a full second loop for v
 					
-						ddS0_nr(j,mu,k,nu,xLoop,1.0,dds);
+						ddS0_nr(j,mu,k,nu,xLoop,s0norm,dds);
 						//ddL_nr(j,mu,k,nu,xLoop,1.0,dds); // check symmetry in (j,mu)<->(k,nu)
 						ddI_nr(j,mu,k,nu,xLoop,-gb,dds);
 						
@@ -275,6 +276,12 @@ for (uint pl=0; pl<Npl; pl++) {
 		checkInv.add(invError);
 		checkInv.checkMessage();
 		if (!checkInv.good()) {
+			cerr << endl << "x.norm()         " << x.norm() << endl;
+			cerr << "mds.norm()       " << mds.norm() << endl;
+			cerr << "mds.maxCoeff()   " << mds.maxCoeff() << endl;
+			cerr << "mds.minCoeff()   " << mds.minCoeff() << endl;
+			cerr << "delta.norm()     " << delta.norm() << endl;
+			cerr << endl << "dds info:" << endl;
 			cerr << "dds.determinant():" << dds.determinant() << endl;
 			cerr << "dds.sum():        " << dds.sum()       << endl;
 			cerr << "dds.prod():       " << dds.prod()      << endl;
@@ -324,6 +331,12 @@ for (uint pl=0; pl<Npl; pl++) {
 		// checking delta
 		checkDelta.checkMessage();
 		if (!checkDelta.good()) {
+			cerr << endl << "x.norm()         " << x.norm() << endl;
+			cerr << "mds.norm()       " << mds.norm() << endl;
+			cerr << "mds.maxCoeff()   " << mds.maxCoeff() << endl;
+			cerr << "mds.minCoeff()   " << mds.minCoeff() << endl;
+			cerr << "delta.norm()     " << delta.norm() << endl;
+			cerr << endl << "dds info:" << endl;
 			cerr << "dds.determinant():" << dds.determinant() << endl;
 			cerr << "dds.sum():        " << dds.sum()       << endl;
 			cerr << "dds.prod():       " << dds.prod()      << endl;
@@ -356,10 +369,10 @@ for (uint pl=0; pl<Npl; pl++) {
 	
 	// printing results to terminal
 	printf("\n");
-	printf("%8s%8s%8s%8s%8s%8s%14s%14s%14s\n","runs","time","K","G","B","a","len",\
+	printf("%8s%8s%8s%8s%8s%8s%8s%14s%14s%14s\n","runs","time","K","G","B","T","a","len",\
 		"i0","s");
-	printf("%8i%8g%8i%8g%8g%8g%14.5g%14.5g%14.5g\n",\
-		runsCount,realtime,p.K,p.G,p.B,p.Epsi,len,i0,s);
+	printf("%8i%8.3g%8i%8.4g%8.4g%8.4g%8.4g%14.5g%14.5g%14.5g\n",\
+		runsCount,realtime,p.K,p.G,p.B,p.T,p.Epsi,len,i0,s);
 	printf("\n");
 	
 	
