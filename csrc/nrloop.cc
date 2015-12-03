@@ -65,10 +65,13 @@ template<uint Dim>
 void mdL_nr(const uint& j, const uint& mu, const Loop<Dim>& l, const number& f, vec& v) {
 	uint pj = (j==(l.size()-1)? 0: j+1);
 	uint nj = (j==0? (l.size()-1): j-1);
-	number norm = Distance(l[j],l[nj]), temp;
-	temp = ((l[j])[mu]-(l[nj])[mu])/norm;
+	
+	number norm = Distance(l[j],l[nj]);
+	number temp = ((l[j])[mu]-(l[nj])[mu])/norm;
+	
 	norm = Distance(l[pj],l[j]);
-	temp += ((l[pj])[mu]-(l[j])[mu])/norm;
+	temp += ((l[j])[mu]-(l[pj])[mu])/norm;
+	
 	v[j*Dim+mu] += -f*temp;
 }
 
@@ -78,26 +81,26 @@ void ddL_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const 
 	if (k==j) {
 		uint pj = (j==(l.size()-1)? 0: j+1);
 		uint nj = (j==0? (l.size()-1): j-1);
-		number normn = Distance(l[j],l[nj]), normp = Distance(l[pj],l[j]), temp;
+		number normn = Distance(l[j],l[nj]), normp = Distance(l[pj],l[j]), temp = 0.0;
 		if (mu==nu)
-			m(j*Dim+mu,j*Dim+mu) += f*(1.0/normn + 1.0/normp);
-		temp = -((l[j])[mu]-(l[nj])[mu])*((l[j])[nu]-(l[nj])[nu])/pow(normn,3);
-		temp -=((l[j])[mu]-(l[pj])[mu])*((l[j])[nu]-(l[pj])[nu])/pow(normp,3);
-		m(j*Dim+mu,j*Dim+nu) += f*temp;
+			temp += 1.0/normn + 1.0/normp;
+		temp -= ((l[j])[mu]-(l[nj])[mu])*((l[j])[nu]-(l[nj])[nu])/pow(normn,3);
+		temp -= ((l[j])[mu]-(l[pj])[mu])*((l[j])[nu]-(l[pj])[nu])/pow(normp,3);
+		m(j*Dim+mu,k*Dim+nu) += f*temp;
 	}
 	else if (k==(j-1)) {
 		uint nj = (j==0? (l.size()-1): j-1);
-		number norm = Distance(l[j],l[nj]), temp;
+		number norm = Distance(l[j],l[nj]), temp = 0.0;
 		if (mu==nu)
-			m(j*Dim+mu,k*Dim+mu) -= f/norm;
-		temp = ((l[j])[mu]-(l[nj])[mu])*((l[j])[nu]-(l[nj])[nu])/pow(norm,3);
+			temp -= 1.0/norm;
+		temp += ((l[j])[mu]-(l[nj])[mu])*((l[j])[nu]-(l[nj])[nu])/pow(norm,3);
 		m(j*Dim+mu,k*Dim+nu) += f*temp;
 	}
 	else if (k==(j+1)) {
 		uint pj = (j==(l.size()-1)? 0: j+1);
-		number norm = Distance(l[j],l[pj]), temp;
+		number norm = Distance(l[pj],l[j]), temp = 0.0;
 		if (mu==nu)
-			m(j*Dim+mu,k*Dim+mu) -= f/norm;
+			temp -= 1.0/norm;
 		temp = ((l[j])[mu]-(l[pj])[mu])*((l[j])[nu]-(l[pj])[nu])/pow(norm,3);
 		m(j*Dim+mu,k*Dim+nu) += f*temp;
 	}
