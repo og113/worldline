@@ -78,9 +78,9 @@ void mdL_nr(const uint& j, const uint& mu, const Loop<Dim>& l, const number& f, 
 // ddL_nr
 template<uint Dim>
 void ddL_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l, const number& f, mat& m) {
+	uint pj = (j==(l.size()-1)? 0: j+1);
+	uint nj = (j==0? (l.size()-1): j-1);
 	if (k==j) {
-		uint pj = (j==(l.size()-1)? 0: j+1);
-		uint nj = (j==0? (l.size()-1): j-1);
 		number normn = Distance(l[j],l[nj]), normp = Distance(l[pj],l[j]), temp = 0.0;
 		if (mu==nu)
 			temp += 1.0/normn + 1.0/normp;
@@ -88,16 +88,14 @@ void ddL_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const 
 		temp -= ((l[j])[mu]-(l[pj])[mu])*((l[j])[nu]-(l[pj])[nu])/pow(normp,3);
 		m(j*Dim+mu,k*Dim+nu) += f*temp;
 	}
-	else if (k==(j-1)) {
-		uint nj = (j==0? (l.size()-1): j-1);
+	else if (k==nj) {
 		number norm = Distance(l[j],l[nj]), temp = 0.0;
 		if (mu==nu)
 			temp -= 1.0/norm;
 		temp += ((l[j])[mu]-(l[nj])[mu])*((l[j])[nu]-(l[nj])[nu])/pow(norm,3);
 		m(j*Dim+mu,k*Dim+nu) += f*temp;
 	}
-	else if (k==(j+1)) {
-		uint pj = (j==(l.size()-1)? 0: j+1);
+	else if (k==pj) {
 		number norm = Distance(l[pj],l[j]), temp = 0.0;
 		if (mu==nu)
 			temp -= 1.0/norm;
