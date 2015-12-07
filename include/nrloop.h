@@ -89,6 +89,19 @@ void mdsqrtS0_nr(const uint& j, const uint& mu, const Loop<Dim>& l, const number
 template<uint Dim>
 void ddsqrtS0_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, \
 						const Loop<Dim>& l, const number& sqrt4s0, const number& f, mat& m);
+						
+// mdV1r_nr
+template<uint Dim>
+void mdV1r_nr(const uint& j, const uint& mu, const Loop<Dim>& l, const number& a, const number& f, vec& v);
+
+// mdV1r_nr
+template<uint Dim>
+void mdV1r_nr(const uint& j, const uint& mu, const uint& i, const Loop<Dim>& l, const number& a, const number& f, vec& v);
+
+// ddV1r_nr
+template<uint Dim>
+void ddV1r_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l,\
+						 const number& a const number& f, mat& m);
 
 /*----------------------------------------------------------------------------------------------------------------------------
 	2 - loopToVector, vectorToLoop

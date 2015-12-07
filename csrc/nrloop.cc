@@ -191,6 +191,45 @@ void ddsqrtS0_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, \
 	
 }
 
+// mdV1r_nr
+template<uint Dim>
+void mdV1r_nr(const uint& j, const uint& mu, const Loop<Dim>& l, const number& a, const number& f, vec& v) {
+
+	for (uint i=0; i<l.size(); i++) {
+		mdV1r_nr( j, mu, i, l, a, f, v)
+	}
+	
+}
+
+// mdV1r_nr
+template<uint Dim>
+void mdV1r_nr(const uint& j, const uint& mu, const uint& i, const Loop<Dim>& l, const number& a, const number& f, vec& v) {
+	number denom, res = 0.0;
+	uint pj = (j==(l.size()-1)? 0: j+1);
+	uint nj = (j==0? (l.size()-1): j-1);
+	uint pi = (i==(l.size()-1)? 0: i+1);
+	uint ni = (i==0? (l.size()-1): i-1);
+		
+	if (i!=j) {
+		denom = a*a + DistanceSquared(l[i],l[j]);
+		res -= 2.0*((l[pi])[mu]-(l[i])[mu])/denom;
+		res -= 4.0*((l[j])[mu]-(l[i])[mu])*Dot(l[pi],l[i],l[pj],l[j])/pow(denom,2);
+	}
+	if (i!=nj) {
+		denom = a*a + DistanceSquared(l[i],l[nj]);
+		res += 2.0*((l[pi])[mu]-(l[i])[mu])/denom;
+	}
+
+	v[j*Dim+mu] += f*res;
+}
+
+// ddV1r_nr
+template<uint Dim>
+void ddV1r_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l,\
+						 const number& a const number& f, mat& m) {
+						 
+}
+
 /*----------------------------------------------------------------------------------------------------------------------------
 	2 - loopToVector, vectorToLoop
 ----------------------------------------------------------------------------------------------------------------------------*/
@@ -276,6 +315,8 @@ template void ddS0_nr<2>(const uint& j, const uint& mu, const uint& k, const uin
 template void mdsqrtS0_nr<2>(const uint& j, const uint& mu, const Loop<2>& l, const number& sqrt4s0, const number& p, vec& v);
 template void ddsqrtS0_nr<2>(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<2>& l,\
 								 const number& sqrt4s0, const number& p, mat& m);
+template void mdV1r_nr<2>(const uint& j, const uint& mu, const Loop<2>& l, const number& a, const number& p, vec& v);
+template void mdV1r_nr<2>(const uint& j, const uint& mu, const uint& i, const Loop<2>& l, const number& a, const number& p, vec& v);
 template void loopToVector<2>(const Loop<2>&,vec&);
 template void vectorToLoop<2>(const vec&, Loop<2>&);
 
@@ -328,6 +369,8 @@ template void ddS0_nr<4>(const uint& j, const uint& mu, const uint& k, const uin
 template void mdsqrtS0_nr<4>(const uint& j, const uint& mu, const Loop<4>& l, const number& sqrt4s0, const number& p, vec& v);
 template void ddsqrtS0_nr<4>(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<4>& l,\
 								 const number& sqrt4s0, const number& p, mat& m);
+template void mdV1r_nr<4>(const uint& j, const uint& mu, const Loop<4>& l, const number& a, const number& p, vec& v);
+template void mdV1r_nr<4>(const uint& j, const uint& mu, const uint& i, const Loop<4>& l, const number& a, const number& p, vec& v);
 template void loopToVector<4>(const Loop<4>&,vec&);
 template void vectorToLoop<4>(const vec&, Loop<4>&);
 
