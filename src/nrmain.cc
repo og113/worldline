@@ -193,6 +193,9 @@ for (uint pl=0; pl<Npl; pl++) {
 		number gb = p.G*p.B;
 		//number s0norm = (p.T>MIN_NUMBER? 1.0/p.T: 2.0);
 		
+		// assigning some scalar quantities
+		number sqrt4s0 = 2.0*sqrt(S0(xLoop));
+		
 		// bulk
 		for (j=0; j<N; j++) {
 		
@@ -203,14 +206,16 @@ for (uint pl=0; pl<Npl; pl++) {
 			for (mu=0; mu<dim; mu++) {
 			
 				//mdS0_nr(j,mu,xLoop,s0norm,mds);
-				mdL_nr(j,mu,xLoop,1.0,mds);
+				mdsqrtS0_nr(j,mu,xLoop,sqrt4s0,1.0,mds);
+				//mdL_nr(j,mu,xLoop,1.0,mds);
 				mdI_nr(j,mu,xLoop,-gb,mds);
 				
 				for (k=0; k<N; k++) {
 					for (nu=0; nu<dim; nu++) { // doing a full second loop for v
 					
 						//ddS0_nr(j,mu,k,nu,xLoop,s0norm,dds);
-						ddL_nr(j,mu,k,nu,xLoop,1.0,dds); // check symmetry in (j,mu)<->(k,nu)
+						ddsqrtS0_nr(j,mu,k,nu,xLoop,sqrt4s0,1.0,dds);
+						//ddL_nr(j,mu,k,nu,xLoop,1.0,dds); // check symmetry in (j,mu)<->(k,nu)
 						ddI_nr(j,mu,k,nu,xLoop,-gb,dds);
 						
 					}
@@ -232,7 +237,8 @@ for (uint pl=0; pl<Npl; pl++) {
 		}
 		
 		// assigning scalar quantities
-		s = len + i0;
+		//s = len + i0;
+		s = sqrt4s0 + i0;
 	
 /*----------------------------------------------------------------------------------------------------------------------------
 	6 - some checks

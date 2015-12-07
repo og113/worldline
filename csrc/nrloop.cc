@@ -131,15 +131,37 @@ void ddS0_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const
 		uint pj = (j==(l.size()-1)? 0: j+1);
 		uint nj = (j==0? (l.size()-1): j-1);
 		if (k==j) {
-			m(j*Dim+mu,j*Dim+mu) += f*(number)l.size();
+			m(j*Dim+mu,k*Dim+nu) += f*(number)l.size();
 		}
 		else if (k==nj) {
-			m(j*Dim+mu,k*Dim+mu) -= f*0.5*(number)l.size();
+			m(j*Dim+mu,k*Dim+nu) -= f*0.5*(number)l.size();
 		}
 		else if (k==pj) {
-			m(j*Dim+mu,k*Dim+mu) -= f*0.5*(number)l.size();
+			m(j*Dim+mu,k*Dim+nu) -= f*0.5*(number)l.size();
 		}
 	}
+}
+
+// mdsqrtS0_nr
+template<uint Dim>
+void mdsqrtS0_nr(const uint& j, const uint& mu, const Loop<Dim>& l, const number& sqrt4s0, const number& f, vec& v) {
+	mdS0_nr(j,mu,l,f*2.0/sqrt4s0,v);
+}
+
+// ddsqrtS0_nr
+template<uint Dim>
+void ddsqrtS0_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, \
+						const Loop<Dim>& l, const number& sqrt4s0, const number& f, mat& m) {
+	ddS0_nr(j,mu,k,nu,l,f*2.0/sqrt4s0,m);
+	
+	uint pj = (j==(l.size()-1)? 0: j+1);
+	uint nj = (j==0? (l.size()-1): j-1);
+	uint pk = (k==(l.size()-1)? 0: k+1);
+	uint nk = (k==0? (l.size()-1): k-1);
+	
+	m(j*Dim+mu,k*Dim+nu) -= (f*pow(l.size(),2)/pow(sqrt4s0,3)) * (2.0*(l[j])[mu]-(l[pj])[mu]-(l[nj])[mu]) \
+												* (2.0*(l[k])[nu]-(l[pk])[nu]-(l[nk])[nu]);
+	
 }
 
 /*----------------------------------------------------------------------------------------------------------------------------
@@ -223,6 +245,9 @@ template void mdL_nr<2>(const uint& j, const uint& mu, const Loop<2>& l, const n
 template void ddL_nr<2>(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<2>& l, const number& p, mat& m);
 template void mdS0_nr<2>(const uint& j, const uint& mu, const Loop<2>& l, const number& p, vec& v);
 template void ddS0_nr<2>(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<2>& l, const number& p, mat& m);
+template void mdsqrtS0_nr<2>(const uint& j, const uint& mu, const Loop<2>& l, const number& sqrt4s0, const number& p, vec& v);
+template void ddsqrtS0_nr<2>(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<2>& l,\
+								 const number& sqrt4s0, const number& p, mat& m);
 template void loopToVector<2>(const Loop<2>&,vec&);
 template void vectorToLoop<2>(const vec&, Loop<2>&);
 
@@ -271,6 +296,9 @@ template void mdL_nr<4>(const uint& j, const uint& mu, const Loop<4>& l, const n
 template void ddL_nr<4>(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<4>& l, const number& p, mat& m);
 template void mdS0_nr<4>(const uint& j, const uint& mu, const Loop<4>& l, const number& p, vec& v);
 template void ddS0_nr<4>(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<4>& l, const number& p, mat& m);
+template void mdsqrtS0_nr<4>(const uint& j, const uint& mu, const Loop<4>& l, const number& sqrt4s0, const number& p, vec& v);
+template void ddsqrtS0_nr<4>(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<4>& l,\
+								 const number& sqrt4s0, const number& p, mat& m);
 template void loopToVector<4>(const Loop<4>&,vec&);
 template void vectorToLoop<4>(const vec&, Loop<4>&);
 
