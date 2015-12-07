@@ -159,7 +159,7 @@ void ddsqrtS0_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, \
 	uint pk = (k==(l.size()-1)? 0: k+1);
 	uint nk = (k==0? (l.size()-1): k-1);
 	
-	m(j*Dim+mu,k*Dim+nu) -= (f*pow(l.size(),2)/pow(sqrt4s0,3)) * (2.0*(l[j])[mu]-(l[pj])[mu]-(l[nj])[mu]) \
+	m(j*Dim+mu,k*Dim+nu) -= (f*pow((number)l.size(),2)/pow(sqrt4s0,3)) * (2.0*(l[j])[mu]-(l[pj])[mu]-(l[nj])[mu]) \
 												* (2.0*(l[k])[nu]-(l[pk])[nu]-(l[nk])[nu]);
 	
 }
