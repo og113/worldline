@@ -50,14 +50,41 @@ void Sm (const uint& j, const Loop<Dim>& l, const number& f, number& result) {
 // S0
 template <uint Dim>
 void S0 (const uint& j, const Loop<Dim>& l, const number& f, number& result) {
-	uint pos = (j==(l.size()-1)? 0: j+1);
-	result += f*DistanceSquared(l[pos],l[j])/4.0;
+	uint pj = (j==(l.size()-1)? 0: j+1);
+	result += f*DistanceSquared(l[pj],l[j])/4.0;
 }
 
 // I0
 template <uint Dim>
 void I0 (const uint& j, const Loop<Dim>& l, const number& f, number& result) {
 	cerr << "mdI_nr error: not defined for dim = " << Dim << endl;
+}
+
+// FGamma
+template <uint Dim>
+void FGamma (const uint& j, const Loop<Dim>& l, const number& f, number& result) {
+
+	uint pj = (j==(l.size()-1)? 0: j+1);
+	uint nj = (j==0? (l.size()-1): j-1);
+	number cot_gamma, temp;
+	
+	temp = Dot(l[pj],l[j],l[j],l[nj]);
+	cot_gamma = DistanceSquared(l[pj],l[j])*DistanceSquared(l[j],l[nj]) - temp*temp;
+	cot_gamma = temp/sqrt(cot_gamma);
+	
+	result += f*(cot_gamma*atan(1.0/cot_gamma)-1.0);	
+}
+
+// V1r
+template <uint Dim>
+void V1r (const uint& j, const uint& k, const Loop<Dim>& l, const number& a, const number& f, number& result) {
+
+	if (k<j) {
+		uint pj = (j==(l.size()-1)? 0: j+1);
+		uint pk = (k==(l.size()-1)? 0: k+1);
+	
+		result += f*2.0*Dot(l[pj],l[j],l[pk],l[k])*pow(DistanceSquared(l[j],l[k])+a*a,(2.0-Dim)/2.0);	
+	}
 }
 
 // mdL_nr
@@ -241,6 +268,7 @@ void printAsLoop(const string& f, const uint& Dim, const vec& v, const uint len)
 template void L<2>(const uint& j, const Loop<2>& l, const number& f, number& result);
 template void S0<2>(const uint& j, const Loop<2>& l, const number& f, number& result);
 template void Sm<2>(const uint& j, const Loop<2>& l, const number& f, number& result);
+template void FGamma<2>(const uint& j, const Loop<2>& l, const number& f, number& result);
 template void mdL_nr<2>(const uint& j, const uint& mu, const Loop<2>& l, const number& p, vec& v);
 template void ddL_nr<2>(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<2>& l, const number& p, mat& m);
 template void mdS0_nr<2>(const uint& j, const uint& mu, const Loop<2>& l, const number& p, vec& v);
@@ -292,6 +320,7 @@ template <> void I0<2> (const uint& j, const Loop<2>& l, const number& f, number
 template void L<4>(const uint& j, const Loop<4>& l, const number& f, number& result);
 template void S0<4>(const uint& j, const Loop<4>& l, const number& f, number& result);
 template void Sm<4>(const uint& j, const Loop<4>& l, const number& f, number& result);
+template void FGamma<4>(const uint& j, const Loop<4>& l, const number& f, number& result);
 template void mdL_nr<4>(const uint& j, const uint& mu, const Loop<4>& l, const number& p, vec& v);
 template void ddL_nr<4>(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<4>& l, const number& p, mat& m);
 template void mdS0_nr<4>(const uint& j, const uint& mu, const Loop<4>& l, const number& p, vec& v);
@@ -301,6 +330,17 @@ template void ddsqrtS0_nr<4>(const uint& j, const uint& mu, const uint& k, const
 								 const number& sqrt4s0, const number& p, mat& m);
 template void loopToVector<4>(const Loop<4>&,vec&);
 template void vectorToLoop<4>(const vec&, Loop<4>&);
+
+// V1r
+template <> void V1r<4>(const uint& j, const uint& k, const Loop<4>& l, const number& a, const number& f, number& result) {
+
+	if (k<j) {
+		uint pj = (j==(l.size()-1)? 0: j+1);
+		uint pk = (k==(l.size()-1)? 0: k+1);
+	
+		result += f*2.0*Dot(l[pj],l[j],l[pk],l[k])/(DistanceSquared(l[j],l[k])+a*a);	
+	}
+}
 
 // mdI_nr<4>
 template <> void mdI_nr<4>(const uint& j, const uint& mu, const Loop<4>& l, const number& f, vec& v) {
