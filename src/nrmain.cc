@@ -220,7 +220,7 @@ for (uint pl=0; pl<Npl; pl++) {
 				mdI_nr(j,mu,xLoop,-gb,mds);
 				
 				// dynamical field self-energy regularisation
-				//mdL_nr(j,mu,xLoop,-g*PI/p.Epsi,mds);
+				mdL_nr(j,mu,xLoop,-g*PI/p.Epsi,mds);
 				
 				// dynamical field cusp regularisation
 				
@@ -230,7 +230,7 @@ for (uint pl=0; pl<Npl; pl++) {
 						V1r(j, k, xLoop, p.Epsi, g, v);
 					
 					// dynamical field
-					//mdV1r_nr(j, mu, k, xLoop, p.Epsi, g, mds);
+					mdV1r_nr(j, mu, k, xLoop, p.Epsi, g, mds);
 				
 					for (nu=0; nu<dim; nu++) {
 					
@@ -241,10 +241,10 @@ for (uint pl=0; pl<Npl; pl++) {
 						ddI_nr(j,mu,k,nu,xLoop,-gb,dds);
 						
 						// dynamical field	
-						//ddV1r_nr(j, mu, k, nu, xLoop, p.Epsi, g, dds);
+						ddV1r_nr(j, mu, k, nu, xLoop, p.Epsi, g, dds);
 						
 						// dynamical field self-energy regularisation
-						//ddL_nr(j,mu,k,nu,xLoop,-g*PI/p.Epsi,dds);
+						ddL_nr(j,mu,k,nu,xLoop,-g*PI/p.Epsi,dds);
 						
 						// dynamical field cusp regularisation
 						
@@ -290,7 +290,7 @@ for (uint pl=0; pl<Npl; pl++) {
 			checkSym.add(asym);
 			checkSym.checkMessage();
 			
-			// checking value of negative eigenvalue
+			// checking value of negative eigenvalue, assuming x is an eigenvector
 			number analyticNegEigenvalue = -2.0*PI*p.G*p.B;
 			number xnorm = x.squaredNorm();
 			number negEigenvalue = ((dds*x).dot(x)/xnorm)*(number)xLoop.size();
