@@ -215,7 +215,9 @@ for (uint pl=0; pl<Npl; pl++) {
 				for (k=0; k<N; k++) {
 				
 					if (mu==0)
-					V1r(j, k, xLoop, p.Epsi, g, v);
+						V1r(j, k, xLoop, p.Epsi, g, v);
+						
+					mdV1r_nr(j, mu, k, xLoop, p.Epsi, g, mds);
 				
 					for (nu=0; nu<dim; nu++) {
 					
@@ -223,6 +225,8 @@ for (uint pl=0; pl<Npl; pl++) {
 						ddsqrtS0_nr(j,mu,k,nu,xLoop,sqrt4s0,1.0,dds);
 						//ddL_nr(j,mu,k,nu,xLoop,1.0,dds); // check symmetry in (j,mu)<->(k,nu)
 						ddI_nr(j,mu,k,nu,xLoop,-gb,dds);
+						
+						ddV1r_nr(j, mu, k, nu, xLoop, p.Epsi, g, dds);
 						
 					}
 				}

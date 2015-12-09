@@ -195,9 +195,8 @@ void ddsqrtS0_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, \
 template<uint Dim>
 void mdV1r_nr(const uint& j, const uint& mu, const Loop<Dim>& l, const number& a, const number& f, vec& v) {
 
-	for (uint i=0; i<l.size(); i++) {
-		mdV1r_nr( j, mu, i, l, a, f, v)
-	}
+	for (uint i=0; i<l.size(); i++)
+		mdV1r_nr( j, mu, i, l, a, f, v);
 	
 }
 
@@ -208,7 +207,6 @@ void mdV1r_nr(const uint& j, const uint& mu, const uint& i, const Loop<Dim>& l, 
 	uint pj = (j==(l.size()-1)? 0: j+1);
 	uint nj = (j==0? (l.size()-1): j-1);
 	uint pi = (i==(l.size()-1)? 0: i+1);
-	uint ni = (i==0? (l.size()-1): i-1);
 		
 	if (i!=j) {
 		denom = a*a + DistanceSquared(l[i],l[j]);
@@ -220,13 +218,13 @@ void mdV1r_nr(const uint& j, const uint& mu, const uint& i, const Loop<Dim>& l, 
 		res += 2.0*((l[pi])[mu]-(l[i])[mu])/denom;
 	}
 
-	v[j*Dim+mu] += f*res;
+	v[j*Dim+mu] += -f*res;
 }
 
 // ddV1r_nr
 template<uint Dim>
 void ddV1r_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l,\
-						 const number& a const number& f, mat& m) {
+						 const number& a, const number& f, mat& m) {
 	number res = 0.0;
 	
 	uint nj = (j==0? (l.size()-1): j-1);
@@ -242,10 +240,10 @@ void ddV1r_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, cons
 	number orig_num = Dot(l[pj],l[j],l[pk],l[k]);
 	number x_jk_mu = (l[j])[mu]-(l[k])[mu];
 	number x_jk_nu = (l[j])[nu]-(l[k])[nu];
-	number dx_j_mu = (l[pj])[mu]-(l[j])[mu];
+	//number dx_j_mu = (l[pj])[mu]-(l[j])[mu];
 	number dx_j_nu = (l[pj])[nu]-(l[j])[nu];
 	number dx_k_mu = (l[pk])[mu]-(l[k])[mu];
-	number dx_k_nu = (l[pk])[nu]-(l[k])[nu];
+	//number dx_k_nu = (l[pk])[nu]-(l[k])[nu];
 	
 	// terms where mu==nu, without sums
 	if (mu==nu) {
@@ -259,34 +257,33 @@ void ddV1r_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, cons
 	
 	// terms where mu not nexcessarily equal to nu, without sums
 	if (k!=j)
-		res += 4.0*( -dx_k_mu*x_jk_nu + x_jk_mu*_dx_j_nu)/pow(denom,2)- 16.0*orig_num*x_jk_mu*x_jk_nu/pow(denom,3);
+		res += 4.0*( -dx_k_mu*x_jk_nu + x_jk_mu*dx_j_nu)/pow(denom,2)- 16.0*orig_num*x_jk_mu*x_jk_nu/pow(denom,3);
 	if (k!=nj)
-		res += 4.0*dx_k_mu*(l[nj])[nu]-(l[k])[nu])/pow(denom_nj,2);
+		res += 4.0*dx_k_mu*((l[nj])[nu]-(l[k])[nu])/pow(denom_nj,2);
 	if (k!=pj)
-		res += -4.0*dx_j_nu*(l[j])[mu]-(l[nk])[mu])/pow(denom_nk,2);
+		res += -4.0*dx_j_nu*((l[j])[mu]-(l[nk])[mu])/pow(denom_nk,2);
 	
 	// terms with sums
 	if (k==j || k==nj || k==pj) {
 	
-		uint ni, pi;
-		number dx_i_mu, dx_i_nu, denom_ij, denom_inj, orig_num_ij;
+		uint pi;
+		number dx_i_mu, dx_i_nu, denom_ij, denom_inj;
 		
 		for (uint i=0; i<l.size(); i++) {
 		
-			ni = (i==0? (l.size()-1): i-1);
 			pi = (i==(l.size()-1)? 0: i+1);
 			dx_i_mu = (l[pi])[mu]-(l[i])[mu];
-			dx_i_nu = (l[pi])[nu]-(li])[nu];
+			dx_i_nu = (l[pi])[nu]-(l[i])[nu];
 			denom_ij = a*a + DistanceSquared(l[i],l[j]);
 			denom_inj = a*a + DistanceSquared(l[i],l[nj]);
 			
 			if (k==j && i!=j)
-				res += 	(4.0/pow(denom_inj,2)) * ( (l[j])[nu]-(l[i])[nu])*dx_i_mu + (l[j])[mu]-(l[i])[mu])*dx_i_nu \
+				res += 	(4.0/pow(denom_inj,2)) * ( ((l[j])[nu]-(l[i])[nu])*dx_i_mu + ((l[j])[mu]-(l[i])[mu])*dx_i_nu \
 						+ 2.0*((l[j])[mu]-(l[i])[mu])*((l[j])[nu]-(l[i])[nu])*Dot(l[pj],l[j],l[pi],l[i])/denom_ij );
 			if (k==nj && i!=nj) 
-				res += -4.0*(l[nj])[nu]-(l[i])[nu])*dx_i_mu/pow(denom_inj,2);
-			if (k==pj && i!=pj) 
-				res += -4.0*(l[j])[mu]-(l[i])[mu])*dx_i_nu/pow(denom_ij,2);
+				res += -4.0*((l[nj])[nu]-(l[i])[nu])*dx_i_mu/pow(denom_inj,2);
+			if (k==pj && i!=j) 
+				res += -4.0*((l[j])[mu]-(l[i])[mu])*dx_i_nu/pow(denom_ij,2);
 			
 			if (mu==nu && i!=j)
 				res += -4.0*Dot(l[pj],l[j],l[pi],l[i])/pow(denom_ij,2);
@@ -386,6 +383,8 @@ template void ddsqrtS0_nr<2>(const uint& j, const uint& mu, const uint& k, const
 								 const number& sqrt4s0, const number& p, mat& m);
 template void mdV1r_nr<2>(const uint& j, const uint& mu, const Loop<2>& l, const number& a, const number& p, vec& v);
 template void mdV1r_nr<2>(const uint& j, const uint& mu, const uint& i, const Loop<2>& l, const number& a, const number& p, vec& v);
+template void ddV1r_nr<2>(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<2>& l,\
+						 const number& a, const number& f, mat& m);
 template void loopToVector<2>(const Loop<2>&,vec&);
 template void vectorToLoop<2>(const vec&, Loop<2>&);
 
@@ -440,6 +439,8 @@ template void ddsqrtS0_nr<4>(const uint& j, const uint& mu, const uint& k, const
 								 const number& sqrt4s0, const number& p, mat& m);
 template void mdV1r_nr<4>(const uint& j, const uint& mu, const Loop<4>& l, const number& a, const number& p, vec& v);
 template void mdV1r_nr<4>(const uint& j, const uint& mu, const uint& i, const Loop<4>& l, const number& a, const number& p, vec& v);
+template void ddV1r_nr<4>(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<4>& l,\
+						 const number& a, const number& f, mat& m);
 template void loopToVector<4>(const Loop<4>&,vec&);
 template void vectorToLoop<4>(const vec&, Loop<4>&);
 
