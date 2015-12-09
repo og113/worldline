@@ -136,6 +136,8 @@ for (uint pl=0; pl<Npl; pl++) {
 	Check checkSm("smoothness",1.0);
 	Check checkSym("symmetric",1.0e-16*NT*NT);
 	Check checkInv("inverse",1.0e-16*NT*NT*NT);
+	Check checkNegEigenvalue("negative eigenvalue",0.1);
+	Check checkNegEigenvector("negative eigenvector",0.1);
 	
 	// defining scalar quantities
 	number len, i0, s, sm, v, vr, fgamma;
@@ -218,7 +220,7 @@ for (uint pl=0; pl<Npl; pl++) {
 				mdI_nr(j,mu,xLoop,-gb,mds);
 				
 				// dynamical field self-energy regularisation
-				mdL_nr(j,mu,xLoop,-g*PI/p.Epsi,mds);
+				//mdL_nr(j,mu,xLoop,-g*PI/p.Epsi,mds);
 				
 				// dynamical field cusp regularisation
 				
@@ -228,7 +230,7 @@ for (uint pl=0; pl<Npl; pl++) {
 						V1r(j, k, xLoop, p.Epsi, g, v);
 					
 					// dynamical field
-					mdV1r_nr(j, mu, k, xLoop, p.Epsi, g, mds);
+					//mdV1r_nr(j, mu, k, xLoop, p.Epsi, g, mds);
 				
 					for (nu=0; nu<dim; nu++) {
 					
@@ -239,10 +241,10 @@ for (uint pl=0; pl<Npl; pl++) {
 						ddI_nr(j,mu,k,nu,xLoop,-gb,dds);
 						
 						// dynamical field	
-						ddV1r_nr(j, mu, k, nu, xLoop, p.Epsi, g, dds);
+						//ddV1r_nr(j, mu, k, nu, xLoop, p.Epsi, g, dds);
 						
 						// dynamical field self-energy regularisation
-						ddL_nr(j,mu,k,nu,xLoop,-g*PI/p.Epsi,dds);
+						//ddL_nr(j,mu,k,nu,xLoop,-g*PI/p.Epsi,dds);
 						
 						// dynamical field cusp regularisation
 						
@@ -278,8 +280,8 @@ for (uint pl=0; pl<Npl; pl++) {
 		sm = Sm(xLoop);
 		checkSm.add(sm);
 		
-		// checking if dds is symmetric
 		if (trivial) {
+			// checking if dds is symmetric
 			mat dds_asym(NT,NT);
 			dds_asym = dds.transpose();
 			dds_asym -= dds;
@@ -287,8 +289,21 @@ for (uint pl=0; pl<Npl; pl++) {
 			number asym = dds_asym.norm();
 			checkSym.add(asym);
 			checkSym.checkMessage();
-		}
-		
+			
+			// checking value of negative eigenvalue
+			number analyticNegEigenvalue = -2.0*PI*p.G*p.B;
+			number xnorm = x.squaredNorm();
+			number negEigenvalue = ((dds*x).dot(x)/xnorm)*(number)xLoop.size();
+			number negEigenvalueTest = abs(negEigenvalue-analyticNegEigenvalue)/abs(analyticNegEigenvalue);
+			checkNegEigenvalue.add(negEigenvalueTest);
+			checkNegEigenvalue.checkMessage();
+			
+			// checking x is an eigenvector (case for circle in continuum limit)
+			negEigenvalue /= (number)xLoop.size();
+			number negEigenvectorTest = (dds*x-negEigenvalue*x).squaredNorm()/xnorm;
+			checkNegEigenvector.add(negEigenvectorTest);
+			checkNegEigenvector.checkMessage();
+		}		
 	
 /*----------------------------------------------------------------------------------------------------------------------------
 	7 - print early 1
