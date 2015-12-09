@@ -227,7 +227,76 @@ void mdV1r_nr(const uint& j, const uint& mu, const uint& i, const Loop<Dim>& l, 
 template<uint Dim>
 void ddV1r_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l,\
 						 const number& a const number& f, mat& m) {
-						 
+	number res = 0.0;
+	
+	uint nj = (j==0? (l.size()-1): j-1);
+	uint pj = (j==(l.size()-1)? 0: j+1);		
+	uint nk = (k==0? (l.size()-1): k-1);
+	uint pk = (k==(l.size()-1)? 0: k+1);
+	
+	number denom = a*a + DistanceSquared(l[j],l[k]);
+	number denom_nj = a*a + DistanceSquared(l[nj],l[k]);
+	number denom_nk = a*a + DistanceSquared(l[j],l[nk]);
+	number denom_njk = a*a + DistanceSquared(l[nj],l[nk]);
+	
+	number orig_num = Dot(l[pj],l[j],l[pk],l[k]);
+	number x_jk_mu = (l[j])[mu]-(l[k])[mu];
+	number x_jk_nu = (l[j])[nu]-(l[k])[nu];
+	number dx_j_mu = (l[pj])[mu]-(l[j])[mu];
+	number dx_j_nu = (l[pj])[nu]-(l[j])[nu];
+	number dx_k_mu = (l[pk])[mu]-(l[k])[mu];
+	number dx_k_nu = (l[pk])[nu]-(l[k])[nu];
+	
+	// terms where mu==nu, without sums
+	if (mu==nu) {
+		if (k!=j)
+			res += 2.0/denom_njk + 2.0/denom + 4.0*orig_num/pow(denom,2);
+		if (k!=nj)
+			res += -2.0/denom_nj;
+		if (k!=pj)
+			res += -2.0/denom_nk;
+	}
+	
+	// terms where mu not nexcessarily equal to nu, without sums
+	if (k!=j)
+		res += 4.0*( -dx_k_mu*x_jk_nu + x_jk_mu*_dx_j_nu)/pow(denom,2)- 16.0*orig_num*x_jk_mu*x_jk_nu/pow(denom,3);
+	if (k!=nj)
+		res += 4.0*dx_k_mu*(l[nj])[nu]-(l[k])[nu])/pow(denom_nj,2);
+	if (k!=pj)
+		res += -4.0*dx_j_nu*(l[j])[mu]-(l[nk])[mu])/pow(denom_nk,2);
+	
+	// terms with sums
+	if (k==j || k==nj || k==pj) {
+	
+		uint ni, pi;
+		number dx_i_mu, dx_i_nu, denom_ij, denom_inj, orig_num_ij;
+		
+		for (uint i=0; i<l.size(); i++) {
+		
+			ni = (i==0? (l.size()-1): i-1);
+			pi = (i==(l.size()-1)? 0: i+1);
+			dx_i_mu = (l[pi])[mu]-(l[i])[mu];
+			dx_i_nu = (l[pi])[nu]-(li])[nu];
+			denom_ij = a*a + DistanceSquared(l[i],l[j]);
+			denom_inj = a*a + DistanceSquared(l[i],l[nj]);
+			
+			if (k==j && i!=j)
+				res += 	(4.0/pow(denom_inj,2)) * ( (l[j])[nu]-(l[i])[nu])*dx_i_mu + (l[j])[mu]-(l[i])[mu])*dx_i_nu \
+						+ 2.0*((l[j])[mu]-(l[i])[mu])*((l[j])[nu]-(l[i])[nu])*Dot(l[pj],l[j],l[pi],l[i])/denom_ij );
+			if (k==nj && i!=nj) 
+				res += -4.0*(l[nj])[nu]-(l[i])[nu])*dx_i_mu/pow(denom_inj,2);
+			if (k==pj && i!=pj) 
+				res += -4.0*(l[j])[mu]-(l[i])[mu])*dx_i_nu/pow(denom_ij,2);
+			
+			if (mu==nu && i!=j)
+				res += -4.0*Dot(l[pj],l[j],l[pi],l[i])/pow(denom_ij,2);
+			
+		}
+		
+	}
+	
+	m(Dim*j+mu,Dim*k+nu) += res;
+	
 }
 
 /*----------------------------------------------------------------------------------------------------------------------------
