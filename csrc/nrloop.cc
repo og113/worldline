@@ -277,19 +277,18 @@ void ddV1r_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, cons
 			denom_ij = a*a + DistanceSquared(l[i],l[j]);
 			denom_inj = a*a + DistanceSquared(l[i],l[nj]);
 			
-			if (k==j && i!=j)
+			if (k==j && i!=j) {
 				res += 	(4.0/pow(denom_inj,2)) * ( ((l[j])[nu]-(l[i])[nu])*dx_i_mu + ((l[j])[mu]-(l[i])[mu])*dx_i_nu \
 						+ 2.0*((l[j])[mu]-(l[i])[mu])*((l[j])[nu]-(l[i])[nu])*Dot(l[pj],l[j],l[pi],l[i])/denom_ij );
+				if (mu==nu)
+					res += -4.0*Dot(l[pj],l[j],l[pi],l[i])/pow(denom_ij,2);
+			}
 			if (k==nj && i!=nj) 
 				res += -4.0*((l[nj])[nu]-(l[i])[nu])*dx_i_mu/pow(denom_inj,2);
 			if (k==pj && i!=j) 
 				res += -4.0*((l[j])[mu]-(l[i])[mu])*dx_i_nu/pow(denom_ij,2);
 			
-			if (mu==nu && i!=j)
-				res += -4.0*Dot(l[pj],l[j],l[pi],l[i])/pow(denom_ij,2);
-			
-		}
-		
+		}		
 	}
 	
 	m(Dim*j+mu,Dim*k+nu) += res;

@@ -2,6 +2,7 @@
 	main program to run serial n-r method to solve classical monopole worldline equations
 */
 
+#include <Eigen/Dense>
 #include "check.h"
 #include "folder.h"
 #include "genloop.h"
@@ -44,6 +45,7 @@ int main(int argc, char** argv) {
 // inputs file
 bool verbose = true;
 bool circle = true;
+bool trivial = false; // doing trivial tests
 string printOpts = "";
 string inputsFile = "inputs3";
 
@@ -56,6 +58,7 @@ if (argc % 2 && argc>1) {
 		else if (id.compare("circle")==0) circle = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("inputs")==0) inputsFile = (string)argv[2*j+2];
 		else if (id.compare("print")==0) printOpts = (string)argv[2*j+2];
+		else if (id.compare("trivial")==0) trivial = (stn<uint>(argv[2*j+2])!=0);
 		else {
 			cerr << "argv id " << id << " not understood" << endl;
 			return 1;
@@ -131,7 +134,8 @@ for (uint pl=0; pl<Npl; pl++) {
 	Check checkSolMax("solution max",1.0e-6);
 	Check checkDelta("delta",1.0);
 	Check checkSm("smoothness",1.0);
-	Check checkInv("inverse",1.0e-16*NT*NT);
+	Check checkSym("symmetric",1.0e-16*NT*NT);
+	Check checkInv("inverse",1.0e-16*NT*NT*NT);
 	
 	// defining scalar quantities
 	number len, i0, s, sm, v, vr, fgamma;
@@ -259,6 +263,18 @@ for (uint pl=0; pl<Npl; pl++) {
 		// smoothness
 		sm = Sm(xLoop);
 		checkSm.add(sm);
+		
+		// making sure dds is symmetric
+		if (trivial) {
+			mat dds_asym(NT,NT);
+			dds_asym = dds.transpose();
+			dds_asym -= dds;
+			dds_asym *= 0.5;
+			number asym = dds_asym.norm();
+			checkSym.add(asym);
+			checkSym.checkMessage();
+		}
+		
 	
 /*----------------------------------------------------------------------------------------------------------------------------
 	7 - print early 1
