@@ -211,26 +211,40 @@ for (uint pl=0; pl<Npl; pl++) {
 		
 			for (mu=0; mu<dim; mu++) {
 			
-				//mdS0_nr(j,mu,xLoop,s0norm,mds);
+				// free particle
 				mdsqrtS0_nr(j,mu,xLoop,sqrt4s0,1.0,mds);
-				//mdL_nr(j,mu,xLoop,1.0,mds);
+				
+				// external field
 				mdI_nr(j,mu,xLoop,-gb,mds);
+				
+				// dynamical field self-energy regularisation
+				mdL_nr(j,mu,xLoop,-g*PI/p.Epsi,mds);
+				
+				// dynamical field cusp regularisation
 				
 				for (k=0; k<N; k++) {
 				
 					if (mu==0)
 						V1r(j, k, xLoop, p.Epsi, g, v);
-						
+					
+					// dynamical field
 					mdV1r_nr(j, mu, k, xLoop, p.Epsi, g, mds);
 				
 					for (nu=0; nu<dim; nu++) {
 					
-						//ddS0_nr(j,mu,k,nu,xLoop,s0norm,dds);
+						// free particle
 						ddsqrtS0_nr(j,mu,k,nu,xLoop,sqrt4s0,1.0,dds);
-						//ddL_nr(j,mu,k,nu,xLoop,1.0,dds); // check symmetry in (j,mu)<->(k,nu)
+						
+						// external field
 						ddI_nr(j,mu,k,nu,xLoop,-gb,dds);
 						
+						// dynamical field	
 						ddV1r_nr(j, mu, k, nu, xLoop, p.Epsi, g, dds);
+						
+						// dynamical field self-energy regularisation
+						ddL_nr(j,mu,k,nu,xLoop,-g*PI/p.Epsi,dds);
+						
+						// dynamical field cusp regularisation
 						
 					}
 				}
@@ -264,7 +278,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		sm = Sm(xLoop);
 		checkSm.add(sm);
 		
-		// making sure dds is symmetric
+		// checking if dds is symmetric
 		if (trivial) {
 			mat dds_asym(NT,NT);
 			dds_asym = dds.transpose();
