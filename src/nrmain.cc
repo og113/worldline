@@ -202,6 +202,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		number sqrt4s0 = 2.0*sqrt(S0(xLoop));
 		len = L(xLoop);
 		number logla = (p.Epsi>MIN_NUMBER? log(len/p.Epsi): 0.0);
+		fgamma = FGamma(xLoop);
 		
 		// bulk
 		for (j=0; j<N; j++) {
@@ -209,7 +210,7 @@ for (uint pl=0; pl<Npl; pl++) {
 			//S0(j, xLoop, s0norm, s0norm);
 			//L		(j, xLoop, 1.0, len);
 			I0		(j, xLoop, -gb, i0);
-			FGamma	(j, xLoop, logla, fgamma);
+			//FGamma	(j, xLoop, logla, fgamma);
 		
 			for (mu=0; mu<dim; mu++) {
 			
@@ -223,6 +224,8 @@ for (uint pl=0; pl<Npl; pl++) {
 				mdL_nr(j,mu,xLoop,-g*PI/p.Epsi,mds);
 				
 				// dynamical field cusp regularisation
+				//mdFGamma_nr(j,mu,xLoop,-g*logla,mds);
+				//mdL_nr(j,mu,xLoop,-g*fgamma/len,mds);
 				
 				for (k=0; k<N; k++) {
 				

@@ -501,22 +501,22 @@ n.b. functions are defined for unit loops. for other loops the result must be mu
 // Dot
 template <uint Dim>
 number Dot(const Loop<Dim>& loop, const uint& i, const uint& j, const uint& k, const uint& l) {
-	Dot(loop[i],loop[j],loop[k],loop[l]);
+	return Dot(loop[i],loop[j],loop[k],loop[l]);
 }
 
 // Dot
 template <uint Dim>
 number Dot(const Loop<Dim>& loop, const uint& i, const uint& j) {
-	uint ni = (i==0? (l.size()-1): i-1);
-	uint nj = (j==0? (l.size()-1): j-1);
-	Dot(loop[i],loop[ni],loop[j],loop[nj]);
+	uint ni = (i==0? (loop.size()-1): i-1);
+	uint nj = (j==0? (loop.size()-1): j-1);
+	return Dot(loop[i],loop[ni],loop[j],loop[nj]);
 }
 
 
 // DX
 template <uint Dim>
 number DX(const Loop<Dim>& loop, const uint& i, const uint& mu) {
-	uint ni = (i==0? (l.size()-1): i-1);
+	uint ni = (i==0? (loop.size()-1): i-1);
 	return (loop[i])[mu]-(loop[ni])[mu];
 }
 
@@ -988,8 +988,7 @@ template <> number DV0 <4>(const Loop<4>& l, const Point<4>& p, const uint& loc)
 	for (uint j=0; j<l.size(); j++) {
 		if (j!=loc) {
 			result += 2.0/DistanceSquared(l[j],p);
-			result -= 2.0/DistanceSquared(l[j],l[loctemplate number Dot<2>(const Loop<2>&, const uint&, const uint&, const uint&, const uint&);
-template number Dot<2>(const Loop<2>&, const uint&, const uint&);]);
+			result -= 2.0/DistanceSquared(l[j],l[loc]);
 		}
 	}
 	return result/pow(l.size()-1.0,2);

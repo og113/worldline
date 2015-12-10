@@ -295,6 +295,50 @@ void ddV1r_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, cons
 	
 }
 
+// mFGamma_nr
+template<uint Dim>
+void mdFGamma_nr(const uint& j, const uint& mu, const Loop<Dim>& l, const number& f, vec& v) {
+	uint nj = (j==0? (l.size()-1): j-1);
+	uint nnj = (nj==0? (l.size()-1): nj-1);
+	uint pj = (j==(l.size()-1)? 0: j+1);
+	
+	number jj = Dot(l,j,j);
+	number jnj = Dot(l,j,nj);
+	number njnj = Dot(l,nj,nj);
+	number njnnj = Dot(l,nnj,nj);
+	number nnjnnj = Dot(l,nnj,nnj);
+	number jpj = Dot(l,j,pj);
+	number pjpj = Dot(l,pj,pj);
+
+	v[j*Dim+mu] -= f*((2.0*atan(sqrt(-pow(njnnj,2) + nnjnnj*njnj)/njnnj)*njnnj* \
+        (-DX(l,nj,mu)*nnjnnj) + DX(l,nnj,mu)*njnnj))/ \
+      pow(-pow(njnnj,2) + nnjnnj*njnj,1.5) + \
+     (2.0*njnnj*DX(l,nj,mu)*njnnj - DX(l,nnj,mu)*njnj)/(njnj*(-pow(njnnj,2) + \
+          nnjnnj*njnj)) + (2.0*atan(sqrt(-pow(njnnj,2) + nnjnnj*njnj)/ \
+          njnnj)*DX(l,nnj,mu))/sqrt(-pow(njnnj,2) + nnjnnj*njnj) + \
+     (2.0*jnj*DX(l,j,mu)*jnj - DX(l,nj,mu)*jj)/ \
+     (jj*(pow(jnj,2) - njnj*jj)) + \
+     (atan(sqrt(-pow(jnj,2) + njnj*jj)/jnj)* \
+        jnj*(2.0*DX(l,j,mu)*njnj - 2.0*DX(l,nj,mu)*jnj))/ \
+      pow(-pow(jnj,2) + njnj*jj,1.5) + \
+     (2.0*atan(sqrt(-pow(jnj,2) + njnj*jj)/jnj)*jnj* \
+        (DX(l,j,mu)*jnj - DX(l,nj,mu)*jj))/ \
+      pow(-pow(jnj,2) + njnj*jj,1.5) + \
+     (2.0*jnj*(-(DX(l,j,mu)*njnj) + DX(l,nj,mu)*jnj))/ \
+      (njnj*(-pow(jnj,2) + njnj*jj)) - \
+     (2.0*atan(sqrt(-pow(jnj,2) + njnj*jj)/jnj)*DX(l,nj,mu))/ \
+      sqrt(-pow(jnj,2) + njnj*jj) + \
+     (2.0*atan(sqrt(-pow(jnj,2) + njnj*jj)/jnj)*DX(l,j,mu))/ \
+      sqrt(-pow(jnj,2) + njnj*jj) + \
+     (atan(sqrt(-pow(jpj,2) + jj*pjpj)/jpj)* \
+        jpj*(-2.0*DX(l,pj,mu)*jpj + 2.0*DX(l,j,mu)*pjpj))/ \
+      pow(-pow(jpj,2) + jj*pjpj,1.5) + \
+     (2.0*jpj*(DX(l,pj,mu)*jj - DX(l,j,mu)*jpj))/ \
+      (jj*(-pow(jpj,2) + jj*pjpj)) - \
+     (2.0*atan(sqrt(-pow(jpj,2) + jj*pjpj)/jpj)* \
+        DX(l,pj,mu))/sqrt(-pow(jpj,2) + jj*pjpj)/2.0;
+}
+
 /*----------------------------------------------------------------------------------------------------------------------------
 	2 - loopToVector, vectorToLoop
 ----------------------------------------------------------------------------------------------------------------------------*/
@@ -384,6 +428,7 @@ template void mdV1r_nr<2>(const uint& j, const uint& mu, const Loop<2>& l, const
 template void mdV1r_nr<2>(const uint& j, const uint& mu, const uint& i, const Loop<2>& l, const number& a, const number& p, vec& v);
 template void ddV1r_nr<2>(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<2>& l,\
 						 const number& a, const number& f, mat& m);
+template void mdFGamma_nr<2>(const uint& j, const uint& mu, const Loop<2>& l, const number& p, vec& v);
 template void loopToVector<2>(const Loop<2>&,vec&);
 template void vectorToLoop<2>(const vec&, Loop<2>&);
 
@@ -440,6 +485,7 @@ template void mdV1r_nr<4>(const uint& j, const uint& mu, const Loop<4>& l, const
 template void mdV1r_nr<4>(const uint& j, const uint& mu, const uint& i, const Loop<4>& l, const number& a, const number& p, vec& v);
 template void ddV1r_nr<4>(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<4>& l,\
 						 const number& a, const number& f, mat& m);
+template void mdFGamma_nr<4>(const uint& j, const uint& mu, const Loop<4>& l, const number& p, vec& v);
 template void loopToVector<4>(const Loop<4>&,vec&);
 template void vectorToLoop<4>(const vec&, Loop<4>&);
 

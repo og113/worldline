@@ -102,6 +102,10 @@ void mdV1r_nr(const uint& j, const uint& mu, const uint& i, const Loop<Dim>& l, 
 template<uint Dim>
 void ddV1r_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l,\
 						 const number& a, const number& f, mat& m);
+						 
+// mFGamma_nr
+template<uint Dim>
+void mdFGamma_nr(const uint& j, const uint& mu, const Loop<Dim>& l, const number& f, vec& v);
 
 /*----------------------------------------------------------------------------------------------------------------------------
 	2 - loopToVector, vectorToLoop
