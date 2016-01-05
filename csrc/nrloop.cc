@@ -87,6 +87,18 @@ void V1r (const uint& j, const uint& k, const Loop<Dim>& l, const number& a, con
 	}
 }
 
+// V2r
+template <uint Dim>
+void V2r (const uint& j, const uint& k, const Loop<Dim>& l, const number& a, const number& f, number& result) {
+
+	if (k<j) {
+		uint pj = (j==(l.size()-1)? 0: j+1);
+		uint pk = (k==(l.size()-1)? 0: k+1);
+	
+		result += f*2.0*Dot(l[pj],l[j],l[pk],l[k])*pow(0.25*DistanceSquared(l[pj]+l[j],l[pk]+l[k])+a*a,(2.0-Dim)/2.0);	
+	}
+}
+
 // mdL_nr
 template<uint Dim>
 void mdL_nr(const uint& j, const uint& mu, const Loop<Dim>& l, const number& f, vec& v) {
@@ -497,6 +509,17 @@ template <> void V1r<4>(const uint& j, const uint& k, const Loop<4>& l, const nu
 		uint pk = (k==(l.size()-1)? 0: k+1);
 	
 		result += f*2.0*Dot(l[pj],l[j],l[pk],l[k])/(DistanceSquared(l[j],l[k])+a*a);	
+	}
+}
+
+// V2r
+template <> void V2r<4>(const uint& j, const uint& k, const Loop<4>& l, const number& a, const number& f, number& result) {
+
+	if (k<j) {
+		uint pj = (j==(l.size()-1)? 0: j+1);
+		uint pk = (k==(l.size()-1)? 0: k+1);
+	
+		result += f*2.0*Dot(l[pj],l[j],l[pk],l[k])/(0.25*DistanceSquared(l[pj]+l[j],l[pk]+l[k])+a*a);	
 	}
 }
 
