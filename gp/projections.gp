@@ -46,6 +46,7 @@ set xlabel "z"
 set ylabel "t"
 plot file using 3:4 with lines
 
+unset multiplot
+
 pause -1
 
-unset multiplot
