@@ -118,6 +118,7 @@ private:
 /*----------------------------------------------------------------------------------------------------------------------------
 	2 - functions acting on Points
 ----------------------------------------------------------------------------------------------------------------------------*/
+
 // Distance squared
 template <uint Dim>
 number DistanceSquared(const Point<Dim>&, const Point<Dim>&);
@@ -204,6 +205,18 @@ private:
 		- V0
 		- aprxDV0
 ----------------------------------------------------------------------------------------------------------------------------*/
+
+// Dot
+template <uint Dim>
+number Dot(const Loop<Dim>& loop, const uint& i, const uint& j, const uint& k, const uint& l);
+
+// Dot
+template <uint Dim>
+number Dot(const Loop<Dim>& loop, const uint& i, const uint& j);
+
+// DX
+template <uint Dim>
+number DX(const Loop<Dim>& loop, const uint& i, const uint& mu);
 
 // L
 template <uint Dim>

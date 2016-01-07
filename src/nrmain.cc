@@ -2,6 +2,7 @@
 	main program to run serial n-r method to solve classical monopole worldline equations
 */
 
+#include <Eigen/Dense>
 #include "check.h"
 #include "folder.h"
 #include "genloop.h"
@@ -44,6 +45,7 @@ int main(int argc, char** argv) {
 // inputs file
 bool verbose = true;
 bool circle = true;
+bool trivial = false; // doing trivial tests
 string printOpts = "";
 string inputsFile = "inputs3";
 
@@ -56,6 +58,7 @@ if (argc % 2 && argc>1) {
 		else if (id.compare("circle")==0) circle = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("inputs")==0) inputsFile = (string)argv[2*j+2];
 		else if (id.compare("print")==0) printOpts = (string)argv[2*j+2];
+		else if (id.compare("trivial")==0) trivial = (stn<uint>(argv[2*j+2])!=0);
 		else {
 			cerr << "argv id " << id << " not understood" << endl;
 			return 1;
@@ -131,10 +134,13 @@ for (uint pl=0; pl<Npl; pl++) {
 	Check checkSolMax("solution max",1.0e-6);
 	Check checkDelta("delta",1.0);
 	Check checkSm("smoothness",1.0);
-	Check checkInv("inverse",1.0e-16*NT*NT);
+	Check checkSym("symmetric",1.0e-16*NT*NT);
+	Check checkInv("inverse",1.0e-16*NT*NT*NT);
+	Check checkNegEigenvalue("negative eigenvalue",0.1);
+	Check checkNegEigenvector("negative eigenvector",0.1);
 	
 	// defining scalar quantities
-	number len, i0, s, sm;
+	number len, i0, s, sm, v, vr, fgamma;
 	
 	// defining vector and matrix quantities
 	vec x(N*dim);
@@ -179,7 +185,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		// initializing to zero
 		mds = Eigen::VectorXd::Zero(NT);
 		dds = Eigen::MatrixXd::Zero(NT,NT);
-		len = 0.0, i0 = 0.0;//, s0 = 0.0;
+		len = 0.0, i0 = 0.0, v = 0.0, fgamma = 0.0;//, s0 = 0.0;
 		
 		// loading x to xLoop - messier than it should be (should work with either a vec or a Loop really)
 		vectorToLoop(x,xLoop);	
@@ -191,27 +197,59 @@ for (uint pl=0; pl<Npl; pl++) {
 		// some simple scalars
 		uint j, k, mu, nu;
 		number gb = p.G*p.B;
+		number g = p.G*p.G/8.0/PI/PI;
 		//number s0norm = (p.T>MIN_NUMBER? 1.0/p.T: 2.0);
+		number sqrt4s0 = 2.0*sqrt(S0(xLoop));
+		len = L(xLoop);
+		number logla = (p.Epsi>MIN_NUMBER? log(len/p.Epsi): 0.0);
+		fgamma = FGamma(xLoop);
 		
 		// bulk
 		for (j=0; j<N; j++) {
 		
 			//S0(j, xLoop, s0norm, s0norm);
-			L(j, xLoop, 1.0, len);
-			I0(j, xLoop, -gb, i0);
+			//L		(j, xLoop, 1.0, len);
+			I0		(j, xLoop, -gb, i0);
+			//FGamma	(j, xLoop, logla, fgamma);
 		
 			for (mu=0; mu<dim; mu++) {
 			
-				//mdS0_nr(j,mu,xLoop,s0norm,mds);
-				mdL_nr(j,mu,xLoop,1.0,mds);
+				// free particle
+				mdsqrtS0_nr(j,mu,xLoop,sqrt4s0,1.0,mds);
+				
+				// external field
 				mdI_nr(j,mu,xLoop,-gb,mds);
 				
+				// dynamical field self-energy regularisation
+				mdL_nr(j,mu,xLoop,-g*PI/p.Epsi,mds);
+				
+				// dynamical field cusp regularisation
+				//mdFGamma_nr(j,mu,xLoop,-g*logla,mds);
+				//mdL_nr(j,mu,xLoop,-g*fgamma/len,mds);
+				
 				for (k=0; k<N; k++) {
-					for (nu=0; nu<dim; nu++) { // doing a full second loop for v
+				
+					if (mu==0)
+						V1r(j, k, xLoop, p.Epsi, g, v);
 					
-						//ddS0_nr(j,mu,k,nu,xLoop,s0norm,dds);
-						ddL_nr(j,mu,k,nu,xLoop,1.0,dds); // check symmetry in (j,mu)<->(k,nu)
+					// dynamical field
+					mdV1r_nr(j, mu, k, xLoop, p.Epsi, g, mds);
+				
+					for (nu=0; nu<dim; nu++) {
+					
+						// free particle
+						ddsqrtS0_nr(j,mu,k,nu,xLoop,sqrt4s0,1.0,dds);
+						
+						// external field
 						ddI_nr(j,mu,k,nu,xLoop,-gb,dds);
+						
+						// dynamical field	
+						ddV1r_nr(j, mu, k, nu, xLoop, p.Epsi, g, dds);
+						
+						// dynamical field self-energy regularisation
+						ddL_nr(j,mu,k,nu,xLoop,-g*PI/p.Epsi,dds);
+						
+						// dynamical field cusp regularisation
 						
 					}
 				}
@@ -232,7 +270,10 @@ for (uint pl=0; pl<Npl; pl++) {
 		}
 		
 		// assigning scalar quantities
-		s = len + i0;
+		//s = len + i0;
+		vr = v;
+		vr -= (abs(p.Epsi)>MIN_NUMBER? g*(PI*len/p.Epsi + fgamma) : 0.0);
+		s = sqrt4s0 + i0 + vr;
 	
 /*----------------------------------------------------------------------------------------------------------------------------
 	6 - some checks
@@ -241,6 +282,31 @@ for (uint pl=0; pl<Npl; pl++) {
 		// smoothness
 		sm = Sm(xLoop);
 		checkSm.add(sm);
+		
+		if (trivial) {
+			// checking if dds is symmetric
+			mat dds_asym(NT,NT);
+			dds_asym = dds.transpose();
+			dds_asym -= dds;
+			dds_asym *= 0.5;
+			number asym = dds_asym.norm();
+			checkSym.add(asym);
+			checkSym.checkMessage();
+			
+			// checking value of negative eigenvalue, assuming x is an eigenvector
+			number analyticNegEigenvalue = -2.0*PI*p.G*p.B;
+			number xnorm = x.squaredNorm();
+			number negEigenvalue = ((dds*x).dot(x)/xnorm)*(number)xLoop.size();
+			number negEigenvalueTest = abs(negEigenvalue-analyticNegEigenvalue)/abs(analyticNegEigenvalue);
+			checkNegEigenvalue.add(negEigenvalueTest);
+			checkNegEigenvalue.checkMessage();
+			
+			// checking x is an eigenvector (case for circle in continuum limit)
+			negEigenvalue /= (number)xLoop.size();
+			number negEigenvectorTest = (dds*x-negEigenvalue*x).squaredNorm()/xnorm;
+			checkNegEigenvector.add(negEigenvectorTest);
+			checkNegEigenvector.checkMessage();
+		}		
 	
 /*----------------------------------------------------------------------------------------------------------------------------
 	7 - print early 1
@@ -383,10 +449,10 @@ for (uint pl=0; pl<Npl; pl++) {
 	
 	// printing results to terminal
 	printf("\n");
-	printf("%8s%8s%8s%8s%8s%8s%8s%14s%14s%14s\n","runs","time","K","G","B","T","a","len",\
-		"i0","s");
-	printf("%8i%8.3g%8i%8.4g%8.4g%8.4g%8.4g%14.5g%14.5g%14.5g\n",\
-		runsCount,realtime,p.K,p.G,p.B,p.T,p.Epsi,len,i0,s);
+	printf("%8s%8s%8s%8s%8s%8s%8s%14s%14s%14s%14s\n","runs","time","K","G","B","T","a","len",\
+		"i0","vr","s");
+	printf("%8i%8.3g%8i%8.4g%8.4g%8.4g%8.4g%14.5g%14.5g%14.5g%14.5g\n",\
+		runsCount,realtime,p.K,p.G,p.B,p.T,p.Epsi,len,i0,vr,s);
 	printf("\n");
 	
 	

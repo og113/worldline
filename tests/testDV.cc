@@ -20,8 +20,8 @@ cout << "testDV" << endl;
 
 uint K=10, Length = pow(2,K);
 uint Seed = 1;
-string file = "data/s0/loops/dim_"+nts<uint>(dim)+"/K_"+nts<uint>(K)+"/loop_run_0.dat";
-//string file = "data/circle/loops/dim_"+nts<uint>(dim)+"/K_"+nts<uint>(K)+"/loop_R_1_rank_0.dat";
+//string file = "data/s0/loops/dim_"+nts<uint>(dim)+"/K_"+nts<uint>(K)+"/loop_run_0.dat";
+string file = "data/circle/loops/dim_"+nts<uint>(dim)+"/K_"+nts<uint>(K)+"/loop_R_1_rank_0.dat";
 
 cout << "loading from " << file << endl;
 
@@ -81,7 +81,7 @@ cout << "difference = " << c-d << endl << endl;
 
 c = FGamma(loop_new)-FGamma(loop);
 d = DFGamma(loop,p,loc);
-number gamma = 2.0*pi/(number)loop.size();
+number gamma = 2.0*PI/(number)loop.size();
 number temp, cot_gamma;
 temp = Dot(loop[2],loop[1],loop[1],loop[0]);
 cot_gamma = DistanceSquared(loop[2],loop[1])*DistanceSquared(loop[1],loop[0]) - temp*temp;
@@ -105,9 +105,9 @@ cout << "DS0 = " << d << endl;
 cout << "difference = " << c-d << endl << endl;
 
 cout << "DeltaGamma = " << FGamma(loop)*log(L(loop)/a) << endl;
-cout << "DeltaSelfErg = " << pi*L(loop)/a << endl;
-cout << "V1r - Deltas = " << v1r-pi*L(loop)/a-FGamma(loop)*log(L(loop)/a) << endl;
-cout << "2*pi*pi = " << -2.0*pi*pi << endl;
+cout << "DeltaSelfErg = " << PI*L(loop)/a << endl;
+cout << "V1r - Deltas = " << v1r-PI*L(loop)/a-FGamma(loop)*log(L(loop)/a) << endl;
+cout << "2*PI*PI = " << -2.0*PI*PI << endl;
 
 return 0;
 }

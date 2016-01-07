@@ -49,6 +49,18 @@ void S0 (const uint& j, const Loop<Dim>& l, const number& f, number& result);
 template <uint Dim>
 void I0 (const uint& j, const Loop<Dim>& l, const number& f, number& result);
 
+// FGamma
+template <uint Dim>
+void FGamma (const uint& j, const Loop<Dim>& l, const number& f, number& result);
+
+// V1r
+template <uint Dim>
+void V1r (const uint& j, const uint& k, const Loop<Dim>& l, const number& a, const number& f, number& result);
+
+// V2r
+template <uint Dim>
+void V2r (const uint& j, const uint& k, const Loop<Dim>& l, const number& a, const number& f, number& result);
+
 // mdL_nr
 template<uint Dim>
 void mdL_nr(const uint& j, const uint& mu, const Loop<Dim>& l, const number& f, vec& v);
@@ -72,6 +84,45 @@ void mdS0_nr(const uint& j, const uint& mu, const Loop<Dim>& l, const number& f,
 // ddS0_nr
 template<uint Dim>
 void ddS0_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l, const number& f, mat& m);
+
+// mdsqrtS0_nr
+template<uint Dim>
+void mdsqrtS0_nr(const uint& j, const uint& mu, const Loop<Dim>& l, const number& sqrt4s0, const number& f, vec& v);
+
+// ddsqrtS0_nr
+template<uint Dim>
+void ddsqrtS0_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, \
+						const Loop<Dim>& l, const number& sqrt4s0, const number& f, mat& m);
+						
+// mdV1r_nr
+template<uint Dim>
+void mdV1r_nr(const uint& j, const uint& mu, const Loop<Dim>& l, const number& a, const number& f, vec& v);
+
+// mdV2r_nr
+template<uint Dim>
+void mdV2r_nr(const uint& j, const uint& mu, const Loop<Dim>& l, const number& a, const number& f, vec& v);
+
+// mdV1r_nr
+template<uint Dim>
+void mdV1r_nr(const uint& j, const uint& mu, const uint& i, const Loop<Dim>& l, const number& a, const number& f, vec& v);
+
+// mdV2r_nr
+template<uint Dim>
+void mdV2r_nr(const uint& j, const uint& mu, const uint& i, const Loop<Dim>& l, const number& a, const number& f, vec& v);
+
+// ddV1r_nr
+template<uint Dim>
+void ddV1r_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l,\
+						 const number& a, const number& f, mat& m);
+
+// ddV2r_nr
+template<uint Dim>
+void ddV2r_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l,\
+						 const number& a, const number& f, mat& m);
+						 
+// mFGamma_nr
+template<uint Dim>
+void mdFGamma_nr(const uint& j, const uint& mu, const Loop<Dim>& l, const number& f, vec& v);
 
 /*----------------------------------------------------------------------------------------------------------------------------
 	2 - loopToVector, vectorToLoop
