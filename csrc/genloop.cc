@@ -697,6 +697,21 @@ number V1r (const Loop<Dim>& l, const number& a) {
 	return result;
 }
 
+// V2r
+template <uint Dim>
+number V2r (const Loop<Dim>& l, const number& a) {
+	number result = 0.0;
+	uint posj, posk;
+	for (uint j=1; j<l.size(); j++) {
+		posj = (j!=(l.size()-1)?j+1:0);
+		for (uint k=0; k<j; k++) {
+			posk = (k!=(l.size()-1)?k+1:0);
+			result += 2.0*Dot(l[posj],l[j],l[posk],l[k])*pow(0.25*DistanceSquared(l[posj]+l[j],l[posk]+l[k])+a*a,(2.0-Dim)/2.0);
+		}
+	}
+	return result;
+}
+
 // DV1
 template <uint Dim>
 number DV1 (const Loop<Dim>& l, const Point<Dim>& p, const uint& loc) {
@@ -1050,6 +1065,20 @@ template <> number V1r<4> (const Loop<4>& l, const number& a) {
 		for (uint k=0; k<j; k++) {
 			posk = (k!=(l.size()-1)?k+1:0);
 			result += 2.0*Dot(l[posj],l[j],l[posk],l[k])/(DistanceSquared(l[j],l[k])+a*a);
+		}
+	}
+	return result;
+}
+
+// V2r
+template <> number V2r<4> (const Loop<4>& l, const number& a) {
+	number result = 0.0;
+	uint posj, posk;
+	for (uint j=1; j<l.size(); j++) {
+		posj = (j!=(l.size()-1)?j+1:0);
+		for (uint k=0; k<j; k++) {
+			posk = (k!=(l.size()-1)?k+1:0);
+			result += 2.0*Dot(l[posj],l[j],l[posk],l[k])/(0.25*DistanceSquared(l[posj]+l[j],l[posk]+l[k])+a*a);
 		}
 	}
 	return result;
