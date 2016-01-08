@@ -140,7 +140,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	Check checkNegEigenvector("negative eigenvector",0.1);
 	
 	// defining scalar quantities
-	number len, i0, s, sm, v, vr, fgamma;
+	number len, i0, s, sm, v, vr;
 	
 	// defining vector and matrix quantities
 	vec x(N*dim);
@@ -185,7 +185,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		// initializing to zero
 		mds = Eigen::VectorXd::Zero(NT);
 		dds = Eigen::MatrixXd::Zero(NT,NT);
-		len = 0.0, i0 = 0.0, v = 0.0, fgamma = 0.0;//, s0 = 0.0;
+		len = 0.0, i0 = 0.0, v = 0.0;//, s0 = 0.0;
 		
 		// loading x to xLoop - messier than it should be (should work with either a vec or a Loop really)
 		vectorToLoop(x,xLoop);	
@@ -198,19 +198,14 @@ for (uint pl=0; pl<Npl; pl++) {
 		uint j, k, mu, nu;
 		number gb = p.G*p.B;
 		number g = p.G*p.G/8.0/PI/PI;
-		//number s0norm = (p.T>MIN_NUMBER? 1.0/p.T: 2.0);
 		number sqrt4s0 = 2.0*sqrt(S0(xLoop));
-		len = L(xLoop);
-		number logla = (p.Epsi>MIN_NUMBER? log(len/p.Epsi): 0.0);
-		fgamma = FGamma(xLoop);
 		
 		// bulk
 		for (j=0; j<N; j++) {
 		
 			//S0(j, xLoop, s0norm, s0norm);
-			//L		(j, xLoop, 1.0, len);
+			L		(j, xLoop, 1.0, len);
 			I0		(j, xLoop, -gb, i0);
-			//FGamma	(j, xLoop, logla, fgamma);
 		
 			for (mu=0; mu<dim; mu++) {
 			
@@ -224,8 +219,6 @@ for (uint pl=0; pl<Npl; pl++) {
 				mdL_nr(j,mu,xLoop,-g*PI/p.Epsi,mds);
 				
 				// dynamical field cusp regularisation
-				//mdFGamma_nr(j,mu,xLoop,-g*logla,mds);
-				//mdL_nr(j,mu,xLoop,-g*fgamma/len,mds);
 				
 				for (k=0; k<N; k++) {
 				
@@ -270,9 +263,8 @@ for (uint pl=0; pl<Npl; pl++) {
 		}
 		
 		// assigning scalar quantities
-		//s = len + i0;
 		vr = v;
-		vr -= (abs(p.Epsi)>MIN_NUMBER? g*(PI*len/p.Epsi + fgamma) : 0.0);
+		vr -= (abs(p.Epsi)>MIN_NUMBER? g*PI*len/p.Epsi : 0.0);
 		s = sqrt4s0 + i0 + vr;
 	
 /*----------------------------------------------------------------------------------------------------------------------------

@@ -248,20 +248,20 @@ void ddV1r_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, cons
 	// terms where mu==nu, without sums
 	if (mu==nu) {
 		if (k!=j)
-			res += 2.0/denom_njnk + 2.0/denom + 4.0*orig_num/pow(denom,2);
+			res += 2.0/denom_njnk + 2.0/denom - 4.0*orig_num/pow(denom,2); //
 		if (k!=nj)
-			res += -2.0/denom_nj;
+			res += -2.0/denom_nj; //
 		if (k!=pj)
-			res += -2.0/denom_nk;
+			res += -2.0/denom_nk; //
 	}
 	
 	// terms where mu not nexcessarily equal to nu, without sums
 	if (k!=j)
-		res += 4.0*( -dx_k_mu*x_jk_nu + x_jk_mu*dx_j_nu )/pow(denom,2) - 16.0*orig_num*x_jk_mu*x_jk_nu/pow(denom,3);
+		res += 4.0*( -dx_k_mu*x_jk_nu + x_jk_mu*dx_j_nu )/pow(denom,2) - 16.0*orig_num*x_jk_mu*x_jk_nu/pow(denom,3); //
 	if (k!=nj)
-		res += 4.0*dx_k_mu*((l[nj])[nu]-(l[k])[nu])/pow(denom_nj,2);
+		res += 4.0*dx_k_mu*((l[nj])[nu]-(l[k])[nu])/pow(denom_nj,2); //
 	if (k!=pj)
-		res += -4.0*dx_j_nu*((l[j])[mu]-(l[nk])[mu])/pow(denom_nk,2);
+		res += -4.0*dx_j_nu*((l[j])[mu]-(l[nk])[mu])/pow(denom_nk,2); //
 	
 	// terms with sums
 	if (k==j || k==nj || k==pj) {
@@ -278,10 +278,10 @@ void ddV1r_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, cons
 			denom_inj = a*a + DistanceSquared(l[i],l[nj]);
 			
 			if (k==j && i!=j) {
-				res += 	(4.0/pow(denom_inj,2)) * ( ((l[j])[nu]-(l[i])[nu])*dx_i_mu + ((l[j])[mu]-(l[i])[mu])*dx_i_nu \
+				res += 	(4.0/pow(denom_ij,2)) * ( ((l[j])[nu]-(l[i])[nu])*dx_i_mu + ((l[j])[mu]-(l[i])[mu])*dx_i_nu \
 						+ 4.0*((l[j])[mu]-(l[i])[mu])*((l[j])[nu]-(l[i])[nu])*Dot(l[pj],l[j],l[pi],l[i])/denom_ij );
 				if (mu==nu)
-					res += -4.0*Dot(l[pj],l[j],l[pi],l[i])/pow(denom_ij,2);
+					res += -4.0*Dot(l[pj],l[j],l[pi],l[i])/pow(denom_ij,2); //
 			}
 			if (k==nj && i!=nj) 
 				res += -4.0*((l[nj])[nu]-(l[i])[nu])*dx_i_mu/pow(denom_inj,2);
