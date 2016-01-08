@@ -670,46 +670,46 @@ number aprxDV0 (const Loop<Dim>& l, const Point<Dim>& p, const uint& loc) {
 // V1
 template <uint Dim>
 number V1 (const Loop<Dim>& l) {
-	number result = 2.0*Dot(l[2],l[1],l[1],l[0])*pow(DistanceSquared(l[1],l[0]),(2.0-Dim)/2.0);
+	number result = Dot(l[2],l[1],l[1],l[0])*pow(DistanceSquared(l[1],l[0]),(2.0-Dim)/2.0);
 	uint posj, posk;
 	for (uint j=2; j<l.size(); j++) {
 		posj = (j!=(l.size()-1)?j+1:0);
 		for (uint k=0; k<j; k++) {
 			posk = (k!=(l.size()-1)?k+1:0);
-			result += 2.0*Dot(l[posj],l[j],l[posk],l[k])*pow(DistanceSquared(l[j],l[k]),(2.0-Dim)/2.0);
+			result += Dot(l[posj],l[j],l[posk],l[k])*pow(DistanceSquared(l[j],l[k]),(2.0-Dim)/2.0);
 		}
 	}
-	return result;
+	return 2.0*result;
 }
 
 // V1r
 template <uint Dim>
 number V1r (const Loop<Dim>& l, const number& a) {
-	number result = 2.0*Dot(l[2],l[1],l[1],l[0])*pow(DistanceSquared(l[1],l[0])+a*a,(2.0-Dim)/2.0);
+	number result = Dot(l[2],l[1],l[1],l[0])*pow(DistanceSquared(l[1],l[0])+a*a,(2.0-Dim)/2.0);
 	uint posj, posk;
 	for (uint j=2; j<l.size(); j++) {
 		posj = (j!=(l.size()-1)?j+1:0);
 		for (uint k=0; k<j; k++) {
 			posk = (k!=(l.size()-1)?k+1:0);
-			result += 2.0*Dot(l[posj],l[j],l[posk],l[k])*pow(DistanceSquared(l[j],l[k])+a*a,(2.0-Dim)/2.0);
+			result += Dot(l[posj],l[j],l[posk],l[k])*pow(DistanceSquared(l[j],l[k])+a*a,(2.0-Dim)/2.0);
 		}
 	}
-	return result;
+	return 2.0*result;
 }
 
 // V2r
 template <uint Dim>
 number V2r (const Loop<Dim>& l, const number& a) {
-	number result = 0.0;
+	number result = Dot(l[2],l[1],l[1],l[0])*pow(0.25*DistanceSquared(l[2]+l[1],l[1]+l[0])+a*a,(2.0-Dim)/2.0);
 	uint posj, posk;
-	for (uint j=1; j<l.size(); j++) {
+	for (uint j=2; j<l.size(); j++) {
 		posj = (j!=(l.size()-1)?j+1:0);
 		for (uint k=0; k<j; k++) {
 			posk = (k!=(l.size()-1)?k+1:0);
-			result += 2.0*Dot(l[posj],l[j],l[posk],l[k])*pow(0.25*DistanceSquared(l[posj]+l[j],l[posk]+l[k])+a*a,(2.0-Dim)/2.0);
+			result += Dot(l[posj],l[j],l[posk],l[k])*pow(0.25*DistanceSquared(l[posj]+l[j],l[posk]+l[k])+a*a,(2.0-Dim)/2.0);
 		}
 	}
-	return result;
+	return 2.0*result;
 }
 
 // DV1
@@ -747,6 +747,27 @@ number DV1r (const Loop<Dim>& l, const Point<Dim>& p, const uint& loc, const num
 			result += Dot(p,l[loc],l[posj],l[j])*pow(DistanceSquared(l[negloc],l[j])+a*a,(2.0-Dim)/2.0)\
 					+ Dot(l[posloc],p,l[posj],l[j])*pow(DistanceSquared(p,l[j])+a*a,(2.0-Dim)/2.0)\
 					- Dot(l[posloc],l[loc],l[posj],l[j])*pow(DistanceSquared(l[loc],l[j])+a*a,(2.0-Dim)/2.0);
+		}
+	}
+	return 2.0*result;
+}
+
+// DV2r
+template <uint Dim>
+number DV2r (const Loop<Dim>& l, const Point<Dim>& p, const uint& loc, const number& a) {
+	uint posj, posloc = (loc!=(l.size()-1)?loc+1:0);
+	uint negloc = (loc!=0?loc-1:(l.size()-1));
+	
+	number result = Dot(l[posloc],p,p,l[negloc])*pow(0.25*DistanceSquared(l[negloc]+p,p+l[posloc])+a*a,(2.0-Dim)/2.0)\
+						- Dot(l[posloc],l[loc],l[loc],l[negloc])*pow(0.25*DistanceSquared(l[negloc]+l[loc],l[loc]+l[posloc])+a*a,(2.0-Dim)/2.0);
+
+	for (uint j=0; j<l.size(); j++) {
+		if (j!=loc && j!=negloc) {
+			posj = (j!=(l.size()-1)?j+1:0);
+			result += Dot(p,l[loc],l[posj],l[j])*pow(0.25*DistanceSquared(l[negloc]+p,l[j]+l[posj])+a*a,(2.0-Dim)/2.0)\
+					- Dot(l[loc],l[negloc],l[posj],l[j])*pow(0.25*DistanceSquared(l[negloc]+l[loc],l[j]+l[posj])+a*a,(2.0-Dim)/2.0)\
+					+ Dot(l[posloc],p,l[posj],l[j])*pow(0.25*DistanceSquared(p+l[posloc],l[j]+l[posj])+a*a,(2.0-Dim)/2.0)\
+					- Dot(l[posloc],l[loc],l[posj],l[j])*pow(0.25*DistanceSquared(l[loc]+l[posloc],l[j]+l[posj])+a*a,(2.0-Dim)/2.0);
 		}
 	}
 	return 2.0*result;
@@ -1072,9 +1093,9 @@ template <> number V1r<4> (const Loop<4>& l, const number& a) {
 
 // V2r
 template <> number V2r<4> (const Loop<4>& l, const number& a) {
-	number result = 0.0;
+	number result = 2.0*Dot(l[2],l[1],l[1],l[0])/(0.25*DistanceSquared(l[2]+l[1],l[1]+l[0])+a*a);
 	uint posj, posk;
-	for (uint j=1; j<l.size(); j++) {
+	for (uint j=2; j<l.size(); j++) {
 		posj = (j!=(l.size()-1)?j+1:0);
 		for (uint k=0; k<j; k++) {
 			posk = (k!=(l.size()-1)?k+1:0);
@@ -1118,6 +1139,26 @@ template <> number DV1r<4> (const Loop<4>& l, const Point<4>& p, const uint& loc
 			result += Dot(p,l[loc],l[posj],l[j])/(DistanceSquared(l[negloc],l[j])+a2)\
 					+ Dot(l[posloc],p,l[posj],l[j])/(DistanceSquared(p,l[j])+a2)\
 					- Dot(l[posloc],l[loc],l[posj],l[j])/(DistanceSquared(l[loc],l[j])+a2);
+		}
+	}
+	return 2.0*result;
+}
+
+// DV2r
+template <> number DV2r<4> (const Loop<4>& l, const Point<4>& p, const uint& loc, const number& a) {
+	uint posj, posloc = (loc!=(l.size()-1)?loc+1:0);
+	uint negloc = (loc!=0?loc-1:(l.size()-1));
+	
+	number result = Dot(l[posloc],p,p,l[negloc])/(0.25*DistanceSquared(l[negloc]+p,p+l[posloc])+a*a)\
+						- Dot(l[posloc],l[loc],l[loc],l[negloc])/(0.25*DistanceSquared(l[negloc]+l[loc],l[loc]+l[posloc])+a*a);
+
+	for (uint j=0; j<l.size(); j++) {
+		if (j!=loc && j!=negloc) {
+			posj = (j!=(l.size()-1)?j+1:0);
+			result += Dot(p,l[negloc],l[posj],l[j])/(0.25*DistanceSquared(l[negloc]+p,l[j]+l[posj])+a*a)\
+					- Dot(l[loc],l[negloc],l[posj],l[j])/(0.25*DistanceSquared(l[negloc]+l[loc],l[j]+l[posj])+a*a)\
+					+ Dot(l[posloc],p,l[posj],l[j])/(0.25*DistanceSquared(p+l[posloc],l[j]+l[posj])+a*a)\
+					- Dot(l[posloc],l[loc],l[posj],l[j])/(0.25*DistanceSquared(l[loc]+l[posloc],l[j]+l[posj])+a*a);
 		}
 	}
 	return 2.0*result;
