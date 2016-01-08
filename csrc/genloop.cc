@@ -752,6 +752,26 @@ number DV1r (const Loop<Dim>& l, const Point<Dim>& p, const uint& loc, const num
 	return 2.0*result;
 }
 
+// DV2r
+template <uint Dim>
+number DV2r (const Loop<Dim>& l, const Point<Dim>& p, const uint& loc, const number& a) {
+	uint posj, posloc = (loc!=(l.size()-1)?loc+1:0);
+	uint negloc = (loc!=0?loc-1:(l.size()-1));
+	
+	number result = Dot(l[posloc],p,p,l[negloc])*pow(DistanceSquared(l[negloc],p)+a*a,(2.0-Dim)/2.0)\
+						- Dot(l[posloc],l[loc],l[loc],l[negloc])*pow(DistanceSquared(l[negloc],l[loc])+a*a,(2.0-Dim)/2.0);
+
+	for (uint j=0; j<l.size(); j++) {
+		if (j!=loc && j!=negloc) {
+			posj = (j!=(l.size()-1)?j+1:0);
+			result += Dot(p,l[loc],l[posj],l[j])*pow(DistanceSquared(l[negloc],l[j])+a*a,(2.0-Dim)/2.0)\
+					+ Dot(l[posloc],p,l[posj],l[j])*pow(DistanceSquared(p,l[j])+a*a,(2.0-Dim)/2.0)\
+					- Dot(l[posloc],l[loc],l[posj],l[j])*pow(DistanceSquared(l[loc],l[j])+a*a,(2.0-Dim)/2.0);
+		}
+	}
+	return 2.0*result;
+}
+
 // I0
 template <uint Dim>
 number I0 (const Loop<Dim>& l) {

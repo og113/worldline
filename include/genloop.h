@@ -266,6 +266,10 @@ number V1 (const Loop<Dim>& l);
 template <uint Dim>
 number V1r (const Loop<Dim>& l, const number& epsi);
 
+// V2r
+template <uint Dim>
+number V2r (const Loop<Dim>& l, const number& epsi);
+
 // DV1
 template <uint Dim>
 number DV1 (const Loop<Dim>& l, const Point<Dim>& p, const uint& loc);
@@ -273,6 +277,10 @@ number DV1 (const Loop<Dim>& l, const Point<Dim>& p, const uint& loc);
 // DV1r
 template <uint Dim>
 number DV1r (const Loop<Dim>& l, const Point<Dim>& p, const uint& loc, const number& a);
+
+// DV2r
+template <uint Dim>
+number DV2r (const Loop<Dim>& l, const Point<Dim>& p, const uint& loc, const number& a);
 
 // I0
 template <uint Dim>
