@@ -135,6 +135,10 @@ number Dot(const Point<Dim>&, const Point<Dim>&);
 template <uint Dim>
 number Dot(const Point<Dim>&, const Point<Dim>&, const Point<Dim>&, const Point<Dim>&);
 
+// MidpointDistance
+template <uint Dim>
+number MidpointDistanceSquared(const Point<Dim>&, const Point<Dim>&, const Point<Dim>&, const Point<Dim>&);
+
 /*----------------------------------------------------------------------------------------------------------------------------
 	3 - Loop class
 ----------------------------------------------------------------------------------------------------------------------------*/
@@ -214,9 +218,17 @@ number Dot(const Loop<Dim>& loop, const uint& i, const uint& j, const uint& k, c
 template <uint Dim>
 number Dot(const Loop<Dim>& loop, const uint& i, const uint& j);
 
+// MidpointDistance
+template <uint Dim>
+number MidpointDistanceSquared(const Loop<Dim>& loop, const uint& i, const uint& j);
+
 // DX
 template <uint Dim>
 number DX(const Loop<Dim>& loop, const uint& i, const uint& mu);
+
+// DX
+template <uint Dim>
+number DX(const Loop<Dim>& loop, const uint& i, const uint& j, const uint& mu);
 
 // L
 template <uint Dim>

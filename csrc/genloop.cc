@@ -250,6 +250,12 @@ number Dot(const Point<Dim>& p1, const Point<Dim>& p2, const Point<Dim>& q1, con
 	return d;
 }
 
+// MidpointDistance
+template <uint Dim>
+number MidpointDistanceSquared(const Point<Dim>& p1, const Point<Dim>& p2, const Point<Dim>& p3, const Point<Dim>& p4) {
+	return 0.25*DistanceSquared(p1+p2,p3+p4);
+}
+
 /*----------------------------------------------------------------------------------------------------------------------------
 	3 - Loop class
 		- initialisers and destructor
@@ -512,12 +518,25 @@ number Dot(const Loop<Dim>& loop, const uint& i, const uint& j) {
 	return Dot(loop[i],loop[ni],loop[j],loop[nj]);
 }
 
+// MidpointDistance
+template <uint Dim>
+number MidpointDistanceSquared(const Loop<Dim>& loop, const uint& i, const uint& j) {
+	uint pi = (i==loop.size()? 0: i+1);
+	uint pj = (j==loop.size()? 0: j+1);
+	return MidpointDistanceSquared(loop[pi],loop[i],loop[pj],loop[j]);
+}
 
 // DX
 template <uint Dim>
 number DX(const Loop<Dim>& loop, const uint& i, const uint& mu) {
 	uint ni = (i==0? (loop.size()-1): i-1);
 	return (loop[i])[mu]-(loop[ni])[mu];
+}
+
+// DX
+template <uint Dim>
+number DX(const Loop<Dim>& loop, const uint& i, const uint& j, const uint& mu) {
+	return (loop[i])[mu]-(loop[j])[mu];
 }
 
 // L
@@ -992,9 +1011,12 @@ template bool operator^= <4>(const Point<4>& lhs, const Point<4>& rhs);
 template number Distance<4>(const Point<4>&, const Point<4>&);
 template number Dot<4>(const Point<4>&, const Point<4>&);
 template number Dot<4>(const Point<4>&, const Point<4>&, const Point<4>&, const Point<4>&);
+template number MidpointDistanceSquared<4>(const Point<4>&, const Point<4>&, const Point<4>&, const Point<4>&);
 template number Dot<4>(const Loop<4>&, const uint&, const uint&, const uint&, const uint&);
 template number Dot<4>(const Loop<4>&, const uint&, const uint&);
+template number MidpointDistanceSquared<4>(const Loop<4>&, const uint&, const uint&);
 template number DX<4>(const Loop<4>&, const uint&, const uint&);
+template number DX<4>(const Loop<4>&, const uint&, const uint&, const uint&);
 template class Loop<4>;
 template number L<4> (const Loop<4>& l);
 template number DL<4> (const Loop<4>& l, const Point<4>& p, const uint& loc);
@@ -1176,9 +1198,12 @@ template bool operator^= <2>(const Point<2>& lhs, const Point<2>& rhs);
 template number Distance<2>(const Point<2>&, const Point<2>&);
 template number Dot<2>(const Point<2>&, const Point<2>&);
 template number Dot<2>(const Point<2>&, const Point<2>&, const Point<2>&, const Point<2>&);
+template number MidpointDistanceSquared<2>(const Point<2>&, const Point<2>&, const Point<2>&, const Point<2>&);
 template number Dot<2>(const Loop<2>&, const uint&, const uint&, const uint&, const uint&);
 template number Dot<2>(const Loop<2>&, const uint&, const uint&);
+template number MidpointDistanceSquared<2>(const Loop<2>&, const uint&, const uint&);
 template number DX<2>(const Loop<2>&, const uint&, const uint&);
+template number DX<2>(const Loop<2>&, const uint&, const uint&, const uint&);
 template class Loop<2>;
 template number L<2> (const Loop<2>& l);
 template number DL<2> (const Loop<2>& l, const Point<2>& p, const uint& loc);
