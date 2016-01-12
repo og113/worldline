@@ -223,10 +223,10 @@ for (uint pl=0; pl<Npl; pl++) {
 				for (k=0; k<N; k++) {
 				
 					if (mu==0)
-						V1r(j, k, xLoop, p.Epsi, g, v);
+						V2r(j, k, xLoop, p.Epsi, g, v);
 					
 					// dynamical field
-					mdV1r_nr(j, mu, k, xLoop, p.Epsi, g, mds);
+					mdV2r_nr(j, mu, k, xLoop, p.Epsi, g, mds);
 				
 					for (nu=0; nu<dim; nu++) {
 					
@@ -237,7 +237,7 @@ for (uint pl=0; pl<Npl; pl++) {
 						ddI_nr(j,mu,k,nu,xLoop,-gb,dds);
 						
 						// dynamical field	
-						ddV1r_nr(j, mu, k, nu, xLoop, p.Epsi, g, dds);
+						ddV2r_nr(j, mu, k, nu, xLoop, p.Epsi, g, dds);
 						
 						// dynamical field self-energy regularisation
 						ddL_nr(j,mu,k,nu,xLoop,-g*PI/p.Epsi,dds);
