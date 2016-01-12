@@ -12,4 +12,6 @@ else
 	sed -i 's/T(/DX(/g' $1
 	sed -i 's/Power(/pow(/g' $1
 	sed -i ':a;N;$!ba;s/\(\s*\)\([+-]\)\(\s*\)\n/ \\ \n\2 /g' $1
+	sed -i 's/^\([+-]\)\(\s*\)/\1 /g' $1
+	sed -i 's/^\(\s*\)/ /g' $1
 fi
