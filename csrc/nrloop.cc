@@ -486,15 +486,15 @@ template <> void mdV2r_nr<4>(const uint& k, const uint& mu, const uint& j, const
 		
 	if (j!=k) {
 		B_jk = a*a + 0.25*DistanceSquared(l[pj]+l[j],l[pk]+l[k]);
-		res =  (2*DX(j,1 + j,m))/B_jk \ 
-			 + (-DX(k,j,m) - DX(1 + k,1 + j,m))*Dot(j,1 + j,k,1 + k)/(2.*pow(B_jk,2)) \ 
-			 - ((DX(k,j,m) + DX(1 + k,1 + j,m))*Dot(j,1 + j,k,1 + k))/(2.*pow(B_jk,2));
+		res =  (2*DX(l,j,pj,mu))/B_jk \
+			 + (-DX(l,k,j,mu) - DX(l,pk,pj,mu))*Dot(l[j],l[pj],l[k],l[pk])/(2.0*pow(B_jk,2)) \
+			 - ((DX(l,k,j,mu) + DX(l,pk,pj,mu))*Dot(l[j],l[pj],l[k],l[pk]))/(2.0*pow(B_jk,2));
 	}
 	if (j!=mk) {	
 		B_jmk = a*a + 0.25*DistanceSquared(l[pj]+l[j],l[k]+l[mk]);
-		res +=  (-2*DX(j,1 + j,m))/B_jmk 
-				 - ((-DX(-1 + k,j,m) - DX(k,1 + j,m))*Dot(j,1 + j,k,-1 + k))/(2.*pow(B_jmk,2)) \ 
-				 + ((DX(-1 + k,j,m) + DX(k,1 + j,m))*Dot(j,1 + j,k,-1 + k))/(2.*pow(B_jmk,2));
+		res +=  (-2*DX(l,j,pj,mu))/B_jmk \
+				 - ((-DX(l,mk,j,mu) - DX(l,k,pj,mu))*Dot(l[j],l[pj],l[k],l[mk]))/(2.0*pow(B_jmk,2)) \
+				 + ((DX(l,mk,j,mu) + DX(l,k,pj,mu))*Dot(l[j],l[pj],l[k],l[mk]))/(2.0*pow(B_jmk,2));
 	}
 
 	v[k*4+mu] += -f*res;
@@ -596,52 +596,62 @@ template <> void ddV2r_nr<4>(const uint& j, const uint& mu, const uint& k, const
 	// terms where mu==nu, without sums		
 	if (mu==nu) {
 		if (k!=j) {
-			res += 2.0/B_jk + 2.0/B_mjmk + T_jk/pow(B_jk,2) + T_mjmk/pow(B_mjmk,2); //
+			res += + 2.0/B_mjmk \
+					 + 2.0/B_jk \
+					 + T_mjmk/pow(B_mjmk,2) \
+					 + T_jk/pow(B_jk,2);
 		}
 		if (k!=mj)
-			res += 2.0/B_mjk + T_mjk/pow(B_mjk,2); //
+			res += - 2.0/B_mjk \
+					 - T_mjk/pow(B_mjk,2);
 		if (k!=pj)
-			res += -2.0/B_jmk + T_jmk/pow(B_jmk,2) ; //
+			res += - 2.0/B_jmk \
+					 - T_jmk/pow(B_jmk,2);
 	}
 	
-	// terms where mu not nexcessarily equal to nu, without sums#
+// terms where mu not nexcessarily equal to nu, without sums#
 	if (k!=j) {
-		res += 	(- DX(l,j,pj,nu)*DX(l,j,k,mu) \
-				- DX(l,j,pj,nu)*DX(l,pj,pk,mu) \
+		res +=  +( DX(l,pj,pk,nu)*DX(l,k,pk,mu) \
 				+ DX(l,j,k,nu)*DX(l,k,pk,mu) \
-				+ DX(l,pj,pk,nu)*DX(l,k,pk,mu) )/pow(B_jk,2)\
-				+( -DX(l,mj,mk,mu)*DX(l,j,mj,nu) \
+				- DX(l,j,pj,nu)*DX(l,pj,pk,mu) \
+				- DX(l,j,pj,nu)*DX(l,j,k,mu) )/pow(B_jk,2) \
+				\
+				+( - DX(l,j,k,mu)*DX(l,j,k,nu) \
+				- DX(l,j,k,nu)*DX(l,pj,pk,mu) \
+				- DX(l,j,k,mu)*DX(l,pj,pk,nu) \
+				- DX(l,pj,pk,mu)*DX(l,pj,pk,nu) )*T_jk/pow(B_jk,3) \
+				\
+				+( - DX(l,mj,mk,mu)*DX(l,j,mj,nu) \
 				- DX(l,j,mj,nu)*DX(l,j,k,mu) \
 				+ DX(l,mj,mk,nu)*DX(l,k,mk,mu) \
-				+ DX(l,j,k,nu)*DX(l,k,mk,mu) )/pow(B_mjmk,2) \
-				+( -DX(l,j,k,mu)*DX(l,j,k,nu) \
-				-DX(l,j,k,nu)*DX(l,pj,pk,mu) \
-				-DX(l,j,k,mu)*DX(l,pj,pk,nu) \
-				-DX(l,pj,pk,mu)*DX(l,pj,pk,nu) )*T_jk/pow(B_jk,3) \
-				+( -DX(l,mj,mk,mu)*DX(l,mj,mk,nu) \
-				-DX(l,mj,mk,nu)*DX(l,j,k,mu) \
-				-DX(l,mj,mk,mu)*DX(l,j,k,nu) \
-				-DX(l,j,k,mu)*DX(l,j,k,nu) )*T_mjmk/pow(B_mjmk,3);
+				+ DX(l,j,k,nu)*DX(l,k,mk,mu)  )/pow(B_mjmk,2) \
+				\
+				+( - DX(l,mj,mk,mu)*DX(l,mj,mk,nu) \
+				- DX(l,mj,mk,nu)*DX(l,j,k,mu) \
+				- DX(l,mj,mk,mu)*DX(l,j,k,nu) \
+				- DX(l,j,k,mu)*DX(l,j,k,nu) )*T_mjmk/pow(B_mjmk,3);
 	}
 	if (k!=mj) {
-		res += 	( -DX(l,mj,k,mu)*DX(l,j,mj,nu) \
-				-DX(l,j,mj,nu)*DX(l,j,pk,mu) \
-				+DX(l,mj,k,nu)*DX(l,k,pk,mu) \
-				+DX(l,j,pk,nu)*DX(l,k,pk,mu) )/pow(B_mjk,2) \
-				+( -DX(l,mj,k,mu)*DX(l,mj,k,nu) \
-				-DX(l,mj,k,nu)*DX(l,j,pk,mu) \
-				-DX(l,mj,k,mu)*DX(l,j,pk,nu) \
-				-DX(l,j,pk,mu)*DX(l,j,pk,nu) )*T_mjk/pow(B_mjk,3);
+		res += 	+( -DX(l,j,pk,nu)*DX(l,k,pk,mu) \
+				- DX(l,mj,k,nu)*DX(l,k,pk,mu) \
+				+ DX(l,j,mj,nu)*DX(l,j,pk,mu) \
+				+ DX(l,mj,k,mu)*DX(l,j,mj,nu) )/pow(B_mjk,2) \
+				\
+				+( DX(l,mj,k,mu)*DX(l,mj,k,nu) \
+				+ DX(l,mj,k,nu)*DX(l,j,pk,mu) \
+				+ DX(l,mj,k,mu)*DX(l,j,pk,nu) \
+				+ DX(l,j,pk,mu)*DX(l,j,pk,nu)  )*T_mjk/pow(B_mjk,3);
 	}
 	if (k!=pj) {
-		res += ( -DX(l,j,pj,nu)*DX(l,j,mk,mu) \
-				-DX(l,j,pj,nu)*DX(l,pj,k,mu) \
-				+DX(l,j,mk,nu)*DX(l,k,mk,mu) \
-				+DX(l,pj,k,nu)*DX(l,k,mk,mu) )/pow(B_jmk,2) \
-				+( -DX(l,j,mk,mu)*DX(l,j,mk,nu) \
-				-DX(l,j,mk,nu)*DX(l,pj,k,mu) \
-				-DX(l,j,mk,mu)*DX(l,pj,k,nu) \
-				-DX(l,pj,k,mu)*DX(l,pj,k,nu) )*T_jmk/pow(B_jmk,3);
+		res +=   +( DX(l,j,pj,nu)*DX(l,j,mk,mu)\
+				 + DX(l,j,pj,nu)*DX(l,pj,k,mu) \
+				 - DX(l,j,mk,nu)*DX(l,k,mk,mu) \
+				 - DX(l,pj,k,nu)*DX(l,k,mk,mu) )/pow(B_jmk,2) \
+				 \
+				 +( DX(l,j,mk,mu)*DX(l,j,mk,nu) \
+				 + DX(l,j,mk,nu)*DX(l,pj,k,mu) \
+				 + DX(l,j,mk,mu)*DX(l,pj,k,nu) \
+				 + DX(l,pj,k,mu)*DX(l,pj,k,nu) )*T_jmk/pow(B_jmk,3);
 	}
 	
 	// terms with sums
@@ -660,37 +670,43 @@ template <> void ddV2r_nr<4>(const uint& j, const uint& mu, const uint& k, const
 			T_imj = Dot(l[j],l[mj],l[pi],l[i]);
 			
 			if (k==j && i!=j) {
-				res += (-DX(l,i,pi,nu)*DX(l,j,i,mu) \
-						-DX(l,i,pi,nu)*DX(l,pj,pi,mu) \
-						+DX(l,i,pi,mu)*(-DX(l,j,i,nu) - DX(l,pj,pi,nu)) )/pow(B_ij,2) \
-						+( -DX(l,j,i,mu)*(-DX(l,j,i,nu) - DX(l,pj,pi,nu)) \
-						-DX(l,pj,pi,mu)*(-DX(l,j,i,nu) - DX(l,pj,pi,nu)) )*T_ij/pow(B_ij,3) \
-						+( -DX(l,i,pi,nu)*DX(l,mj,i,mu) \
-						-DX(l,i,pi,nu)*DX(l,j,pi,mu) \
-						+DX(l,i,pi,mu)*(-DX(l,mj,i,nu) - DX(l,j,pi,nu)) )/pow(B_imj,2) \
-						+( -DX(l,mj,i,mu)*(-DX(l,mj,i,nu) - DX(l,j,pi,nu)) \
-						-DX(l,j,pi,mu)*(-DX(l,mj,i,nu) - DX(l,j,pi,nu)) )*T_imj/pow(B_imj,3);				
+				res += +(- DX(l,i,pi,nu)*(-DX(l,mj,i,mu) - DX(l,j,pi,mu))/2.0 \
+					 + DX(l,i,pi,nu)*(DX(l,mj,i,mu) + DX(l,j,pi,mu))/2.0 \
+					 - DX(l,i,pi,mu)*(-DX(l,mj,i,nu) - DX(l,j,pi,nu)) )/pow(B_imj,2) \
+					 \
+					 +( DX(l,i,pi,nu)*(-DX(l,j,i,mu) - DX(l,pj,pi,mu))/2.0 \
+					 - DX(l,i,pi,nu)*(DX(l,j,i,mu) + DX(l,pj,pi,mu))/2.0 \
+					 + DX(l,i,pi,mu)*(-DX(l,j,i,nu) - DX(l,pj,pi,nu)) )/pow(B_ij,2) \
+					 \
+					 +(-(-DX(l,mj,i,mu) - DX(l,j,pi,mu))*(-DX(l,mj,i,nu) - DX(l,j,pi,nu))\
+					 + (DX(l,mj,i,mu) + DX(l,j,pi,mu))*(-DX(l,mj,i,nu) - DX(l,j,pi,nu)) )*T_imj/(2.0*pow(B_imj,3)) \
+					 \
+					 +( (-DX(l,j,i,mu) - DX(l,pj,pi,mu))*(-DX(l,j,i,nu) - DX(l,pj,pi,nu))\
+				 	- (DX(l,j,i,mu) + DX(l,pj,pi,mu))*(-DX(l,j,i,nu) - DX(l,pj,pi,nu)) )*T_ij/(2.0*pow(B_ij,3));				
 
 				if (mu==nu)
-					res += - T_imj/pow(B_imj,2) - T_ij/pow(B_ij,2);
+					res += + T_imj/pow(B_imj,2) \
+ 							- T_ij/pow(B_ij,2);
 			}
 			if (k==mj && i!=mj) {
-				res += (-DX(l,i,pi,nu)*DX(l,mj,i,mu) \
-						-DX(l,i,pi,nu)*DX(l,j,pi,mu) \
-						+DX(l,i,pi,mu)*(-DX(l,mj,i,nu) - DX(l,j,pi,nu)) )/pow(B_imj,2) \
-						+(-DX(l,mj,i,mu)*(-DX(l,mj,i,nu) - DX(l,j,pi,nu)) \
-						-DX(l,j,pi,mu)*(-DX(l,mj,i,nu) - DX(l,j,pi,nu)) )*T_imj/pow(B_imj,3);
+				res +=  ( DX(l,i,pi,nu)*(-DX(l,mj,i,mu) - DX(l,j,pi,mu))/2.0 \
+				 - DX(l,i,pi,nu)*(DX(l,mj,i,mu) + DX(l,j,pi,mu))/2.0 \
+				 - DX(l,i,pi,mu)*(-DX(l,mj,i,nu) - DX(l,j,pi,nu)) )/pow(B_imj,2) \
+				 \
+				 +( -(-DX(l,mj,i,mu) - DX(l,j,pi,mu))*(-DX(l,mj,i,nu) - DX(l,j,pi,nu))\
+				 + (DX(l,mj,i,mu) + DX(l,j,pi,mu))*(-DX(l,mj,i,nu) - DX(l,j,pi,nu)) )*T_imj/(2.0*pow(B_imj,3));
 				if (mu==nu)
-					res += - T_imj/pow(B_imj,2);
+					res += + T_imj/pow(B_imj,2); 
 			}
 			if (k==pj && i!=j) {
-				res += 	( DX(l,i,pi,nu)*DX(l,j,i,mu) \
-						+DX(l,i,pi,nu)*DX(l,pj,pi,mu) \
-						+DX(l,i,pi,mu)*(-DX(l,j,i,nu) - DX(l,pj,pi,nu)) )/pow(B_ij,2) \
-						+(-DX(l,j,i,mu)*(-DX(l,j,i,nu) - DX(l,pj,pi,nu))\
-						-DX(l,pj,pi,mu)*(-DX(l,j,i,nu) - DX(l,pj,pi,nu)) )*T_ij/pow(B_ij,3);
+				res += 	 ( - DX(l,i,pi,nu)*(-DX(l,j,i,mu) - DX(l,pj,pi,mu))/2.0 \
+						 + DX(l,i,pi,nu)*(DX(l,j,i,mu) + DX(l,pj,pi,mu))/2.0 \
+						 + DX(l,i,pi,mu)*(-DX(l,j,i,nu) - DX(l,pj,pi,nu)) )/pow(B_ij,2) \
+						 \
+						 + ( (-DX(l,j,i,mu) - DX(l,pj,pi,mu))*(-DX(l,j,i,nu) - DX(l,pj,pi,nu))\
+						 - (DX(l,j,i,mu) + DX(l,pj,pi,mu))*(-DX(l,j,i,nu) - DX(l,pj,pi,nu)) )*T_ij/(2.0*pow(B_ij,3));
 				if (mu==nu)
-					res += - T_ij/pow(B_ij,2);
+					res +=  - T_ij/pow(B_ij,2);
 			}
 		}		
 	}

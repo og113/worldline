@@ -5,8 +5,9 @@ if [ -z "$1" ]
     echo "must supply input file"
 else
 	echo "changing mathematica output to c++ input"
-	sed -i 's/\\\[Rho\]/m/g' $1
-	sed -i 's/\\\[Sigma\]/n/g' $1
+	sed -i 's/2*/2.0*/g' $1
+	sed -i 's/\\\[Rho\]/mu/g' $1
+	sed -i 's/\\\[Sigma\]/nu/g' $1
 	sed -i 's/\\\[Delta\]/d/g' $1
 	sed -i 's/TT(/Dot(/g' $1
 	sed -i 's/T(/DX(/g' $1
@@ -27,5 +28,8 @@ else
 	sed -i 's/l/k/g' $1
 	sed -i 's/y/i/g' $1
 	sed -i 's/z/j/g' $1
+	sed -i 's/-1 + \([a-z]\)/m\1/g' $1
+	sed -i 's/1 + \([a-z]\)/p\1/g' $1
+	sed -i 's/DX(/DX(l,/g' $1
 	
 fi
