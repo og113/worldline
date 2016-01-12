@@ -479,20 +479,22 @@ template <> void mdV1r_nr<4>(const uint& k, const uint& mu, const uint& j, const
 
 // mdV2r_nr
 template <> void mdV2r_nr<4>(const uint& k, const uint& mu, const uint& j, const Loop<4>& l, const number& a, const number& f, vec& v) {
-	number denom, res = 0.0;
+	number B_jk, B_jmk, res = 0.0;
 	uint pk = (k==(l.size()-1)? 0: k+1);
 	uint mk = (k==0? (l.size()-1): k-1);
 	uint pj = (j==(l.size()-1)? 0: j+1);
 		
 	if (j!=k) {
-		denom = a*a + 0.25*DistanceSquared(l[pj]+l[j],l[pk]+l[k]);
-		res = -2.0*DX(l,pj,j,mu)/denom \
-				-( DX(l,k,j,mu) + DX(l,pk,pj,mu) )*Dot(l[pj],l[j],l[pk],l[k])/pow(denom,2);
+		B_jk = a*a + 0.25*DistanceSquared(l[pj]+l[j],l[pk]+l[k]);
+		res =  (2*DX(j,1 + j,m))/B_jk \ 
+			 + (-DX(k,j,m) - DX(1 + k,1 + j,m))*Dot(j,1 + j,k,1 + k)/(2.*pow(B_jk,2)) \ 
+			 - ((DX(k,j,m) + DX(1 + k,1 + j,m))*Dot(j,1 + j,k,1 + k))/(2.*pow(B_jk,2));
 	}
 	if (j!=mk) {	
-		denom = a*a + 0.25*DistanceSquared(l[pj]+l[j],l[k]+l[mk]);
-		res += -2.0*DX(l,pj,j,mu)/denom \
-				 -( DX(l,mk,j,mu) + DX(l,k,pj,mu) )*Dot(l[pj],l[j],l[k],l[mk])/pow(denom,2);
+		B_jmk = a*a + 0.25*DistanceSquared(l[pj]+l[j],l[k]+l[mk]);
+		res +=  (-2*DX(j,1 + j,m))/B_jmk 
+				 - ((-DX(-1 + k,j,m) - DX(k,1 + j,m))*Dot(j,1 + j,k,-1 + k))/(2.*pow(B_jmk,2)) \ 
+				 + ((DX(-1 + k,j,m) + DX(k,1 + j,m))*Dot(j,1 + j,k,-1 + k))/(2.*pow(B_jmk,2));
 	}
 
 	v[k*4+mu] += -f*res;
@@ -594,7 +596,7 @@ template <> void ddV2r_nr<4>(const uint& j, const uint& mu, const uint& k, const
 	// terms where mu==nu, without sums		
 	if (mu==nu) {
 		if (k!=j) {
-			res += 2.0/B_jk - 2.0/B_mjmk + T_jk/pow(B_jk,2) + T_mjmk/pow(B_mjmk,2); //
+			res += 2.0/B_jk + 2.0/B_mjmk + T_jk/pow(B_jk,2) + T_mjmk/pow(B_mjmk,2); //
 		}
 		if (k!=mj)
 			res += 2.0/B_mjk + T_mjk/pow(B_mjk,2); //
