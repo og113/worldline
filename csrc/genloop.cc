@@ -403,7 +403,7 @@ void Loop<Dim>::load(const string& f) {
 		return;
 	}
 	uint fd = countDoubles(f);
-	if (fd!=Dim*Length) {
+	if (fd<Dim*Length) {
 		cerr << "load error: " << f << " contains " << fd << " doubles, loop requires " << Length*Dim << endl;
 		return;
 	}
