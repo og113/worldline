@@ -60,39 +60,58 @@ if (pr.empty()) {
 	return 1;
 }
 Parameters p = pr.Min;
-uint Length = pow(2,p.K);
 
-cout << "generating " << p.Nl << " circular unit loops each of " << Length << " points in " << dim << " dimensions" << endl;
+// parameter loops
+uint Npl = 1; // number of parameter loops
+Parameters::Label label = static_cast<Parameters::Label>(0);
+if (pr.toStep(label)) {
+	Npl = (pr.Steps)[label-1];
+	cout << "looping " << label << " over " << Npl << " steps" << endl;
+}
+
+// starting loop
+for (uint pl=0; pl<Npl; pl++) {
+	// stepping parameters
+	if (pr.toStep(label) && pl>0)
+		p.step(pr);
+	else if (pr.toStep(label) && label==Parameters::nl)
+		p.Nl = (pr.Max).Nl;
+		
+	uint Length = pow(2,p.K);
+
+	cout << "generating " << p.Nl << " circular unit loops each of " << Length << " points in " << dim << " dimensions" << endl;
 
 /*-------------------------------------------------------------------------------------------------------------------------
 	3 - making and saving loops
 -------------------------------------------------------------------------------------------------------------------------*/
-string file, asciiFile;
-uint Seed = time(NULL);
-Loop<dim> loop(p.K,Seed);
-Metropolis<dim> met(loop,p,Seed);
-Point<dim> p0, point;
-number R = 1.0, R0 = 1.0, w = 2.0*PI/(number)Length;
-if (abs(p.G)>MIN_NUMBER && abs(p.B)>MIN_NUMBER) {
-	R =  1.0/p.G/p.B;
-	R0 = R;
-}
-if (abs(p.Epsi)>MIN_NUMBER && extend)
-	R += p.Epsi;
-	
-for (uint j=0; j<p.Nl; j++) {
-	file = "data/circle/loops/dim_"+nts<uint>(dim)+"/K_"+nts<uint>(p.K)+"/loop_R_"+nts<number>(R0)\
-														+"_rank_"+nts<uint>(j)+".dat";
-	if (j==0)
-		cout << "printing to " << file << ", with runs from 0..." << p.Nl << endl;
-	for (uint k=0; k<Length; k++) {
-		point = p0;
-		point[2] += R*gsl_sf_cos(w*k);
-		point[3] += R*gsl_sf_sin(w*k);
-		loop[k] = point;
+	string file, asciiFile;
+	uint Seed = time(NULL);
+	Loop<dim> loop(p.K,Seed);
+	Metropolis<dim> met(loop,p,Seed);
+	Point<dim> p0, point;
+	number R = 1.0, R0 = 1.0, w = 2.0*PI/(number)Length;
+	if (abs(p.G)>MIN_NUMBER && abs(p.B)>MIN_NUMBER) {
+		R =  1.0/p.G/p.B;
+		R0 = R;
 	}
-	loop.save(file);
-	loop.clear();
+	if (abs(p.Epsi)>MIN_NUMBER && extend)
+		R += p.Epsi;
+	
+	for (uint j=0; j<p.Nl; j++) {
+		file = "data/circle/loops/dim_"+nts<uint>(dim)+"/K_"+nts<uint>(p.K)+"/loop_R_"+nts<number>(R0)\
+															+"_rank_"+nts<uint>(j)+".dat";
+		if (j==0)
+			cout << "printing to " << file << ", with runs from 0..." << p.Nl << endl;
+		for (uint k=0; k<Length; k++) {
+			point = p0;
+			point[2] += R*gsl_sf_cos(w*k);
+			point[3] += R*gsl_sf_sin(w*k);
+			loop[k] = point;
+		}
+		loop.save(file);
+		loop.clear();
+	}
+
 }
 
 return 0;
