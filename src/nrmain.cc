@@ -45,6 +45,7 @@ int main(int argc, char** argv) {
 // inputs file
 bool verbose = true;
 bool circle = true;
+bool step = true;
 bool trivial = false; // doing trivial tests
 string printOpts = "";
 string inputsFile = "inputs3";
@@ -56,6 +57,7 @@ if (argc % 2 && argc>1) {
 		if (id[0]=='-') id = id.substr(1);
 		if (id.compare("verbose")==0) verbose = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("circle")==0) circle = (stn<uint>(argv[2*j+2])!=0);
+		else if (id.compare("step")==0) step = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("inputs")==0) inputsFile = (string)argv[2*j+2];
 		else if (id.compare("print")==0) printOpts = (string)argv[2*j+2];
 		else if (id.compare("trivial")==0) trivial = (stn<uint>(argv[2*j+2])!=0);
@@ -112,9 +114,16 @@ if (pr.toStep(label)) {
 
 // starting loop
 for (uint pl=0; pl<Npl; pl++) {
+
+	Filename loadFile;
 	// stepping parameters
-	if (pr.toStep(label) && pl>0)
+	if (pr.toStep(label) && pl>0) {
+		if (step) {
+			loadFile = "data/nr/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_G_"+nts(p.G)+"_B_"+nts(p.B)+".dat";
+			circle = false;
+		}
 		p.step(pr);
+	}
 	else if (pr.toStep(label) && label==Parameters::nl)
 		p.Nl = (pr.Max).Nl;
 	uint N = pow(2,p.K);
@@ -152,13 +161,11 @@ for (uint pl=0; pl<Npl; pl++) {
 	Loop<dim> xLoop(p.K,Seed);
 	
 	// x file
-	Filename loadFile = (circle?\
-				"data/circle/loops/dim_"+nts<uint>(dim)+"/K_"+nts<uint>(p.K)+"/loop_R_"+nts<uint>(abs(p.G*p.B))\
-										+"_rank_0.dat":\
-				"data/s0/loops/dim_"+nts<uint>(dim)+"/K_"+nts<uint>(p.K)+"/loop_run_0.dat");
+	if (circle || !step)
+		loadFile = "data/circle/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_R_"+nts(abs(1.0/p.G/p.B))+"_rank_0.dat";
 	// check if file exists
 	if (!loadFile.exists()) {
-		cerr << "Loop2 error: " << loadFile << " doesn't exist" << endl;
+		cerr << "nrmain error: " << loadFile << " doesn't exist" << endl;
 		return 1;
 	}
 	cout << "loading loops from:" << endl;
@@ -166,9 +173,11 @@ for (uint pl=0; pl<Npl; pl++) {
 	
 	// loading x
 	loadVectorBinary(loadFile,x);
-	x.conservativeResize(NT);
-	for (uint mu=0; mu<zm; mu++)
-		x[N*dim+mu] = 1.0e-3;
+	if (x.size()!=NT) {
+		x.conservativeResize(NT);
+		for (uint mu=0; mu<zm; mu++)
+			x[N*dim+mu] = 1.0e-3;
+	}
 	
 	//defining some quantities used to stop n-r loop
 	uint runsCount = 0;
@@ -298,6 +307,12 @@ for (uint pl=0; pl<Npl; pl++) {
 			number negEigenvectorTest = (dds*x-negEigenvalue*x).squaredNorm()/xnorm;
 			checkNegEigenvector.add(negEigenvectorTest);
 			checkNegEigenvector.checkMessage();
+			
+			if (!checkNegEigenvalue.good() || !checkNegEigenvector.good()) {
+				cerr << "negative eigenvalue = " << negEigenvalue << endl;
+				cerr << "analytic result     = " << analyticNegEigenvalue << endl;
+				cerr << "eigenvector test    = " << negEigenvectorTest << endl;
+			}
 		}		
 	
 /*----------------------------------------------------------------------------------------------------------------------------
@@ -441,10 +456,10 @@ for (uint pl=0; pl<Npl; pl++) {
 	
 	// printing results to terminal
 	printf("\n");
-	printf("%8s%8s%8s%8s%8s%8s%8s%14s%14s%14s%14s\n","runs","time","K","G","B","T","a","len",\
-		"i0","vr","s");
-	printf("%8i%8.3g%8i%8.4g%8.4g%8.4g%8.4g%14.5g%14.5g%14.5g%14.5g\n",\
-		runsCount,realtime,p.K,p.G,p.B,p.T,p.Epsi,len,i0,vr,s);
+	printf("%8s%8s%8s%8s%8s%8s%8s%14s%14s%14s%14s%14s\n","runs","time","K","G","B","T","a","len",\
+		"i0","vr","s","s_am");
+	printf("%8i%8.3g%8i%8.4g%8.4g%8.4g%8.4g%14.5g%14.5g%14.5g%14.5g%14.5g\n",\
+		runsCount,realtime,p.K,p.G,p.B,p.T,p.Epsi,len,i0,vr,s,PI/p.G/p.B-p.G*p.G/4.0);
 	printf("\n");
 	
 	
