@@ -46,7 +46,7 @@ int main(int argc, char** argv) {
 bool verbose = true;
 bool circle = true;
 bool step = true;
-bool trivial = false; // doing trivial tests
+bool alltests = false; // doing alltests
 string printOpts = "";
 string inputsFile = "inputs4";
 
@@ -60,7 +60,7 @@ if (argc % 2 && argc>1) {
 		else if (id.compare("step")==0) step = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("inputs")==0) inputsFile = (string)argv[2*j+2];
 		else if (id.compare("print")==0) printOpts = (string)argv[2*j+2];
-		else if (id.compare("trivial")==0) trivial = (stn<uint>(argv[2*j+2])!=0);
+		else if (id.compare("alltests")==0) alltests = (stn<uint>(argv[2*j+2])!=0);
 		else {
 			cerr << "argv id " << id << " not understood" << endl;
 			return 1;
@@ -151,6 +151,8 @@ for (uint pl=0; pl<Npl; pl++) {
 	Check checkSolMax("solution max",1.0e-6);
 	Check checkDelta("delta",1.0);
 	Check checkSm("smoothness",1.0);
+	Check checkDX("dx<<a",2.0e-1);
+	Check checkA("a<<L",2.0e-1);
 	Check checkSym("symmetric",1.0e-16*NT*NT);
 	Check checkInv("inverse",1.0e-16*NT*NT*NT);
 	Check checkNegEigenvalue("negative eigenvalue",0.1);
@@ -300,7 +302,20 @@ for (uint pl=0; pl<Npl; pl++) {
 		sm = Sm(xLoop);
 		checkSm.add(sm);
 		
-		if (trivial) {
+		// check dx<<a
+		checkDX.add(len/(number)N/p.Epsi);
+		
+		// check a<<L
+		number Atest = p.Epsi/(len/2.0/PI);
+		if (alltests) {
+			// check a<<1/(Mean Gaussian Curvature)
+			number kg = KG(xLoop)/2.0/PI;
+			if (1.0/kg<len)
+				Atest = p.Epsi*kg;
+		}
+		checkA.add(Atest);
+				
+		if (alltests) {
 			// checking if dds is symmetric
 			mat dds_asym(NT,NT);
 			dds_asym = dds.transpose();
@@ -454,10 +469,10 @@ for (uint pl=0; pl<Npl; pl++) {
 		//printing tests to see convergence
 		if (verbose) {
 			if (runsCount==1) {
-				printf("%5s%5s%12s%12s%12s%12s%12s%12s%12s\n","pl","run","len","i0","s","sol","solM","delta","Sm");
+				printf("%5s%5s%12s%12s%12s%12s%12s%12s%12s%12s%12s\n","pl","run","len","i0","s","sol","solM","delta","Sm","dx","a");
 			}
-			printf("%5i%5i%12.5g%12.5g%12.5g%12.5g%12.5g%12.5g%12.5g\n",pl,runsCount,len,i0,s,checkSol.back(),\
-				checkSolMax.back(),checkDelta.back(),checkSm.back());
+			printf("%5i%5i%12.5g%12.5g%12.5g%12.5g%12.5g%12.5g%12.5g%12.5g%12.5g\n",pl,runsCount,len,i0,s,checkSol.back(),\
+				checkSolMax.back(),checkDelta.back(),checkSm.back(),checkDX.back(),checkA.back());
 		}
 	
 	}
