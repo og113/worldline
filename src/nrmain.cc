@@ -278,16 +278,19 @@ for (uint pl=0; pl<Npl; pl++) {
 			}
 		}
 		
-		// external momenta
-		mdPX_nr(xLoop,N/2-1,P,1.0,mds);
-		mdPX_nr(xLoop,0,P,-1.0,mds);
+		Point<dim> P0;
+		if (!(P==P0)) {
+			// external momenta
+			mdPX_nr(xLoop,N/2-1,P,1.0,mds);
+			mdPX_nr(xLoop,0,P,-1.0,mds);
 		
-		// dynamical field cusp regularisation
-		number cusp_scale = -g*log(renorm_scale/p.Epsi);
-		mdFGamma_nr(xLoop,N/2-1,cusp_scale,mds);
-		mdFGamma_nr(xLoop,0,cusp_scale,mds);
-		ddFGamma_nr(xLoop,N/2-1,cusp_scale,dds);
-		ddFGamma_nr(xLoop,0,cusp_scale,dds);
+			// dynamical field cusp regularisation
+			number cusp_scale = -g*log(renorm_scale/p.Epsi);
+			mdFGamma_nr(xLoop,N/2-1,cusp_scale,mds);
+			mdFGamma_nr(xLoop,0,cusp_scale,mds);
+			ddFGamma_nr(xLoop,N/2-1,cusp_scale,dds);
+			ddFGamma_nr(xLoop,0,cusp_scale,dds);
+		}
 		
 		// assigning scalar quantities
 		vr = v;
