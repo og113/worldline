@@ -242,7 +242,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		
 			fr = (md.I0<lp? 0.0: (-(PI*lp/2.0)*(md.I0-lp/2.0))+PI*md.I0*md.I0/4.0);
 			//f = (md.I0<lp? -PI*md.I0*md.I0/4.0: -(PI*lp/2.0)*(md.I0-lp/2.0));
-			vr = md.V - PI*md.L/p.Epsi - md.FGamma*log(md.L/p.Epsi);
+			vr = md.V - PI*md.L/p.Epsi;
 		
 			s0_data_local[k] = md.S0;
 			fr_data_local[k] = fr;

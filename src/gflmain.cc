@@ -29,6 +29,7 @@ int main(int argc, char** argv) {
 
 // data to print
 string inputsFile = "inputs3";
+bool ascii = false;
 
 // getting argv
 if (argc % 2 && argc>1) {
@@ -36,6 +37,7 @@ if (argc % 2 && argc>1) {
 		string id = argv[2*j+1];
 		if (id[0]=='-') id = id.substr(1);
 		if (id.compare("inputs")==0) inputsFile = (string)argv[2*j+2];
+		else if (id.compare("ascii")==0) ascii = (stn<uint>(argv[2*j+2])==1);
 		else {
 			cerr << "argv id " << id << " not understood" << endl;
 			return 1;
@@ -134,9 +136,8 @@ for (uint pl=0; pl<Npl; pl++) {
 			4 - printing one loop in ascii
 -------------------------------------------------------------------------------------------------------------------------*/
 
-	bool asciiPrint = false;
-	if (asciiPrint) {
-		string asciiFile = "data/temp/floopAscii.dat";
+	if (ascii) {
+		string asciiFile = "data/temp/asciiFloop.dat";
 		uint Seed = time(NULL)+p.Nl;
 		Loop<dim> loop(p.K,Seed);
 		loop.grow();

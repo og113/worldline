@@ -910,8 +910,6 @@ uint Metropolis<Dim>::step(const uint& Num, const bool& firstStep, MetropolisDat
 			Data.V = V1r(*LoopPtr,epsi);
 			Data.S += g*Data.V;
 			Data.S -= (abs(epsi)>MIN_NUMBER? g*PI*Data.L/epsi: 0.0);
-			Data.FGamma = (abs(epsi)>MIN_NUMBER? FGamma(*LoopPtr): 0.0);
-			Data.S -= (abs(epsi)>MIN_NUMBER? g*Data.FGamma*log(Data.L/epsi): 0.0);
 			Data.I0 = I0(*LoopPtr);
 			Data.S -= g*b*t*Data.I0;
 		}
@@ -943,11 +941,8 @@ uint Metropolis<Dim>::step(const uint& Num, const bool& firstStep, MetropolisDat
 		if (abs(g)>MIN_NUMBER) {
 			DataChange.V = DV1r<Dim>(*LoopPtr, temp, loc, epsi);	
 			DataChange.S += g*DataChange.V;
-			DataChange.S += (abs(epsi)>MIN_NUMBER? Data.FGamma*log(Data.L/epsi): 0.0);
 			DataChange.L = DL(*LoopPtr, temp, loc);
-			DataChange.FGamma = (abs(epsi)>MIN_NUMBER? DFGamma(*LoopPtr, temp, loc): 0.0);
 			DataChange.S -= (abs(epsi)>MIN_NUMBER? g*PI*DataChange.L/epsi: 0.0);
-			DataChange.S -= (abs(epsi)>MIN_NUMBER? g*(Data.FGamma+DataChange.FGamma)*log((Data.L+DataChange.L)/epsi): 0.0);
 			DataChange.I0 = DI0(*LoopPtr, temp, loc);
 			DataChange.S -= g*b*t*DataChange.I0;
 		}
@@ -959,7 +954,6 @@ uint Metropolis<Dim>::step(const uint& Num, const bool& firstStep, MetropolisDat
 			Data.L += DataChange.L;
 			Data.S0 += DataChange.S0;
 			Data.V += DataChange.V;
-			Data.FGamma += DataChange.FGamma;
 			Data.I0 += DataChange.I0;
 			Data.Sm += DataChange.Sm;
 			counter++;
@@ -973,7 +967,6 @@ uint Metropolis<Dim>::step(const uint& Num, const bool& firstStep, MetropolisDat
 				Data.L += DataChange.L;
 				Data.S0 += DataChange.S0;
 				Data.V += DataChange.V;
-				Data.FGamma += DataChange.FGamma;
 				Data.I0 += DataChange.I0;
 				Data.Sm += DataChange.Sm;
 				counter++;

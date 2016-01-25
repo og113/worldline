@@ -212,10 +212,10 @@ for (uint pl=0; pl<Npl; pl++) {
 		//w /= 2.0;
 		w = cos(gbt*I0(l));
 		len = L(l,errorl); //doing nothing with errorl
-		//ren = (abs(p.Epsi)>MIN_NUMBER? p.G*PI*len/p.Epsi: 0.0);
-		//v = p.G*V1r(l,p.Epsi,errorv);
-		//v -= ren;
-		//z = gsl_sf_exp(-v);
+		ren = (abs(p.Epsi)>MIN_NUMBER? p.G*PI*len/p.Epsi: 0.0);
+		v = p.G*V1r(l,p.Epsi,errorv);
+		v -= ren;
+		z = gsl_sf_exp(-v);
 		v = 0.0;
 		z = 1.0;
 		if (abs(p.G)>MIN_NUMBER)
@@ -223,7 +223,7 @@ for (uint pl=0; pl<Npl; pl++) {
 			//f = (I<lp? 0.0: -(PI*lp/2.0)*(I-lp/2.0))+PI*I*I/4.0;
 		else
 			f = 0.0;
-		//w *= z; v *= z; f *= z;
+		w *= z; v *= z; f *= z;
 		
 		sums_local[0] += s0;
 		sums_local[3] += f;
