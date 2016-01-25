@@ -44,7 +44,7 @@ int main(int argc, char** argv) {
 
 // inputs file
 bool verbose = true;
-bool circle = true;
+bool lemon = true;
 bool step = true;
 bool alltests = false; // doing alltests
 string printOpts = "";
@@ -56,7 +56,7 @@ if (argc % 2 && argc>1) {
 		string id = argv[2*j+1];
 		if (id[0]=='-') id = id.substr(1);
 		if (id.compare("verbose")==0) verbose = (stn<uint>(argv[2*j+2])!=0);
-		else if (id.compare("circle")==0) circle = (stn<uint>(argv[2*j+2])!=0);
+		else if (id.compare("lemon")==0) lemon = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("step")==0) step = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("inputs")==0) inputsFile = (string)argv[2*j+2];
 		else if (id.compare("print")==0) printOpts = (string)argv[2*j+2];
@@ -118,10 +118,6 @@ for (uint pl=0; pl<Npl; pl++) {
 	Filename loadFile;
 	// stepping parameters
 	if (pr.toStep(label) && pl>0) {
-		if (step) {
-			loadFile = "data/nr/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_G_"+nts(p.G)+"_B_"+nts(p.B)+".dat";
-			circle = false;
-		}
 		p.step(pr);
 	}
 	else if (pr.toStep(label) && label==Parameters::nl)
@@ -129,13 +125,17 @@ for (uint pl=0; pl<Npl; pl++) {
 	uint N = pow(2,p.K);
 	uint zm = dim;
 	uint NT = N*dim+zm;
+	number M = p.P2, R = abs(1.0/p.G/p.B);
 	Point<dim> P;
 	P[0] = p.P1;
 	P[1] = p.P2;
 	if (dim>2) {
 		P[2] = p.P3;
-		if (dim>3)
+		M = p.P3;
+		if (dim>3) {
 			P[3] = p.P4;
+			M = p.P4;
+		}
 	}
 		
 /*----------------------------------------------------------------------------------------------------------------------------
@@ -171,8 +171,16 @@ for (uint pl=0; pl<Npl; pl++) {
 	Loop<dim> xLoop(p.K,Seed);
 	
 	// x file
-	if (circle || !step)
-		loadFile = "data/circle/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_R_"+nts(abs(1.0/p.G/p.B))+"_rank_0.dat";
+	if (pl==0 || !step) {
+		if (lemon)
+			loadFile = "data/lemon/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_R_"+nts(R)+"_M_"+nts(M)+"_rank_0.dat";
+		else
+			loadFile = "data/circle/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_R_"+nts(R)+"_rank_0.dat";
+	}
+	else if (step) {
+		loadFile = "data/nr/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_G_"+nts(p.G)+"_B_"+nts(p.B)+".dat";
+		lemon = false;
+	}
 	// check if file exists
 	if (!loadFile.exists()) {
 		cerr << "nrmain error: " << loadFile << " doesn't exist" << endl;
@@ -218,7 +226,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		number gb = p.G*p.B;
 		number g = p.G*p.G/8.0/PI/PI;
 		number sqrt4s0 = 2.0*sqrt(S0(xLoop));
-		number renorm_scale = 1.0/gb;
+		number renorm_scale = R;
 		
 		// bulk
 		for (j=0; j<N; j++) {
