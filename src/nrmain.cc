@@ -283,17 +283,13 @@ for (uint pl=0; pl<Npl; pl++) {
 			// external momenta
 			mdPX_nr(xLoop,N/2-1,P,1.0,mds);
 			mdPX_nr(xLoop,0,P,-1.0,mds);
-			cout << "added mdPX to " << 0 << " and " << N/2-1 << endl;
 		
 			// dynamical field cusp regularisation
 			number cusp_scale = -g*log(renorm_scale/p.Epsi);
-			cout << "cusp scale = " << cusp_scale << endl;
 			mdFGamma_nr(xLoop,N/2-1,cusp_scale,mds);
 			mdFGamma_nr(xLoop,0,cusp_scale,mds);
-			cout << "added mdFGamma" << endl;
 			ddFGamma_nr(xLoop,N/2-1,cusp_scale,dds);
 			ddFGamma_nr(xLoop,0,cusp_scale,dds);
-			cout << "added ddFGamma" << endl;
 		}
 		
 		// assigning scalar quantities

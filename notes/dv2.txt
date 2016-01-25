@@ -1,0 +1,9 @@
+ Sum(
+ 
+ (-2*DX(j,1 + j,m))/B_jmk + (2*DX(j,1 + j,m))/B_jk \ 
+ - ((-DX(-1 + k,j,m) - DX(k,1 + j,m))*T_jmk)/(2.*pow(B_jmk,2)) \ 
+ + ((DX(-1 + k,j,m) + DX(k,1 + j,m))*T_jmk)/(2.*pow(B_jmk,2)) \ 
+ + ((-DX(k,j,m) - DX(1 + k,1 + j,m))*T_jk)/(2.*pow(B_jk,2)) \ 
+ - ((DX(k,j,m) + DX(1 + k,1 + j,m))*T_jk)/(2.*pow(B_jk,2))
+ 
+ ,j)

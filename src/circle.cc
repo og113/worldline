@@ -30,6 +30,7 @@ int main(int argc, char** argv) {
 // data to print
 string inputsFile = "inputs";
 bool extend = false;
+bool lemon = false;
 
 // getting argv
 if (argc % 2 && argc>1) {
@@ -38,6 +39,7 @@ if (argc % 2 && argc>1) {
 		if (id[0]=='-') id = id.substr(1);
 		if (id.compare("inputs")==0) inputsFile = (string)argv[2*j+2];
 		else if (id.compare("extend")==0) extend = (stn<uint>(argv[2*j+2])!=0);
+		else if (id.compare("lemon")==0) lemon = (stn<uint>(argv[2*j+2])!=0);
 		else {
 			cerr << "argv id " << id << " not understood" << endl;
 			return 1;
@@ -77,9 +79,14 @@ for (uint pl=0; pl<Npl; pl++) {
 	else if (pr.toStep(label) && label==Parameters::nl)
 		p.Nl = (pr.Max).Nl;
 		
-	uint Length = pow(2,p.K);
+	uint N = pow(2,p.K);
 
-	cout << "generating " << p.Nl << " circular unit loops each of " << Length << " points in " << dim << " dimensions" << endl;
+	cout << "generating " << p.Nl << " ";
+	if (!lemon)
+		cout << "circular";
+	else
+		cout << "lemon shaped";
+	cout << " unit loops each of " << N << " points in " << dim << " dimensions" << endl;
 
 /*-------------------------------------------------------------------------------------------------------------------------
 	3 - making and saving loops
@@ -89,7 +96,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	Loop<dim> loop(p.K,Seed);
 	Metropolis<dim> met(loop,p,Seed);
 	Point<dim> p0, point;
-	number R = 1.0, R0 = 1.0, w = 2.0*PI/(number)Length;
+	number R = 1.0, R0 = 1.0;
 	if (abs(p.G)>MIN_NUMBER && abs(p.B)>MIN_NUMBER) {
 		R =  1.0/p.G/p.B;
 		R0 = R;
@@ -98,16 +105,50 @@ for (uint pl=0; pl<Npl; pl++) {
 		R += p.Epsi;
 	
 	for (uint j=0; j<p.Nl; j++) {
-		file = "data/circle/loops/dim_"+nts<uint>(dim)+"/K_"+nts<uint>(p.K)+"/loop_R_"+nts<number>(R0)\
+		if (!lemon)
+			file = "data/circle/loops/dim_"+nts<uint>(dim)+"/K_"+nts<uint>(p.K)+"/loop_R_"+nts<number>(R0)\
+															+"_rank_"+nts<uint>(j)+".dat";
+		else
+			file = "data/lemon/loops/dim_"+nts<uint>(dim)+"/K_"+nts<uint>(p.K)+"/loop_R_"+nts<number>(R0)\
 															+"_rank_"+nts<uint>(j)+".dat";
 		if (j==0)
 			cout << "printing to " << file << ", with runs from 0..." << p.Nl << endl;
-		for (uint k=0; k<Length; k++) {
-			point = p0;
-			point[2] += R*gsl_sf_cos(w*k);
-			point[3] += R*gsl_sf_sin(w*k);
-			loop[k] = point;
+			
+		if (!lemon)	{
+			number w = 2.0*PI/(number)N;
+			for (uint k=0; k<N; k++) {
+				point = p0;
+				point[2] += R*gsl_sf_cos(w*k);
+				point[3] += R*gsl_sf_sin(w*k);
+				loop[k] = point;
+			}
 		}
+		else {
+			number x0 = R*p.P4/2.0;
+			number rho = R*sqrt(1.0-p.P4*p.P4/4.0), angle;
+			Point<dim> pl, pr;
+			pl[2] -= x0;
+			pr[2] += x0;
+			number w_max = asin(rho/R);
+			
+			for (uint k=0; k<N; k++) {
+				if (k<N/2) {
+					angle = -w_max + (4.0*w_max/(number)N)*k;
+					point = pl;
+					point[2] += R*gsl_sf_cos(angle);
+					point[3] += R*gsl_sf_sin(angle);
+					loop[k] = point;
+				}
+				else {
+					angle = -w_max + (4.0*w_max/(number)N)*(k-(number)N/2.0);
+					point = pr;
+					point[2] += -R*gsl_sf_cos(angle);
+					point[3] += -R*gsl_sf_sin(angle);
+					loop[k] = point;
+				}
+			}
+		}
+		
 		loop.save(file);
 		loop.clear();
 	}

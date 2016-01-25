@@ -21,7 +21,7 @@ int main(int argc, char** argv) {
 string binaryFile = "";
 string asciiFile = "";
 bool loop = false;
-uint K;
+uint K=0;
 
 //dimension
 #define dim 4

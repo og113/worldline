@@ -243,7 +243,7 @@ number NormSquared(const Point<Dim>& p) {
 // Norm
 template <uint Dim>
 number Norm(const Point<Dim>& p) {
-	return sqrt(Norm(p));
+	return sqrt(NormSquared(p));
 }
 
 // Dot

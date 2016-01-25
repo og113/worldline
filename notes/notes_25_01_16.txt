@@ -1,0 +1,19 @@
+notes from discussion with arttu:
+
+	mass of monopole appearing in compact qed:
+		- for a particle that is not confined <W>~exp(-m*L)
+		- for a monopole this term comes from the self energy, which is <W>~exp(-beta*L/a), so for beta~O(1), the monopole has mass at the lattice scale.
+		- however for small beta, i.e. weak coupling (is there not a 1/beta in the self energy?!!!!! CONFUSION), the monopole can be light and therefore propagating.
+		- n.b. for very small beta large wilson loops are not supressed and the monopole condenses
+		- the case with the light monopole is near a weakly first order phase transition between the ono-dynamical, heavy monopoles and the monopole condensate
+		
+	changing, while keeping gauge parameter fixed:
+		- can add term like j_m^2 to action, where j_m^\mu = \epsilon^{\mu\nu\rho\sigma}\partial_\nu F_{\rho\sigma}, which is zero in the absence of monopoles and acts like a mass term for monopoles.
+		- adding a negative term of this form pushes the phase transition (mentioned above) to weaker coupling.
+		
+	relating explicit to implicit monopole theories
+		- explicit monopole theories alla Blagojevic and Senjanovic
+		- implicit alla Polyakov
+		- n.b. j_m^2 term can be written as wordline kinetic term
+		- duality transformations like this present in papers citing a paper by peskin in 70's or 80's about duality on the lattice
+		- hagen kleinert book called ~ gauge fields in condensed matter, does some comparable duality transformations clearly and explicitly

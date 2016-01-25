@@ -318,25 +318,25 @@ void ddFGamma_nr(const Loop<Dim>& l, const uint& j, const number& f, mat& m) {
 			ddcdqdp = -Q[mu]*Q[nu]/p/pow(q,3) - P[mu]*P[mu]/pow(p,3)/q + pq*Q[mu]*P[nu]/pow(p,3)/pow(q,3);
 			ddcdqdp += (mu==nu? 1.0/p/q: 0.0);
 			
-		
+			
+			m(mj*Dim+mu,mj*Dim+nu) += f*( gamma_dashdash*dcdp_mu*dcdp_nu \
+										+ gamma_dash*ddcdpdp );	
+			m(mj*Dim+mu,j*Dim+nu) += f*( -gamma_dashdash*dcdp_mu*(dcdp_nu+dcdq_nu) \
+										- gamma_dash*(ddcdpdp + ddcdpdq) );						
+			m(mj*Dim+mu,pj*Dim+nu) += f*( gamma_dashdash*dcdp_mu*dcdq_nu \
+										+ gamma_dash*ddcdpdq );		
+			m(j*Dim+mu,mj*Dim+nu) += f*( -gamma_dashdash*(dcdp_mu+dcdq_mu)*dcdp_nu \
+									- gamma_dash*(ddcdpdp + ddcdqdp) );
 			m(j*Dim+mu,j*Dim+nu) += f*( gamma_dashdash*(dcdp_mu+dcdq_mu)*(dcdp_nu+dcdq_nu) \
 									+ gamma_dash*(ddcdpdp + ddcdpdq + ddcdqdp + ddcdqdq) );
 			m(j*Dim+mu,pj*Dim+nu) += f*( -gamma_dashdash*(dcdp_mu+dcdq_mu)*dcdq_nu \
 									- gamma_dash*(ddcdpdq + ddcdqdq) );
-			m(j*Dim+mu,mj*Dim+nu) += f*( -gamma_dashdash*(dcdp_mu+dcdq_mu)*dcdp_nu \
-									- gamma_dash*(ddcdpdp + ddcdqdp) );
+			m(pj*Dim+mu,mj*Dim+nu) += f*( gamma_dashdash*dcdq_mu*dcdp_nu \
+										+ gamma_dash*ddcdqdp );		
 			m(pj*Dim+mu,j*Dim+nu) += f*( -gamma_dashdash*dcdq_mu*(dcdp_nu+dcdq_nu) \
 										- gamma_dash*(ddcdqdp + ddcdqdq) );		
 			m(pj*Dim+mu,pj*Dim+nu) += f*( gamma_dashdash*dcdq_mu*dcdq_nu \
-										+ gamma_dash*ddcdqdq );						
-			m(pj*Dim+mu,mj*Dim+nu) += f*( gamma_dashdash*dcdq_mu*dcdp_nu \
-										+ gamma_dash*ddcdqdp );	
-			m(mj*Dim+mu,j*Dim+nu) += f*( -gamma_dashdash*dcdp_mu*(dcdp_nu+dcdq_nu) \
-										- gamma_dash*(ddcdpdp + ddcdpdq) );		
-			m(mj*Dim+mu,pj*Dim+nu) += f*( gamma_dashdash*dcdp_mu*dcdq_nu \
-										+ gamma_dash*ddcdpdq );						
-			m(mj*Dim+mu,mj*Dim+nu) += f*( gamma_dashdash*dcdp_mu*dcdp_nu \
-										+ gamma_dash*ddcdpdp );			
+										+ gamma_dash*ddcdqdq );								
 		}
 	}
 }
