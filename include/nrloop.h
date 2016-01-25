@@ -51,7 +51,7 @@ void I0 (const uint& j, const Loop<Dim>& l, const number& f, number& result);
 
 // FGamma
 template <uint Dim>
-void FGamma (const uint& j, const Loop<Dim>& l, const number& f, number& result);
+void FGamma (const Loop<Dim>& l, const uint& loc, const number& f, number& result);
 
 // V1r
 template <uint Dim>
@@ -60,6 +60,10 @@ void V1r (const uint& j, const uint& k, const Loop<Dim>& l, const number& a, con
 // V2r
 template <uint Dim>
 void V2r (const uint& j, const uint& k, const Loop<Dim>& l, const number& a, const number& f, number& result);
+
+// mdPX_nr
+template<uint Dim>
+void mdPX_nr(const Loop<Dim>& l, const uint& loc, const Point<Dim>& P, const number& f, vec& v);
 
 // mdL_nr
 template<uint Dim>
@@ -120,9 +124,13 @@ template<uint Dim>
 void ddV2r_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l,\
 						 const number& a, const number& f, mat& m);
 						 
-// mFGamma_nr
+// mdFGamma_nr
 template<uint Dim>
-void mdFGamma_nr(const uint& j, const uint& mu, const Loop<Dim>& l, const number& f, vec& v);
+void mdFGamma_nr(const Loop<Dim>& l, const uint& loc, const number& f, vec& v);
+
+// ddFGamma_nr
+template<uint Dim>
+void ddFGamma_nr(const Loop<Dim>& l, const uint& loc, const number& f, mat& m);
 
 /*----------------------------------------------------------------------------------------------------------------------------
 	2 - loopToVector, vectorToLoop

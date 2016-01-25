@@ -35,7 +35,7 @@ struct ParametersRange;
 // Parameters
 struct Parameters {
 	static const uint Size;
-	enum Label { nl=1, ng=2, nig=3, nsw=4, npsw=5, k=6, g=7, b=8, t=9, epsi=10};
+	enum Label { nl=1, ng=2, nig=3, nsw=4, npsw=5, k=6, g=7, b=8, t=9, epsi=10, p1=11, p2=12, p3=13, p4=14};
 	uint Nl;
 	uint Ng;
 	uint Nig;
@@ -46,6 +46,10 @@ struct Parameters {
 	number B;
 	number T;
 	number Epsi;
+	number P1;
+	number P2;
+	number P3;
+	number P4;
 	void step(const ParametersRange&);
 	void save(const string& filename) const;
 	void load(const string& filename);

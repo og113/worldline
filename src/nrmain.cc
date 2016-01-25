@@ -48,7 +48,7 @@ bool circle = true;
 bool step = true;
 bool alltests = false; // doing alltests
 string printOpts = "";
-string inputsFile = "inputs3";
+string inputsFile = "inputs4";
 
 // getting argv
 if (argc % 2 && argc>1) {
@@ -129,6 +129,14 @@ for (uint pl=0; pl<Npl; pl++) {
 	uint N = pow(2,p.K);
 	uint zm = dim;
 	uint NT = N*dim+zm;
+	Point<dim> P;
+	P[0] = p.P1;
+	P[1] = p.P2;
+	if (dim>2) {
+		P[2] = p.P3;
+		if (dim>3)
+			P[3] = p.P4;
+	}
 		
 /*----------------------------------------------------------------------------------------------------------------------------
 	3 - defining quantitites
@@ -210,6 +218,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		number gb = p.G*p.B;
 		number g = p.G*p.G/8.0/PI/PI;
 		number sqrt4s0 = 2.0*sqrt(S0(xLoop));
+		number renorm_scale = 1.0/gb;
 		
 		// bulk
 		for (j=0; j<N; j++) {
@@ -228,8 +237,6 @@ for (uint pl=0; pl<Npl; pl++) {
 				
 				// dynamical field self-energy regularisation
 				mdL_nr(j,mu,xLoop,-g*PI/p.Epsi,mds);
-				
-				// dynamical field cusp regularisation
 				
 				for (k=0; k<N; k++) {
 				
@@ -253,8 +260,6 @@ for (uint pl=0; pl<Npl; pl++) {
 						// dynamical field self-energy regularisation
 						ddL_nr(j,mu,k,nu,xLoop,-g*PI/p.Epsi,dds);
 						
-						// dynamical field cusp regularisation
-						
 					}
 				}
 			}		
@@ -273,10 +278,28 @@ for (uint pl=0; pl<Npl; pl++) {
 			}
 		}
 		
+		Point<dim> P0;
+		if (!(P==P0)) {
+			// external momenta
+			mdPX_nr(xLoop,N/2-1,P,1.0,mds);
+			mdPX_nr(xLoop,0,P,-1.0,mds);
+			cout << "added mdPX to " << 0 << " and " << N/2-1 << endl;
+		
+			// dynamical field cusp regularisation
+			number cusp_scale = -g*log(renorm_scale/p.Epsi);
+			cout << "cusp scale = " << cusp_scale << endl;
+			mdFGamma_nr(xLoop,N/2-1,cusp_scale,mds);
+			mdFGamma_nr(xLoop,0,cusp_scale,mds);
+			cout << "added mdFGamma" << endl;
+			ddFGamma_nr(xLoop,N/2-1,cusp_scale,dds);
+			ddFGamma_nr(xLoop,0,cusp_scale,dds);
+			cout << "added ddFGamma" << endl;
+		}
+		
 		// assigning scalar quantities
 		vr = v;
 		vr -= (abs(p.Epsi)>MIN_NUMBER? g*PI*len/p.Epsi : 0.0);
-		s = sqrt4s0 + i0 + vr;
+		s = sqrt4s0 + i0 + vr + Dot(xLoop[N/2-1],P) - Dot(xLoop[0],P);
 	
 /*----------------------------------------------------------------------------------------------------------------------------
 	6 - some checks

@@ -27,8 +27,8 @@ CONTENTS
 -------------------------------------------------------------------------------------------------------------------------*/
 
 // Size
-const uint Parameters::Size = 10;
-const uint ParametersRange::Size = 10;
+const uint Parameters::Size = 14;
+const uint ParametersRange::Size = 14;
 
 // step
 void Parameters::step(const ParametersRange& pr) {
@@ -76,6 +76,22 @@ void Parameters::step(const ParametersRange& pr) {
 				stepSize = ((pr.Max).Epsi-(pr.Min).Epsi)/((pr.Steps)[label-1]-1.0);
 				Epsi += stepSize;
 				break;
+			case p1:
+				stepSize = ((pr.Max).P1-(pr.Min).P1)/((pr.Steps)[label-1]-1.0);
+				P1 += stepSize;
+				break;
+			case p2:
+				stepSize = ((pr.Max).P2-(pr.Min).P2)/((pr.Steps)[label-1]-1.0);
+				P2 += stepSize;
+				break;
+			case p3:
+				stepSize = ((pr.Max).P3-(pr.Min).P3)/((pr.Steps)[label-1]-1.0);
+				P4 += stepSize;
+				break;
+			case p4:
+				stepSize = ((pr.Max).P4-(pr.Min).P4)/((pr.Steps)[label-1]-1.0);
+				P4 += stepSize;
+				break;	
 			default:
 				cerr << "Parameters error: Label unknown" << endl;
 				break;
@@ -99,6 +115,10 @@ ostream& operator<<(ostream& os, const Parameters& p) {
 	os << setw(20) << "B" << setw(20) << p.B << endl;
 	os << setw(20) << "T" << setw(20) << p.T << endl;
 	os << setw(20) << "Epsi" << setw(20) << p.Epsi << endl;
+	os << setw(20) << "P1" << setw(20) << p.P1 << endl;
+	os << setw(20) << "P2" << setw(20) << p.P2 << endl;
+	os << setw(20) << "P3" << setw(20) << p.P3 << endl;
+	os << setw(20) << "P4" << setw(20) << p.P4 << endl;
 	return os;
 }
 
@@ -136,17 +156,21 @@ void Parameters::load(const string& filename) {
 	is >> dross >> B;
 	is >> dross >> T;
 	is >> dross >> Epsi;
+	is >> dross >> P1;
+	is >> dross >> P2;
+	is >> dross >> P3;
+	is >> dross >> P4;
 	is.close();
 }
 
 // empty
 bool Parameters::empty() const {
-	return (Nl==0 && Ng==0 && Nig==0 && Nsw==0 && Npsw==0 && K==0 && abs(G)<MIN_NUMBER && abs(B)<MIN_NUMBER && abs(T)<MIN_NUMBER && abs(Epsi)<MIN_NUMBER);
+	return (Nl==0 && Ng==0 && Nig==0 && Nsw==0 && Npsw==0 && K==0 && abs(G)<MIN_NUMBER && abs(B)<MIN_NUMBER && abs(T)<MIN_NUMBER && abs(Epsi)<MIN_NUMBER && abs(P1)<MIN_NUMBER && abs(P2)<MIN_NUMBER && abs(P3)<MIN_NUMBER && abs(P4)<MIN_NUMBER);
 }
 
 // operator==
 bool operator==(const Parameters& l, const Parameters& r){
-	return (l.Nl==r.Nl && l.Ng==r.Ng && l.Nig==r.Nig && l.Nsw==r.Nsw && l.Npsw==r.Npsw && l.K==r.K && abs(l.G-r.G)<MIN_NUMBER && abs(l.B-r.B)<MIN_NUMBER && abs(l.T-r.T)<MIN_NUMBER && abs(l.Epsi-r.Epsi)<MIN_NUMBER);
+	return (l.Nl==r.Nl && l.Ng==r.Ng && l.Nig==r.Nig && l.Nsw==r.Nsw && l.Npsw==r.Npsw && l.K==r.K && abs(l.G-r.G)<MIN_NUMBER && abs(l.B-r.B)<MIN_NUMBER && abs(l.T-r.T)<MIN_NUMBER && abs(l.Epsi-r.Epsi)<MIN_NUMBER && abs(l.P1-r.P1)<MIN_NUMBER && abs(l.P2-r.P2)<MIN_NUMBER && abs(l.P3-r.P3)<MIN_NUMBER && abs(l.P4-r.P4)<MIN_NUMBER);
 }
 
 // writeBinary
@@ -161,6 +185,10 @@ ostream& Parameters::writeBinary(ostream& os) const {
 	os.write(reinterpret_cast<const char*>(&B),sizeof(number));
 	os.write(reinterpret_cast<const char*>(&T),sizeof(number));
 	os.write(reinterpret_cast<const char*>(&Epsi),sizeof(number));
+	os.write(reinterpret_cast<const char*>(&P1),sizeof(number));
+	os.write(reinterpret_cast<const char*>(&P2),sizeof(number));
+	os.write(reinterpret_cast<const char*>(&P3),sizeof(number));
+	os.write(reinterpret_cast<const char*>(&P4),sizeof(number));
 	return os;
 }
 
@@ -176,6 +204,10 @@ istream& Parameters::readBinary(istream& is) {
 	is.read(reinterpret_cast<char*>(&B),sizeof(number));
 	is.read(reinterpret_cast<char*>(&T),sizeof(number));
 	is.read(reinterpret_cast<char*>(&Epsi),sizeof(number));
+	is.read(reinterpret_cast<char*>(&P1),sizeof(number));
+	is.read(reinterpret_cast<char*>(&P2),sizeof(number));
+	is.read(reinterpret_cast<char*>(&P3),sizeof(number));
+	is.read(reinterpret_cast<char*>(&P4),sizeof(number));
 	return is;
 }
 
@@ -252,6 +284,10 @@ void ParametersRange::load(const string& filename) {
 	is >> dross >> dross >> Min.B >> dross >> Max.B >> dross >> Steps[7] >> dross;
 	is >> dross >> dross >> Min.T >> dross >> Max.T >> dross >> Steps[8] >> dross;
 	is >> dross >> dross >> Min.Epsi >> dross >> Max.Epsi >> dross >> Steps[9] >> dross;
+	is >> dross >> dross >> Min.P1 >> dross >> Max.P1 >> dross >> Steps[10] >> dross;
+	is >> dross >> dross >> Min.P2 >> dross >> Max.P2 >> dross >> Steps[11] >> dross;
+	is >> dross >> dross >> Min.P3 >> dross >> Max.P3 >> dross >> Steps[12] >> dross;
+	is >> dross >> dross >> Min.P4 >> dross >> Max.P4 >> dross >> Steps[13] >> dross;
 	is.close();
 }
 
@@ -299,6 +335,15 @@ ostream& operator<<(ostream& os, const ParametersRange& pr) {
 						<< setw(12) << (pr.Max).T << " , " << setw(12) << (pr.Steps)[8] << " ]" << endl;
 	os << setw(20) << "Epsi" << "[ " << setw(12) << (pr.Min).Epsi << " , " \
 						<< setw(12) << (pr.Max).Epsi << " , " << setw(12) << (pr.Steps)[9] << " ]" << endl;
+	os << setw(20) << "P1" << "[ " << setw(12) << (pr.Min).P1 << " , " \
+						<< setw(12) << (pr.Max).P1 << " , " << setw(12) << (pr.Steps)[10] << " ]" << endl;
+	os << setw(20) << "P2" << "[ " << setw(12) << (pr.Min).P2 << " , " \
+						<< setw(12) << (pr.Max).P2 << " , " << setw(12) << (pr.Steps)[11] << " ]" << endl;
+	os << setw(20) << "P3" << "[ " << setw(12) << (pr.Min).P3 << " , " \
+						<< setw(12) << (pr.Max).P3 << " , " << setw(12) << (pr.Steps)[12] << " ]" << endl;
+	os << setw(20) << "P4" << "[ " << setw(12) << (pr.Min).P4 << " , " \
+						<< setw(12) << (pr.Max).P4 << " , " << setw(12) << (pr.Steps)[13] << " ]" << endl;
+	
 	return os;
 }
 

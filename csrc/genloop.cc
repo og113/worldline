@@ -230,6 +230,22 @@ number Distance(const Point<Dim>& p1, const Point<Dim>& p2) {
 	return sqrt(DistanceSquared(p1,p2));
 }
 
+// NormSquared
+template <uint Dim>
+number NormSquared(const Point<Dim>& p) {
+	number d = pow(p[0],2);
+	for (uint j=1; j<Dim; j++) {
+		d += pow(p[j],2);
+	}
+	return d;
+}
+
+// Norm
+template <uint Dim>
+number Norm(const Point<Dim>& p) {
+	return sqrt(Norm(p));
+}
+
 // Dot
 template <uint Dim>
 number Dot(const Point<Dim>& p1, const Point<Dim>& p2) {
@@ -1001,6 +1017,7 @@ template Point<4> operator* <4>(const number& lhs,const Point<4>& rhs);
 template Point<4> operator/ <4>(const Point<4>& lhs,const number& rhs);
 template bool operator== <4>(const Point<4>& lhs, const Point<4>& rhs);
 template bool operator^= <4>(const Point<4>& lhs, const Point<4>& rhs);
+template number Norm<4>(const Point<4>&);
 template number Distance<4>(const Point<4>&, const Point<4>&);
 template number Dot<4>(const Point<4>&, const Point<4>&);
 template number Dot<4>(const Point<4>&, const Point<4>&, const Point<4>&, const Point<4>&);
@@ -1189,6 +1206,7 @@ template Point<2> operator/ <2>(const Point<2>& lhs,const number& rhs);
 template bool operator== <2>(const Point<2>& lhs, const Point<2>& rhs);
 template bool operator^= <2>(const Point<2>& lhs, const Point<2>& rhs);
 template number Distance<2>(const Point<2>&, const Point<2>&);
+template number Norm<2>(const Point<2>&);
 template number Dot<2>(const Point<2>&, const Point<2>&);
 template number Dot<2>(const Point<2>&, const Point<2>&, const Point<2>&, const Point<2>&);
 template number MidpointDistanceSquared<2>(const Point<2>&, const Point<2>&, const Point<2>&, const Point<2>&);
