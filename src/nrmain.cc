@@ -159,7 +159,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	Check checkNegEigenvector("negative eigenvector",0.1);
 	
 	// defining scalar quantities
-	number len, i0, s, sm, v, vr;
+	number len, i0, s, sm, v, vr, fgamma;
 	
 	// defining vector and matrix quantities
 	vec x(N*dim);
@@ -226,7 +226,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		number gb = p.G*p.B;
 		number g = p.G*p.G/8.0/PI/PI;
 		number sqrt4s0 = 2.0*sqrt(S0(xLoop));
-		number renorm_scale = R;
+		number cusp_scale = g*log(R/p.Epsi);
 		
 		// bulk
 		for (j=0; j<N; j++) {
@@ -234,6 +234,7 @@ for (uint pl=0; pl<Npl; pl++) {
 			//S0(j, xLoop, s0norm, s0norm);
 			L		(j, xLoop, 1.0, len);
 			I0		(j, xLoop, -gb, i0);
+			FGamma  (j, xLoop, -cusp_scale, fgamma);
 		
 			for (mu=0; mu<dim; mu++) {
 			
@@ -245,6 +246,8 @@ for (uint pl=0; pl<Npl; pl++) {
 				
 				// dynamical field self-energy regularisation
 				mdL_nr(j,mu,xLoop,-g*PI/p.Epsi,mds);
+				
+				
 				
 				for (k=0; k<N; k++) {
 				
@@ -293,17 +296,19 @@ for (uint pl=0; pl<Npl; pl++) {
 			mdPX_nr(xLoop,0,P,-1.0,mds);
 		
 			// dynamical field cusp regularisation
-			number cusp_scale = -g*log(renorm_scale/p.Epsi);
-			mdFGamma_nr(xLoop,N/2-1,cusp_scale,mds);
-			mdFGamma_nr(xLoop,0,cusp_scale,mds);
-			ddFGamma_nr(xLoop,N/2-1,cusp_scale,dds);
-			ddFGamma_nr(xLoop,0,cusp_scale,dds);
+			mdFGamma_nr(xLoop,N/2-1,-cusp_scale,mds);
+			mdFGamma_nr(xLoop,0,-cusp_scale,mds);
+			ddFGamma_nr(xLoop,N/2-1,-cusp_scale,dds);
+			ddFGamma_nr(xLoop,0,-cusp_scale,dds);
 		}
 		
 		// assigning scalar quantities
 		vr = v;
 		vr -= (abs(p.Epsi)>MIN_NUMBER? g*PI*len/p.Epsi : 0.0);
-		s = sqrt4s0 + i0 + vr + Dot(xLoop[N/2-1],P) - Dot(xLoop[0],P);
+		vr -= (!(P==P0)? cusp_scale*fgamma : 0.0);
+		s = sqrt4s0 + i0 + vr;
+		if (!(P==P0))
+			s += Dot(xLoop[N/2-1],P) - Dot(xLoop[0],P);
 	
 /*----------------------------------------------------------------------------------------------------------------------------
 	6 - some checks

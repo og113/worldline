@@ -62,7 +62,7 @@ void I0 (const uint& j, const Loop<Dim>& l, const number& f, number& result) {
 
 // FGamma
 template <uint Dim>
-void FGamma (const Loop<Dim>& l,const uint& j,  const number& f, number& result) {
+void FGamma (const uint& j,const Loop<Dim>& l,  const number& f, number& result) {
 
 	uint pj = (j==(l.size()-1)? 0: j+1);
 	uint nj = (j==0? (l.size()-1): j-1);
@@ -261,22 +261,26 @@ void mdFGamma_nr(const Loop<Dim>& l, const uint& j, const number& f, vec& v) {
 	uint mj = (j==0? (l.size()-1): j-1);
 	
 	Point<Dim> P = l[j]-l[mj];
-	Point<Dim> Q = l[j]-l[pj];
+	Point<Dim> Q = l[pj]-l[j];
 	
 	number p = Norm(P);
 	number q = Norm(Q);
 	number pq = Dot(P,Q);
 	number c = pq/p/q;
-	number gamma_dash = -c/(1.0-c*c) + acos(c)/pow(1.0-c*c,1.5);
-	number dcdp, dcdq;
+	number s = sqrt(1.0-c*c);
+	number DG = -c/pow(s,2) + acos(c)/pow(s,3);
+	//number dcdp, dcdq;
 	
 	for (uint mu=0; mu<Dim; mu++) {
-		dcdp = Q[mu]/p/q - pq*P[mu]/q/pow(p,3);
+		/*dcdp = Q[mu]/p/q - pq*P[mu]/q/pow(p,3);
 		dcdq = P[mu]/p/q - pq*Q[mu]/p/pow(q,3);
 		
-		v(j*Dim+mu) += -f*gamma_dash*(dcdp + dcdq);
-		v(pj*Dim+mu) += -f*(-gamma_dash*dcdq);
-		v(mj*Dim+mu) += -f*(-gamma_dash*dcdp);
+		v(mj*Dim+mu) += -f*(-DG*dcdp);
+		v(j*Dim+mu) += -f*(DG*(dcdp - dcdq));
+		v(pj*Dim+mu) += -f*(DG*dcdq);*/
+		v(mj*Dim+mu) += -f*( (DG*(pq*P[mu] - pow(p,2)*Q[mu]))/(pow(p,3)*q) );
+		v(j*Dim+mu) += -f*( -((DG*((pow(p,2) + pq)*pow(q,2)*P[mu] - pow(p,2)*(pq + pow(q,2))*Q[mu]))/(pow(p,3)*pow(q,3))) );
+		v(pj*Dim+mu) += -f*( (DG*(pow(q,2)*P[mu] - pq*Q[mu]))/(p*pow(q,3)) );
 	}
 }
 
@@ -287,56 +291,102 @@ void ddFGamma_nr(const Loop<Dim>& l, const uint& j, const number& f, mat& m) {
 	uint mj = (j==0? (l.size()-1): j-1);
 	
 	Point<Dim> P = l[j]-l[mj];
-	Point<Dim> Q = l[j]-l[pj];
+	Point<Dim> Q = l[pj]-l[j];
 	
 	number p = Norm(P);
 	number q = Norm(Q);
 	number pq = Dot(P,Q);
 	number c = pq/p/q;
 	number s = sqrt(1.0-c*c);
-	number gamma_dash = -c/pow(s,2) + acos(c)/pow(s,3);
-	number gamma_dashdash = (-s*(2.0+c*c) + 3.0*c*acos(c))/pow(s,5);
-	number dcdp_mu, dcdp_nu, dcdq_mu, dcdq_nu, ddcdpdp, ddcdpdq, ddcdqdp, ddcdqdq; // mu before nu in ordering
+	number DG = -c/pow(s,2) + acos(c)/pow(s,3);
+	number DDG = (-s*(2.0+c*c) + 3.0*c*acos(c))/pow(s,5);
+	//number dcdp_mu, dcdp_nu, dcdq_mu, dcdq_nu, ddcdpdp, ddcdpdq, ddcdqdp, ddcdqdq; // mu before nu in ordering
 	
 	for (uint mu=0; mu<Dim; mu++) {
-		dcdp_mu = Q[mu]/p/q - pq*P[mu]/q/pow(p,3);
-		dcdq_mu = P[mu]/p/q - pq*Q[mu]/p/pow(q,3);
+		/*dcdp_mu = Q[mu]/p/q - pq*P[mu]/q/pow(p,3);
+		dcdq_mu = P[mu]/p/q - pq*Q[mu]/p/pow(q,3);*/
 		
 		for (uint nu=0; nu<Dim; nu++) {
-			dcdp_nu = Q[nu]/p/q - pq*P[nu]/q/pow(p,3);
+			/*dcdp_nu = Q[nu]/p/q - pq*P[nu]/q/pow(p,3);
 			dcdq_nu = P[nu]/p/q - pq*Q[nu]/p/pow(q,3);
 			
-			ddcdpdp = -(Q[mu]*P[nu]+P[mu]*Q[mu])/pow(p,3)/q - 3.0*pq*P[mu]*P[nu]/pow(p,5)/q;
+			ddcdpdp = -(Q[mu]*P[nu]+P[mu]*Q[nu])/pow(p,3)/q + 3.0*pq*P[mu]*P[nu]/pow(p,5)/q;
 			ddcdpdp += (mu==nu? -pq/pow(p,3)/q: 0.0);
 			
-			ddcdqdq = -(Q[mu]*P[nu]+P[mu]*Q[mu])/p/pow(q,3) - 3.0*pq*Q[mu]*Q[nu]/p/pow(q,5);
+			ddcdqdq = -(Q[mu]*P[nu]+P[mu]*Q[nu])/p/pow(q,3) + 3.0*pq*Q[mu]*Q[nu]/p/pow(q,5);
 			ddcdqdq += (mu==nu? -pq/p/pow(q,3): 0.0);
 			
 			ddcdpdq = -Q[mu]*Q[nu]/p/pow(q,3) - P[mu]*P[mu]/pow(p,3)/q + pq*P[mu]*Q[nu]/pow(p,3)/pow(q,3);
 			ddcdpdq += (mu==nu? 1.0/p/q: 0.0);
 			
-			ddcdqdp = -Q[mu]*Q[nu]/p/pow(q,3) - P[mu]*P[mu]/pow(p,3)/q + pq*Q[mu]*P[nu]/pow(p,3)/pow(q,3);
+			ddcdqdp = -Q[mu]*Q[nu]/p/pow(q,3) - P[mu]*P[nu]/pow(p,3)/q + pq*Q[mu]*P[nu]/pow(p,3)/pow(q,3);
 			ddcdqdp += (mu==nu? 1.0/p/q: 0.0);
 			
 			
-			m(mj*Dim+mu,mj*Dim+nu) += f*( gamma_dashdash*dcdp_mu*dcdp_nu \
-										+ gamma_dash*ddcdpdp );	
-			m(mj*Dim+mu,j*Dim+nu) += f*( -gamma_dashdash*dcdp_mu*(dcdp_nu+dcdq_nu) \
-										- gamma_dash*(ddcdpdp + ddcdpdq) );						
-			m(mj*Dim+mu,pj*Dim+nu) += f*( gamma_dashdash*dcdp_mu*dcdq_nu \
-										+ gamma_dash*ddcdpdq );		
-			m(j*Dim+mu,mj*Dim+nu) += f*( -gamma_dashdash*(dcdp_mu+dcdq_mu)*dcdp_nu \
-									- gamma_dash*(ddcdpdp + ddcdqdp) );
-			m(j*Dim+mu,j*Dim+nu) += f*( gamma_dashdash*(dcdp_mu+dcdq_mu)*(dcdp_nu+dcdq_nu) \
-									+ gamma_dash*(ddcdpdp + ddcdpdq + ddcdqdp + ddcdqdq) );
-			m(j*Dim+mu,pj*Dim+nu) += f*( -gamma_dashdash*(dcdp_mu+dcdq_mu)*dcdq_nu \
-									- gamma_dash*(ddcdpdq + ddcdqdq) );
-			m(pj*Dim+mu,mj*Dim+nu) += f*( gamma_dashdash*dcdq_mu*dcdp_nu \
-										+ gamma_dash*ddcdqdp );		
-			m(pj*Dim+mu,j*Dim+nu) += f*( -gamma_dashdash*dcdq_mu*(dcdp_nu+dcdq_nu) \
-										- gamma_dash*(ddcdqdp + ddcdqdq) );		
-			m(pj*Dim+mu,pj*Dim+nu) += f*( gamma_dashdash*dcdq_mu*dcdq_nu \
-										+ gamma_dash*ddcdqdq );								
+			m(mj*Dim+mu,mj*Dim+nu) += f*( DDG*dcdp_mu*dcdp_nu \
+										+ DG*ddcdpdp );	
+			m(mj*Dim+mu,j*Dim+nu) += f*( -DDG*dcdp_mu*(dcdp_nu-dcdq_nu) \
+										- DG*(ddcdpdp - ddcdpdq) );						
+			m(mj*Dim+mu,pj*Dim+nu) += f*( -DDG*dcdp_mu*dcdq_nu \
+										- DG*ddcdpdq );		
+			m(j*Dim+mu,mj*Dim+nu) += f*( -DDG*(dcdp_mu-dcdq_mu)*dcdp_nu \
+									- DG*(ddcdpdp - ddcdqdp) );
+			m(j*Dim+mu,j*Dim+nu) += f*( DDG*(dcdp_mu-dcdq_mu)*(dcdp_nu-dcdq_nu) \
+									+ DG*(ddcdpdp - ddcdpdq - ddcdqdp + ddcdqdq) );
+			m(j*Dim+mu,pj*Dim+nu) += f*( DDG*(dcdp_mu-dcdq_mu)*dcdq_nu \
+									- DG*(ddcdpdq + ddcdqdq) );
+			m(pj*Dim+mu,mj*Dim+nu) += f*( -DDG*dcdq_mu*dcdp_nu \
+										- DG*ddcdqdp );		
+			m(pj*Dim+mu,j*Dim+nu) += f*( DDG*dcdq_mu*(dcdp_nu-dcdq_nu) \
+										- DG*(-ddcdqdp + ddcdqdq) );		
+			m(pj*Dim+mu,pj*Dim+nu) += f*( DDG*dcdq_mu*dcdq_nu \
+										+ DG*ddcdqdq );	*/
+			m(mj*Dim+mu,mj*Dim+nu) += f*( (P[mu]*(pq*(DDG*pq + 3.0*DG*p*q)*P[nu] - pow(p,2)*(DDG*pq + DG*p*q)*Q[nu]) + \
+     pow(p,2)*(-((DDG*pq + DG*p*q)*P[nu]*Q[mu]) + p*(DDG*p*Q[mu]*Q[nu] - DG*pq*q*delta(mu,nu))))/(pow(p,6)*pow(q,2)) );	
+     
+			m(mj*Dim+mu,j*Dim+nu) += f*( (P[mu]*(-(pow(q,2)*(DDG*pq*(pow(p,2) + pq) + DG*p*(pow(p,2) + 3.0*pq)*q)*P[nu]) + \
+        pow(p,2)*(DDG*pq + DG*p*q)*(pq + pow(q,2))*Q[nu]) + \
+     pow(p,2)*(pow(q,2)*(DDG*(pow(p,2) + pq) + DG*p*q)*P[nu]*Q[mu] - \
+        p*(p*(DG*p*q + DDG*(pq + pow(q,2)))*Q[mu]*Q[nu] - DG*(pow(p,2) + pq)*pow(q,3)*delta(mu,nu))))/ \
+   (pow(p,6)*pow(q,4)) );			
+   			
+			m(mj*Dim+mu,pj*Dim+nu) += f*( ((-(DDG*pq) - DG*p*q)*P[mu]*(-(pow(q,2)*P[nu]) + pq*Q[nu]) + \
+     pow(p,2)*(-(DDG*pow(q,2)*P[nu]*Q[mu]) + (DDG*pq + DG*p*q)*Q[mu]*Q[nu] - DG*p*pow(q,3)*delta(mu,nu)))/ \
+   (pow(p,4)*pow(q,4)) );	
+											
+			m(j*Dim+mu,mj*Dim+nu) += f*( (pow(q,2)*P[mu]*(-((DDG*pq*(pow(p,2) + pq) + DG*p*(pow(p,2) + 3.0*pq)*q)*P[nu]) + \
+        pow(p,2)*(DDG*(pow(p,2) + pq) + DG*p*q)*Q[nu]) + \
+     pow(p,2)*((DDG*pq + DG*p*q)*(pq + pow(q,2))*P[nu]*Q[mu] - \
+        p*(p*(DG*p*q + DDG*(pq + pow(q,2)))*Q[mu]*Q[nu] - DG*(pow(p,2) + pq)*pow(q,3)*delta(mu,nu))))/ \
+   (pow(p,6)*pow(q,4)) );
+									
+			m(j*Dim+mu,j*Dim+nu) += f*( (pow(q,2)*P[mu]*(pow(q,2)*(DDG*pow(pow(p,2) + pq,2) \
+			+ DG*p*(2.0*pow(p,2) + 3.0*pq)*q)*P[nu] - 
+        pow(p,2)*(DDG*(pow(p,2) + pq)*(pq + pow(q,2)) + DG*p*q*(pow(p,2) + pq + pow(q,2)))*Q[nu]) - \
+     pow(p,2)*(pow(q,2)*(DDG*(pow(p,2) + pq)*(pq + pow(q,2)) + DG*p*q*(pow(p,2) + pq + pow(q,2)))*P[nu]* \
+         Q[mu] - p*(p*(DDG*pow(pq + pow(q,2),2) + DG*p*q*(3.0*pq + 2.0*pow(q,2)))*Q[mu]*Q[nu] - \
+           DG*pow(q,3)*(pq*pow(q,2) + pow(p,2)*(pq + 2.0*pow(q,2)))*delta(mu,nu))))/(pow(p,6)*pow(q,6)) );
+									
+			m(j*Dim+mu,pj*Dim+nu) += f*( (pow(q,2)*P[mu]*(-(pow(q,2)*(DDG*(pow(p,2) + pq) + DG*p*q)*P[nu]) \
+			+ (pow(p,2) + pq)*(DDG*pq + DG*p*q)*Q[nu]) + \
+     pow(p,2)*(pow(q,2)*(DG*p*q + DDG*(pq + pow(q,2)))*P[nu]*Q[mu] - \
+        (DDG*pq*(pq + pow(q,2)) + DG*p*q*(3.0*pq + pow(q,2)))*Q[mu]*Q[nu]\
+         + DG*p*pow(q,3)*(pq + pow(q,2))*delta(mu,nu)))/ \
+   (pow(p,4)*pow(q,6)) );
+									
+			m(pj*Dim+mu,mj*Dim+nu) += f*( (-(pq*(DDG*pq + DG*p*q)*P[nu]*Q[mu]) \
+			+ pow(q,2)*P[mu]*((DDG*pq + DG*p*q)*P[nu] - DDG*pow(p,2)*Q[nu]) + \
+     pow(p,2)*((DDG*pq + DG*p*q)*Q[mu]*Q[nu] - DG*p*pow(q,3)*delta(mu,nu)))/(pow(p,4)*pow(q,4)) );		
+										
+			m(pj*Dim+mu,j*Dim+nu) += f*( ((pow(p,2) + pq)*pow(q,2)*(DDG*pq + DG*p*q)*P[nu]*Q[mu] + \
+     pow(q,2)*P[mu]*(-(pow(q,2)*(DDG*(pow(p,2) + pq) + DG*p*q)*P[nu]) + \
+        pow(p,2)*(DG*p*q + DDG*(pq + pow(q,2)))*Q[nu]) - \
+     pow(p,2)*((DDG*pq*(pq + pow(q,2)) + DG*p*q*(3.0*pq + pow(q,2)))*Q[mu]*Q[nu] - \
+        DG*p*pow(q,3)*(pq + pow(q,2))*delta(mu,nu)))/(pow(p,4)*pow(q,6)) );	
+											
+			m(pj*Dim+mu,pj*Dim+nu) += f*( (-(pow(q,2)*(DDG*pq + DG*p*q)*P[nu]*Q[mu]) \
+			+ pow(q,2)*P[mu]*(DDG*pow(q,2)*P[nu] - (DDG*pq + DG*p*q)*Q[nu]) + \
+     pq*((DDG*pq + 3.0*DG*p*q)*Q[mu]*Q[nu] - DG*p*pow(q,3)*delta(mu,nu)))/(pow(p,2)*pow(q,6)) );							
 		}
 	}
 }
@@ -418,7 +468,7 @@ void printAsLoop(const string& f, const uint& Dim, const vec& v, const uint len)
 template void L<2>(const uint& j, const Loop<2>& l, const number& f, number& result);
 template void S0<2>(const uint& j, const Loop<2>& l, const number& f, number& result);
 template void Sm<2>(const uint& j, const Loop<2>& l, const number& f, number& result);
-template void FGamma<2>(const Loop<2>& l, const uint& j, const number& f, number& result);
+template void FGamma<2>(const uint& j, const Loop<2>& l, const number& f, number& result);
 template void mdPX_nr<2>(const Loop<2>& l, const uint& loc, const Point<2>& P, const number& f, vec& v);
 template void mdL_nr<2>(const uint& j, const uint& mu, const Loop<2>& l, const number& p, vec& v);
 template void ddL_nr<2>(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<2>& l, const number& p, mat& m);
@@ -474,7 +524,7 @@ template <> void I0<2> (const uint& j, const Loop<2>& l, const number& f, number
 template void L<4>(const uint& j, const Loop<4>& l, const number& f, number& result);
 template void S0<4>(const uint& j, const Loop<4>& l, const number& f, number& result);
 template void Sm<4>(const uint& j, const Loop<4>& l, const number& f, number& result);
-template void FGamma<4>(const Loop<4>& l, const uint& loc, const number& f, number& result);
+template void FGamma<4>(const uint& j, const Loop<4>& l, const number& f, number& result);
 template void mdPX_nr<4>(const Loop<4>& l, const uint& loc, const Point<4>& P, const number& f, vec& v);
 template void mdL_nr<4>(const uint& j, const uint& mu, const Loop<4>& l, const number& p, vec& v);
 template void ddL_nr<4>(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<4>& l, const number& p, mat& m);

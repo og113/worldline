@@ -51,7 +51,7 @@ void I0 (const uint& j, const Loop<Dim>& l, const number& f, number& result);
 
 // FGamma
 template <uint Dim>
-void FGamma (const Loop<Dim>& l, const uint& loc, const number& f, number& result);
+void FGamma (const uint& loc, const Loop<Dim>& l, const number& f, number& result);
 
 // V1r
 template <uint Dim>
