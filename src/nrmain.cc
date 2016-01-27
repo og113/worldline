@@ -513,7 +513,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	// results to compare to
 	number s_cf = PI/p.G/p.B;
 	if (!weak) s_cf -= p.G*p.G/4.0;
-	else if (abs(M)>MIN_NUMBER && abs(M)<2.0) s_cf -= (2.0/p.G/p.B)*( asin(M/2.0) + 2.0*M*sqrt(1.0-pow(M,2)/4.0) );
+	else if (abs(M)>MIN_NUMBER && abs(M)<2.0) s_cf -= (2.0/p.G/p.B)*( asin(M/2.0) + (M/2.0)*sqrt(1.0-pow(M/2.0,2)) );
 	number gamma_ratio = 0.0;
 	if (abs(M)>MIN_NUMBER && abs(M)<2.0) {
 		number gamma_weak = PI-2.0*asin(sqrt(1.0-pow(M,2)/4.0));
