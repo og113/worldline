@@ -42,7 +42,7 @@ int main(int argc, char** argv) {
 	1 - argv, parameters etc
 ----------------------------------------------------------------------------------------------------------------------------*/
 
-// inputs file
+// argv options
 bool verbose = true;
 bool lemon = true;
 bool step = true;
@@ -131,7 +131,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	uint N = pow(2,p.K);
 	uint zm = dim;
 	uint NT = N*dim+zm;
-	number M = p.P4, R = abs(1.0/p.G/p.B);
+	number M = p.P2, R = abs(1.0/p.G/p.B);
 	Point<dim> P;
 	P[0] = p.P1;
 	P[1] = p.P2;
@@ -289,7 +289,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		}
 		
 		Point<dim> P0;
-		if (!(P==P0)) {
+		if (!(P^=P0)) {
 			// external momenta
 			mdPX_nr(xLoop,N/2-1,P,-1.0,mds);
 			mdPX_nr(xLoop,0,P,1.0,mds);
@@ -299,20 +299,23 @@ for (uint pl=0; pl<Npl; pl++) {
 			Gamma(0, xLoop, 1.0, gamma0);
 			FGamma(N/2-1, xLoop, -cusp_scale, fgamma);
 			FGamma(0, xLoop, -cusp_scale, fgamma);
-			if (!weak) mdFGamma_nr(xLoop,N/2-1,-cusp_scale,mds);
-			if (!weak) mdFGamma_nr(xLoop,0,-cusp_scale,mds);
-			if (!weak) ddFGamma_nr(xLoop,N/2-1,-cusp_scale,dds);
-			if (!weak) ddFGamma_nr(xLoop,0,-cusp_scale,dds);
+			if (!weak) {
+				mdFGamma_nr(xLoop,N/2-1,-cusp_scale,mds);
+				mdFGamma_nr(xLoop,0,-cusp_scale,mds);
+				ddFGamma_nr(xLoop,N/2-1,-cusp_scale,dds);
+				ddFGamma_nr(xLoop,0,-cusp_scale,dds);
+			}
 			
 		}
 		
 		// assigning scalar quantities
 		vr = v;
 		vr -= (abs(p.Epsi)>MIN_NUMBER? g*PI*len/p.Epsi : 0.0);
-		vr -= (!(P==P0)? cusp_scale*fgamma : 0.0);
-		s = sqrt4s0 + i0 + vr;
-		if (!(P==P0))
-			s -= Dot(xLoop[N/2-1],P) - Dot(xLoop[0],P);
+		vr -= (!(P^=P0)? cusp_scale*fgamma : 0.0);
+		s = sqrt4s0 + i0;
+		if (!weak) s += vr;
+		if (!(P^=P0))
+			s -= Dot(xLoop[N/2-1]-xLoop[0],P);
 	
 /*----------------------------------------------------------------------------------------------------------------------------
 	6 - some checks
@@ -507,16 +510,22 @@ for (uint pl=0; pl<Npl; pl++) {
 	time = clock() - time;
 	number realtime = time/1000000.0;
 	
+	// results to compare to
+	number s_cf = PI/p.G/p.B;
+	if (!weak) s_cf -= p.G*p.G/4.0;
+	else if (abs(M)>MIN_NUMBER && abs(M)<2.0) s_cf -= (2.0/p.G/p.B)*( asin(M/2.0) + 2.0*M*sqrt(1.0-pow(M,2)/4.0) );
+	number gamma_ratio = 0.0;
+	if (abs(M)>MIN_NUMBER && abs(M)<2.0) {
+		number gamma_weak = PI-2.0*asin(sqrt(1.0-pow(M,2)/4.0));
+		gamma_ratio = (gamma0+gamma1)/2.0/gamma_weak;
+	}
+		
 	// printing results to terminal
-	number gamma_weak = PI-2.0*asin(sqrt(1.0-pow(M,2)/4.0));
-	number s_am = PI/p.G/p.B-p.G*p.G/4.0;
-	number gamma_ratio = (gamma0+gamma1)/2.0/gamma_weak;
-	
 	printf("\n");
 	printf("%8s%8s%8s%8s%8s%8s%8s%14s%14s%14s%14s%14s%14s\n","runs","time","K","G","B","T","a","len",\
-		"i0","vr","gamma","s","s_am");
+		"i0","vr","gamma","s","s_cf");
 	printf("%8i%8.3g%8i%8.4g%8.4g%8.4g%8.4g%14.5g%14.5g%14.5g%14.5g%14.5g%14.5g\n",\
-		runsCount,realtime,p.K,p.G,p.B,p.T,p.Epsi,len,i0,vr,gamma_ratio,s,s_am);
+		runsCount,realtime,p.K,p.G,p.B,p.T,p.Epsi,len,i0,vr,gamma_ratio,s,s_cf);
 	printf("\n");
 	
 	
