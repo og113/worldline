@@ -181,8 +181,13 @@ for (uint pl=0; pl<Npl; pl++) {
 	if (pl==0 || !step) {
 		if (lemon)
 			loadFile = "data/lemon/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_R_"+nts(R)+"_M_"+nts(M)+"_rank_0.dat";
-		else
-			loadFile = "data/circle/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_R_"+nts(R)+"_rank_0.dat";
+		else {
+			loadFile = "data/nr/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_G_"+nts(p.G)+"_B_"+nts(p.B)+"_M_"+nts(M)+".dat";
+			if (!loadFile.exists()) {
+				loadFile = "data/circle/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_R_"+nts(R)+"_rank_0.dat";
+			}
+		}
+			
 	}
 	// check if file exists
 	if (!loadFile.exists()) {
