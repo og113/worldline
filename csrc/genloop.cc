@@ -591,6 +591,27 @@ number Sm (const Loop<Dim>& l) {
 	return res/(number)l.size();
 }
 
+// Sm
+template <uint Dim>
+number Sm (const Loop<Dim>& l, const uint& m, const uint& n) {
+	uint pos, neg;
+	Point<Dim> pp;
+	number res = 0.0, temp;
+	for (uint j=0; j<l.size(); j++) {
+		if (j!=m && j!=n) {
+			pos = (j==(l.size()-1)? 0 : j+1);
+			neg = (j==0? (l.size()-1) : j-1);
+			pp = l[j];
+			pp *= 2.0;
+			pp -= l[neg];
+			temp = Dot(l[pos],pp,l[pos],l[j]);
+			temp /= DistanceSquared(l[pos],l[j]);
+			res += temp;
+		}
+	}
+	return res/((number)l.size()-2.0);
+}
+
 // DSm
 template <uint Dim>
 number DSm (const Loop<Dim>& l, const Point<Dim>& p, const uint& loc) {
@@ -1031,6 +1052,7 @@ template class Loop<4>;
 template number L<4> (const Loop<4>& l);
 template number DL<4> (const Loop<4>& l, const Point<4>& p, const uint& loc);
 template number Sm<4> (const Loop<4>& l);
+template number Sm<4> (const Loop<4>& l, const uint& m, const uint& n);
 template number DSm<4> (const Loop<4>& l, const Point<4>& p, const uint& loc);
 template number KG<4> (const Loop<4>& l);
 template number S0<4> (const Loop<4>& l);

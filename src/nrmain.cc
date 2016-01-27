@@ -46,6 +46,7 @@ int main(int argc, char** argv) {
 bool verbose = true;
 bool lemon = true;
 bool step = true;
+bool weak = false;
 bool alltests = false; // doing alltests
 string printOpts = "";
 string inputsFile = "inputs4";
@@ -58,6 +59,7 @@ if (argc % 2 && argc>1) {
 		if (id.compare("verbose")==0) verbose = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("lemon")==0) lemon = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("step")==0) step = (stn<uint>(argv[2*j+2])!=0);
+		else if (id.compare("weak")==0) weak = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("inputs")==0) inputsFile = (string)argv[2*j+2];
 		else if (id.compare("print")==0) printOpts = (string)argv[2*j+2];
 		else if (id.compare("alltests")==0) alltests = (stn<uint>(argv[2*j+2])!=0);
@@ -116,6 +118,10 @@ if (pr.toStep(label)) {
 for (uint pl=0; pl<Npl; pl++) {
 
 	Filename loadFile;
+	if (step && pl>0) {
+		loadFile = "data/nr/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_G_"+nts(p.G)+"_B_"+nts(p.B)+"_M_"+nts(p.P4)+".dat";
+		lemon = false;
+	}
 	// stepping parameters
 	if (pr.toStep(label) && pl>0) {
 		p.step(pr);
@@ -125,7 +131,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	uint N = pow(2,p.K);
 	uint zm = dim;
 	uint NT = N*dim+zm;
-	number M = p.P2, R = abs(1.0/p.G/p.B);
+	number M = p.P4, R = abs(1.0/p.G/p.B);
 	Point<dim> P;
 	P[0] = p.P1;
 	P[1] = p.P2;
@@ -159,7 +165,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	Check checkNegEigenvector("negative eigenvector",0.1);
 	
 	// defining scalar quantities
-	number len, i0, s, sm, v, vr, fgamma;
+	number len, i0, s, sm, v, vr, fgamma, gamma0, gamma1;
 	
 	// defining vector and matrix quantities
 	vec x(N*dim);
@@ -176,10 +182,6 @@ for (uint pl=0; pl<Npl; pl++) {
 			loadFile = "data/lemon/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_R_"+nts(R)+"_M_"+nts(M)+"_rank_0.dat";
 		else
 			loadFile = "data/circle/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_R_"+nts(R)+"_rank_0.dat";
-	}
-	else if (step) {
-		loadFile = "data/nr/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_G_"+nts(p.G)+"_B_"+nts(p.B)+".dat";
-		lemon = false;
 	}
 	// check if file exists
 	if (!loadFile.exists()) {
@@ -212,7 +214,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		// initializing to zero
 		mds = Eigen::VectorXd::Zero(NT);
 		dds = Eigen::MatrixXd::Zero(NT,NT);
-		len = 0.0, i0 = 0.0, v = 0.0;//, s0 = 0.0;
+		len = 0.0, i0 = 0.0, v = 0.0, fgamma = 0.0, gamma0 = 0.0, gamma1 = 0.0;//, s0 = 0.0;
 		
 		// loading x to xLoop - messier than it should be (should work with either a vec or a Loop really)
 		vectorToLoop(x,xLoop);	
@@ -234,7 +236,6 @@ for (uint pl=0; pl<Npl; pl++) {
 			//S0(j, xLoop, s0norm, s0norm);
 			L		(j, xLoop, 1.0, len);
 			I0		(j, xLoop, -gb, i0);
-			FGamma  (j, xLoop, -cusp_scale, fgamma);
 		
 			for (mu=0; mu<dim; mu++) {
 			
@@ -245,9 +246,7 @@ for (uint pl=0; pl<Npl; pl++) {
 				mdI_nr(j,mu,xLoop,-gb,mds);
 				
 				// dynamical field self-energy regularisation
-				mdL_nr(j,mu,xLoop,-g*PI/p.Epsi,mds);
-				
-				
+				if (!weak) mdL_nr(j,mu,xLoop,-g*PI/p.Epsi,mds);
 				
 				for (k=0; k<N; k++) {
 				
@@ -255,7 +254,7 @@ for (uint pl=0; pl<Npl; pl++) {
 						V1r(j, k, xLoop, p.Epsi, g, v);
 					
 					// dynamical field
-					mdV1r_nr(j, mu, k, xLoop, p.Epsi, g, mds);
+					if (!weak) mdV1r_nr(j, mu, k, xLoop, p.Epsi, g, mds);
 				
 					for (nu=0; nu<dim; nu++) {
 					
@@ -266,10 +265,10 @@ for (uint pl=0; pl<Npl; pl++) {
 						ddI_nr(j,mu,k,nu,xLoop,-gb,dds);
 						
 						// dynamical field	
-						ddV1r_nr(j, mu, k, nu, xLoop, p.Epsi, g, dds);
+						if (!weak) ddV1r_nr(j, mu, k, nu, xLoop, p.Epsi, g, dds);
 						
 						// dynamical field self-energy regularisation
-						ddL_nr(j,mu,k,nu,xLoop,-g*PI/p.Epsi,dds);
+						if (!weak) ddL_nr(j,mu,k,nu,xLoop,-g*PI/p.Epsi,dds);
 						
 					}
 				}
@@ -292,14 +291,19 @@ for (uint pl=0; pl<Npl; pl++) {
 		Point<dim> P0;
 		if (!(P==P0)) {
 			// external momenta
-			mdPX_nr(xLoop,N/2-1,P,1.0,mds);
-			mdPX_nr(xLoop,0,P,-1.0,mds);
+			mdPX_nr(xLoop,N/2-1,P,-1.0,mds);
+			mdPX_nr(xLoop,0,P,1.0,mds);
 		
 			// dynamical field cusp regularisation
-			mdFGamma_nr(xLoop,N/2-1,-cusp_scale,mds);
-			mdFGamma_nr(xLoop,0,-cusp_scale,mds);
-			ddFGamma_nr(xLoop,N/2-1,-cusp_scale,dds);
-			ddFGamma_nr(xLoop,0,-cusp_scale,dds);
+			Gamma(N/2-1, xLoop, 1.0, gamma1);
+			Gamma(0, xLoop, 1.0, gamma0);
+			FGamma(N/2-1, xLoop, -cusp_scale, fgamma);
+			FGamma(0, xLoop, -cusp_scale, fgamma);
+			if (!weak) mdFGamma_nr(xLoop,N/2-1,-cusp_scale,mds);
+			if (!weak) mdFGamma_nr(xLoop,0,-cusp_scale,mds);
+			if (!weak) ddFGamma_nr(xLoop,N/2-1,-cusp_scale,dds);
+			if (!weak) ddFGamma_nr(xLoop,0,-cusp_scale,dds);
+			
 		}
 		
 		// assigning scalar quantities
@@ -308,14 +312,14 @@ for (uint pl=0; pl<Npl; pl++) {
 		vr -= (!(P==P0)? cusp_scale*fgamma : 0.0);
 		s = sqrt4s0 + i0 + vr;
 		if (!(P==P0))
-			s += Dot(xLoop[N/2-1],P) - Dot(xLoop[0],P);
+			s -= Dot(xLoop[N/2-1],P) - Dot(xLoop[0],P);
 	
 /*----------------------------------------------------------------------------------------------------------------------------
 	6 - some checks
 ----------------------------------------------------------------------------------------------------------------------------*/	
 
 		// smoothness
-		sm = Sm(xLoop);
+		sm = Sm(xLoop,0,N/2-1);
 		checkSm.add(sm);
 		
 		// check dx<<a
@@ -367,7 +371,8 @@ for (uint pl=0; pl<Npl; pl++) {
 ----------------------------------------------------------------------------------------------------------------------------*/	
 		
 		if (po!=PrintOptions::none) {
-			Filename early = "data/temp/"+timenumber+"xEarly1_K_"+nts(p.K)+"_G_"+nts(p.G)+"_B_"+nts(p.B)+"_run_"+nts(runsCount)+".dat";
+			Filename early = "data/temp/"+timenumber+"xEarly1_K_"+nts(p.K)+"_G_"+nts(p.G)+"_B_"+nts(p.B)+"_M_"+nts(M)\
+						+"_run_"+nts(runsCount)+".dat";
 			if (po==PrintOptions::x || po==PrintOptions::all) {
 				printAsLoop(early,dim,x,N*dim);
 				printf("%12s%50s\n","x:",((string)early).c_str());
@@ -430,7 +435,8 @@ for (uint pl=0; pl<Npl; pl++) {
 ----------------------------------------------------------------------------------------------------------------------------*/	
 
 		if (po!=PrintOptions::none) {
-			Filename early = "data/temp/"+timenumber+"deltaEarly2_K_"+nts(p.K)+"_G_"+nts(p.G)+"_B_"+nts(p.B)+"_run_"+nts(runsCount)+".dat";
+			Filename early = "data/temp/"+timenumber+"deltaEarly2_K_"+nts(p.K)+"_G_"+nts(p.G)+"_B_"+nts(p.B)+"_M_"+nts(M)\
+							+"_run_"+nts(runsCount)+".dat";
 			if (po==PrintOptions::delta || po==PrintOptions::all) {
 				printAsLoop(early,dim,delta,N*dim);
 				printf("%12s%50s\n","delta:",((string)early).c_str());
@@ -502,11 +508,15 @@ for (uint pl=0; pl<Npl; pl++) {
 	number realtime = time/1000000.0;
 	
 	// printing results to terminal
+	number gamma_weak = PI-2.0*asin(sqrt(1.0-pow(M,2)/4.0));
+	number s_am = PI/p.G/p.B-p.G*p.G/4.0;
+	number gamma_ratio = (gamma0+gamma1)/2.0/gamma_weak;
+	
 	printf("\n");
-	printf("%8s%8s%8s%8s%8s%8s%8s%14s%14s%14s%14s%14s\n","runs","time","K","G","B","T","a","len",\
-		"i0","vr","s","s_am");
-	printf("%8i%8.3g%8i%8.4g%8.4g%8.4g%8.4g%14.5g%14.5g%14.5g%14.5g%14.5g\n",\
-		runsCount,realtime,p.K,p.G,p.B,p.T,p.Epsi,len,i0,vr,s,PI/p.G/p.B-p.G*p.G/4.0);
+	printf("%8s%8s%8s%8s%8s%8s%8s%14s%14s%14s%14s%14s%14s\n","runs","time","K","G","B","T","a","len",\
+		"i0","vr","gamma","s","s_am");
+	printf("%8i%8.3g%8i%8.4g%8.4g%8.4g%8.4g%14.5g%14.5g%14.5g%14.5g%14.5g%14.5g\n",\
+		runsCount,realtime,p.K,p.G,p.B,p.T,p.Epsi,len,i0,vr,gamma_ratio,s,s_am);
 	printf("\n");
 	
 	
@@ -522,7 +532,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		printf("%12s%50s\n","results:",resFile.c_str());
 		
 		// printing loop to file
-		string loopRes = "data/nr/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_G_"+nts(p.G)+"_B_"+nts(p.B)+".dat";
+		string loopRes = "data/nr/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_G_"+nts(p.G)+"_B_"+nts(p.B)+"_M_"+nts(M)+".dat";
 		saveVectorBinary(loopRes,x);
 		printf("%12s%50s\n","x:",loopRes.c_str());
 		
@@ -530,7 +540,7 @@ for (uint pl=0; pl<Npl; pl++) {
 
 	// printing extras to ascii files
 	if (po!=PrintOptions::none) {
-		Filename file = "data/temp/"+timenumber+"x_K_"+nts(p.K)+"_G_"+nts(p.G)+"_B_"+nts(p.B)+"_run_"+nts(runsCount)+".dat";
+		Filename file = "data/temp/"+timenumber+"x_K_"+nts(p.K)+"_G_"+nts(p.G)+"_B_"+nts(p.B)+"_M_"+nts(M)+"_run_"+nts(runsCount)+".dat";
 		if (po==PrintOptions::x || po==PrintOptions::all) {
 			saveVectorAscii(file,x);
 			printf("%12s%50s\n","x:",((string)file).c_str());

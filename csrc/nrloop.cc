@@ -60,6 +60,19 @@ void I0 (const uint& j, const Loop<Dim>& l, const number& f, number& result) {
 	cerr << "mdI_nr error: not defined for dim = " << Dim << endl;
 }
 
+// Gamma
+template <uint Dim>
+void Gamma (const uint& j, const Loop<Dim>& l, const number& f, number& result) {
+	uint pj = (j==(l.size()-1)? 0: j+1);
+	uint nj = (j==0? (l.size()-1): j-1);
+	number cos_gamma;
+	
+	cos_gamma = Dot(l[pj],l[j],l[j],l[nj]);
+	cos_gamma /= Distance(l[pj],l[j])*Distance(l[j],l[nj]);
+	
+	result += f*(acos(cos_gamma));
+}
+
 // FGamma
 template <uint Dim>
 void FGamma (const uint& j,const Loop<Dim>& l,  const number& f, number& result) {
@@ -468,6 +481,7 @@ void printAsLoop(const string& f, const uint& Dim, const vec& v, const uint len)
 template void L<2>(const uint& j, const Loop<2>& l, const number& f, number& result);
 template void S0<2>(const uint& j, const Loop<2>& l, const number& f, number& result);
 template void Sm<2>(const uint& j, const Loop<2>& l, const number& f, number& result);
+template void Gamma<2>(const uint& j, const Loop<2>& l, const number& f, number& result);
 template void FGamma<2>(const uint& j, const Loop<2>& l, const number& f, number& result);
 template void mdPX_nr<2>(const Loop<2>& l, const uint& loc, const Point<2>& P, const number& f, vec& v);
 template void mdL_nr<2>(const uint& j, const uint& mu, const Loop<2>& l, const number& p, vec& v);
@@ -524,6 +538,7 @@ template <> void I0<2> (const uint& j, const Loop<2>& l, const number& f, number
 template void L<4>(const uint& j, const Loop<4>& l, const number& f, number& result);
 template void S0<4>(const uint& j, const Loop<4>& l, const number& f, number& result);
 template void Sm<4>(const uint& j, const Loop<4>& l, const number& f, number& result);
+template void Gamma<4>(const uint& j, const Loop<4>& l, const number& f, number& result);
 template void FGamma<4>(const uint& j, const Loop<4>& l, const number& f, number& result);
 template void mdPX_nr<4>(const Loop<4>& l, const uint& loc, const Point<4>& P, const number& f, vec& v);
 template void mdL_nr<4>(const uint& j, const uint& mu, const Loop<4>& l, const number& p, vec& v);
