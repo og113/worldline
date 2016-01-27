@@ -163,6 +163,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	Check checkInv("inverse",1.0e-16*NT*NT*NT);
 	Check checkNegEigenvalue("negative eigenvalue",0.1);
 	Check checkNegEigenvector("negative eigenvector",0.1);
+	Check checkGamma("gamma",0.1);
 	
 	// defining scalar quantities
 	number len, i0, s, sm, v, vr, fgamma, gamma0, gamma1;
@@ -367,6 +368,15 @@ for (uint pl=0; pl<Npl; pl++) {
 				cerr << "analytic result     = " << analyticNegEigenvalue << endl;
 				cerr << "eigenvector test    = " << negEigenvectorTest << endl;
 			}
+			
+			// checking if angle gamma agrees with weak coupling result
+			number gamma_ratio = 0.0;
+			if (abs(M)>MIN_NUMBER && abs(M)<2.0) {
+				number gamma_weak = PI-2.0*asin(sqrt(1.0-pow(M,2)/4.0));
+				gamma_ratio = (gamma0+gamma1)/2.0/gamma_weak;
+			}
+			checkGamma.add(gamma_ratio);
+			checkGamma.checkMessage();
 		}		
 	
 /*----------------------------------------------------------------------------------------------------------------------------
@@ -514,18 +524,13 @@ for (uint pl=0; pl<Npl; pl++) {
 	number s_cf = PI/p.G/p.B;
 	if (!weak) s_cf -= p.G*p.G/4.0;
 	else if (abs(M)>MIN_NUMBER && abs(M)<2.0) s_cf -= (2.0/p.G/p.B)*( asin(M/2.0) + (M/2.0)*sqrt(1.0-pow(M/2.0,2)) );
-	number gamma_ratio = 0.0;
-	if (abs(M)>MIN_NUMBER && abs(M)<2.0) {
-		number gamma_weak = PI-2.0*asin(sqrt(1.0-pow(M,2)/4.0));
-		gamma_ratio = (gamma0+gamma1)/2.0/gamma_weak;
-	}
 		
 	// printing results to terminal
 	printf("\n");
-	printf("%8s%8s%8s%8s%8s%8s%8s%14s%14s%14s%14s%14s%14s\n","runs","time","K","G","B","T","a","len",\
-		"i0","vr","gamma","s","s_cf");
-	printf("%8i%8.3g%8i%8.4g%8.4g%8.4g%8.4g%14.5g%14.5g%14.5g%14.5g%14.5g%14.5g\n",\
-		runsCount,realtime,p.K,p.G,p.B,p.T,p.Epsi,len,i0,vr,gamma_ratio,s,s_cf);
+	printf("%8s%8s%8s%8s%8s%8s%8s%8s%14s%14s%14s%14s%14s\n","runs","time","K","G","B","T","a","M","len",\
+		"i0","vr","s","s_cf");
+	printf("%8i%8.3g%8i%8.4g%8.4g%8.4g%8.4g%8.4g%14.5g%14.5g%14.5g%14.5g%14.5g\n",\
+		runsCount,realtime,p.K,p.G,p.B,p.T,p.Epsi,M,len,i0,vr,s,s_cf);
 	printf("\n");
 	
 	
@@ -535,8 +540,8 @@ for (uint pl=0; pl<Npl; pl++) {
 		string resFile = "results/nr/nrmain.dat";
 		FILE* ros;
 		ros = fopen(resFile.c_str(),"a");
-		fprintf(ros,"%12s%8i%8i%8g%8g%8g%16.6g%16.6g%16.6g%12.4g\n",\
-					timenumber.c_str(),pl,p.K,p.G,p.B,p.Epsi,len,i0,s,checkSol.back());
+		fprintf(ros,"%12s%8i%8i%8g%8g%8g%8g%16.6g%16.6g%16.6g%12.4g\n",\
+					timenumber.c_str(),pl,p.K,p.G,p.B,p.Epsi,M,len,i0,s,checkSol.back());
 		fclose(ros);
 		printf("%12s%50s\n","results:",resFile.c_str());
 		
