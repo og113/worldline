@@ -545,7 +545,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		string resFile = "results/nr/nrmain.dat";
 		FILE* ros;
 		ros = fopen(resFile.c_str(),"a");
-		fprintf(ros,"%12s%8i%8i%8g%8g%8g%8g%16.6g%16.6g%16.6g%12.4g\n",\
+		fprintf(ros,"%12s%8i%8i%8.4g%8.4g%8.4g%8.4g%16.6g%16.6g%16.6g%12.4g\n",\
 					timenumber.c_str(),pl,p.K,p.G,p.B,p.Epsi,M,len,i0,s,checkSol.back());
 		fclose(ros);
 		printf("%12s%50s\n","results:",resFile.c_str());

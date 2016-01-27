@@ -911,8 +911,8 @@ Metropolis<Dim>::Metropolis(const Parameters& p, const uint& s): Seed(s), Steps(
 template <uint Dim>
 Metropolis<Dim>::~Metropolis() {
 	delete Generator;
-	delete P;
-	delete LoopPtr;
+	//delete P;
+	//delete LoopPtr;
 }
 
 // set loop
