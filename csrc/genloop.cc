@@ -822,7 +822,7 @@ uint Metropolis<Dim>::step(const uint& Num) {
 // Dim=4
 template class Point<4>;
 template ostream& operator<< <4>(ostream& os,const Point<4>& p);
-template Point<4> operator+ <4>(const Point<4// COMPLETELY WRONG>& lhs,const Point<4>& rhs);
+template Point<4> operator+ <4>(const Point<4>& lhs,const Point<4>& rhs);
 template Point<4> operator- <4>(const Point<4>& lhs,const Point<4>& rhs);
 template Point<4> operator* <4>(const number& lhs,const Point<4>& rhs);
 template Point<4> operator/ <4>(const Point<4>& lhs,const number& rhs);
