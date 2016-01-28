@@ -664,6 +664,50 @@ number KG (const Loop<Dim>& l) {
 	return res; // multiply and divide by N for dt and for averaging respectively
 }
 
+// KGMax
+template <uint Dim>
+number KGMax (const Loop<Dim>& l) {
+	uint pos1, pos2;
+	Point<Dim> pp;
+	number res = 0.0, t_sqrd, t_dot_sqrd, t_t_dot, temp;
+	for (uint j=0; j<l.size(); j++) {
+		pos1 = (j==(l.size()-1)? 0 : j+1);
+		pos2 = (pos1==(l.size()-1)? 0 : pos1+1);
+		pp = l[pos1];
+		pp *= 2.0;
+		pp -= l[pos2];
+		t_sqrd = DistanceSquared(l[pos1],l[j]);
+		t_dot_sqrd = DistanceSquared(l[j],pp);
+		t_t_dot = Dot(l[j],pp,l[pos1],l[j]);
+		temp = sqrt((t_dot_sqrd-t_t_dot*t_t_dot/t_sqrd)/t_sqrd)*l.size();
+		res = (temp>res? temp: res);
+	}
+	return res;
+}
+
+// KGMax
+template <uint Dim>
+number KGMax (const Loop<Dim>& l, const uint& ex1, const uint& ex2) {
+	uint pos1, pos2;
+	Point<Dim> pp;
+	number res = 0.0, t_sqrd, t_dot_sqrd, t_t_dot, temp;
+	for (uint j=0; j<l.size(); j++) {
+		if (j!=ex1 && j!=ex2) {
+			pos1 = (j==(l.size()-1)? 0 : j+1);
+			pos2 = (pos1==(l.size()-1)? 0 : pos1+1);
+			pp = l[pos1];
+			pp *= 2.0;
+			pp -= l[pos2];
+			t_sqrd = DistanceSquared(l[pos1],l[j]);
+			t_dot_sqrd = DistanceSquared(l[j],pp);
+			t_t_dot = Dot(l[j],pp,l[pos1],l[j]);
+			temp = sqrt((t_dot_sqrd-t_t_dot*t_t_dot/t_sqrd)/t_sqrd)*l.size();
+			res = (temp>res? temp: res);
+		}
+	}
+	return res;
+}
+
 // S0
 template <uint Dim>
 number S0 (const Loop<Dim>& l) {
@@ -883,6 +927,35 @@ number DFGamma (const Loop<Dim>& l, const Point<Dim>& p, const uint& loc) {
 	return result;
 }
 
+// Interpolate
+template <uint Dim>
+void Interpolate (const Loop<Dim>& in, Loop<Dim>& out) {
+	if (in.K==out.K) {
+		out = in;
+	}
+	else if (in.K>out.K) {
+		uint N_out = pow(2,out.K);
+		uint N_diff = pow(2,in.K-out.K);
+		for (uint j=0; j<N_out; j++) {
+			out[j] = in[N_diff*j];
+		}
+	}
+	else {
+		uint N_in = pow(2,in.K);
+		uint N_out = pow(2,out.K);
+		uint N_diff = pow(2,out.K-in.K);
+		uint n, posn, m;
+		number b_m;
+		for (uint j=0; j<N_out; j++) {
+			n = j/N_diff;
+			posn = (n!=(N_in-1)?n+1:0);
+			m = j%N_diff;
+			b_m = m/(number)N_diff;
+			out[j] = (1.0-b_m)*in[n] + b_m*in[posn];
+		}
+	}
+}
+
 /*----------------------------------------------------------------------------------------------------------------------------
 	5 - Metropolis
 ----------------------------------------------------------------------------------------------------------------------------*/
@@ -1057,6 +1130,8 @@ template number Sm<4> (const Loop<4>& l);
 template number Sm<4> (const Loop<4>& l, const uint& m, const uint& n);
 template number DSm<4> (const Loop<4>& l, const Point<4>& p, const uint& loc);
 template number KG<4> (const Loop<4>& l);
+template number KGMax<4> (const Loop<4>& l);
+template number KGMax<4> (const Loop<4>& l, const uint& ex1, const uint& ex2);
 template number S0<4> (const Loop<4>& l);
 template number DS0<4> (const Loop<4>& l, const Point<4>& p, const uint& loc);
 template number FGamma<4> (const Loop<4>& l);

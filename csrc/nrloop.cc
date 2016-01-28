@@ -112,6 +112,44 @@ void V2r (const uint& j, const uint& k, const Loop<Dim>& l, const number& a, con
 	}
 }
 
+// KGMax
+template <uint Dim>
+void KGMax (const uint& j, const Loop<Dim>& l, const number& f, number& result) {
+	uint pos1, pos2;
+	Point<Dim> pp;
+	number t_sqrd, t_dot_sqrd, t_t_dot, temp;
+	pos1 = (j==(l.size()-1)? 0 : j+1);
+	pos2 = (pos1==(l.size()-1)? 0 : pos1+1);
+	pp = l[pos1];
+	pp *= 2.0;
+	pp -= l[pos2];
+	t_sqrd = DistanceSquared(l[pos1],l[j]);
+	t_dot_sqrd = DistanceSquared(l[j],pp);
+	t_t_dot = Dot(l[j],pp,l[pos1],l[j]);
+	temp = f*sqrt((t_dot_sqrd-t_t_dot*t_t_dot/t_sqrd)/t_sqrd)*l.size();
+	result =  (temp>result? temp: result);
+}
+
+// KGMax
+template <uint Dim>
+void KGMax (const uint& j, const Loop<Dim>& l, const uint& ex1, const uint& ex2, const number& f, number& result) {
+	if (j!=ex1 && j!=ex2) {
+		uint pos1, pos2;
+		Point<Dim> pp;
+		number t_sqrd, t_dot_sqrd, t_t_dot, temp;
+		pos1 = (j==(l.size()-1)? 0 : j+1);
+		pos2 = (pos1==(l.size()-1)? 0 : pos1+1);
+		pp = l[pos1];
+		pp *= 2.0;
+		pp -= l[pos2];
+		t_sqrd = DistanceSquared(l[pos1],l[j]);
+		t_dot_sqrd = DistanceSquared(l[j],pp);
+		t_t_dot = Dot(l[j],pp,l[pos1],l[j]);
+		temp = f*sqrt((t_dot_sqrd-t_t_dot*t_t_dot/t_sqrd)/t_sqrd)*l.size();
+		result = (temp>result? temp: result);
+	}
+}
+
 // mdPX_nr
 template<uint Dim>
 void mdPX_nr(const Loop<Dim>& l,const uint& loc, const Point<Dim>& P, const number& f, vec& v) {
@@ -483,6 +521,8 @@ template void S0<2>(const uint& j, const Loop<2>& l, const number& f, number& re
 template void Sm<2>(const uint& j, const Loop<2>& l, const number& f, number& result);
 template void Gamma<2>(const uint& j, const Loop<2>& l, const number& f, number& result);
 template void FGamma<2>(const uint& j, const Loop<2>& l, const number& f, number& result);
+template void KGMax<2>(const uint& j, const Loop<2>& l, const number& f, number& result);
+template void KGMax<2>(const uint& j, const Loop<2>& l, const uint& ex1, const uint& ex2, const number& f, number& result);
 template void mdPX_nr<2>(const Loop<2>& l, const uint& loc, const Point<2>& P, const number& f, vec& v);
 template void mdL_nr<2>(const uint& j, const uint& mu, const Loop<2>& l, const number& p, vec& v);
 template void ddL_nr<2>(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<2>& l, const number& p, mat& m);
@@ -540,6 +580,8 @@ template void S0<4>(const uint& j, const Loop<4>& l, const number& f, number& re
 template void Sm<4>(const uint& j, const Loop<4>& l, const number& f, number& result);
 template void Gamma<4>(const uint& j, const Loop<4>& l, const number& f, number& result);
 template void FGamma<4>(const uint& j, const Loop<4>& l, const number& f, number& result);
+template void KGMax<4>(const uint& j, const Loop<4>& l, const number& f, number& result);
+template void KGMax<4>(const uint& j, const Loop<4>& l, const uint& ex1, const uint& ex2, const number& f, number& result);
 template void mdPX_nr<4>(const Loop<4>& l, const uint& loc, const Point<4>& P, const number& f, vec& v);
 template void mdL_nr<4>(const uint& j, const uint& mu, const Loop<4>& l, const number& p, vec& v);
 template void ddL_nr<4>(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<4>& l, const number& p, mat& m);

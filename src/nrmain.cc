@@ -44,7 +44,7 @@ int main(int argc, char** argv) {
 
 // argv options
 bool verbose = true;
-bool lemon = true;
+bool lemon = false;
 bool step = true;
 bool weak = false;
 bool alltests = false; // doing alltests
@@ -117,17 +117,22 @@ if (pr.toStep(label)) {
 // starting loop
 for (uint pl=0; pl<Npl; pl++) {
 
+	// doing things before parameter step
 	Filename loadFile;
 	if (step && pl>0) {
-		loadFile = "data/nr/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_G_"+nts(p.G)+"_B_"+nts(p.B)+"_M_"+nts(p.P4)+".dat";
+		loadFile = "data/nr/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_G_"+nts(p.G)+"_B_"+nts(p.B)+"_M_"+nts(p.P4)\
+					+"_a_"+nts(p.Epsi)+".dat";
 		lemon = false;
 	}
+	
 	// stepping parameters
 	if (pr.toStep(label) && pl>0) {
 		p.step(pr);
 	}
 	else if (pr.toStep(label) && label==Parameters::nl)
 		p.Nl = (pr.Max).Nl;
+	
+	// defining some derived parameters	
 	uint N = pow(2,p.K);
 	uint zm = dim;
 	uint NT = N*dim+zm;
@@ -143,7 +148,7 @@ for (uint pl=0; pl<Npl; pl++) {
 			M = p.P4;
 		}
 	}
-		
+
 /*----------------------------------------------------------------------------------------------------------------------------
 	3 - defining quantitites
 ----------------------------------------------------------------------------------------------------------------------------*/
@@ -166,7 +171,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	Check checkGamma("gamma",0.1);
 	
 	// defining scalar quantities
-	number len, i0, s, sm, v, vr, fgamma, gamma0, gamma1;
+	number len, i0, s, sm, v, vr, fgamma, gamma0, gamma1, kg;
 	
 	// defining vector and matrix quantities
 	vec x(N*dim);
@@ -182,7 +187,8 @@ for (uint pl=0; pl<Npl; pl++) {
 		if (lemon)
 			loadFile = "data/lemon/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_R_"+nts(R)+"_M_"+nts(M)+"_rank_0.dat";
 		else {
-			loadFile = "data/nr/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_G_"+nts(p.G)+"_B_"+nts(p.B)+"_M_"+nts(M)+".dat";
+			loadFile = "data/nr/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_G_"+nts(p.G)+"_B_"+nts(p.B)+"_M_"+nts(M)\
+			+"_a_"+nts(p.Epsi)+".dat";
 			if (!loadFile.exists()) {
 				loadFile = "data/circle/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_R_"+nts(R)+"_rank_0.dat";
 			}
@@ -220,10 +226,10 @@ for (uint pl=0; pl<Npl; pl++) {
 		// initializing to zero
 		mds = Eigen::VectorXd::Zero(NT);
 		dds = Eigen::MatrixXd::Zero(NT,NT);
-		len = 0.0, i0 = 0.0, v = 0.0, fgamma = 0.0, gamma0 = 0.0, gamma1 = 0.0;//, s0 = 0.0;
-		
+		len = 0.0, i0 = 0.0, v = 0.0, fgamma = 0.0, gamma0 = 0.0, gamma1 = 0.0, kg = 0.0;//, s0 = 0.0;
+				
 		// loading x to xLoop - messier than it should be (should work with either a vec or a Loop really)
-		vectorToLoop(x,xLoop);	
+		vectorToLoop(x,xLoop);
 
 /*----------------------------------------------------------------------------------------------------------------------------
 	5 - assigning mdx and ddx
@@ -236,12 +242,16 @@ for (uint pl=0; pl<Npl; pl++) {
 		number sqrt4s0 = 2.0*sqrt(S0(xLoop));
 		number cusp_scale = g*log(R/p.Epsi);
 		
+		Point<dim> P0;
+		
 		// bulk
 		for (j=0; j<N; j++) {
 		
 			//S0(j, xLoop, s0norm, s0norm);
 			L		(j, xLoop, 1.0, len);
 			I0		(j, xLoop, -gb, i0);
+			if (!(P^=P0)) KGMax(j, xLoop, 0, N/2-1, 1.0, kg);
+			else 		  KGMax(j, xLoop, 1.0, kg);
 		
 			for (mu=0; mu<dim; mu++) {
 			
@@ -294,7 +304,6 @@ for (uint pl=0; pl<Npl; pl++) {
 			}
 		}
 		
-		Point<dim> P0;
 		if (!(P^=P0)) {
 			// external momenta
 			mdPX_nr(xLoop,N/2-1,P,-1.0,mds);
@@ -335,13 +344,8 @@ for (uint pl=0; pl<Npl; pl++) {
 		checkDX.add(len/(number)N/p.Epsi);
 		
 		// check a<<L
-		number Atest = p.Epsi/(len/2.0/PI);
-		if (alltests) {
-			// check a<<1/(Mean Gaussian Curvature)
-			number kg = KG(xLoop)/2.0/PI;
-			if (1.0/kg<len)
-				Atest = p.Epsi*kg;
-		}
+		//number Atest = p.Epsi/(len/2.0/PI);
+		number Atest = p.Epsi*kg;
 		checkA.add(Atest);
 				
 		if (alltests) {
@@ -390,7 +394,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		
 		if (po!=PrintOptions::none) {
 			Filename early = "data/temp/"+timenumber+"xEarly1_K_"+nts(p.K)+"_G_"+nts(p.G)+"_B_"+nts(p.B)+"_M_"+nts(M)\
-						+"_run_"+nts(runsCount)+".dat";
+						+"_a_"+nts(p.Epsi)+"_run_"+nts(runsCount)+".dat";
 			if (po==PrintOptions::x || po==PrintOptions::all) {
 				printAsLoop(early,dim,x,N*dim);
 				printf("%12s%50s\n","x:",((string)early).c_str());
@@ -454,7 +458,7 @@ for (uint pl=0; pl<Npl; pl++) {
 
 		if (po!=PrintOptions::none) {
 			Filename early = "data/temp/"+timenumber+"deltaEarly2_K_"+nts(p.K)+"_G_"+nts(p.G)+"_B_"+nts(p.B)+"_M_"+nts(M)\
-							+"_run_"+nts(runsCount)+".dat";
+							+"_a_"+nts(p.Epsi)+"_run_"+nts(runsCount)+".dat";
 			if (po==PrintOptions::delta || po==PrintOptions::all) {
 				printAsLoop(early,dim,delta,N*dim);
 				printf("%12s%50s\n","delta:",((string)early).c_str());
@@ -551,7 +555,8 @@ for (uint pl=0; pl<Npl; pl++) {
 		printf("%12s%50s\n","results:",resFile.c_str());
 		
 		// printing loop to file
-		string loopRes = "data/nr/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_G_"+nts(p.G)+"_B_"+nts(p.B)+"_M_"+nts(M)+".dat";
+		string loopRes = "data/nr/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_G_"+nts(p.G)+"_B_"+nts(p.B)+"_M_"+nts(M)\
+							+"_a_"+nts(p.Epsi)+".dat";
 		saveVectorBinary(loopRes,x);
 		printf("%12s%50s\n","x:",loopRes.c_str());
 		

@@ -157,6 +157,10 @@ class Loop;
 template <uint Dim>
 class Metropolis;
 
+// Interpolate
+template <uint Dim>
+void Interpolate (const Loop<Dim>& in, Loop<Dim>& out);
+
 // Loop class
 template <uint Dim>
 class Loop {
@@ -170,6 +174,9 @@ public:
 	
 	// Metropolis
 	friend class Metropolis<Dim>;
+	
+	// Interpolate
+	friend void Interpolate<Dim>(const Loop<Dim>& in, Loop<Dim>& out);
 	
 	// clear
 	void clear();
@@ -261,6 +268,14 @@ number DSm (const Loop<Dim>& l, const Point<Dim>& p, const uint& loc);
 // KG
 template <uint Dim>
 number KG (const Loop<Dim>& l);
+
+// KGMax
+template <uint Dim>
+number KGMax (const Loop<Dim>& l);
+
+// KGMax
+template <uint Dim>
+number KGMax (const Loop<Dim>& l, const uint& ex1, const uint& ex2);
 
 // S0
 template <uint Dim>

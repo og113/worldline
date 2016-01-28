@@ -65,6 +65,14 @@ void V1r (const uint& j, const uint& k, const Loop<Dim>& l, const number& a, con
 template <uint Dim>
 void V2r (const uint& j, const uint& k, const Loop<Dim>& l, const number& a, const number& f, number& result);
 
+// KGMax
+template <uint Dim>
+void KGMax (const uint& j, const Loop<Dim>& l, const number& f, number& result);
+
+// KGMax
+template <uint Dim>
+void KGMax (const uint& j, const Loop<Dim>& l, const uint& ex1, const uint& ex2, const number& f, number& result);
+
 // mdPX_nr
 template<uint Dim>
 void mdPX_nr(const Loop<Dim>& l, const uint& loc, const Point<Dim>& P, const number& f, vec& v);
