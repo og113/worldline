@@ -230,6 +230,32 @@ number Distance(const Point<Dim>& p1, const Point<Dim>& p2) {
 	return sqrt(DistanceSquared(p1,p2));
 }
 
+// NormSquared
+template <uint Dim>
+number NormSquared(const Point<Dim>& p) {
+	number d = pow(p[0],2);
+	for (uint j=1; j<Dim; j++) {
+		d += pow(p[j],2);
+	}
+	return d;
+}
+
+// Norm
+template <uint Dim>
+number Norm(const Point<Dim>& p) {
+	return sqrt(NormSquared(p));
+}
+
+// Dot
+template <uint Dim>
+number Dot(const Point<Dim>& p1, const Point<Dim>& p2) {
+	number d = p1[0]*p2[0];
+	for (uint j=1; j<Dim; j++) {
+		d += p1[j]*p2[j];
+	}
+	return d;
+}
+
 // Dot
 template <uint Dim>
 number Dot(const Point<Dim>& p1, const Point<Dim>& p2, const Point<Dim>& q1, const Point<Dim>& q2) {
@@ -238,6 +264,12 @@ number Dot(const Point<Dim>& p1, const Point<Dim>& p2, const Point<Dim>& q1, con
 		d += (p1[j]-p2[j])*(q1[j]-q2[j]);
 	}
 	return d;
+}
+
+// MidpointDistance
+template <uint Dim>
+number MidpointDistanceSquared(const Point<Dim>& p1, const Point<Dim>& p2, const Point<Dim>& p3, const Point<Dim>& p4) {
+	return 0.25*DistanceSquared(p1+p2,p3+p4);
 }
 
 /*----------------------------------------------------------------------------------------------------------------------------
@@ -368,7 +400,8 @@ void Loop<Dim>::saveAscii(const string& f) const {
 	ofstream os;
 	os.open(f.c_str());
 	if (os.good()) {
-		os << *this;
+		for (uint j=0; j<size(); j++)
+			os << Points[j] << endl;
 		os.close();
 	}
 	else {
@@ -386,7 +419,7 @@ void Loop<Dim>::load(const string& f) {
 		return;
 	}
 	uint fd = countDoubles(f);
-	if (fd!=Dim*Length) {
+	if (fd<Dim*Length) {
 		cerr << "load error: " << f << " contains " << fd << " doubles, loop requires " << Length*Dim << endl;
 		return;
 	}
@@ -425,7 +458,9 @@ void Loop<Dim>::loadAscii(const string& f) {
 		ifstream is;
 		is.open(f.c_str());
 		if (is.good()) {
-			is >> *this;
+			for (uint j=0; j<size(); j++)
+				is >> Points[j];
+			Grown = true;
 			is.close();
 		}
 		else {
@@ -475,23 +510,6 @@ void Loop<Dim>::setLength(const number& L) {
 	}
 }
 
-// stream <<
-template <uint Dim>
-ostream& operator<< (ostream& os,const Loop<Dim>& l) {
-	for (uint j=0; j<l.Length; j++)
-		os << l.Points[j] << endl;
-	return os;
-}
-
-// stream >>
-template <uint Dim>
-istream& operator>> (istream& is, Loop<Dim>& l) {
-	for (uint j=0; j<l.Length; j++)
-		is >> l.Points[j];
-	l.Grown = true;
-	return is;
-}
-
 /*----------------------------------------------------------------------------------------------------------------------------
 	4 - loop functions
 		- S0
@@ -501,6 +519,41 @@ istream& operator>> (istream& is, Loop<Dim>& l) {
 		
 n.b. functions are defined for unit loops. for other loops the result must be multiplied by appropriate factors (depending on Dim) of T, the length of the loop.
 ----------------------------------------------------------------------------------------------------------------------------*/
+
+// Dot
+template <uint Dim>
+number Dot(const Loop<Dim>& loop, const uint& i, const uint& j, const uint& k, const uint& l) {
+	return Dot(loop[i],loop[j],loop[k],loop[l]);
+}
+
+// Dot
+template <uint Dim>
+number Dot(const Loop<Dim>& loop, const uint& i, const uint& j) {
+	uint ni = (i==0? (loop.size()-1): i-1);
+	uint nj = (j==0? (loop.size()-1): j-1);
+	return Dot(loop[i],loop[ni],loop[j],loop[nj]);
+}
+
+// MidpointDistance
+template <uint Dim>
+number MidpointDistanceSquared(const Loop<Dim>& loop, const uint& i, const uint& j) {
+	uint pi = (i==loop.size()? 0: i+1);
+	uint pj = (j==loop.size()? 0: j+1);
+	return MidpointDistanceSquared(loop[pi],loop[i],loop[pj],loop[j]);
+}
+
+// DX
+template <uint Dim>
+number DX(const Loop<Dim>& loop, const uint& i, const uint& mu) {
+	uint ni = (i==0? (loop.size()-1): i-1);
+	return (loop[i])[mu]-(loop[ni])[mu];
+}
+
+// DX
+template <uint Dim>
+number DX(const Loop<Dim>& loop, const uint& i, const uint& j, const uint& mu) {
+	return (loop[i])[mu]-(loop[j])[mu];
+}
 
 // L
 template <uint Dim>
@@ -538,6 +591,27 @@ number Sm (const Loop<Dim>& l) {
 	return res/(number)l.size();
 }
 
+// Sm
+template <uint Dim>
+number Sm (const Loop<Dim>& l, const uint& m, const uint& n) {
+	uint pos, neg;
+	Point<Dim> pp;
+	number res = 0.0, temp;
+	for (uint j=0; j<l.size(); j++) {
+		if (j!=m && j!=n) {
+			pos = (j==(l.size()-1)? 0 : j+1);
+			neg = (j==0? (l.size()-1) : j-1);
+			pp = l[j];
+			pp *= 2.0;
+			pp -= l[neg];
+			temp = Dot(l[pos],pp,l[pos],l[j]);
+			temp /= DistanceSquared(l[pos],l[j]);
+			res += temp;
+		}
+	}
+	return res/((number)l.size()-2.0);
+}
+
 // DSm
 template <uint Dim>
 number DSm (const Loop<Dim>& l, const Point<Dim>& p, const uint& loc) {
@@ -570,6 +644,70 @@ number DSm (const Loop<Dim>& l, const Point<Dim>& p, const uint& loc) {
 	return res/(number)l.size();
 }
 
+// KG
+template <uint Dim>
+number KG (const Loop<Dim>& l) {
+	uint pos1, pos2;
+	Point<Dim> pp;
+	number res = 0.0, t_sqrd, t_dot_sqrd, t_t_dot;
+	for (uint j=0; j<l.size(); j++) {
+		pos1 = (j==(l.size()-1)? 0 : j+1);
+		pos2 = (pos1==(l.size()-1)? 0 : pos1+1);
+		pp = l[pos1];
+		pp *= 2.0;
+		pp -= l[pos2];
+		t_sqrd = DistanceSquared(l[pos1],l[j]);
+		t_dot_sqrd = DistanceSquared(l[j],pp);
+		t_t_dot = Dot(l[j],pp,l[pos1],l[j]);
+		res += sqrt((t_dot_sqrd-t_t_dot*t_t_dot/t_sqrd)/t_sqrd);
+	}
+	return res; // multiply and divide by N for dt and for averaging respectively
+}
+
+// KGMax
+template <uint Dim>
+number KGMax (const Loop<Dim>& l) {
+	uint pos1, pos2;
+	Point<Dim> pp;
+	number res = 0.0, t_sqrd, t_dot_sqrd, t_t_dot, temp;
+	for (uint j=0; j<l.size(); j++) {
+		pos1 = (j==(l.size()-1)? 0 : j+1);
+		pos2 = (pos1==(l.size()-1)? 0 : pos1+1);
+		pp = l[pos1];
+		pp *= 2.0;
+		pp -= l[pos2];
+		t_sqrd = DistanceSquared(l[pos1],l[j]);
+		t_dot_sqrd = DistanceSquared(l[j],pp);
+		t_t_dot = Dot(l[j],pp,l[pos1],l[j]);
+		temp = sqrt((t_dot_sqrd-t_t_dot*t_t_dot/t_sqrd)/t_sqrd)*l.size();
+		res = (temp>res? temp: res);
+	}
+	return res;
+}
+
+// KGMax
+template <uint Dim>
+number KGMax (const Loop<Dim>& l, const uint& ex1, const uint& ex2) {
+	uint pos1, pos2;
+	Point<Dim> pp;
+	number res = 0.0, t_sqrd, t_dot_sqrd, t_t_dot, temp;
+	for (uint j=0; j<l.size(); j++) {
+		if (j!=ex1 && j!=ex2) {
+			pos1 = (j==(l.size()-1)? 0 : j+1);
+			pos2 = (pos1==(l.size()-1)? 0 : pos1+1);
+			pp = l[pos1];
+			pp *= 2.0;
+			pp -= l[pos2];
+			t_sqrd = DistanceSquared(l[pos1],l[j]);
+			t_dot_sqrd = DistanceSquared(l[j],pp);
+			t_t_dot = Dot(l[j],pp,l[pos1],l[j]);
+			temp = sqrt((t_dot_sqrd-t_t_dot*t_t_dot/t_sqrd)/t_sqrd)*l.size();
+			res = (temp>res? temp: res);
+		}
+	}
+	return res;
+}
+
 // S0
 template <uint Dim>
 number S0 (const Loop<Dim>& l) {
@@ -582,11 +720,13 @@ number S0 (const Loop<Dim>& l) {
 // DS0
 template <uint Dim>
 number DS0 (const Loop<Dim>& l, const Point<Dim>& p, const uint& loc) {
-	uint loc_pos = (loc==(l.size()-1)? 0: loc);
-	uint loc_neg = (loc==0? (l.size()-1): loc);
-	Point<Dim> a = l[loc_neg]+l[loc_pos]-l[loc];
-	number result = Dot(p,l[loc],p,a);
-	return result*(number)l.size()/2.0;
+	uint loc_pos = (loc==(l.size()-1)? 0: loc+1);
+	uint loc_neg = (loc==0? (l.size()-1): loc-1);
+	number result = DistanceSquared(p,l[loc_neg]);
+	result += DistanceSquared(l[loc_pos],p);
+	result -= DistanceSquared(l[loc],l[loc_neg]);
+	result -= DistanceSquared(l[loc_pos],l[loc]);
+	return result*(number)l.size()/4.0;
 }
 
 // V0
@@ -630,31 +770,46 @@ number aprxDV0 (const Loop<Dim>& l, const Point<Dim>& p, const uint& loc) {
 // V1
 template <uint Dim>
 number V1 (const Loop<Dim>& l) {
-	number result = 2.0*Dot(l[2],l[1],l[1],l[0])*pow(DistanceSquared(l[1],l[0]),(2.0-Dim)/2.0);
+	number result = Dot(l[2],l[1],l[1],l[0])*pow(DistanceSquared(l[1],l[0]),(2.0-Dim)/2.0);
 	uint posj, posk;
 	for (uint j=2; j<l.size(); j++) {
 		posj = (j!=(l.size()-1)?j+1:0);
 		for (uint k=0; k<j; k++) {
 			posk = (k!=(l.size()-1)?k+1:0);
-			result += 2.0*Dot(l[posj],l[j],l[posk],l[k])*pow(DistanceSquared(l[j],l[k]),(2.0-Dim)/2.0);
+			result += Dot(l[posj],l[j],l[posk],l[k])*pow(DistanceSquared(l[j],l[k]),(2.0-Dim)/2.0);
 		}
 	}
-	return result;
+	return 2.0*result;
 }
 
 // V1r
 template <uint Dim>
 number V1r (const Loop<Dim>& l, const number& a) {
-	number result = 2.0*Dot(l[2],l[1],l[1],l[0])*pow(DistanceSquared(l[1],l[0])+a*a,(2.0-Dim)/2.0);
+	number result = Dot(l[2],l[1],l[1],l[0])*pow(DistanceSquared(l[1],l[0])+a*a,(2.0-Dim)/2.0);
 	uint posj, posk;
 	for (uint j=2; j<l.size(); j++) {
 		posj = (j!=(l.size()-1)?j+1:0);
 		for (uint k=0; k<j; k++) {
 			posk = (k!=(l.size()-1)?k+1:0);
-			result += 2.0*Dot(l[posj],l[j],l[posk],l[k])*pow(DistanceSquared(l[j],l[k])+a*a,(2.0-Dim)/2.0);
+			result += Dot(l[posj],l[j],l[posk],l[k])*pow(DistanceSquared(l[j],l[k])+a*a,(2.0-Dim)/2.0);
 		}
 	}
-	return result;
+	return 2.0*result;
+}
+
+// V2r
+template <uint Dim>
+number V2r (const Loop<Dim>& l, const number& a) {
+	number result = Dot(l[2],l[1],l[1],l[0])*pow(0.25*DistanceSquared(l[2]+l[1],l[1]+l[0])+a*a,(2.0-Dim)/2.0);
+	uint posj, posk;
+	for (uint j=2; j<l.size(); j++) {
+		posj = (j!=(l.size()-1)?j+1:0);
+		for (uint k=0; k<j; k++) {
+			posk = (k!=(l.size()-1)?k+1:0);
+			result += Dot(l[posj],l[j],l[posk],l[k])*pow(0.25*DistanceSquared(l[posj]+l[j],l[posk]+l[k])+a*a,(2.0-Dim)/2.0);
+		}
+	}
+	return 2.0*result;
 }
 
 // DV1
@@ -697,10 +852,108 @@ number DV1r (const Loop<Dim>& l, const Point<Dim>& p, const uint& loc, const num
 	return 2.0*result;
 }
 
+// DV2r
+template <uint Dim>
+number DV2r (const Loop<Dim>& l, const Point<Dim>& p, const uint& loc, const number& a) {
+	uint posj, posloc = (loc!=(l.size()-1)?loc+1:0);
+	uint negloc = (loc!=0?loc-1:(l.size()-1));
+	
+	number result = Dot(l[posloc],p,p,l[negloc])*pow(0.25*DistanceSquared(l[negloc]+p,p+l[posloc])+a*a,(2.0-Dim)/2.0)\
+						- Dot(l[posloc],l[loc],l[loc],l[negloc])*pow(0.25*DistanceSquared(l[negloc]+l[loc],l[loc]+l[posloc])+a*a,(2.0-Dim)/2.0);
+
+	for (uint j=0; j<l.size(); j++) {
+		if (j!=loc && j!=negloc) {
+			posj = (j!=(l.size()-1)?j+1:0);
+			result += Dot(p,l[loc],l[posj],l[j])*pow(0.25*DistanceSquared(l[negloc]+p,l[j]+l[posj])+a*a,(2.0-Dim)/2.0)\
+					- Dot(l[loc],l[negloc],l[posj],l[j])*pow(0.25*DistanceSquared(l[negloc]+l[loc],l[j]+l[posj])+a*a,(2.0-Dim)/2.0)\
+					+ Dot(l[posloc],p,l[posj],l[j])*pow(0.25*DistanceSquared(p+l[posloc],l[j]+l[posj])+a*a,(2.0-Dim)/2.0)\
+					- Dot(l[posloc],l[loc],l[posj],l[j])*pow(0.25*DistanceSquared(l[loc]+l[posloc],l[j]+l[posj])+a*a,(2.0-Dim)/2.0);
+		}
+	}
+	return 2.0*result;
+}
+
 // I0
 template <uint Dim>
 number I0 (const Loop<Dim>& l) {
 	return 0;
+}
+
+// DI0
+template <uint Dim>
+number DI0 (const Loop<Dim>& l, const Point<Dim>& p, const uint& loc) {
+	return 0;
+}
+
+// FGamma = gamma*cot(gamma)-1
+template <uint Dim>
+number FGamma (const Loop<Dim>& l) {
+	number result = -(number)l.size(), cot_gamma, temp;
+	uint posj = 1, negj = l.size()-1;
+	for (uint j=0; j<l.size(); j++) {	
+		temp = Dot(l[posj],l[j],l[j],l[negj]);
+		cot_gamma = DistanceSquared(l[posj],l[j])*DistanceSquared(l[j],l[negj]) - temp*temp;
+		cot_gamma = temp/sqrt(cot_gamma);
+		result += cot_gamma*atan(1.0/cot_gamma);
+		posj = ((j+1)!=(l.size()-1)?j+2:0);
+		negj = j;
+	}
+	return result;
+}
+
+// DFGamma
+template <uint Dim>
+number DFGamma (const Loop<Dim>& l, const Point<Dim>& p, const uint& loc) {
+	uint j = (loc!=0?loc-1:(l.size()-1));
+	uint nj = (j!=0?j-1:(l.size()-1));
+	uint pj = loc;
+	number temp, cot_gamma, result = 0.0;
+	
+	for (uint k=0; k<3; k++) {
+		temp = Dot(l[pj],l[j],l[j],l[nj]);
+		cot_gamma = DistanceSquared(l[pj],l[j])*DistanceSquared(l[j],l[nj]) - temp*temp;
+		cot_gamma = temp/sqrt(cot_gamma);
+		result -= cot_gamma*atan(1.0/cot_gamma);
+		
+		temp = Dot((pj==loc?p:l[pj]),(j==loc?p:l[j]),(j==loc?p:l[j]),(nj==loc?p:l[nj]));
+		cot_gamma = DistanceSquared((pj==loc?p:l[pj]),(j==loc?p:l[j]))*DistanceSquared((j==loc?p:l[j]),(nj==loc?p:l[nj])) - temp*temp;
+		cot_gamma = temp/sqrt(cot_gamma);
+		result += cot_gamma*atan(1.0/cot_gamma);
+		
+		nj = (nj==(l.size()-1)? 0 : nj+1);
+		j = (j==(l.size()-1)? 0 : j+1);
+		pj = (pj==(l.size()-1)? 0 : pj+1);
+	}
+	return result;
+}
+
+// Interpolate
+template <uint Dim>
+void Interpolate (const Loop<Dim>& in, Loop<Dim>& out) {
+	if (in.K==out.K) {
+		out = in;
+	}
+	else if (in.K>out.K) {
+		uint N_out = pow(2,out.K);
+		uint N_diff = pow(2,in.K-out.K);
+		for (uint j=0; j<N_out; j++) {
+			out[j] = in[N_diff*j];
+		}
+	}
+	else {
+		uint N_in = pow(2,in.K);
+		uint N_out = pow(2,out.K);
+		uint N_diff = pow(2,out.K-in.K);
+		uint n, posn, m;
+		number b_m;
+		for (uint j=0; j<N_out; j++) {
+			n = j/N_diff;
+			posn = (n!=(N_in-1)?n+1:0);
+			m = j%N_diff;
+			b_m = m/(number)N_diff;
+			out[j] = (1.0-b_m)*in[n] + b_m*in[posn];
+		}
+	}
 }
 
 /*----------------------------------------------------------------------------------------------------------------------------
@@ -709,11 +962,9 @@ number I0 (const Loop<Dim>& l) {
 
 // constructor
 template <uint Dim>
-Metropolis<Dim>::Metropolis(Loop<Dim>& L, const Parameters& p, const uint& s): Seed(s), Steps(0) {
+Metropolis<Dim>::Metropolis(Loop<Dim>& L, const Parameters& p, const uint& s): Seed(s), Steps(0), Data(), DataChange() {
 	LoopPtr = &L;
 	P = &p;
-	G = P->G;
-	SOld = 0.0;
 
 	// setting generator
 	Generator = gsl_rng_alloc(gsl_rng_taus);
@@ -721,11 +972,9 @@ Metropolis<Dim>::Metropolis(Loop<Dim>& L, const Parameters& p, const uint& s): S
 
 // constructor
 template <uint Dim>
-Metropolis<Dim>::Metropolis(const Parameters& p, const uint& s): Seed(s), Steps(0) {
+Metropolis<Dim>::Metropolis(const Parameters& p, const uint& s): Seed(s), Steps(0), Data(), DataChange() {
 	LoopPtr = NULL;
 	P = &p;
-	G = P->G;
-	SOld = 0.0;
 
 	// setting generator
 	Generator = gsl_rng_alloc(gsl_rng_taus);
@@ -735,6 +984,8 @@ Metropolis<Dim>::Metropolis(const Parameters& p, const uint& s): Seed(s), Steps(
 template <uint Dim>
 Metropolis<Dim>::~Metropolis() {
 	delete Generator;
+	//delete P;
+	//delete LoopPtr;
 }
 
 // set loop
@@ -751,7 +1002,7 @@ void Metropolis<Dim>::setSeed(const uint& s) {
 
 // Step
 template <uint Dim>
-uint Metropolis<Dim>::step(const uint& Num) {
+uint Metropolis<Dim>::step(const uint& Num, const bool& firstStep, MetropolisData& data) {
 	gsl_rng_set(Generator,Seed);
 	// checking loop grown
 	if (!LoopPtr->Grown) {
@@ -759,16 +1010,25 @@ uint Metropolis<Dim>::step(const uint& Num) {
 		return 0.0;
 	}
 	// counter
-	number counter = 0.0;
-	// initializing S0
-	SOld = S0(*LoopPtr);
-	if (abs(G)>MIN_NUMBER) {
-		SOld += G*V1r(*LoopPtr,(*P).Epsi);
-		SOld -= (abs((*P).Epsi)>MIN_NUMBER? G*pi*L(*LoopPtr)/(*P).Epsi: 0.0);
+	number counter = 0.0, epsi = P->Epsi, g = P->G, b = P->B, t = P->T;
+	uint size = LoopPtr->size();
+	if (firstStep) {
+		// initializing Data
+		Data.L = L(*LoopPtr);
+		Data.S0 = S0(*LoopPtr);
+		Data.S = Data.S0;
+		Data.Sm = Sm(*LoopPtr);
+		if (abs(g)>MIN_NUMBER) {
+			Data.V = V1r(*LoopPtr,epsi);
+			Data.S += g*Data.V;
+			Data.S -= (abs(epsi)>MIN_NUMBER? g*PI*Data.L/epsi: 0.0);
+			Data.I0 = I0(*LoopPtr);
+			Data.S -= g*b*t*Data.I0;
+		}
 	}
 		
 	// defining some parameters
-	number sigma = 1.0/sqrt((number)LoopPtr->size());
+	number sigma = 1.0/sqrt((number)size);
 	uint loc, loc_pos, loc_neg;
 	number acc_prob, rand;
 	Point<Dim> temp;
@@ -777,42 +1037,67 @@ uint Metropolis<Dim>::step(const uint& Num) {
 	for (uint j=0; j<Num; j++) {
 	
 		// choosing location to change
-		loc = (uint)(gsl_rng_uniform (Generator)*LoopPtr->size());
+		loc = (uint)(gsl_rng_uniform (Generator)*size);
 	
 		// calculating generation probability and generating new point
-		loc_pos = (loc==(LoopPtr->size()-1)? 0: loc+1);
-		loc_neg = (loc==0? LoopPtr->size()-1: loc-1);
+		loc_pos = (loc==(size-1)? 0: loc+1);
+		loc_neg = (loc==0? size-1: loc-1);
 		temp = (LoopPtr->Points[loc_pos] + LoopPtr->Points[loc_neg])/2.0;
 		for (uint n=0; n<Dim; n++)
 			temp[n] += gsl_ran_gaussian(Generator, sigma); //gsl_ran_gaussian_ziggurat is another option
 	
 		// calculating change in action
-		SChange = DS0<Dim>(*LoopPtr, temp, loc);
-		if (abs(G)>MIN_NUMBER) {
-			SChange += G*DV1r<Dim>(*LoopPtr, temp, loc,(*P).Epsi);	
-			SChange -= (abs((*P).Epsi)>MIN_NUMBER? G*pi*DL(*LoopPtr, temp, loc)/(*P).Epsi: 0.0);
+		DataChange.S0 = DS0(*LoopPtr, temp, loc);
+		DataChange.S = DataChange.S0;
+		DataChange.Sm = DSm(*LoopPtr, temp, loc);
+		if (abs(g)>MIN_NUMBER) {
+			DataChange.V = DV1r<Dim>(*LoopPtr, temp, loc, epsi);	
+			DataChange.S += g*DataChange.V;
+			DataChange.L = DL(*LoopPtr, temp, loc);
+			DataChange.S -= (abs(epsi)>MIN_NUMBER? g*PI*DataChange.L/epsi: 0.0);
+			DataChange.I0 = DI0(*LoopPtr, temp, loc);
+			DataChange.S -= g*b*t*DataChange.I0;
 		}
 	
 		// accepting new point according to acceptance probability
-		if (SChange<0.0) {
+		if (DataChange.S<0.0) {
 			LoopPtr->Points[loc] = temp;
-			SOld += SChange;
+			Data.S += DataChange.S;
+			Data.L += DataChange.L;
+			Data.S0 += DataChange.S0;
+			Data.V += DataChange.V;
+			Data.I0 += DataChange.I0;
+			Data.Sm += DataChange.Sm;
 			counter++;
 		}
-		else if (SChange<-LOG_MIN_NUMBER) {
-			acc_prob = gsl_sf_exp(-SChange);
+		else if (DataChange.S<-LOG_MIN_NUMBER) {
+			acc_prob = gsl_sf_exp(-DataChange.S);
 			rand = gsl_rng_uniform(Generator);
 			if (rand<acc_prob) {
 				LoopPtr->Points[loc] = temp;
-				SOld += SChange;
+				Data.S += DataChange.S;
+				Data.L += DataChange.L;
+				Data.S0 += DataChange.S0;
+				Data.V += DataChange.V;
+				Data.I0 += DataChange.I0;
+				Data.Sm += DataChange.Sm;
 				counter++;
 			}
-		}// COMPLETELY WRONG
+		}
 		
 	}
 	Steps += counter;
 	LoopPtr->centre();
+	data = Data;
 	return Steps;
+}
+
+
+// Step
+template <uint Dim>
+uint Metropolis<Dim>::step(const uint& Num, const bool& firstStep) {
+	MetropolisData dross;
+	return step(Num,firstStep,dross);
 }
 
 
@@ -828,14 +1113,29 @@ template Point<4> operator* <4>(const number& lhs,const Point<4>& rhs);
 template Point<4> operator/ <4>(const Point<4>& lhs,const number& rhs);
 template bool operator== <4>(const Point<4>& lhs, const Point<4>& rhs);
 template bool operator^= <4>(const Point<4>& lhs, const Point<4>& rhs);
-template number Distance(const Point<4>&, const Point<4>&);
+template number Norm<4>(const Point<4>&);
+template number Distance<4>(const Point<4>&, const Point<4>&);
+template number Dot<4>(const Point<4>&, const Point<4>&);
+template number Dot<4>(const Point<4>&, const Point<4>&, const Point<4>&, const Point<4>&);
+template number MidpointDistanceSquared<4>(const Point<4>&, const Point<4>&, const Point<4>&, const Point<4>&);
+template number Dot<4>(const Loop<4>&, const uint&, const uint&, const uint&, const uint&);
+template number Dot<4>(const Loop<4>&, const uint&, const uint&);
+template number MidpointDistanceSquared<4>(const Loop<4>&, const uint&, const uint&);
+template number DX<4>(const Loop<4>&, const uint&, const uint&);
+template number DX<4>(const Loop<4>&, const uint&, const uint&, const uint&);
 template class Loop<4>;
-template ostream& operator<< <4>(ostream& os,const Loop<4>& l);
 template number L<4> (const Loop<4>& l);
 template number DL<4> (const Loop<4>& l, const Point<4>& p, const uint& loc);
 template number Sm<4> (const Loop<4>& l);
+template number Sm<4> (const Loop<4>& l, const uint& m, const uint& n);
 template number DSm<4> (const Loop<4>& l, const Point<4>& p, const uint& loc);
+template number KG<4> (const Loop<4>& l);
+template number KGMax<4> (const Loop<4>& l);
+template number KGMax<4> (const Loop<4>& l, const uint& ex1, const uint& ex2);
 template number S0<4> (const Loop<4>& l);
+template number DS0<4> (const Loop<4>& l, const Point<4>& p, const uint& loc);
+template number FGamma<4> (const Loop<4>& l);
+template number DFGamma<4> (const Loop<4>& l, const Point<4>& p, const uint& loc);
 template class Metropolis<4>;
 
 // V0, Dim=4, slightly changed for speed
@@ -873,14 +1173,24 @@ template <> number aprxDV0 <4> (const Loop<4>& l, const Point<4>& p, const uint&
 	return result/pow(l.size()-1.0,2);
 }
 
-// I, for Dim=4
+// I0, for Dim=4
 template <> number I0 <4>(const Loop<4>& l) {
-uint posj = 1;
-	number result = (l[0])[1]*((l[1])[2]-(l[0])[2]);
+	uint posj = 1;
+	number result = (l[0])[2]*((l[posj])[3]-(l[0])[3]);
 	for (uint j=1; j<l.size(); j++) {
 		posj = (j==(l.size()-1)?0:j+1);
-		result += (l[j])[1]*((l[posj])[2]-(l[j])[2]);
+		result += (l[j])[2]*((l[posj])[3]-(l[j])[3]);
 	}
+	return result;
+}
+
+// DI0, for Dim=4
+template <> number DI0 <4>(const Loop<4>& l, const Point<4>& p, const uint& loc) {
+	uint pos = (loc==(l.size()-1)? 0: loc+1);
+	uint neg = (loc==0? (l.size()-1):loc-1);
+	number result = p[2]*((l[pos])[3]-p[3]);
+	result -= (l[loc])[2]*((l[pos])[3]-(l[loc])[3]);
+	result += (l[neg])[2]*(p[3]-(l[loc])[3]);
 	return result;
 }
 
@@ -912,6 +1222,20 @@ template <> number V1r<4> (const Loop<4>& l, const number& a) {
 	return result;
 }
 
+// V2r
+template <> number V2r<4> (const Loop<4>& l, const number& a) {
+	number result = 2.0*Dot(l[2],l[1],l[1],l[0])/(0.25*DistanceSquared(l[2]+l[1],l[1]+l[0])+a*a);
+	uint posj, posk;
+	for (uint j=2; j<l.size(); j++) {
+		posj = (j!=(l.size()-1)?j+1:0);
+		for (uint k=0; k<j; k++) {
+			posk = (k!=(l.size()-1)?k+1:0);
+			result += 2.0*Dot(l[posj],l[j],l[posk],l[k])/(0.25*DistanceSquared(l[posj]+l[j],l[posk]+l[k])+a*a);
+		}
+	}
+	return result;
+}
+
 // DV1
 template <> number DV1<4> (const Loop<4>& l, const Point<4>& p, const uint& loc) {
 	uint posj, posloc = (loc!=(l.size()-1)?loc+1:0);
@@ -935,16 +1259,37 @@ template <> number DV1<4> (const Loop<4>& l, const Point<4>& p, const uint& loc)
 template <> number DV1r<4> (const Loop<4>& l, const Point<4>& p, const uint& loc, const number& a) {
 	uint posj, posloc = (loc!=(l.size()-1)?loc+1:0);
 	uint negloc = (loc!=0?loc-1:(l.size()-1));
+	number a2 = a*a;
 	
-	number result = Dot(l[posloc],p,p,l[negloc])/(DistanceSquared(l[negloc],p)+a*a)\
-						- Dot(l[posloc],l[loc],l[loc],l[negloc])/(DistanceSquared(l[negloc],l[loc])+a*a);
+	number result = Dot(l[posloc],p,p,l[negloc])/(DistanceSquared(l[negloc],p)+a2)\
+						- Dot(l[posloc],l[loc],l[loc],l[negloc])/(DistanceSquared(l[negloc],l[loc])+a2);
 
 	for (uint j=0; j<l.size(); j++) {
 		if (j!=loc && j!=negloc) {
 			posj = (j!=(l.size()-1)?j+1:0);
-			result += Dot(p,l[loc],l[posj],l[j])/(DistanceSquared(l[negloc],l[j])+a*a)\
-					+ Dot(l[posloc],p,l[posj],l[j])/(DistanceSquared(p,l[j])+a*a)\
-					- Dot(l[posloc],l[loc],l[posj],l[j])/(DistanceSquared(l[loc],l[j])+a*a);
+			result += Dot(p,l[loc],l[posj],l[j])/(DistanceSquared(l[negloc],l[j])+a2)\
+					+ Dot(l[posloc],p,l[posj],l[j])/(DistanceSquared(p,l[j])+a2)\
+					- Dot(l[posloc],l[loc],l[posj],l[j])/(DistanceSquared(l[loc],l[j])+a2);
+		}
+	}
+	return 2.0*result;
+}
+
+// DV2r
+template <> number DV2r<4> (const Loop<4>& l, const Point<4>& p, const uint& loc, const number& a) {
+	uint posj, posloc = (loc!=(l.size()-1)?loc+1:0);
+	uint negloc = (loc!=0?loc-1:(l.size()-1));
+	
+	number result = Dot(l[posloc],p,p,l[negloc])/(0.25*DistanceSquared(l[negloc]+p,p+l[posloc])+a*a)\
+						- Dot(l[posloc],l[loc],l[loc],l[negloc])/(0.25*DistanceSquared(l[negloc]+l[loc],l[loc]+l[posloc])+a*a);
+
+	for (uint j=0; j<l.size(); j++) {
+		if (j!=loc && j!=negloc) {
+			posj = (j!=(l.size()-1)?j+1:0);
+			result += Dot(p,l[negloc],l[posj],l[j])/(0.25*DistanceSquared(l[negloc]+p,l[j]+l[posj])+a*a)\
+					- Dot(l[loc],l[negloc],l[posj],l[j])/(0.25*DistanceSquared(l[negloc]+l[loc],l[j]+l[posj])+a*a)\
+					+ Dot(l[posloc],p,l[posj],l[j])/(0.25*DistanceSquared(p+l[posloc],l[j]+l[posj])+a*a)\
+					- Dot(l[posloc],l[loc],l[posj],l[j])/(0.25*DistanceSquared(l[loc]+l[posloc],l[j]+l[posj])+a*a);
 		}
 	}
 	return 2.0*result;
@@ -959,15 +1304,23 @@ template Point<2> operator* <2>(const number& lhs,const Point<2>& rhs);
 template Point<2> operator/ <2>(const Point<2>& lhs,const number& rhs);
 template bool operator== <2>(const Point<2>& lhs, const Point<2>& rhs);
 template bool operator^= <2>(const Point<2>& lhs, const Point<2>& rhs);
-template number Distance(const Point<2>&, const Point<2>&);
+template number Distance<2>(const Point<2>&, const Point<2>&);
+template number Norm<2>(const Point<2>&);
+template number Dot<2>(const Point<2>&, const Point<2>&);
+template number Dot<2>(const Point<2>&, const Point<2>&, const Point<2>&, const Point<2>&);
+template number MidpointDistanceSquared<2>(const Point<2>&, const Point<2>&, const Point<2>&, const Point<2>&);
+template number Dot<2>(const Loop<2>&, const uint&, const uint&, const uint&, const uint&);
+template number Dot<2>(const Loop<2>&, const uint&, const uint&);
+template number MidpointDistanceSquared<2>(const Loop<2>&, const uint&, const uint&);
+template number DX<2>(const Loop<2>&, const uint&, const uint&);
+template number DX<2>(const Loop<2>&, const uint&, const uint&, const uint&);
 template class Loop<2>;
-template ostream& operator<< <2>(ostream& os,const Loop<2>& l);
 template number L<2> (const Loop<2>& l);
 template number DL<2> (const Loop<2>& l, const Point<2>& p, const uint& loc);
 template number S0<2> (const Loop<2>& l);
 template class Metropolis<2>;
 
-// V0, Dim=2, logarithmic, GF(x,y) = log(|x-y|)/2/pi
+// V0, Dim=2, logarithmic, GF(x,y) = log(|x-y|)/2/PI
 template <> number V0 <2>(const Loop<2>& l) {
 	number result = 2.0/DistanceSquared(l[1],l[0]);
 	for (uint j=2; j<l.size(); j++) {
@@ -978,7 +1331,7 @@ template <> number V0 <2>(const Loop<2>& l) {
 	return result/pow(l.size()-1.0,2);
 }
 
-// DV0, Dim=2, logarithmic, GF(x,y) = log(|x-y|)/2/pi
+// DV0, Dim=2, logarithmic, GF(x,y) = log(|x-y|)/2/PI
 template <> number DV0 <2>(const Loop<2>& l, const Point<2>& p, const uint& loc) {
 	number result = 0.0;
 	for (uint j=0; j<l.size(); j++) {

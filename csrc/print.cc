@@ -7,6 +7,7 @@
 #include <sstream>
 #include <iomanip>
 #include <cmath>
+#include <Eigen/Dense>
 #include "folder.h"
 #include "simple.h" // for countLines
 #include "print.h"
@@ -29,7 +30,7 @@ CONTENTS
 
 // save - saveVectorAscii
 template <class T>
-void saveVectorAscii(const string& f,  const vector<T>& v) {
+void saveVectorAscii(const string& f,  const T& v) {
 	ofstream os;
 	os.open(f.c_str());
 	if (os.good()) {
@@ -48,7 +49,7 @@ void saveVectorAscii(const string& f,  const vector<T>& v) {
 
 // save - saveVectorAsciiAppend
 template <class T>
-void saveVectorAsciiAppend(const string& f,  const vector<T>& v) {
+void saveVectorAsciiAppend(const string& f,  const T& v) {
 	ofstream os;
 	os.open(f.c_str(), ios::app);
 	if (os.good()) {
@@ -67,14 +68,14 @@ void saveVectorAsciiAppend(const string& f,  const vector<T>& v) {
 
 // save - saveVectorBinary
 template <class T>
-void saveVectorBinary(const string& f,  const vector<T>& v) {
+void saveVectorBinary(const string& f,  const T& v) {
 	ofstream os;
 	os.open(f.c_str(),ios::binary);
-	const T* r;
+	const number* r;
 	if (os.good()) {
 		for (uint j=0; j<v.size(); j++) {
 			r = &v[j];
-			os.write(reinterpret_cast<const char*>(r),sizeof(T));
+			os.write(reinterpret_cast<const char*>(r),sizeof(number));
 		}
 		os.close();
 	}
@@ -87,10 +88,10 @@ void saveVectorBinary(const string& f,  const vector<T>& v) {
 
 // save - saveVectorBinaryAppend
 template <class T>
-void saveVectorBinaryAppend(const string& f,  const vector<T>& v) {
+void saveVectorBinaryAppend(const string& f,  const T& v) {
 	ofstream os;
 	os.open(f.c_str(),ios::binary | ios::app);
-	const T* r;
+	const number* r;
 	if (os.good()) {
 		for (uint j=0; j<v.size(); j++) {
 			r = &v[j];
@@ -105,13 +106,51 @@ void saveVectorBinaryAppend(const string& f,  const vector<T>& v) {
 	}
 }
 
+
+// save mat - binary
+void saveMatrixBinary(const string& f, const Eigen::MatrixXd& m) {
+	ofstream os;
+	os.open(f.c_str(),ios::binary);
+	if (!os.good()) {
+		cerr << "save error: stream not good for " << f << endl;
+		return;
+	}
+	const double* d;
+	for (uint j=0; j<m.rows(); j++) {
+		for (uint k=0; k<m.cols(); k++) {
+			d = &m(j,k);
+			os.write(reinterpret_cast<const char*>(d),sizeof(double));
+		}
+	}
+	os.close();
+}
+
+// save mat - ascii
+void saveMatrixAscii(const string& f, const Eigen::MatrixXd& m) {
+	ofstream F;
+	F.open(f.c_str());
+	if (!F.good()) {
+		cerr << "save error: stream not good for " << f << endl;
+		return;
+	}
+	F << left << setprecision(16);
+	for (uint j=0; j<m.rows(); j++) {
+		for (uint k=0; k<m.cols(); k++) {
+			F << setw(24) << m(j,k);
+		}
+		F << endl;
+	}
+	F.close();
+}
+
+
 /*-------------------------------------------------------------------------------------------------------------------------
 	2. load
 -------------------------------------------------------------------------------------------------------------------------*/
 
 // loadVectorAscii
 template <class T>
-void loadVectorAscii(const string& f, vector<T>& v) {
+void loadVectorAscii(const string& f, T& v) {
 	uint lines = countLines(f);
 	v.resize(lines);
 	ifstream is;
@@ -131,15 +170,15 @@ void loadVectorAscii(const string& f, vector<T>& v) {
 
 // loadVectorBinary
 template <class T>
-void loadVectorBinary(const string& f, vector<T>& v) {
-	T t;
-	uint lines = countType<T>(f, t);
+void loadVectorBinary(const string& f, T& v) {
+	number t;
+	uint lines = countDoubles(f);
 	v.resize(lines);
 	ifstream is;
 	is.open(f.c_str(),ios::binary);
 	if (is.good()) {
 		for (uint j=0; j<lines; j++) {
-			is.read(reinterpret_cast<char*>(&t),sizeof(t));
+			is.read(reinterpret_cast<char*>(&t),sizeof(number));
 			v[j] = t;
 		}
 		is.close();
@@ -153,7 +192,7 @@ void loadVectorBinary(const string& f, vector<T>& v) {
 
 // loadVectorAsciiColumn
 template <class T>
-void loadVectorAsciiColumn(const string& f, vector<T>& v, const uint& col) {
+void loadVectorAsciiColumn(const string& f, T& v, const uint& col) {
 	uint cols = countColumns(f);
 	if (col>cols) {
 		cerr << "loadVectorAsciiColumn error: col(" << col << ")>cols(" << cols << ")" << endl;
@@ -164,7 +203,7 @@ void loadVectorAsciiColumn(const string& f, vector<T>& v, const uint& col) {
 	ifstream is;
 	is.open(f.c_str());
 	if (is.good()) {
-		T dross;
+		number dross;
 		string line;
 		for (uint j=0; j<lines; j++) {
 			getline(is,line);
@@ -187,13 +226,19 @@ void loadVectorAsciiColumn(const string& f, vector<T>& v, const uint& col) {
 -------------------------------------------------------------------------------------------------------------------------*/
 
 // save
-template void saveVectorBinary<number>(const string& f, const vector<number>& v);
-template void saveVectorBinaryAppend<number>(const string& f, const vector<number>& v);
-template void saveVectorAscii<number>(const string& f, const vector<number>& v);
-template void saveVectorAsciiAppend<number>(const string& f, const vector<number>& v);
+template void saveVectorBinary< vector<number> >(const string& f, const vector<number>& v);
+template void saveVectorBinaryAppend< vector<number> >(const string& f, const vector<number>& v);
+template void saveVectorAscii< vector<number> >(const string& f, const vector<number>& v);
+template void saveVectorAsciiAppend< vector<number> >(const string& f, const vector<number>& v);
+template void saveVectorBinary< Eigen::VectorXd >(const string& f, const Eigen::VectorXd& v);
+template void saveVectorBinaryAppend< Eigen::VectorXd >(const string& f, const Eigen::VectorXd& v);
+template void saveVectorAscii< Eigen::VectorXd >(const string& f, const Eigen::VectorXd& v);
+template void saveVectorAsciiAppend< Eigen::VectorXd >(const string& f, const Eigen::VectorXd& v);
 
 // load
-template void loadVectorBinary<number>(const string& f, vector<number>& v);
-template void loadVectorAscii<number>(const string& f, vector<number>& v);
-template void loadVectorAsciiColumn<number>(const string& f, vector<number>& v, const uint& col);
-
+template void loadVectorBinary< vector<number> >(const string& f, vector<number>& v);
+template void loadVectorAscii< vector<number> >(const string& f, vector<number>& v);
+template void loadVectorAsciiColumn< vector<number> >(const string& f, vector<number>& v, const uint& col);
+template void loadVectorBinary< Eigen::VectorXd >(const string& f, Eigen::VectorXd& v);
+template void loadVectorAscii< Eigen::VectorXd >(const string& f, Eigen::VectorXd& v);
+template void loadVectorAsciiColumn< Eigen::VectorXd >(const string& f, Eigen::VectorXd& v, const uint& col);

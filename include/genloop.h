@@ -118,6 +118,7 @@ private:
 /*----------------------------------------------------------------------------------------------------------------------------
 	2 - functions acting on Points
 ----------------------------------------------------------------------------------------------------------------------------*/
+
 // Distance squared
 template <uint Dim>
 number DistanceSquared(const Point<Dim>&, const Point<Dim>&);
@@ -126,9 +127,25 @@ number DistanceSquared(const Point<Dim>&, const Point<Dim>&);
 template <uint Dim>
 number Distance(const Point<Dim>&, const Point<Dim>&);
 
+// NormSquared
+template <uint Dim>
+number NormSquared(const Point<Dim>&);
+
+// Norm
+template <uint Dim>
+number Norm(const Point<Dim>&);
+
+// Dot
+template <uint Dim>
+number Dot(const Point<Dim>&, const Point<Dim>&);
+
 // Dot
 template <uint Dim>
 number Dot(const Point<Dim>&, const Point<Dim>&, const Point<Dim>&, const Point<Dim>&);
+
+// MidpointDistance
+template <uint Dim>
+number MidpointDistanceSquared(const Point<Dim>&, const Point<Dim>&, const Point<Dim>&, const Point<Dim>&);
 
 /*----------------------------------------------------------------------------------------------------------------------------
 	3 - Loop class
@@ -136,17 +153,13 @@ number Dot(const Point<Dim>&, const Point<Dim>&, const Point<Dim>&, const Point<
 template <uint Dim>
 class Loop;
 
-// stream <<
-template <uint Dim>
-ostream& operator<< (ostream&,const Loop<Dim>&);
-
-// stream>>
-template <uint Dim>
-istream& operator>>(istream&,Loop<Dim>&);
-
 // Metropolis
 template <uint Dim>
 class Metropolis;
+
+// Interpolate
+template <uint Dim>
+void Interpolate (const Loop<Dim>& in, Loop<Dim>& out);
 
 // Loop class
 template <uint Dim>
@@ -161,6 +174,9 @@ public:
 	
 	// Metropolis
 	friend class Metropolis<Dim>;
+	
+	// Interpolate
+	friend void Interpolate<Dim>(const Loop<Dim>& in, Loop<Dim>& out);
 	
 	// clear
 	void clear();
@@ -179,10 +195,6 @@ public:
 	// indexing
 	const Point<Dim>& operator[](const uint&) const;
 	Point<Dim>& operator[](const uint&);
-	
-	// stream <<, >>
-	friend ostream& operator<< <Dim>(ostream&,const Loop&);
-	friend istream& operator>> <Dim>(istream&, Loop&);
 	
 	// size
 	uint size() const;
@@ -213,6 +225,26 @@ private:
 		- aprxDV0
 ----------------------------------------------------------------------------------------------------------------------------*/
 
+// Dot
+template <uint Dim>
+number Dot(const Loop<Dim>& loop, const uint& i, const uint& j, const uint& k, const uint& l);
+
+// Dot
+template <uint Dim>
+number Dot(const Loop<Dim>& loop, const uint& i, const uint& j);
+
+// MidpointDistance
+template <uint Dim>
+number MidpointDistanceSquared(const Loop<Dim>& loop, const uint& i, const uint& j);
+
+// DX
+template <uint Dim>
+number DX(const Loop<Dim>& loop, const uint& i, const uint& mu);
+
+// DX
+template <uint Dim>
+number DX(const Loop<Dim>& loop, const uint& i, const uint& j, const uint& mu);
+
 // L
 template <uint Dim>
 number L (const Loop<Dim>& l);
@@ -225,9 +257,25 @@ number DL (const Loop<Dim>& l, const Point<Dim>& p, const uint& loc);
 template <uint Dim>
 number Sm (const Loop<Dim>& l);
 
+// Sm
+template <uint Dim>
+number Sm (const Loop<Dim>& l, const uint& m, const uint& n);
+
 // DSm
 template <uint Dim>
 number DSm (const Loop<Dim>& l, const Point<Dim>& p, const uint& loc);
+
+// KG
+template <uint Dim>
+number KG (const Loop<Dim>& l);
+
+// KGMax
+template <uint Dim>
+number KGMax (const Loop<Dim>& l);
+
+// KGMax
+template <uint Dim>
+number KGMax (const Loop<Dim>& l, const uint& ex1, const uint& ex2);
 
 // S0
 template <uint Dim>
@@ -257,6 +305,10 @@ number V1 (const Loop<Dim>& l);
 template <uint Dim>
 number V1r (const Loop<Dim>& l, const number& epsi);
 
+// V2r
+template <uint Dim>
+number V2r (const Loop<Dim>& l, const number& epsi);
+
 // DV1
 template <uint Dim>
 number DV1 (const Loop<Dim>& l, const Point<Dim>& p, const uint& loc);
@@ -265,13 +317,41 @@ number DV1 (const Loop<Dim>& l, const Point<Dim>& p, const uint& loc);
 template <uint Dim>
 number DV1r (const Loop<Dim>& l, const Point<Dim>& p, const uint& loc, const number& a);
 
+// DV2r
+template <uint Dim>
+number DV2r (const Loop<Dim>& l, const Point<Dim>& p, const uint& loc, const number& a);
+
 // I0
 template <uint Dim>
 number I0 (const Loop<Dim>& l);
 
+// DI0
+template <uint Dim>
+number DI0 (const Loop<Dim>& l, const Point<Dim>& p, const uint& loc);
+
+// FGamma = gamma*cot(gamma)-1
+template <uint Dim>
+number FGamma (const Loop<Dim>& l);
+
+// DFGamma
+template <uint Dim>
+number DFGamma (const Loop<Dim>& l, const Point<Dim>& p, const uint& loc);
+
+
 /*----------------------------------------------------------------------------------------------------------------------------
 	5 - Metropolis
 ----------------------------------------------------------------------------------------------------------------------------*/
+
+// Metropolis Data
+struct MetropolisData {
+	number L;
+	number S0;
+	number I0;
+	number V;
+	number FGamma;
+	number S;
+	number Sm;
+};
 
 // Metropolis
 template <uint Dim>
@@ -282,7 +362,8 @@ public:
 	~Metropolis();
 	
 	// step
-	uint				step(const uint&);
+	uint				step(const uint&, const bool& firstStep);
+	uint				step(const uint&, const bool& firstStep, MetropolisData& data);
 	
 	// set seed, loop
 	void 				setSeed(const uint&);
@@ -291,9 +372,8 @@ public:
 private:
 	uint				Seed;
 	uint				Steps;
-	number				G;
-	number				SOld;
-	number				SChange;
+	MetropolisData		Data;
+	MetropolisData		DataChange;
 	gsl_rng* 			Generator;
 	const Parameters*		P;
 	Loop<Dim>*			LoopPtr;

@@ -6,7 +6,11 @@ if (outFile ne 'gui') \
 set term fig size 1600,800; \
 set output outFile; \
 
-file="data/temp/projections.dat"
+file="data/temp/151201162640mdsEarly1_K_8_G_1_B_1_run_1.dat"
+
+#if you want to choose which file to load
+if (exists("inFile")) \
+file=inFile; \
 
 unset log
 unset label
@@ -14,9 +18,9 @@ unset key
 set autoscale
 set xtic auto
 set ytic auto
-set title "2d loop"
+set title "4d loop"
 
-set multiplot layout 2,3 rowsfirst
+set multiplot layout 3,2 rowsfirst
 
 set xlabel "x"
 set ylabel "y"
@@ -42,6 +46,7 @@ set xlabel "z"
 set ylabel "t"
 plot file using 3:4 with lines
 
+unset multiplot
+
 pause -1
 
-unset multiplot

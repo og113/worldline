@@ -100,7 +100,7 @@ if (rank==root) {
 		cerr << "Parameters empty: nothing in inputs file" << endl;
 		MPI_Abort(MPI_COMM_WORLD,1);
 	}
-	if (abs(p.G)<MIN_NUMBER || p.Nsw==0 || p.Npsw==0 ) {
+	if (p.Nsw==0 || p.Npsw==0 ) {//abs(p.G)<MIN_NUMBER ||
 		cerr << "trivial loop2 run due to parameters: " << endl;
 		cerr << p << endl;
 		MPI_Abort(MPI_COMM_WORLD,1);
@@ -209,7 +209,8 @@ for (uint pl=0; pl<Npl; pl++) {
 		uint Seed = time(NULL)+rank+2, steps_local = 0, steps;
 		Loop<dim> loop(p.K,Seed);
 		Metropolis<dim> met(loop,p,++Seed);
-		number s0, v, I, fr, lp = 1.0/p.G/p.B;
+		number fr, vr, lp = 1.0/p.G/p.B;
+		MetropolisData md;
 		
 		// timing  metropolis
 		clock_t time_run = 0.0;
@@ -219,36 +220,37 @@ for (uint pl=0; pl<Npl; pl++) {
 		loop.load(loadFile);
 	
 		// doing dummy metropolis runs
-		met.step(p.Nig*Np);
+		met.step(p.Nig*Np,true,md);
 		met.setSeed(time(NULL)+rank+2);
 		
-		if (rank==root && verbose)
-			printf("%8s%12s%12s%12s%12s\n","sweep","S0","V","I","Fr");
+		if (rank==root && verbose) {
+			printf("%8s%12s%12s%12s%12s%12s%12s%12s%12s%12s\n","sweep","S","Fr","S0","V","Vr","I","L","FGamma","Sm");
+			fr = (md.I0<lp? 0.0: (-(PI*lp/2.0)*(md.I0-lp/2.0))+PI*md.I0*md.I0/4.0);
+			//f = (md.I0<lp? -PI*md.I0*md.I0/4.0: -(PI*lp/2.0)*(md.I0-lp/2.0));
+			vr = md.V - PI*md.L/p.Epsi - md.FGamma*log(md.L/p.Epsi);
+			printf("%8i%12.5g%12.5g%12.5g%12.5g%12.5g%12.5g%12.5g%12.5g%12.5g\n",-1,md.S,fr,md.S0,md.V,vr,md.I0,md.L,md.FGamma,md.Sm);
+		}
 		
 		for (uint k=0; k<p.Nsw; k++) {
 	
 			// metropolis runs per sweep
 			if (k==(p.Nsw-1))
-				steps_local = met.step(p.Npsw*Np);
+				steps_local = met.step(p.Npsw*Np,false,md);
 			else
-				met.step(p.Npsw*Np);
+				met.step(p.Npsw*Np,false,md);
 			met.setSeed(time(NULL)+k*1000+rank+2);
 		
-			s0 = S0(loop);
-			I = I0(loop);
-			//w = gsl_sf_cos(p.G*I0(loop));
-			v = p.G*V1r(loop,p.Epsi);
-			v -= (abs(p.Epsi)>MIN_NUMBER? p.G*pi*L(loop)/p.Epsi: 0.0);
-			//z = (v>-LOG_MIN_NUMBER? 0.0: gsl_sf_exp(-v));
-			fr = (I<lp? 0.0: (-(pi*lp/2.0)*(I-lp/2.0))+pi*I*I/4.0);
-			//f = (I<lp? -pi*I*I/4.0: -(pi*lp/2.0)*(I-lp/2.0));
+			fr = (md.I0<lp? 0.0: (-(PI*lp/2.0)*(md.I0-lp/2.0))+PI*md.I0*md.I0/4.0);
+			//f = (md.I0<lp? -PI*md.I0*md.I0/4.0: -(PI*lp/2.0)*(md.I0-lp/2.0));
+			vr = md.V - PI*md.L/p.Epsi;
 		
-			s0_data_local[k] = s0;
+			s0_data_local[k] = md.S0;
 			fr_data_local[k] = fr;
-			v_data_local[k] = v;
+			v_data_local[k] = vr;
 			
-			if (rank==root && verbose)
-				printf("%8i%12.5g%12.5g%12.5g%12.5g\n",k,s0,v,I,fr);
+			if (rank==root && verbose) {	
+				printf("%8i%12.5g%12.5g%12.5g%12.5g%12.5g%12.5g%12.5g%12.5g%12.5g\n",k,md.S,fr,md.S0,md.V,vr,md.I0,md.L,md.FGamma,md.Sm);
+			}
 		
 		}
 		
@@ -302,7 +304,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	vMCDA.calcCorrs(intCorrTime_local[2],expCorrTime_local[2],corrErrorSqrd_local[2]);
 
 	// saving correlations
-	vMCDA.saveCorrelator(corrFile);
+	s0MCDA.saveCorrelator(corrFile);
 	//vMCDA.saveCorrelatorAppendAscii(corrTotalFile);
 	if (rank==root)
 			cout << "correlators printed to: " << endl << corrFile << endl;// << corrTotalFile << endl;

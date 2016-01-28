@@ -27,7 +27,7 @@ CONTENTS
 // constructor
 MonteCarloData::MonteCarloData(const string& f): 
 	Mean(), MeanSqrd(), IntCorrTime(), ExpCorrTime(), Jacknife(), Bootstrap() {
-	loadVectorBinary<number>(f,DataArray);
+	loadVectorBinary(f,DataArray);
 	Size = DataArray.size();
 	Correlator.resize(Size,0.0);
 	Generator = gsl_rng_alloc(gsl_rng_taus);
@@ -48,7 +48,7 @@ void MonteCarloData::zeroNums() {
 
 // load Data
 void MonteCarloData::loadData(const string& f) {
-	loadVectorBinary<number>(f,DataArray);
+	loadVectorBinary(f,DataArray);
 	Size = DataArray.size();
 	Correlator.resize(Size,0.0);
 	zeroNums();
@@ -61,7 +61,7 @@ void MonteCarloData::loadDataAscii(const string& f) {
 
 // save Data
 void MonteCarloData::saveData(const string& f) const {
-	saveVectorBinary<number>(f,DataArray);
+	saveVectorBinary(f,DataArray);
 }
 
 // save Correlator
@@ -70,7 +70,7 @@ void MonteCarloData::saveCorrelator(const string& f) const {
 		cerr << "MonteCarloData::saveCorrelator error: correlator not calculated yet" << endl;
 		return;
 	}
-	saveVectorBinary<number>(f,Correlator);
+	saveVectorBinary(f,Correlator);
 }
 
 // save Correlator Append
@@ -79,12 +79,12 @@ void MonteCarloData::saveCorrelatorAppend(const string& f) const {
 		cerr << "MonteCarloData::saveCorrelator error: correlator not calculated yet" << endl;
 		return;
 	}
-	saveVectorBinaryAppend<number>(f,Correlator);
+	saveVectorBinaryAppend(f,Correlator);
 }
 
 // save Data ascii
 void MonteCarloData::saveDataAscii(const string& f) const {
-	saveVectorAscii<number>(f,DataArray);
+	saveVectorAscii(f,DataArray);
 }
 
 // save Correlator ascii
@@ -93,7 +93,7 @@ void MonteCarloData::saveCorrelatorAscii(const string& f) const {
 		cerr << "MonteCarloData::saveCorrelator error: correlator not calculated yet" << endl;
 		return;
 	}
-	saveVectorAscii<number>(f,Correlator);
+	saveVectorAscii(f,Correlator);
 }
 
 // save Correlator append ascii
@@ -102,7 +102,7 @@ void MonteCarloData::saveCorrelatorAppendAscii(const string& f) const {
 		cerr << "MonteCarloData::saveCorrelator error: correlator not calculated yet" << endl;
 		return;
 	}
-	saveVectorAsciiAppend<number>(f,Correlator);
+	saveVectorAsciiAppend(f,Correlator);
 }
 
 // save Results
