@@ -17,17 +17,17 @@ file2="results/nr/nr_photon_nocuspterm.dat"
 unset log
 unset label
 set key below
-#set logscale y
+set logscale y
 set xtic auto
 set autoscale
-#set format y "10^{%L}"
-set title "Induced NR results, K=8, a=0.1, g=1, B=1"
+set format y "10^{%L}"
+set title "Induced NR results, K=8, g=1, B=1"
 set xlabel "M"
 set ylabel "S"
 
 set xrange [0:2]
-plot file1 u 7:10 title "NR result" ls 1 lc rgb "blue", \
-	file2 u 7:10 title "NR result, no cusp regularisation term" with lines lc rgb "green", \
+plot file1 u 7:10 title "NR result, a=0.15" ls 1 lc rgb "blue", \
+	file2 u 7:8 title "NR result, no cusp regularisation term" ls 1 lc rgb "green", \
 	file1 u 7:(p($7,1.0,1.0)) title "Weak coupling analytic result" with lines lc rgb "red"
 
 pause -1
