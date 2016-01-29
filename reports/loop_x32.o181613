@@ -1,0 +1,24 @@
+starting glmain with 32 nodes
+25.68user 1.60system 0:01.76elapsed 1545%CPU (0avgtext+0avgdata 18332maxresident)k
+1952inputs+8outputs (0major+65839minor)pagefaults 0swaps
+starting loop2 with 32 nodes
+looping 10 over 2 steps
+loading loops from:
+data/s0+v/loops/dim_4/K_10/loop_G_1_B_1_rank_0.dat
+data printed to: 
+data/s0+v/local/151030002901s0_dim_4_K_10_G_1_B_1_rank_0.dat
+data/s0+v/local/151030002901fr_dim_4_K_10_G_1_B_1_rank_0.dat
+data/s0+v/local/151030002901v_dim_4_K_10_G_1_B_1_rank_0.dat
+correlators printed to: 
+data/s0+v/local/151030002901vCorr_dim_4_K_10_G_1_B_1_rank_0.dat
+results printed to:
+results/s0+v/loop2Cosmos_dim_4.dat
+
+timenumber: 151030002901
+
+     dim      Nl     Nsw       K       G       B            v           %v        T_int        T_exp     time_met
+       4      32   32768      10       1       1    -0.015652       724.84      -85.294       1.7738          inf
+
+loading loops from:
+data/s0+v/loops/dim_4/K_10/loop_G_1_B_1_rank_0.dat
+=>> PBS: job killed: walltime 10843 exceeded limit 10800
