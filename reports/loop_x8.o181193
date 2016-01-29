@@ -1,0 +1,15 @@
+starting glmain with 8 nodes
+2.38user 0.24system 0:01.13elapsed 230%CPU (0avgtext+0avgdata 7904maxresident)k
+8inputs+8outputs (0major+12460minor)pagefaults 0swaps
+starting loop2 with 8 nodes
+data printed to: results/s0+v/s0_dim_4_K_10_B_1_G_1_rank_0.dat
+results/s0+v/w_dim_4_K_10_B_1_G_1_rank_0.dat
+results/s0+v/v_dim_4_K_10_B_1_G_1_rank_0.dat
+results printed to results/s0+v/loop2Cosmos_dim_4.dat
+timenumber: 151019123405
+
+     dim      Nl     Nsw       K       G       B            W      %errorW        T_int        T_exp         mets
+       4       8     128      10       1       1       1.0694       4.6394       633.95       1.6035       8.9825
+
+166.03user 0.14system 0:21.67elapsed 766%CPU (0avgtext+0avgdata 7696maxresident)k
+5280inputs+720outputs (1major+13303minor)pagefaults 0swaps

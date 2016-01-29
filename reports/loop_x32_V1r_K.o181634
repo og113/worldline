@@ -1,0 +1,47 @@
+starting glmain with 32 nodes
+using inputs file jobinputs/inputs6
+looping 6 over 6 steps
+generating 4096 unit loops each of 16384 points in 4 dimensions
+164.33user 7.35system 0:13.12elapsed 1308%CPU (0avgtext+0avgdata 18464maxresident)k
+8inputs+4194312outputs (0major+76530minor)pagefaults 0swaps
+starting loop with 32 nodes
+using inputs file jobinputs/inputs6
+looping 6 over 6 steps
+results printed to results/s0/loopCosmos_dim_4.dat
+timenumber: 151030112727
+
+     dim      Nl      Ng       K       G       B       T          S0    %errorS0           F     %errorF           V     %errorV
+       4    4096      64       4       1       1       0           1           0     -0.2441       45.47       -7.73        13.8
+
+results printed to results/s0/loopCosmos_dim_4.dat
+timenumber: 151030112728
+
+     dim      Nl      Ng       K       G       B       T          S0    %errorS0           F     %errorF           V     %errorV
+       4    4096      64       6       1       1       0           1           0     -0.2723        -nan      -60.84        -nan
+
+results printed to results/s0/loopCosmos_dim_4.dat
+timenumber: 151030112730
+
+     dim      Nl      Ng       K       G       B       T          S0    %errorS0           F     %errorF           V     %errorV
+       4    4096      64       8       1       1       0           1           0     -0.2401       2.805     -0.1127       21.57
+
+results printed to results/s0/loopCosmos_dim_4.dat
+timenumber: 151030112731
+
+     dim      Nl      Ng       K       G       B       T          S0    %errorS0           F     %errorF           V     %errorV
+       4    4096      64      10       1       1       0           1           0     -0.2564       2.771    -0.02444       7.419
+
+results printed to results/s0/loopCosmos_dim_4.dat
+timenumber: 151030112746
+
+     dim      Nl      Ng       K       G       B       T          S0    %errorS0           F     %errorF           V     %errorV
+       4    4096      64      12       1       1       0           1           0     -0.2572       1.982   -0.006976       11.15
+
+results printed to results/s0/loopCosmos_dim_4.dat
+timenumber: 151030113134
+
+     dim      Nl      Ng       K       G       B       T          S0    %errorS0           F     %errorF           V     %errorV
+       4    4096      64      14       1       1       0           1           0     -0.2507       2.433   -0.001729       19.81
+
+7824.32user 20.78system 4:10.09elapsed 3136%CPU (0avgtext+0avgdata 18356maxresident)k
+0inputs+72outputs (0major+80076minor)pagefaults 0swaps

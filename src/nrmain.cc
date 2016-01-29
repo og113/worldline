@@ -547,7 +547,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	if (checkDelta.good()) {
 	
 		// printing results to file	
-		string resFile = "results/nr/nrmain_cosmos.dat";
+		string resFile = "results/nr/nrmain.dat";
 		FILE* ros;
 		ros = fopen(resFile.c_str(),"a");
 		fprintf(ros,"%12s%8i%8i%8.4g%8.4g%8.4g%8.4g%16.6g%16.6g%16.6g%12.4g\n",\

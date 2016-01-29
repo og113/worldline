@@ -1,0 +1,20 @@
+starting glmain with 32 nodes
+26.44user 1.55system 0:01.70elapsed 1646%CPU (0avgtext+0avgdata 18332maxresident)k
+5488inputs+8outputs (1major+65840minor)pagefaults 0swaps
+starting loop2 with 32 nodes
+data printed to: 
+data/s0+v/local/151027153320s0_dim_4_K_10_G_1_B_1_rank_0.dat
+data/s0+v/local/151027153320fr_dim_4_K_10_G_1_B_1_rank_0.dat
+data/s0+v/local/151027153320v_dim_4_K_10_G_1_B_1_rank_0.dat
+correlators printed to: 
+data/s0+v/local/151027153320vCorr_dim_4_K_10_G_1_B_1_rank_0.dat
+results printed to:
+results/s0+v/loop2Cosmos_dim_4.dat
+
+timenumber: 151027153320
+
+     dim      Nl     Nsw       K       G       B            v           %v        T_int        T_exp     time_met
+       4      32   32768      10       1       1    -0.015997       783.34      -64.884        1.716          inf
+
+237440.82user 1.73system 2:03:40elapsed 3199%CPU (0avgtext+0avgdata 18716maxresident)k
+5552inputs+67608outputs (1major+83426minor)pagefaults 0swaps
