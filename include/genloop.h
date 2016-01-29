@@ -157,7 +157,7 @@ class Loop;
 template <uint Dim>
 class Metropolis;
 
-// Interpolate
+// Interpolate - UNTESTED
 template <uint Dim>
 void Interpolate (const Loop<Dim>& in, Loop<Dim>& out);
 

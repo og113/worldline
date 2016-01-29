@@ -241,6 +241,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		number g = p.G*p.G/8.0/PI/PI;
 		number sqrt4s0 = 2.0*sqrt(S0(xLoop));
 		number cusp_scale = g*log(R/p.Epsi);
+		number kg_scale = 1.0/2.0/PI;
 		
 		Point<dim> P0;
 		
@@ -250,8 +251,8 @@ for (uint pl=0; pl<Npl; pl++) {
 			//S0(j, xLoop, s0norm, s0norm);
 			L		(j, xLoop, 1.0, len);
 			I0		(j, xLoop, -gb, i0);
-			if (!(P^=P0)) KGMax(j, xLoop, 0, N/2-1, 1.0, kg);
-			else 		  KGMax(j, xLoop, 1.0, kg);
+			if (!(P^=P0)) KGMax(j, xLoop, 0, N/2-1, kg_scale, kg);
+			else 		  KGMax(j, xLoop, kg_scale, kg);
 		
 			for (mu=0; mu<dim; mu++) {
 			
@@ -550,7 +551,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		FILE* ros;
 		ros = fopen(resFile.c_str(),"a");
 		fprintf(ros,"%12s%8i%8i%8.4g%8.4g%8.4g%8.4g%16.6g%16.6g%16.6g%12.4g\n",\
-					timenumber.c_str(),pl,p.K,p.G,p.B,p.Epsi,M,len,i0,s,checkSol.back());
+					timenumber.c_str(),pl,p.K,p.G,p.B,p.Epsi,M,s,checkSol.back(),checkDX.back(),checkA.back());
 		fclose(ros);
 		printf("%12s%50s\n","results:",resFile.c_str());
 		
