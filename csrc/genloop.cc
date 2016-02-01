@@ -927,7 +927,7 @@ number DFGamma (const Loop<Dim>& l, const Point<Dim>& p, const uint& loc) {
 	return result;
 }
 
-// Interpolate
+// Interpolate - UNTESTED
 template <uint Dim>
 void Interpolate (const Loop<Dim>& in, Loop<Dim>& out) {
 	if (in.K==out.K) {
