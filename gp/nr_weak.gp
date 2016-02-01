@@ -29,7 +29,7 @@ set ylabel "S"
 set arrow from 0.5,6 to 0,(pi-0.25)
 set label "Affleck-Manton result" at 0.5,6
 #set arrow from (2-1/sqrt(pi)),10 to (2-1/sqrt(pi)),0.1 nohead
-#set label "1-1/sqrt(PI)" at (2-1/sqrt(pi)+0.05),1
+#set label "2-1/sqrt(PI)" at (2-1/sqrt(pi)+0.05),1
 
 set xrange [0:2]
 plot file1 u 7:10 title "NR result, a=0.15" ls 1 lc rgb "violet", \
