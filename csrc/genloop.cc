@@ -645,7 +645,7 @@ number DSm (const Loop<Dim>& l, const Point<Dim>& p, const uint& loc) {
 }
 
 // KG
-template <uint Dim>
+template <uint Dim> // N.B. not sure this is correct. only checked for circle. different evaluation in nrloop.cc
 number KG (const Loop<Dim>& l) {
 	uint pos1, pos2;
 	Point<Dim> pp;
