@@ -150,6 +150,98 @@ void KGMax (const uint& j, const Loop<Dim>& l, const uint& ex1, const uint& ex2,
 	}
 }
 
+// KGAvg
+template <uint Dim>
+void KGAvg (const uint& j, const Loop<Dim>& l, const number& f, number& result) {
+	uint pos1, pos2;
+	Point<Dim> pp;
+	number t_sqrd, t_dot_sqrd, t_t_dot, temp;
+	pos1 = (j==(l.size()-1)? 0 : j+1);
+	pos2 = (pos1==(l.size()-1)? 0 : pos1+1);
+	pp = l[pos1];
+	pp *= 2.0;
+	pp -= l[pos2];
+	t_sqrd = DistanceSquared(l[pos1],l[j]);
+	t_dot_sqrd = DistanceSquared(l[j],pp);
+	t_t_dot = Dot(l[j],pp,l[pos1],l[j]);
+	temp = f*sqrt((t_dot_sqrd-t_t_dot*t_t_dot/t_sqrd)/t_sqrd);
+	result +=  temp;
+}
+
+// KGAvg
+template <uint Dim>
+void KGAvg (const uint& j, const Loop<Dim>& l, const uint& ex1, const uint& ex2, const number& f, number& result) {
+	if (j!=ex1 && j!=ex2) {
+		uint pos1, pos2;
+		Point<Dim> pp;
+		number t_sqrd, t_dot_sqrd, t_t_dot, temp;
+		pos1 = (j==(l.size()-1)? 0 : j+1);
+		pos2 = (pos1==(l.size()-1)? 0 : pos1+1);
+		pp = l[pos1];
+		pp *= 2.0;
+		pp -= l[pos2];
+		t_sqrd = DistanceSquared(l[pos1],l[j]);
+		t_dot_sqrd = DistanceSquared(l[j],pp);
+		t_t_dot = Dot(l[j],pp,l[pos1],l[j]);
+		temp = f*sqrt((t_dot_sqrd-t_t_dot*t_t_dot/t_sqrd)/t_sqrd)*l.size()/((number)l.size()-2.0);
+		result += temp;
+	}
+}
+
+// KGMaxPlane
+template <uint Dim>
+void KGMaxPlane (const uint& j, const Loop<Dim>& l, const number& f, number& result) {
+	uint pj = (j==(l.size()-1)? 0: j+1);
+	uint nj = (j==0? (l.size()-1):j-1);
+	number dx = (l[pj])[2]-(l[j])[2];
+	number ddx = (l[pj])[2]-2.0*(l[j])[2]+(l[nj])[2];
+	number dy = (l[pj])[3]-(l[j])[3];
+	number ddy = (l[pj])[3]-2.0*(l[j])[3]+(l[nj])[3];
+	number temp = f*abs(dx*ddy-dy*ddx)/pow(dx*dx+dy*dy,1.5);
+	result = (temp>result? temp: result);
+}
+
+// KGMaxPlane
+template <uint Dim>
+void KGMaxPlane (const uint& j, const Loop<Dim>& l, const uint& ex1, const uint& ex2, const number& f, number& result) {
+	if (j!=ex1 && j!=ex2) {
+		uint pj = (j==(l.size()-1)? 0: j+1);
+		uint nj = (j==0? (l.size()-1):j-1);
+		number dx = (l[pj])[2]-(l[j])[2];
+		number ddx = (l[pj])[2]-2.0*(l[j])[2]+(l[nj])[2];
+		number dy = (l[pj])[3]-(l[j])[3];
+		number ddy = (l[pj])[3]-2.0*(l[j])[3]+(l[nj])[3];
+		number temp = f*abs(dx*ddy-dy*ddx)/pow(dx*dx+dy*dy,1.5);
+		result = (temp>result? temp: result);
+	}
+}
+
+// KGAvgPlane
+template <uint Dim>
+void KGAvgPlane (const uint& j, const Loop<Dim>& l, const number& f, number& result) {
+	uint pj = (j==(l.size()-1)? 0: j+1);
+	uint nj = (j==0? (l.size()-1):j-1);
+	number dx = (l[pj])[2]-(l[j])[2];
+	number ddx = (l[pj])[2]-2.0*(l[j])[2]+(l[nj])[2];
+	number dy = (l[pj])[3]-(l[j])[3];
+	number ddy = (l[pj])[3]-2.0*(l[j])[3]+(l[nj])[3];
+	result += f*abs(dx*ddy-dy*ddx)/pow(dx*dx+dy*dy,1.5)/(number)l.size();
+}
+
+// KGAvgPlane
+template <uint Dim>
+void KGAvgPlane (const uint& j, const Loop<Dim>& l, const uint& ex1, const uint& ex2, const number& f, number& result) {
+	if (j!=ex1 && j!=ex2) {
+		uint pj = (j==(l.size()-1)? 0: j+1);
+		uint nj = (j==0? (l.size()-1):j-1);
+		number dx = (l[pj])[2]-(l[j])[2];
+		number ddx = (l[pj])[2]-2.0*(l[j])[2]+(l[nj])[2];
+		number dy = (l[pj])[3]-(l[j])[3];
+		number ddy = (l[pj])[3]-2.0*(l[j])[3]+(l[nj])[3];
+		result += f*abs(dx*ddy-dy*ddx)/pow(dx*dx+dy*dy,1.5)/((number)l.size()-2.0);
+	}
+}
+
 // mdPX_nr
 template<uint Dim>
 void mdPX_nr(const Loop<Dim>& l,const uint& loc, const Point<Dim>& P, const number& f, vec& v) {
@@ -523,6 +615,12 @@ template void Gamma<2>(const uint& j, const Loop<2>& l, const number& f, number&
 template void FGamma<2>(const uint& j, const Loop<2>& l, const number& f, number& result);
 template void KGMax<2>(const uint& j, const Loop<2>& l, const number& f, number& result);
 template void KGMax<2>(const uint& j, const Loop<2>& l, const uint& ex1, const uint& ex2, const number& f, number& result);
+template void KGAvg<2>(const uint& j, const Loop<2>& l, const number& f, number& result);
+template void KGAvg<2>(const uint& j, const Loop<2>& l, const uint& ex1, const uint& ex2, const number& f, number& result);
+template void KGMaxPlane<2>(const uint& j, const Loop<2>& l, const number& f, number& result);
+template void KGMaxPlane<2>(const uint& j, const Loop<2>& l, const uint& ex1, const uint& ex2, const number& f, number& result);
+template void KGAvgPlane<2>(const uint& j, const Loop<2>& l, const number& f, number& result);
+template void KGAvgPlane<2>(const uint& j, const Loop<2>& l, const uint& ex1, const uint& ex2, const number& f, number& result);
 template void mdPX_nr<2>(const Loop<2>& l, const uint& loc, const Point<2>& P, const number& f, vec& v);
 template void mdL_nr<2>(const uint& j, const uint& mu, const Loop<2>& l, const number& p, vec& v);
 template void ddL_nr<2>(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<2>& l, const number& p, mat& m);
@@ -582,6 +680,12 @@ template void Gamma<4>(const uint& j, const Loop<4>& l, const number& f, number&
 template void FGamma<4>(const uint& j, const Loop<4>& l, const number& f, number& result);
 template void KGMax<4>(const uint& j, const Loop<4>& l, const number& f, number& result);
 template void KGMax<4>(const uint& j, const Loop<4>& l, const uint& ex1, const uint& ex2, const number& f, number& result);
+template void KGAvg<4>(const uint& j, const Loop<4>& l, const number& f, number& result);
+template void KGAvg<4>(const uint& j, const Loop<4>& l, const uint& ex1, const uint& ex2, const number& f, number& result);
+template void KGMaxPlane<4>(const uint& j, const Loop<4>& l, const number& f, number& result);
+template void KGMaxPlane<4>(const uint& j, const Loop<4>& l, const uint& ex1, const uint& ex2, const number& f, number& result);
+template void KGAvgPlane<4>(const uint& j, const Loop<4>& l, const number& f, number& result);
+template void KGAvgPlane<4>(const uint& j, const Loop<4>& l, const uint& ex1, const uint& ex2, const number& f, number& result);
 template void mdPX_nr<4>(const Loop<4>& l, const uint& loc, const Point<4>& P, const number& f, vec& v);
 template void mdL_nr<4>(const uint& j, const uint& mu, const Loop<4>& l, const number& p, vec& v);
 template void ddL_nr<4>(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<4>& l, const number& p, mat& m);
