@@ -537,7 +537,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		
 	// printing results to terminal
 	printf("\n");
-	printf("%8s%8s%8s%8s%8s%8s%8s%8s%14s%14s%14s%14s%14s\n","runs","time","K","G","B","T","a","M","len",\
+	printf("%8s%8s%8s%8s%8s%8s%8s%12s%14s%14s%14s%14s%14s\n","runs","time","K","G","B","T","a","M","len",\
 		"i0","vr","s","s_cf");
 	printf("%8i%8.3g%8i%8.4g%8.4g%8.4g%8.4g%12.5g%14.5g%14.5g%14.5g%14.5g%14.5g\n",\
 		runsCount,realtime,p.K,p.G,p.B,p.T,p.Epsi,M,len,i0,vr,s,s_cf);
