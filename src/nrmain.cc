@@ -545,7 +545,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	printf("\n");
 	printf("%8s%8s%8s%8s%8s%8s%8s%8s%14s%14s%14s%14s%14s\n","runs","time","K","G","B","T","a","M","len",\
 		"i0","vr","s","s_cf");
-	printf("%8i%8.3g%8i%8.4g%8.4g%8.4g%8.4g%8.4g%14.5g%14.5g%14.5g%14.5g%14.5g\n",\
+	printf("%8i%8.3g%8i%8.4g%8.4g%8.4g%8.4g%12.5g%14.5g%14.5g%14.5g%14.5g%14.5g\n",\
 		runsCount,realtime,p.K,p.G,p.B,p.T,p.Epsi,M,len,i0,vr,s,s_cf);
 	printf("\n");
 	
@@ -553,11 +553,16 @@ for (uint pl=0; pl<Npl; pl++) {
 	if (checkDelta.good()) {
 	
 		// printing results to file	
-		string resFile = "results/nr/nrmain.dat";
+		string resFile = "results/nr/nrmain_cosmos.dat";
 		FILE* ros;
 		ros = fopen(resFile.c_str(),"a");
+<<<<<<< HEAD
 		fprintf(ros,"%12s%8i%8i%8.4g%8.4g%8.4g%8.4g%16.6g%12.4g%12.4g%12.4g\n",\
 					timenumber.c_str(),pl,p.K,p.G,p.B,p.Epsi,M,s,checkSol.back(),checkDX.back(),checkAMax.back());
+=======
+		fprintf(ros,"%24s%24i%24i%24g%24g%24g%24g%24g%24g%24g%24g\n",\
+					timenumber.c_str(),pl,p.K,p.G,p.B,p.Epsi,M,s,checkSol.back(),checkDX.back(),checkA.back());
+>>>>>>> 3c1eab08d10de8eb59dc57b0d8b3751327e45a6a
 		fclose(ros);
 		printf("%12s%50s\n","results:",resFile.c_str());
 		
