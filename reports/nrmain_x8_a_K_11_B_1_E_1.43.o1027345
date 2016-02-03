@@ -1,0 +1,74 @@
+using inputs file nrinputs/inputs3
+looping 10 over 51 steps
+loading loops from:
+data/nr/loops/dim_4/K_11/loop_G_1_B_1_M_1.43_a_0.15.dat
+   pl  run         len          i0           s         sol        solM       delta          Sm          dx       a_max       a_avg
+    0    1      5.0172    -0.49252      0.1324  9.4984e-13  1.6745e-11  1.9871e-13    0.001332    0.016332      309.85     0.38099
+
+    runs    time       K       G       B       T       a           M           len            i0            vr             s          s_cf
+       1    76.9      11       1       1       0    0.15        1.43        5.0172      -0.49252      -0.85468        0.1324        2.8916
+
+    results:                      results/nr/nrmain_cosmos.dat
+          x:data/nr/loops/dim_4/K_11/loop_G_1_B_1_M_1.43_a_0.15.dat
+loading loops from:
+data/nr/loops/dim_4/K_11/loop_G_1_B_1_M_1.43_a_0.15.dat
+   pl  run         len          i0           s         sol        solM       delta          Sm          dx       a_max       a_avg
+    1    1      5.0172    -0.49252     0.12909  0.00033453   0.0038185     0.04125    0.001332    0.016442      307.79     0.37845
+    1    2      5.2318    -0.49809     0.12892  3.2618e-05  0.00050615   0.0047563   0.0013562    0.017145      305.94     0.37536
+    1    3      5.2564    -0.49906     0.12892  1.8364e-06  2.8773e-05  0.00012217   0.0013565    0.017226      304.55      0.3736
+    1    4      5.2571    -0.49908     0.12892  9.7566e-10  1.5195e-08  5.2388e-08   0.0013566    0.017228      304.53     0.37357
+
+    runs    time       K       G       B       T       a           M           len            i0            vr             s          s_cf
+       4     308      11       1       1       0   0.149        1.43        5.2571      -0.49908       -0.9185       0.12892        2.8916
+
+    results:                      results/nr/nrmain_cosmos.dat
+          x:data/nr/loops/dim_4/K_11/loop_G_1_B_1_M_1.43_a_0.149.dat
+loading loops from:
+data/nr/loops/dim_4/K_11/loop_G_1_B_1_M_1.43_a_0.149.dat
+   pl  run         len          i0           s         sol        solM       delta          Sm          dx       a_max       a_avg
+    2    1      5.2571    -0.49908     0.12522  0.00031658   0.0035816    0.059284   0.0013566    0.017344      302.49     0.37106
+    2    2      5.5864    -0.50665     0.12496  9.3405e-05   0.0014439    0.011893   0.0013838    0.018431      296.47     0.36318
+    2    3      5.6528    -0.50911     0.12495  1.1434e-05  0.00017759   0.0011012   0.0013842     0.01865      292.96     0.35882
+    2    4      5.6589    -0.50932     0.12495  7.7249e-08  1.1927e-06  5.3946e-06   0.0013844     0.01867      292.74     0.35855
+    2    5       5.659    -0.50932     0.12495  2.4643e-12  4.3637e-11  1.7408e-10   0.0013844     0.01867      292.74     0.35855
+
+    runs    time       K       G       B       T       a           M           len            i0            vr             s          s_cf
+       5     385      11       1       1       0   0.148        1.43         5.659      -0.50932       -1.0252       0.12495        2.8916
+
+    results:                      results/nr/nrmain_cosmos.dat
+          x:data/nr/loops/dim_4/K_11/loop_G_1_B_1_M_1.43_a_0.148.dat
+loading loops from:
+data/nr/loops/dim_4/K_11/loop_G_1_B_1_M_1.43_a_0.148.dat
+   pl  run         len          i0           s         sol        solM       delta          Sm          dx       a_max       a_avg
+    3    1       5.659    -0.50932      0.1206  0.00028193   0.0031529     0.10934   0.0013844    0.018797      290.76     0.35613
+    3    2      6.3497    -0.52129     0.12006   0.0004077   0.0061697    0.054562   0.0014165    0.021091      272.14     0.33389
+    3    3      6.7121    -0.53241     0.11983  0.00019909   0.0030547    0.093371   0.0014149    0.022295      256.23     0.31446
+    3    4      7.3988    -0.54523     0.11972  0.00037365   0.0056458     0.15107     0.00142    0.024576       234.4     0.28868
+    3    5      8.7067    -0.56531     0.11949  0.00072162    0.010838     0.34252   0.0014192     0.02892      198.64     0.24602
+    3    6      13.219    -0.57235     0.14446   0.0019926     0.02753     0.52146   0.0014056    0.043908      127.39     0.16244
+Check delta: test(7.53668) > closeness(1)
+
+x.norm()         21.0322
+x_end.norm()     4.4298e-15
+mds.norm()       1.01084
+mds.maxCoeff()   0.490941
+mds.minCoeff()   -0.490985
+delta.norm()     158.513
+
+dds info:
+dds.determinant():inf
+dds.sum():        16384
+dds.prod():       0
+dds.mean():       0.000243902
+dds.minCoeff():   -1004.54
+dds.maxCoeff():   1991.8
+dds.trace():      968396
+dds.norm():       14954.3
+
+    runs    time       K       G       B       T       a           M           len            i0            vr             s          s_cf
+       7     584      11       1       1       0   0.147        1.43         27.53      -0.65559       -6.9914       0.26006        2.8916
+
+nrmain error: data/nr/loops/dim_4/K_11/loop_G_1_B_1_M_1.43_a_0.147.dat doesn't exist
+Command exited with non-zero status 1
+1350.77user 2.48system 22:33.33elapsed 99%CPU (0avgtext+0avgdata 1074972maxresident)k
+18512inputs+488outputs (1major+14562minor)pagefaults 0swaps
