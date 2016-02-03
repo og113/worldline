@@ -7,8 +7,9 @@ set term png size 1600,800; \
 set output outFile; \
 
 # file where results are
-file1="results/nr/nrmain_cosmos_24format.dat"
-file2="results/nr/nrmain_cosmos_a_0.15.dat"
+file1="results/nr/nrmain_cosmos.dat"
+file2="results/nr/nrmain_cosmos_2.dat"
+file3="results/nr/nrmain_cosmos_3.dat"
 
 # approximate analytic result
 pi=3.1415926535897932
@@ -30,9 +31,10 @@ set xlabel "B"
 set ylabel "E"
 set zlabel "S"
 
-set xrange [0.0:2.0]
-splot file1 u 5:7:($6==0.15? ($3==11?$10:"1/0"): "1/0") title "NR result" ls 1 lc rgb "blue"#, \
-	#file2 u 5:7:($6==0.15? $10: "1/0") title "NR result" ls 1 lc rgb "green", \
-	#file1 u 5:7:(p($5,$6,$7)) title "weak coupling result" with lines lc rgb "red"
+set xrange [0:2]
+splot file1 u 5:7:($6==0.15? ($3==11?$10:"1/0"): "1/0") title "NR results, 1" ls 1 lc rgb "blue", \
+	file2 u 5:7:($6==0.15? $8: "1/0") title "NR results, 2" ls 1 lc rgb "red", \
+	file3 u 5:7:($6==0.15? $8: "1/0") title "NR results, 3" ls 1 lc rgb "violet", \
+	file1 u (1.0):x:(p(1.0,1.0,x)) title "weak coupling result" with lines lc rgb "green"
 
 pause -1
