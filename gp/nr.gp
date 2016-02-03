@@ -11,7 +11,8 @@ pi=3.1415926535897932
 p(g,B)=pi/g/B - g**2/4.0
 
 # files
-file="results/nr/nr_vacuum_K.dat"
+file1="results/nr/nr_vacuum_K.dat"
+file2="results/nr/nr_vacuum_K.dat"
 
 unset log
 unset label
