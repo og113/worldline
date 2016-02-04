@@ -47,6 +47,7 @@ bool verbose = true;
 bool lemon = false;
 bool step = true;
 bool weak = false;
+bool eigen = false;
 bool alltests = false; // doing alltests
 string printOpts = "";
 string inputsFile = "inputs4";
@@ -60,6 +61,7 @@ if (argc % 2 && argc>1) {
 		else if (id.compare("lemon")==0) lemon = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("step")==0) step = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("weak")==0) weak = (stn<uint>(argv[2*j+2])!=0);
+		else if (id.compare("eigen")==0) eigen = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("inputs")==0) inputsFile = (string)argv[2*j+2];
 		else if (id.compare("print")==0) printOpts = (string)argv[2*j+2];
 		else if (id.compare("alltests")==0) alltests = (stn<uint>(argv[2*j+2])!=0);
@@ -532,6 +534,26 @@ for (uint pl=0; pl<Npl; pl++) {
 	11 - printing results
 ----------------------------------------------------------------------------------------------------------------------------*/	
 
+	// eigenvalues, if required
+	if (eigen) {
+		mat dds_wlm = dds.block(0,0,dim*N,dim*N); // dds without Lagrange multipliers
+		number eigenTol = 1.0e-16*dim*N;
+		uint negEigs = 0;
+		cout << "calculating eigendecomposition of dds..." << endl;
+		Eigen::SelfAdjointEigenSolver<mat> eigensolver(dds_wlm);
+		if (eigensolver.info()!=Eigen::Success) abort();
+		//cout << "first " << 2*dim << " eigenvalues are: " << endl;
+		for (uint j=0; j<8; j++) {
+			if ((eigensolver.eigenvalues())[j]<-eigenTol)
+				negEigs++;
+			//cout << (eigensolver.eigenvalues())[j] << endl;
+		}
+		cout << negEigs << " negative eigenvalues found, less than " << -eigenTol << endl;
+		string eigenFile = "data/nr/eigenvalues/dim_"+nts(dim)+"/K_"+nts(p.K)+"/eigenvalues_G_"+nts(p.G)+"_B_"\
+							+nts(p.B)+"_M_"+nts(M)+"_a_"+nts(p.Epsi)+".dat";
+		saveVectorBinary(eigenFile,eigensolver.eigenvalues());
+	}
+
 	//stopping clock
 	time = clock() - time;
 	number realtime = time/1000000.0;
@@ -543,10 +565,10 @@ for (uint pl=0; pl<Npl; pl++) {
 		
 	// printing results to terminal
 	printf("\n");
-	printf("%8s%8s%8s%8s%8s%8s%8s%12s%14s%14s%14s%14s%14s\n","runs","time","K","G","B","T","a","M","len",\
-		"i0","vr","s","s_cf");
-	printf("%8i%8.3g%8i%8.4g%8.4g%8.4g%8.4g%12.5g%14.5g%14.5g%14.5g%14.5g%14.5g\n",\
-		runsCount,realtime,p.K,p.G,p.B,p.T,p.Epsi,M,len,i0,vr,s,s_cf);
+	printf("%8s%8s%8s%8s%8s%8s%8s%12s%14s%14s%14s%14s\n","runs","time","K","G","B","T","a","M","len",\
+		"i0","vr","s");
+	printf("%8i%8.3g%8i%8.4g%8.4g%8.4g%8.4g%12.5g%14.5g%14.5g%14.5g%14.5g\n",\
+		runsCount,realtime,p.K,p.G,p.B,p.T,p.Epsi,M,len,i0,vr,s);
 	printf("\n");
 	
 	
