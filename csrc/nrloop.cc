@@ -112,6 +112,54 @@ void V2r (const uint& j, const uint& k, const Loop<Dim>& l, const number& a, con
 	}
 }
 
+// SimpleCurvatureMax
+template <uint Dim>
+void SimpleCurvatureMax (const uint& j, const Loop<Dim>& l, const number& f, number& result) {
+	uint pj = (j==(l.size()-1)? 0: j+1);
+	uint nj = (j==0? (l.size()-1):j-1);
+	Point<Dim> dd = l[pj] + l[nj] - 2.0*l[j];
+	Point<Dim> d = l[pj] - l[j];
+	number temp = f*abs(Dot(dd,d))/NormSquared(d);
+	result = (temp>result? temp: result);
+}
+
+// SimpleCurvatureMax
+template <uint Dim>
+void SimpleCurvatureMax (const uint& j, const Loop<Dim>& l, const uint& ex1, const uint& ex2, const number& f, number& result) {
+	if (j!=ex1 && j!=ex2) {
+		uint pj = (j==(l.size()-1)? 0: j+1);
+		uint nj = (j==0? (l.size()-1):j-1);
+		Point<Dim> dd = l[pj] + l[nj] - 2.0*l[j];
+		Point<Dim> d = l[pj] - l[j];
+		number temp = f*abs(Dot(dd,d))/NormSquared(d);
+		result = (temp>result? temp: result);
+	}
+}
+
+// SimpleCurvatureAvg
+template <uint Dim>
+void SimpleCurvatureAvg (const uint& j, const Loop<Dim>& l, const number& f, number& result) {
+	uint pj = (j==(l.size()-1)? 0: j+1);
+	uint nj = (j==0? (l.size()-1):j-1);
+	Point<Dim> dd = l[pj] + l[nj] - 2.0*l[j];
+	Point<Dim> d = l[pj] - l[j];
+	number temp = f*abs(Dot(dd,d))/NormSquared(d);
+	result += temp/(number)l.size();
+}
+
+// SimpleCurvatureAvg
+template <uint Dim>
+void SimpleCurvatureAvg (const uint& j, const Loop<Dim>& l, const uint& ex1, const uint& ex2, const number& f, number& result) {
+	if (j!=ex1 && j!=ex2) {
+		uint pj = (j==(l.size()-1)? 0: j+1);
+		uint nj = (j==0? (l.size()-1):j-1);
+		Point<Dim> dd = l[pj] + l[nj] - 2.0*l[j];
+		Point<Dim> d = l[pj] - l[j];
+		number temp = f*abs(Dot(dd,d))/NormSquared(d);
+		result += temp/((number)l.size()-2.0);
+	}
+}
+
 // KGMax
 template <uint Dim>
 void KGMax (const uint& j, const Loop<Dim>& l, const number& f, number& result) {

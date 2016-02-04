@@ -163,8 +163,8 @@ for (uint pl=0; pl<Npl; pl++) {
 	Check checkDelta("delta",1.0);
 	Check checkSm("smoothness",1.0);
 	Check checkDX("dx<<a",2.0e-1);
-	Check checkAMax("a*K_max<<1",5.0e-1);
-	Check checkAAvg("a*K_avg<<1",2.0e-1);
+	Check checkAMax("a*SC_max<<1",5.0e-1);
+	Check checkAAvg("a*SC_avg<<1",2.0e-1);
 	Check checkSym("symmetric",1.0e-16*NT*NT);
 	Check checkInv("inverse",1.0e-16*NT*NT*NT);
 	Check checkNegEigenvalue("negative eigenvalue",0.1);
@@ -172,7 +172,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	Check checkGamma("gamma",0.1);
 	
 	// defining scalar quantities
-	number len, i0, s, sm, v, vr, fgamma, gamma0, gamma1, kg_max, kg_avg;
+	number len, i0, s, sm, v, vr, fgamma, gamma0, gamma1, sc_max, sc_avg;
 	
 	// defining vector and matrix quantities
 	vec x(N*dim);
@@ -227,7 +227,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		// initializing to zero
 		mds = Eigen::VectorXd::Zero(NT);
 		dds = Eigen::MatrixXd::Zero(NT,NT);
-		len = 0.0, i0 = 0.0, v = 0.0, fgamma = 0.0, gamma0 = 0.0, gamma1 = 0.0, kg_max = 0.0, kg_avg = 0.0;//, s0 = 0.0;
+		len = 0.0, i0 = 0.0, v = 0.0, fgamma = 0.0, gamma0 = 0.0, gamma1 = 0.0, sc_max = 0.0, sc_avg = 0.0;//, s0 = 0.0;
 				
 		// loading x to xLoop - messier than it should be (should work with either a vec or a Loop really)
 		vectorToLoop(x,xLoop);
@@ -242,7 +242,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		number g = p.G*p.G/8.0/PI/PI;
 		number sqrt4s0 = 2.0*sqrt(S0(xLoop));
 		number cusp_scale = g*log(R/p.Epsi);
-		number kg_scale = 1.0;
+		number sc_scale = 1.0;
 		
 		Point<dim> P0;
 		
@@ -253,12 +253,12 @@ for (uint pl=0; pl<Npl; pl++) {
 			L		(j, xLoop, 1.0, len);
 			I0		(j, xLoop, -gb, i0);
 			if (!(P^=P0)) {
-				KGMaxPlane(j, xLoop, 0, N/2-1, kg_scale, kg_max);
-				KGAvgPlane(j, xLoop, 0, N/2-1, kg_scale, kg_avg);
+				SimpleCurvatureMax(j, xLoop, 0, N/2-1, sc_scale, sc_max);
+				SimpleCurvatureAvg(j, xLoop, 0, N/2-1, sc_scale, sc_avg);
 			}
 			else {
-				KGMaxPlane(j, xLoop, kg_scale, kg_max);
-				KGAvgPlane(j, xLoop, kg_scale, kg_avg);
+				SimpleCurvatureMax(j, xLoop, sc_scale, sc_max);
+				SimpleCurvatureAvg(j, xLoop, sc_scale, sc_avg);
 			}
 		
 			for (mu=0; mu<dim; mu++) {
@@ -351,9 +351,9 @@ for (uint pl=0; pl<Npl; pl++) {
 		// check dx<<a
 		checkDX.add(len/(number)N/p.Epsi);
 		
-		// check a<<kg
-		checkAMax.add(p.Epsi*kg_max);
-		checkAAvg.add(p.Epsi*kg_avg);
+		// check a<<sc
+		checkAMax.add(p.Epsi*sc_max);
+		checkAAvg.add(p.Epsi*sc_avg);
 				
 		if (alltests) {
 			// checking if dds is symmetric
@@ -556,13 +556,8 @@ for (uint pl=0; pl<Npl; pl++) {
 		string resFile = "results/nr/nrmain_cosmos.dat";
 		FILE* ros;
 		ros = fopen(resFile.c_str(),"a");
-<<<<<<< HEAD
-		fprintf(ros,"%12s%8i%8i%8.4g%8.4g%8.4g%8.4g%16.6g%12.4g%12.4g%12.4g\n",\
-					timenumber.c_str(),pl,p.K,p.G,p.B,p.Epsi,M,s,checkSol.back(),checkDX.back(),checkAMax.back());
-=======
 		fprintf(ros,"%24s%24i%24i%24g%24g%24g%24g%24g%24g%24g%24g\n",\
 					timenumber.c_str(),pl,p.K,p.G,p.B,p.Epsi,M,s,checkSol.back(),checkDX.back(),checkA.back());
->>>>>>> 3c1eab08d10de8eb59dc57b0d8b3751327e45a6a
 		fclose(ros);
 		printf("%12s%50s\n","results:",resFile.c_str());
 		
