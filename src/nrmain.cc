@@ -553,11 +553,11 @@ for (uint pl=0; pl<Npl; pl++) {
 	if (checkDelta.good()) {
 	
 		// printing results to file	
-		string resFile = "results/nr/nrmain_cosmos.dat";
+		string resFile = "results/nr/nrmain_cosmos_3.dat";
 		FILE* ros;
 		ros = fopen(resFile.c_str(),"a");
-		fprintf(ros,"%24s%24i%24i%24g%24g%24g%24g%24g%24g%24g%24g\n",\
-					timenumber.c_str(),pl,p.K,p.G,p.B,p.Epsi,M,s,checkSol.back(),checkDX.back(),checkA.back());
+		fprintf(ros,"%24s%24i%24i%24g%24g%24g%24g%24g%24g%24g%24g%24g\n",\
+					timenumber.c_str(),pl,p.K,p.G,p.B,p.Epsi,M,s,checkSol.back(),checkDX.back(),checkAMax.back(),checkAAvg.back());
 		fclose(ros);
 		printf("%12s%50s\n","results:",resFile.c_str());
 		
