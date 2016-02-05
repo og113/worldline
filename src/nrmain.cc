@@ -363,7 +363,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		// check dx<<a
 		checkDX.add(len/(number)N/p.Epsi);
 		
-		// check a*sc<<1, a*kg<<1
+		// check sc<<1, a*kg<<1
 		checkSCMax.add(sc_max);
 		checkSCAvg.add(sc_avg);
 		checkKGMax.add(p.Epsi*kg_max);
