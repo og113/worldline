@@ -6,7 +6,7 @@ if (outFile ne 'gui') \
 set term png size 1600,800; \
 set output outFile; \
 
-# file where results are
+# files where results are
 file1="results/nr/nrmain_cosmos.dat"
 file2="results/nr/nrmain_cosmos_2.dat"
 file3="results/nr/nrmain_cosmos_3.dat"

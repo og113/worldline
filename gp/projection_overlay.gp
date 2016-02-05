@@ -6,16 +6,16 @@ if (outFile ne 'gui') \
 set term fig size 1600,800; \
 set output outFile; \
 
-file1="data/temp/loop_G_1_B_1_M_1.43_a_0.15.dat"
-file2="data/temp/loop_G_1_B_0.99_M_1.43_a_0.15.dat"
-file3="data/temp/loop_G_1_B_0.98_M_1.43_a_0.15.dat"
-file4="data/temp/loop_G_1_B_0.97_M_1.43_a_0.15.dat"
-file5="data/temp/loop_G_1_B_0.96_M_1.43_a_0.15.dat"
-file6="data/temp/loop_G_1_B_0.95_M_1.43_a_0.15.dat"
-file7="data/temp/loop_G_1_B_0.4_M_1.43_a_0.15.dat"
-file8="data/temp/loop_G_1_B_0.3_M_1.43_a_0.15.dat"
-file9="data/temp/loop_G_1_B_0.2_M_1.43_a_0.15.dat"
-file10="data/temp/loop_G_1_B_0.1_M_1.43_a_0.15.dat"
+file1="data/temp/loop_G_1_B_1_M_1.439_a_0.15.dat"
+file2="data/temp/loop_G_1_B_0.99_M_1.439_a_0.15.dat"
+file3="data/temp/loop_G_1_B_0.98_M_1.439_a_0.15.dat"
+file4="data/temp/loop_G_1_B_0.97_M_1.439_a_0.15.dat"
+file5="data/temp/loop_G_1_B_0.96_M_1.439_a_0.15.dat"
+file6="data/temp/loop_G_1_B_0.95_M_1.439_a_0.15.dat"
+file7="data/temp/loop_G_1_B_0.4_M_1.439_a_0.15.dat"
+file8="data/temp/loop_G_1_B_0.3_M_1.439_a_0.15.dat"
+file9="data/temp/loop_G_1_B_0.2_M_1.439_a_0.15.dat"
+file10="data/temp/loop_G_1_B_0.1_M_1.439_a_0.15.dat"
 
 
 #if you want to choose which file to load
@@ -28,7 +28,7 @@ set key below
 set autoscale
 set xtic auto
 set ytic auto
-set title "Lemons, a=0.15, g=1.0, K=11, E=1.43"
+set title "Lemons, a=0.15, g=1.0, K=11, E=1.439"
 set xlabel "z"
 set ylabel "t"
 #set xrange [-1:1]
