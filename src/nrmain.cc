@@ -165,8 +165,8 @@ for (uint pl=0; pl<Npl; pl++) {
 	Check checkDelta("delta",1.0);
 	Check checkSm("smoothness",1.0);
 	Check checkDX("dx<<a",2.0e-1);
-	Check checkSCMax("a*sc_max<<1",5.0e-1);
-	Check checkSCAvg("a*sc_avg<<1",2.0e-1);
+	Check checkSCMax("sc_max<<1",5.0e-1);
+	Check checkSCAvg("sc_avg<<1",2.0e-1);
 	Check checkKGMax("a*kg_max<<1",5.0e-1);
 	Check checkKGAvg("a*kg_avg<<1",2.0e-1);
 	Check checkSym("symmetric",1.0e-16*NT*NT);
@@ -364,8 +364,8 @@ for (uint pl=0; pl<Npl; pl++) {
 		checkDX.add(len/(number)N/p.Epsi);
 		
 		// check a*sc<<1, a*kg<<1
-		checkSCMax.add(p.Epsi*sc_max);
-		checkSCAvg.add(p.Epsi*sc_avg);
+		checkSCMax.add(sc_max);
+		checkSCAvg.add(sc_avg);
 		checkKGMax.add(p.Epsi*kg_max);
 		checkKGAvg.add(p.Epsi*kg_avg);
 				
