@@ -60,26 +60,27 @@ void saveVectorAsciiAppend(const string& f,  const T& v) {
 		return;
 	}
 	ofstream os;
-	os.open("data/temp/tempAppend",ios::out); // may be an error here with multiple nodes due to always sending to same temp file
+	string tempFile = "data/temp/tempAppend";
+	os.open(tempFile.c_str(),ios::out); // may be an error here with multiple nodes due to always sending to same temp file
 	if (!os.good()) {
-		cerr << "saveVectorAsciiAppend error: stream not good for " << f << endl;
+		cerr << "saveVectorAsciiAppend error: stream not good for " << tempFile << endl;
 		return;
 	}
-	os.precision(16);
-	os << left;
+	os << left << setprecision(16);
 	if (lengthOs!=lengthIs) {
 		cerr << "saveVectorAsciiAppend error: length of vector, "<< lengthOs\
 				 << ", to append not equal to file length, "<< lengthIs << endl;
+		return;
 	}
 	else {
 		string lineIn;
 		for (uint j=0; j<lengthOs; j++){
 			getline(is,lineIn);
-			os << lineIn << setw(25) << v[j] << endl;
+			os << lineIn << setw(24) << v[j] << endl;
 		}
 		is.close();
 		os.close();
-		copyFile("data/tempAppend",f);
+		copyFile(tempFile,f);
 	}
 }
 

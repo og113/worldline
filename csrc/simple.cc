@@ -181,7 +181,7 @@ bool fileExists(const string& f) {
 //count non-empty lines of a file
 uint countLines(const string & file_to_count) {
 	ifstream fin;
-	fin.open(file_to_count.c_str());
+	fin.open(file_to_count.c_str(), ios::in);
 	if (!fin.good()) cerr << "countLines error: " << file_to_count << " not opened properly." << endl;
 	string line;
 	unsigned int counter = 0;
@@ -197,7 +197,7 @@ uint countLines(const string & file_to_count) {
 // countColumns
 uint countColumns(const string & file_to_count) {
 	ifstream fin;
-	fin.open(file_to_count.c_str());
+	fin.open(file_to_count.c_str(), ios::in);
 	if (!fin.good()) cerr << "countRows error: " << file_to_count << " not opened properly." << endl;
 	string line;
 	unsigned int counter = 0;
