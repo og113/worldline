@@ -591,6 +591,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		string eigenFile = "data/nr/eigenvalues/dim_"+nts(dim)+"/K_"+nts(p.K)+"/eigenvalues_G_"+nts(p.G)+"_B_"\
 							+nts(p.B)+"_M_"+nts(M)+"_a_"+nts(p.Epsi)+"_mu_"+nts(p.Mu)+".dat";
 		saveVectorBinary(eigenFile,eigensolver.eigenvalues());
+		printf("%12s%50s\n","eigenvalues:",((string)eigenFile).c_str());
 	}
 	
 	// curvature, if required

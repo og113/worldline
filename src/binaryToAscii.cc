@@ -66,7 +66,7 @@ if (loop) {
 }
 else {
 	loadVectorBinary< vector<number> >(binaryFile,v);
-	if (v.size()>pow(2,K))
+	if (v.size()>pow(2,K) && K!=0)
 		v.resize(pow(2,K));
 	saveVectorAscii< vector<number> >(asciiFile,v);
 }

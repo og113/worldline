@@ -31,8 +31,8 @@ set ylabel "t"
 #set xrange [min:max]
 #set yrange [min:max]
 #set size ratio -1
-set xrange [-0.02:0.02]
-set yrange [1.23:1.24]
+set xrange [-0.05:0.05]
+set yrange [0.8:0.95]
 #set size ratio -1
 
 plot file using 3:4 with lines lc rgb 'black', \
