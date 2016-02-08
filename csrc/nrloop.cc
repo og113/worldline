@@ -636,6 +636,9 @@ void printAsLoop(const string& f, const uint& Dim, const vec& v, const uint len)
 		uint N = len/Dim, mu;
 		ofstream os;
 		os.open(f.c_str());
+		if (!os.good()) {
+			cerr << "printAsLoop error: " << f << " not opened properly" << endl;
+		}
 		os << left << setprecision(16);
 		for (uint j=0; j<N; j++) {
 			for (mu=0; mu<Dim; mu++) {

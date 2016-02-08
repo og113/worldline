@@ -244,8 +244,8 @@ for (uint pl=0; pl<Npl; pl++) {
 		len = 0.0, i0 = 0.0, v = 0.0, fgamma = 0.0, gamma0 = 0.0, gamma1 = 0.0;//, s0 = 0.0;
 		sc_max = 0.0, sc_avg = 0.0, kg_max = 0.0, kg_avg = 0.0;
 		if (curvature) {
-			sc_vec = Eigen::VectorXd::Zero(N*dim);
-			kg_vec = Eigen::VectorXd::Zero(N*dim);
+			sc_vec = Eigen::VectorXd::Zero(N);
+			kg_vec = Eigen::VectorXd::Zero(N);
 		}
 				
 		// loading x to xLoop - messier than it should be (should work with either a vec or a Loop really)
@@ -277,7 +277,7 @@ for (uint pl=0; pl<Npl; pl++) {
 			if (curvature) {
 					SimpleCurvatureMax(j, xLoop, sc_scale, sc_vec[j]);
 					KGMaxPlane(j, xLoop, kg_scale, kg_vec[j]);
-				}
+			}
 			if (!(P^=P0)) {
 				SimpleCurvatureMax(j, xLoop, 0, N/2-1, sc_scale, sc_max);
 				SimpleCurvatureAvg(j, xLoop, 0, N/2-1, sc_scale, sc_avg);
@@ -592,7 +592,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	
 	// curvature, if required
 	if (curvature) {
-		Filename file = "data/temp/"+timenumber+"xCurvature_K_"+nts(p.K)+"_G_"+nts(p.G)+"_B_"+nts(p.B)+"_M_"+nts(M)+"_run_"+nts(runsCount)+".dat";
+		Filename file = "data/temp/xCurvature_K_"+nts(p.K)+"_G_"+nts(p.G)+"_B_"+nts(p.B)+"_M_"+nts(M)+"_run_"+nts(runsCount)+".dat";
 		printAsLoop(file,dim,x,N*dim);
 		saveVectorAsciiAppend(file,sc_vec);
 		saveVectorAsciiAppend(file,kg_vec);

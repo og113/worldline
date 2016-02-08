@@ -6,7 +6,7 @@ if (outFile ne 'gui') \
 set term fig size 1600,800; \
 set output outFile; \
 
-file="data/temp/palette.dat"
+file="data/temp/xCurvature_K_8_G_1_B_1_M_0.02_run_1.dat"
 
 #if you want to choose which file to load
 if (exists("inFile")) \
