@@ -597,7 +597,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	// curvature, if required
 	if (curvature) {
 		Filename file = "data/temp/xCurvature_K_"+nts(p.K)+"_G_"+nts(p.G)+"_B_"+nts(p.B)+"_M_"+nts(M)\
-						+"_a_"+nts(p.Epsi)+"_mu_"+nts(p.Mu)+"_run_"+nts(runsCount)+".dat";
+						+"_a_"+nts(p.Epsi)+"_mu_"+nts(p.Mu)+".dat";
 		printAsLoop(file,dim,x,N*dim);
 		saveVectorAsciiAppend(file,sc_vec);
 		saveVectorAsciiAppend(file,kg_vec);
