@@ -143,6 +143,10 @@ number Dot(const Point<Dim>&, const Point<Dim>&);
 template <uint Dim>
 number Dot(const Point<Dim>&, const Point<Dim>&, const Point<Dim>&, const Point<Dim>&);
 
+// Angle
+template <uint Dim>
+number Angle(const Point<Dim>&, const Point<Dim>&, const Point<Dim>&);
+
 // MidpointDistance
 template <uint Dim>
 number MidpointDistanceSquared(const Point<Dim>&, const Point<Dim>&, const Point<Dim>&, const Point<Dim>&);
