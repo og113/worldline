@@ -7,6 +7,7 @@
 #include <fstream>
 #include <vector>
 #include "simple.h"
+#include "folder.h"
 #include "genloop.h"
 #include "print.h"
 
@@ -18,8 +19,7 @@ int main(int argc, char** argv) {
 	1. getting argv
 ----------------------------------------------------------------------------------------------------------------------------*/
 
-string binaryFile = "";
-string asciiFile = "";
+Filename binaryFile, asciiFile;
 bool loop = false;
 uint K=0;
 
@@ -50,6 +50,11 @@ if (loop && K==0) {
 if (binaryFile.empty() || asciiFile.empty()) {
 	cerr << "must provide two files as input" << endl;
 	cerr << binaryFile << ", " << asciiFile << endl;
+	return 1;
+}
+
+if (!binaryFile.exists()) {
+	cerr << "binary file " << binaryFile << " doesn't exist" << endl;
 	return 1;
 }
 
