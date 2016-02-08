@@ -260,7 +260,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		number gb = p.G*p.B;
 		number g = p.G*p.G/8.0/PI/PI;
 		number sqrt4s0 = 2.0*sqrt(S0(xLoop));
-		number cusp_scale = g*log(R/p.Epsi);
+		number cusp_scale = g*log(p.Mu/p.Epsi);
 		number sc_scale = 1.0;
 		number kg_scale = 1.0;
 		

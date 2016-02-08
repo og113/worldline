@@ -35,7 +35,7 @@ struct ParametersRange;
 // Parameters
 struct Parameters {
 	static const uint Size;
-	enum Label { nl=1, ng=2, nig=3, nsw=4, npsw=5, k=6, g=7, b=8, t=9, epsi=10, p1=11, p2=12, p3=13, p4=14};
+	enum Label { nl=1, ng=2, nig=3, nsw=4, npsw=5, k=6, g=7, b=8, t=9, epsi=10, mu=11, p1=12, p2=13, p3=14, p4=15};
 	uint Nl;
 	uint Ng;
 	uint Nig;
@@ -46,6 +46,7 @@ struct Parameters {
 	number B;
 	number T;
 	number Epsi;
+	number Mu;
 	number P1;
 	number P2;
 	number P3;
