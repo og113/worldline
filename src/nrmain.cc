@@ -129,7 +129,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	Filename loadFile;
 	if (step && pl>0) {
 		loadFile = "data/nr/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_G_"+nts(p.G)+"_B_"+nts(p.B)+"_M_"+nts(p.P4)\
-					+"_a_"+nts(p.Epsi)+".dat";
+					+"_a_"+nts(p.Epsi)+"_mu_"+nts(p.Mu)+".dat";
 		lemon = false;
 	}
 	
@@ -203,9 +203,12 @@ for (uint pl=0; pl<Npl; pl++) {
 			loadFile = "data/lemon/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_R_"+nts(R)+"_M_"+nts(M)+"_rank_0.dat";
 		else {
 			loadFile = "data/nr/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_G_"+nts(p.G)+"_B_"+nts(p.B)+"_M_"+nts(M)\
-			+"_a_"+nts(p.Epsi)+".dat";
+			+"_a_"+nts(p.Epsi)+"_mu_"+nts(p.Mu)+".dat";
 			if (!loadFile.exists()) {
-				loadFile = "data/circle/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_R_"+nts(R)+"_rank_0.dat";
+				loadFile = "data/nr/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_G_"+nts(p.G)+"_B_"+nts(p.B)+"_M_"+nts(M)\
+			+"_a_"+nts(p.Epsi)+".dat";
+				if (!loadFile.exists())
+					loadFile = "data/circle/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_R_"+nts(R)+"_rank_0.dat";
 			}
 		}
 			
@@ -433,7 +436,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		
 		if (po!=PrintOptions::none) {
 			Filename early = "data/temp/"+timenumber+"xEarly1_K_"+nts(p.K)+"_G_"+nts(p.G)+"_B_"+nts(p.B)+"_M_"+nts(M)\
-						+"_a_"+nts(p.Epsi)+"_run_"+nts(runsCount)+".dat";
+						+"_a_"+nts(p.Epsi)+"_mu_"+nts(p.Mu)+"_run_"+nts(runsCount)+".dat";
 			if (po==PrintOptions::x || po==PrintOptions::all) {
 				printAsLoop(early,dim,x,N*dim);
 				printf("%12s%50s\n","x:",((string)early).c_str());
@@ -503,7 +506,7 @@ for (uint pl=0; pl<Npl; pl++) {
 
 		if (po!=PrintOptions::none) {
 			Filename early = "data/temp/"+timenumber+"deltaEarly2_K_"+nts(p.K)+"_G_"+nts(p.G)+"_B_"+nts(p.B)+"_M_"+nts(M)\
-							+"_a_"+nts(p.Epsi)+"_run_"+nts(runsCount)+".dat";
+							+"_a_"+nts(p.Epsi)+"_mu_"+nts(p.Mu)+"_run_"+nts(runsCount)+".dat";
 			if (po==PrintOptions::delta || po==PrintOptions::all) {
 				printAsLoop(early,dim,delta,N*dim);
 				printf("%12s%50s\n","delta:",((string)early).c_str());
@@ -586,13 +589,14 @@ for (uint pl=0; pl<Npl; pl++) {
 		}
 		cout << negEigs << " negative eigenvalues found, less than " << -eigenTol << endl;
 		string eigenFile = "data/nr/eigenvalues/dim_"+nts(dim)+"/K_"+nts(p.K)+"/eigenvalues_G_"+nts(p.G)+"_B_"\
-							+nts(p.B)+"_M_"+nts(M)+"_a_"+nts(p.Epsi)+".dat";
+							+nts(p.B)+"_M_"+nts(M)+"_a_"+nts(p.Epsi)+"_mu_"+nts(p.Mu)+".dat";
 		saveVectorBinary(eigenFile,eigensolver.eigenvalues());
 	}
 	
 	// curvature, if required
 	if (curvature) {
-		Filename file = "data/temp/xCurvature_K_"+nts(p.K)+"_G_"+nts(p.G)+"_B_"+nts(p.B)+"_M_"+nts(M)+"_run_"+nts(runsCount)+".dat";
+		Filename file = "data/temp/xCurvature_K_"+nts(p.K)+"_G_"+nts(p.G)+"_B_"+nts(p.B)+"_M_"+nts(M)\
+						+"_a_"+nts(p.Epsi)+"_mu_"+nts(p.Mu)+"_run_"+nts(runsCount)+".dat";
 		printAsLoop(file,dim,x,N*dim);
 		saveVectorAsciiAppend(file,sc_vec);
 		saveVectorAsciiAppend(file,kg_vec);
@@ -610,28 +614,28 @@ for (uint pl=0; pl<Npl; pl++) {
 		
 	// printing results to terminal
 	printf("\n");
-	printf("%8s%8s%8s%8s%8s%8s%8s%12s%14s%14s%14s%14s\n","runs","time","K","G","B","T","a","M","len",\
+	printf("%8s%8s%8s%8s%8s%8s%8s%8s%12s%14s%14s%14s%14s\n","runs","time","K","G","B","T","a","mu","M","len",\
 		"i0","vr","s");
-	printf("%8i%8.3g%8i%8.4g%8.4g%8.4g%8.4g%12.5g%14.5g%14.5g%14.5g%14.5g\n",\
-		runsCount,realtime,p.K,p.G,p.B,p.T,p.Epsi,M,len,i0,vr,s);
+	printf("%8i%8.3g%8i%8.4g%8.4g%8.4g%8.4g%8.4g%12.5g%14.5g%14.5g%14.5g%14.5g\n",\
+		runsCount,realtime,p.K,p.G,p.B,p.T,p.Epsi,p.Mu,M,len,i0,vr,s);
 	printf("\n");
 	
 	
 	if (checkDelta.good()) {
 	
 		// printing results to file	
-		string resFile = "results/nr/nrmain_cosmos_3.dat";
+		string resFile = "results/nr/nrmain_cosmos_4.dat";
 		FILE* ros;
 		ros = fopen(resFile.c_str(),"a");
-		fprintf(ros,"%24s%24i%24i%24g%24g%24g%24g%24g%24g%24g%24g%24g%24g%24g\n",\
-					timenumber.c_str(),pl,p.K,p.G,p.B,p.Epsi,M,s,checkSol.back(),checkDX.back(),checkSCMax.back(),checkSCAvg.back()\
+		fprintf(ros,"%24s%24i%24i%24g%24g%24g%24g%24g%24g%24g%24g%24g%24g%24g%24g\n",\
+					timenumber.c_str(),pl,p.K,p.G,p.B,p.Epsi,p.Mu,M,s,checkSol.back(),checkDX.back(),checkSCMax.back(),checkSCAvg.back()\
 					,checkKGMax.back(),checkKGAvg.back());
 		fclose(ros);
 		printf("%12s%50s\n","results:",resFile.c_str());
 		
 		// printing loop to file
 		string loopRes = "data/nr/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_G_"+nts(p.G)+"_B_"+nts(p.B)+"_M_"+nts(M)\
-							+"_a_"+nts(p.Epsi)+".dat";
+							+"_a_"+nts(p.Epsi)+"_mu_"+nts(p.Mu)+".dat";
 		saveVectorBinary(loopRes,x);
 		printf("%12s%50s\n","x:",loopRes.c_str());
 		
@@ -639,7 +643,8 @@ for (uint pl=0; pl<Npl; pl++) {
 
 	// printing extras to ascii files
 	if (po!=PrintOptions::none) {
-		Filename file = "data/temp/"+timenumber+"x_K_"+nts(p.K)+"_G_"+nts(p.G)+"_B_"+nts(p.B)+"_M_"+nts(M)+"_run_"+nts(runsCount)+".dat";
+		Filename file = "data/temp/"+timenumber+"x_K_"+nts(p.K)+"_G_"+nts(p.G)+"_B_"+nts(p.B)+"_M_"+nts(M)\
+							+"_a_"+nts(p.Epsi)+"_mu_"+nts(p.Mu)+"_run_"+nts(runsCount)+".dat";
 		if (po==PrintOptions::x || po==PrintOptions::all) {
 			saveVectorAscii(file,x);
 			printf("%12s%50s\n","x:",((string)file).c_str());
