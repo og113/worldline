@@ -34,7 +34,7 @@ using namespace std;
 ----------------------------------------------------------------------------------------------------------------------------*/
 
 struct PrintOptions {
-	enum Option { none, all, x, mds, dds, delta};
+	enum Option { none, all, x, mds, dds, delta, curvature};
 };
 
 int main(int argc, char** argv) {
@@ -48,6 +48,7 @@ bool lemon = false;
 bool step = true;
 bool weak = false;
 bool eigen = false;
+bool curvature = false;
 bool alltests = false; // doing alltests
 string printOpts = "";
 string inputsFile = "inputs4";
@@ -62,6 +63,7 @@ if (argc % 2 && argc>1) {
 		else if (id.compare("step")==0) step = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("weak")==0) weak = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("eigen")==0) eigen = (stn<uint>(argv[2*j+2])!=0);
+		else if (id.compare("curvature")==0) curvature = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("inputs")==0) inputsFile = (string)argv[2*j+2];
 		else if (id.compare("print")==0) printOpts = (string)argv[2*j+2];
 		else if (id.compare("alltests")==0) alltests = (stn<uint>(argv[2*j+2])!=0);
@@ -86,6 +88,10 @@ if (!printOpts.empty()) {
 		po = PrintOptions::dds;
 	else if (printOpts.compare("delta")==0)
 		po = PrintOptions::delta;
+	else if (printOpts.compare("curvature")==0) {
+		po = PrintOptions::curvature;
+		curvature = true;
+	}
 	else
 		cerr << "print options not understood: " << printOpts << endl;
 }
@@ -183,6 +189,10 @@ for (uint pl=0; pl<Npl; pl++) {
 	vec mds(NT);
 	mat dds(NT,NT);
 	
+	// curvature
+	vec sc_vec;
+	vec kg_vec;
+	
 	// defining xLoop
 	uint Seed = time;
 	Loop<dim> xLoop(p.K,Seed);
@@ -233,6 +243,10 @@ for (uint pl=0; pl<Npl; pl++) {
 		dds = Eigen::MatrixXd::Zero(NT,NT);
 		len = 0.0, i0 = 0.0, v = 0.0, fgamma = 0.0, gamma0 = 0.0, gamma1 = 0.0;//, s0 = 0.0;
 		sc_max = 0.0, sc_avg = 0.0, kg_max = 0.0, kg_avg = 0.0;
+		if (curvature) {
+			sc_vec = Eigen::VectorXd::Zero(N*dim);
+			kg_vec = Eigen::VectorXd::Zero(N*dim);
+		}
 				
 		// loading x to xLoop - messier than it should be (should work with either a vec or a Loop really)
 		vectorToLoop(x,xLoop);
@@ -260,6 +274,10 @@ for (uint pl=0; pl<Npl; pl++) {
 			I0		(j, xLoop, -gb, i0);
 			
 			//curvatures
+			if (curvature) {
+					SimpleCurvatureMax(j, xLoop, sc_scale, sc_vec[j]);
+					KGMaxPlane(j, xLoop, kg_scale, kg_vec[j]);
+				}
 			if (!(P^=P0)) {
 				SimpleCurvatureMax(j, xLoop, 0, N/2-1, sc_scale, sc_max);
 				SimpleCurvatureAvg(j, xLoop, 0, N/2-1, sc_scale, sc_avg);
@@ -430,7 +448,13 @@ for (uint pl=0; pl<Npl; pl++) {
 				saveMatrixAscii(early,dds);
 				printf("%12s%50s\n","dds:",((string)early).c_str());
 			}
-			
+			if (po==PrintOptions::curvature || po==PrintOptions::all) {
+				early.ID = "curvatureEarly1";
+				printAsLoop(early,dim,x,N*dim);
+				saveVectorAsciiAppend(early,sc_vec);
+				saveVectorAsciiAppend(early,kg_vec);
+				printf("%12s%50s\n","curvature:",((string)early).c_str());
+			}
 		}
 		
 /*----------------------------------------------------------------------------------------------------------------------------
@@ -564,6 +588,15 @@ for (uint pl=0; pl<Npl; pl++) {
 		string eigenFile = "data/nr/eigenvalues/dim_"+nts(dim)+"/K_"+nts(p.K)+"/eigenvalues_G_"+nts(p.G)+"_B_"\
 							+nts(p.B)+"_M_"+nts(M)+"_a_"+nts(p.Epsi)+".dat";
 		saveVectorBinary(eigenFile,eigensolver.eigenvalues());
+	}
+	
+	// curvature, if required
+	if (curvature) {
+		Filename file = "data/temp/"+timenumber+"xCurvature_K_"+nts(p.K)+"_G_"+nts(p.G)+"_B_"+nts(p.B)+"_M_"+nts(M)+"_run_"+nts(runsCount)+".dat";
+		printAsLoop(file,dim,x,N*dim);
+		saveVectorAsciiAppend(file,sc_vec);
+		saveVectorAsciiAppend(file,kg_vec);
+		printf("%12s%50s\n","curvature:",((string)file).c_str());
 	}
 
 	//stopping clock

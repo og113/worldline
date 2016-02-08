@@ -50,19 +50,36 @@ void saveVectorAscii(const string& f,  const T& v) {
 // save - saveVectorAsciiAppend
 template <class T>
 void saveVectorAsciiAppend(const string& f,  const T& v) {
+	uint lengthOs = v.size();
+	uint lengthIs = countLines(f);
+	ifstream is;
+	is.open(f.c_str(),ios::in);
+	if (!is.good()) {
+		cerr << "saveVectorAsciiAppend error: stream not good for " << f << endl;
+		is.close();
+		return;
+	}
 	ofstream os;
-	os.open(f.c_str(), ios::app);
-	if (os.good()) {
-		os << setprecision(16);
-		for (uint j=0; j<v.size(); j++) {
-			os << v[j] << endl;
-		}
-		os.close();
+	os.open("data/temp/tempAppend",ios::out); // may be an error here with multiple nodes due to always sending to same temp file
+	if (!os.good()) {
+		cerr << "saveVectorAsciiAppend error: stream not good for " << f << endl;
+		return;
+	}
+	os.precision(16);
+	os << left;
+	if (lengthOs!=lengthIs) {
+		cerr << "saveVectorAsciiAppend error: length of vector, "<< lengthOs\
+				 << ", to append not equal to file length, "<< lengthIs << endl;
 	}
 	else {
-		cerr << "saveVectorAsciiAppend error: cannot write to " << f << endl;
+		string lineIn;
+		for (uint j=0; j<lengthOs; j++){
+			getline(is,lineIn);
+			os << lineIn << setw(25) << v[j] << endl;
+		}
+		is.close();
 		os.close();
-		return;
+		copyFile("data/tempAppend",f);
 	}
 }
 
