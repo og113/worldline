@@ -109,6 +109,7 @@ if (p.empty()) {
 
 // timenumber
 string timenumber = currentDateTime();
+cout << "timenumber: " << timenumber << endl;
 
 /*----------------------------------------------------------------------------------------------------------------------------
 	2 - beginning parameter loop
@@ -615,7 +616,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		
 	// printing results to terminal
 	printf("\n");
-	printf("%8s%8s%8s%8s%8s%8s%8s%8s%12s%14s%14s%14s%14s\n","runs","time","K","G","B","T","a","mu","M","len",\
+	printf("%8s%8s%8s%8s%8s%8s%8s%8s%12s%14s%14s%14s%14s\n","runs","time","K","G","B","T","a","mu","E","len",\
 		"i0","vr","s");
 	printf("%8i%8.3g%8i%8.4g%8.4g%8.4g%8.4g%8.4g%12.5g%14.5g%14.5g%14.5g%14.5g\n",\
 		runsCount,realtime,p.K,p.G,p.B,p.T,p.Epsi,p.Mu,M,len,i0,vr,s);
