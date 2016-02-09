@@ -7,6 +7,7 @@
 #include <fstream>
 #include <vector>
 #include "simple.h"
+#include "folder.h"
 #include "genloop.h"
 #include "print.h"
 
@@ -18,8 +19,7 @@ int main(int argc, char** argv) {
 	1. getting argv
 ----------------------------------------------------------------------------------------------------------------------------*/
 
-string binaryFile = "";
-string asciiFile = "";
+Filename binaryFile, asciiFile;
 bool loop = false;
 uint K=0;
 
@@ -53,6 +53,11 @@ if (binaryFile.empty() || asciiFile.empty()) {
 	return 1;
 }
 
+if (!binaryFile.exists()) {
+	cerr << "binary file " << binaryFile << " doesn't exist" << endl;
+	return 1;
+}
+
 /*----------------------------------------------------------------------------------------------------------------------------
 	2. loading and printing
 ----------------------------------------------------------------------------------------------------------------------------*/
@@ -66,7 +71,7 @@ if (loop) {
 }
 else {
 	loadVectorBinary< vector<number> >(binaryFile,v);
-	if (v.size()>pow(2,K))
+	if (v.size()>pow(2,K) && K!=0)
 		v.resize(pow(2,K));
 	saveVectorAscii< vector<number> >(asciiFile,v);
 }

@@ -266,6 +266,12 @@ number Dot(const Point<Dim>& p1, const Point<Dim>& p2, const Point<Dim>& q1, con
 	return d;
 }
 
+// Angle
+template <uint Dim>
+number Angle(const Point<Dim>& p1, const Point<Dim>& p2, const Point<Dim>& p3) {
+	return acos(Dot(p1,p2,p2,p3)/Distance(p1,p2)/Distance(p2,p3));
+}
+
 // MidpointDistance
 template <uint Dim>
 number MidpointDistanceSquared(const Point<Dim>& p1, const Point<Dim>& p2, const Point<Dim>& p3, const Point<Dim>& p4) {
@@ -1118,6 +1124,7 @@ template number Distance<4>(const Point<4>&, const Point<4>&);
 template number DistanceSquared<4>(const Point<4>&, const Point<4>&);
 template number Dot<4>(const Point<4>&, const Point<4>&);
 template number Dot<4>(const Point<4>&, const Point<4>&, const Point<4>&, const Point<4>&);
+template number Angle<4>(const Point<4>&, const Point<4>&, const Point<4>&);
 template number MidpointDistanceSquared<4>(const Point<4>&, const Point<4>&, const Point<4>&, const Point<4>&);
 template number Dot<4>(const Loop<4>&, const uint&, const uint&, const uint&, const uint&);
 template number Dot<4>(const Loop<4>&, const uint&, const uint&);
@@ -1310,6 +1317,7 @@ template number DistanceSquared<2>(const Point<2>&, const Point<2>&);
 template number Norm<2>(const Point<2>&);
 template number Dot<2>(const Point<2>&, const Point<2>&);
 template number Dot<2>(const Point<2>&, const Point<2>&, const Point<2>&, const Point<2>&);
+template number Angle<2>(const Point<2>&, const Point<2>&, const Point<2>&);
 template number MidpointDistanceSquared<2>(const Point<2>&, const Point<2>&, const Point<2>&, const Point<2>&);
 template number Dot<2>(const Loop<2>&, const uint&, const uint&, const uint&, const uint&);
 template number Dot<2>(const Loop<2>&, const uint&, const uint&);
