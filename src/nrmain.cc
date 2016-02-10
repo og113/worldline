@@ -114,31 +114,42 @@ string timenumber = currentDateTime();
 	2 - beginning parameter loop
 ----------------------------------------------------------------------------------------------------------------------------*/
 
-// parameter loops
-uint Npl = 1; // number of parameter loops
-Parameters::Label label = static_cast<Parameters::Label>(0);
-if (pr.toStep(label)) {
-	Npl = (pr.Steps)[label-1];
-	cout << "looping " << label << " over " << Npl << " steps" << endl;
+// starting loop over types of parameters
+for (uint pl=0; pl<Parameters::Size; pl++) {
+	Parameters::Label label = static_cast<Parameters::Label>(pl+1);
+	if (pr.toStep(label)) {
+		uint Nlpp = (pr.Steps)[pl];
+		cout << "looping " << label << " over " << Nlpp << " steps" << endl;
+		Parameters p = pr.Min;
+		if (pl>0) {
+			p.step(pr,label);
+		}
+		
+		
+	}
 }
 
-// starting loop
-for (uint pl=0; pl<Npl; pl++) {
+// starting loop over types of parameters
+
+// starting loop over values of parameter
+
+for (uint lpp=0; lpp<Nlpp; lpp++) {
 
 	// doing things before parameter step
-	Filename loadFile;
-	if (step && pl>0) {
-		loadFile = "data/nr/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_G_"+nts(p.G)+"_B_"+nts(p.B)+"_M_"+nts(p.P4)\
-					+"_a_"+nts(p.Epsi)+"_mu_"+nts(p.Mu)+".dat";
-		lemon = false;
-	}
+	Filename loadFile, stepFile;
+
+	if (lpp>0)
+		stepFile = "data/nr/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_G_"+nts(p.G)+"_B_"+nts(p.B)+"_M_"+nts(p.P4)\
+		+"_a_"+nts(p.Epsi)+"_mu_"+nts(p.Mu)+".dat";
 	
 	// stepping parameters
-	if (pr.toStep(label) && pl>0) {
-		p.step(pr);
+	if (pr.toStep(label) && lpp>0) {
+		p.step(pr,label);
 	}
-	else if (pr.toStep(label) && label==Parameters::nl)
+	else if (pr.toStep(label) && label==Parameters::nl) {
 		p.Nl = (pr.Max).Nl;
+		Nlpp = 1;
+	}
 	
 	// defining some derived parameters	
 	uint N = pow(2,p.K);
@@ -198,7 +209,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	Loop<dim> xLoop(p.K,Seed);
 	
 	// x file
-	if (pl==0 || !step) {
+	if (lpp==0 || !step) {
 		if (lemon)
 			loadFile = "data/lemon/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_R_"+nts(R)+"_M_"+nts(M)+"_rank_0.dat";
 		else {
@@ -206,12 +217,18 @@ for (uint pl=0; pl<Npl; pl++) {
 			+"_a_"+nts(p.Epsi)+"_mu_"+nts(p.Mu)+".dat";
 			if (!loadFile.exists()) {
 				loadFile = "data/nr/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_G_"+nts(p.G)+"_B_"+nts(p.B)+"_M_"+nts(M)\
-			+"_a_"+nts(p.Epsi)+".dat";
+				+"_a_"+nts(p.Epsi)+".dat";
+				if (!loadFile.exists() && lpp>0)
+					loadFile = stepFile;
 				if (!loadFile.exists())
 					loadFile = "data/circle/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_R_"+nts(R)+"_rank_0.dat";
 			}
 		}
 			
+	}
+	else {
+		loadFile = stepFile;
+		lemon = false;
 	}
 	// check if file exists
 	if (!loadFile.exists()) {
@@ -561,9 +578,9 @@ for (uint pl=0; pl<Npl; pl++) {
 		//printing tests to see convergence
 		if (verbose) {
 			if (runsCount==1) {
-				printf("%5s%5s%12s%12s%12s%12s%12s%12s%12s%12s%12s%12s\n","pl","run","len","i0","s","sol","solM","delta","Sm","dx","sc_max","kg_max");
+				printf("%5s%5s%12s%12s%12s%12s%12s%12s%12s%12s%12s%12s\n","lpp","run","len","i0","s","sol","solM","delta","Sm","dx","sc_max","kg_max");
 			}
-			printf("%5i%5i%12.5g%12.5g%12.5g%12.5g%12.5g%12.5g%12.5g%12.5g%12.5g%12.5g\n",pl,runsCount,len,i0,s,checkSol.back(),\
+			printf("%5i%5i%12.5g%12.5g%12.5g%12.5g%12.5g%12.5g%12.5g%12.5g%12.5g%12.5g\n",lpp,runsCount,len,i0,s,checkSol.back(),\
 				checkSolMax.back(),checkDelta.back(),checkSm.back(),checkDX.back(),checkSCMax.back(),checkKGMax.back());
 		}
 	
@@ -629,7 +646,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		FILE* ros;
 		ros = fopen(resFile.c_str(),"a");
 		fprintf(ros,"%24s%24i%24i%24g%24g%24g%24g%24g%24g%24g%24g%24g%24g%24g%24g%24g\n",\
-					timenumber.c_str(),pl,p.K,p.G,p.B,p.Epsi,p.Mu,M,s,(gamma0+gamma1)/2.0,\
+					timenumber.c_str(),lpp,p.K,p.G,p.B,p.Epsi,p.Mu,M,s,(gamma0+gamma1)/2.0,\
 					checkSol.back(),checkDX.back(),checkSCMax.back(),checkSCAvg.back(),checkKGMax.back(),checkKGAvg.back());
 		fclose(ros);
 		printf("%12s%50s\n","results:",resFile.c_str());
