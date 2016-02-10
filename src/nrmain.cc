@@ -115,21 +115,6 @@ string timenumber = currentDateTime();
 ----------------------------------------------------------------------------------------------------------------------------*/
 
 // starting loop over types of parameters
-for (uint pl=0; pl<Parameters::Size; pl++) {
-	Parameters::Label label = static_cast<Parameters::Label>(pl+1);
-	if (pr.toStep(label)) {
-		uint Nlpp = (pr.Steps)[pl];
-		cout << "looping " << label << " over " << Nlpp << " steps" << endl;
-		Parameters p = pr.Min;
-		if (pl>0) {
-			p.step(pr,label);
-		}
-		
-		
-	}
-}
-
-// starting loop over types of parameters
 
 // starting loop over values of parameter
 
@@ -143,14 +128,9 @@ for (uint lpp=0; lpp<Nlpp; lpp++) {
 		+"_a_"+nts(p.Epsi)+"_mu_"+nts(p.Mu)+".dat";
 	
 	// stepping parameters
-	if (pr.toStep(label) && lpp>0) {
+	if (pr.toStep(label) && lpp>0)
 		p.step(pr,label);
-	}
-	else if (pr.toStep(label) && label==Parameters::nl) {
-		p.Nl = (pr.Max).Nl;
-		Nlpp = 1;
-	}
-	
+
 	// defining some derived parameters	
 	uint N = pow(2,p.K);
 	uint zm = dim;
