@@ -7,9 +7,11 @@ set term png size 1600,800; \
 set output outFile; \
 
 # files where results are
+file0="results/nr/nrmain.dat"
 file1="results/nr/nrmain_cosmos.dat"
 file2="results/nr/nrmain_cosmos_2.dat"
 file3="results/nr/nrmain_cosmos_3.dat"
+file4="results/nr/nrmain_cosmos_4.dat"
 
 # approximate analytic result
 pi=3.1415926535897932
@@ -23,16 +25,17 @@ unset log
 unset label
 set key below
 set xtic auto
-#set logscale y
-#set format y "10^{%L}"
+set logscale y
+set format y "10^{%L}"
 set autoscale
-set title "Induced instanton, g=1.0, B=1.0, K=10, E=1.4"
-set xlabel "a"
+set title "Induced instanton, g=1.0, B=1.0, K=11"
+set xlabel "E"
 set ylabel "S"
 
-set xrange [0.13:0.15]
-plot file3 u 6:($1==160203084722? $11: "1/0") title "NR result" ls 1 lc rgb "blue"#, \
-	#file2 u 7:10 title "NR result, a=0.15" ls 1 lc rgb "green", \
-	#file1 u 7:(p(1.0,1.0,$7)) title "weak coupling result" with lines lc rgb "red"
+set xrange [0:1.5]
+plot file1 u ($3==11? ($5==1? ($6==0.15? $7: 1/0): 1/0): 1/0):($3==11? ($5==1? ($6==0.15? $10: 1/0): 1/0): 1/0) title "a=0.15, {/Symbol m}=1.0" with points pointtype 1 lc rgb "red", \
+	file2 u ($3==11? ($5==1? ($6==0.15? $7: 1/0): 1/0): 1/0):($3==11? ($5==1? ($6==0.15? $8: 1/0): 1/0): 1/0) notitle with points pointtype 1 lc rgb "red", \
+	file4 u ($3==11? ($6==0.15? ($7==0.15? $8: 1/0): 1/0): 1/0):($3==11? ($6==0.15? ($7==0.15? $9: 1/0): 1/0): 1/0) title "a=0.15, {/Symbol m}=0.15" with points pointtype 2 lc rgb "blue", \
+	p(1.0,1.0,x) with lines title "weak coupling result" lc rgb "black"
 
 pause -1
