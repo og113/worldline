@@ -124,13 +124,12 @@ for (uint pl=0; pl<Npl; pl++) {
 
 	// doing things before parameter step
 	Filename loadFile, stepFile;
-
-	if (pl>0)
-		stepFile = filenameLoopNR<dim>(p);
 	
 	// stepping parameters
-	if (pl>0)
+	if (pl>0) }
 		p = pr.position(pl);
+		stepFile = filenameLoopNR<dim>(pr.neigh(pl));
+	}
 	
 	// defining some derived parameters	
 	uint N = pow(2,p.K);
