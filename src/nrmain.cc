@@ -124,15 +124,15 @@ if (pr.toStep(label)) {
 }
 
 // starting loop
+
 for (uint pl=0; pl<Npl; pl++) {
 
 	// doing things before parameter step
-	Filename loadFile;
-	if (step && pl>0) {
-		loadFile = "data/nr/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_G_"+nts(p.G)+"_B_"+nts(p.B)+"_M_"+nts(p.P4)\
-					+"_a_"+nts(p.Epsi)+"_mu_"+nts(p.Mu)+".dat";
-		lemon = false;
-	}
+	Filename loadFile, stepFile;
+
+	if (pl>0)
+		stepFile = "data/nr/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_G_"+nts(p.G)+"_B_"+nts(p.B)+"_M_"+nts(p.P4)\
+		+"_a_"+nts(p.Epsi)+"_mu_"+nts(p.Mu)+".dat";
 	
 	// stepping parameters
 	if (pr.toStep(label) && pl>0) {
@@ -207,12 +207,18 @@ for (uint pl=0; pl<Npl; pl++) {
 			+"_a_"+nts(p.Epsi)+"_mu_"+nts(p.Mu)+".dat";
 			if (!loadFile.exists()) {
 				loadFile = "data/nr/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_G_"+nts(p.G)+"_B_"+nts(p.B)+"_M_"+nts(M)\
-			+"_a_"+nts(p.Epsi)+".dat";
+				+"_a_"+nts(p.Epsi)+".dat";
+				if (!loadFile.exists() && pl>0)
+					loadFile = stepFile;
 				if (!loadFile.exists())
 					loadFile = "data/circle/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_R_"+nts(R)+"_rank_0.dat";
 			}
 		}
 			
+	}
+	else {
+		loadFile = stepFile;
+		lemon = false;
 	}
 	// check if file exists
 	if (!loadFile.exists()) {
