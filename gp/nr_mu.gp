@@ -8,6 +8,7 @@ set output outFile; \
 
 # files where results are
 file1="results/nr/nrmain_cosmos_4.dat"
+file2="results/nr/nrmain_failures.dat"
 
 # approximate analytic result
 #pi=3.1415926535897932
@@ -22,18 +23,21 @@ unset label
 set key below
 set xtic auto
 set ytic auto
-set y2tic auto
+#set y2tic auto
 #set logscale z
 #set format z "10^{%L}"
 set autoscale
-set title "Induced instanton, a=0.15, E=1.43, K=11"
+set title "Induced instanton, a=0.15, K=11"
 set xlabel "{/Symbol m}"
-set ylabel "maximum K*a"
-set y2label "average K*a"
+set ylabel "d(dx^2)/2dx^2"
+set zlabel "E maximum"
+#set y2label "average K*a"
 
-#set xrange [0:1]
+set xrange [0:1.2]
 #set yrange [0:1.8]
-plot file1 u 7:($1==160208165923?$15:"1/0") title "maximum K*a" ls 1 lc rgb "blue" axes x1y1, \
-	file1 u 7:($1==160208165923?$16:"1/0") title "average K*a" ls 1 lc rgb "red" axes x1y2
+splot file2 u 7:15:8 title "E maximum" ls 1 lc rgb "blue"
+
+#plot file1 u 7:($1==160208165923?$15:"1/0") title "d(dx^2)/2dx^2 at maximum E" ls 1 lc rgb "blue" axes x1y1, \
+#	file1 u 7:($1==160208165923?$16:"1/0") title "average K*a" ls 1 lc rgb "red" axes x1y2
 
 pause -1
