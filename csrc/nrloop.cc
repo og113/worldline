@@ -18,7 +18,8 @@
 	contents:
 		1 - nr loop functions
 		2 - loopToVector, vectorToLoop
-		3 - explicit instatiation
+		3 - filename functions
+		4 - explicit instatiation
 ----------------------------------------------------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------------------------------------------------*/
 
@@ -655,7 +656,19 @@ void printAsLoop(const string& f, const uint& Dim, const vec& v, const uint len)
 
 
 /*----------------------------------------------------------------------------------------------------------------------------
-	3 - explicit instantiation
+	3 - filename functions
+----------------------------------------------------------------------------------------------------------------------------*/
+
+// filenameLoop
+template<uint Dim>
+Filename filenameLoopNR(const Parameters& p) {
+	Filename f = "data/nr/loops/dim_"+nts(Dim)+"/K_"+nts(p.K)+"/loop_G_"+nts(p.G)+"_B_"+nts(p.B)+"_M_"+nts(p.P4)\
+		+"_a_"+nts(p.Epsi)+"_mu_"+nts(p.Mu)+".dat";
+	return f;
+}
+
+/*----------------------------------------------------------------------------------------------------------------------------
+	4 - explicit instantiation
 ----------------------------------------------------------------------------------------------------------------------------*/
 
 // dim 2
@@ -689,6 +702,7 @@ template void mdFGamma_nr<2>(const Loop<2>& l, const uint& loc, const number& f,
 template void ddFGamma_nr<2>(const Loop<2>& l, const uint& loc, const number& f, mat& v);
 template void loopToVector<2>(const Loop<2>&,vec&);
 template void vectorToLoop<2>(const vec&, Loop<2>&);
+template Filename filenameLoopNR<2>(const Parameters& p);
 
 // mdI_nr<2>
 template <> void mdI_nr<2>(const uint& j, const uint& mu, const Loop<2>& l, const number& f, vec& v) {
@@ -758,6 +772,7 @@ template void mdFGamma_nr<4>(const Loop<4>& l, const uint& loc, const number& p,
 template void ddFGamma_nr<4>(const Loop<4>& l, const uint& loc, const number& p, mat& v);
 template void loopToVector<4>(const Loop<4>&,vec&);
 template void vectorToLoop<4>(const vec&, Loop<4>&);
+template Filename filenameLoopNR<4>(const Parameters& p);
 
 // V1r
 template <> void V1r<4>(const uint& j, const uint& k, const Loop<4>& l, const number& a, const number& f, number& result) {

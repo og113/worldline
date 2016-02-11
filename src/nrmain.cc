@@ -116,30 +116,21 @@ cout << "timenumber: " << timenumber << endl;
 ----------------------------------------------------------------------------------------------------------------------------*/
 
 // parameter loops
-uint Npl = 1; // number of parameter loops
-Parameters::Label label = static_cast<Parameters::Label>(0);
-if (pr.toStep(label)) {
-	Npl = (pr.Steps)[label-1];
-	cout << "looping " << label << " over " << Npl << " steps" << endl;
-}
+uint Npl = pr.totalSteps();
+cout << "looping over " << Npl << " steps" << endl;
 
 // starting loop
-
 for (uint pl=0; pl<Npl; pl++) {
 
 	// doing things before parameter step
 	Filename loadFile, stepFile;
 
 	if (pl>0)
-		stepFile = "data/nr/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_G_"+nts(p.G)+"_B_"+nts(p.B)+"_M_"+nts(p.P4)\
-		+"_a_"+nts(p.Epsi)+"_mu_"+nts(p.Mu)+".dat";
+		stepFile = filenameLoopNR<dim>(p);
 	
 	// stepping parameters
-	if (pr.toStep(label) && pl>0) {
-		p.step(pr);
-	}
-	else if (pr.toStep(label) && label==Parameters::nl)
-		p.Nl = (pr.Max).Nl;
+	if (pl>0)
+		p = pr.position(pl);
 	
 	// defining some derived parameters	
 	uint N = pow(2,p.K);
@@ -203,12 +194,9 @@ for (uint pl=0; pl<Npl; pl++) {
 		if (lemon)
 			loadFile = "data/lemon/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_R_"+nts(R)+"_M_"+nts(M)+"_rank_0.dat";
 		else {
-			loadFile = "data/nr/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_G_"+nts(p.G)+"_B_"+nts(p.B)+"_M_"+nts(M)\
-			+"_a_"+nts(p.Epsi)+"_mu_"+nts(p.Mu)+".dat";
+			loadFile = filenameLoopNR<dim>(p);
 			if (!loadFile.exists()) {
-				loadFile = "data/nr/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_G_"+nts(p.G)+"_B_"+nts(p.B)+"_M_"+nts(M)\
-				+"_a_"+nts(p.Epsi)+".dat";
-				if (!loadFile.exists() && pl>0)
+				if (pl>0)
 					loadFile = stepFile;
 				if (!loadFile.exists())
 					loadFile = "data/circle/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_R_"+nts(R)+"_rank_0.dat";
@@ -642,10 +630,9 @@ for (uint pl=0; pl<Npl; pl++) {
 		printf("%12s%50s\n","results:",resFile.c_str());
 		
 		// printing loop to file
-		string loopRes = "data/nr/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_G_"+nts(p.G)+"_B_"+nts(p.B)+"_M_"+nts(M)\
-							+"_a_"+nts(p.Epsi)+"_mu_"+nts(p.Mu)+".dat";
+		Filename loopRes = filenameLoopNR<dim>(p);
 		saveVectorBinary(loopRes,x);
-		printf("%12s%50s\n","x:",loopRes.c_str());
+		printf("%12s%50s\n","x:",((string)loopRes).c_str());
 		
 	}	
 

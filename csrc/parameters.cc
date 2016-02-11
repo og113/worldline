@@ -31,69 +31,68 @@ const uint Parameters::Size = 15;
 const uint ParametersRange::Size = 15;
 
 // step
-void Parameters::step(const ParametersRange& pr, const Parameters::Label& label) {
+void Parameters::step(const ParametersRange& pr, const Parameters::Label& label, const uint& j) {
 	if (pr.toStep(label)) {
 		number stepSize;
 		switch (label){
 			case nl:
 				stepSize = ((pr.Max).Nl-(pr.Min).Nl)/((pr.Steps)[label-1]-1.0);
-				Nl += (uint)stepSize;
+				Nl += j*(uint)stepSize;
 				break;
 			case ng:
 				stepSize = ((pr.Max).Ng-(pr.Min).Ng)/((pr.Steps)[label-1]-1.0);
-				Ng += (uint)stepSize;
-				break;
+				Ng += j*(uint)stepSize;
 				break;
 			case nig:
 				stepSize = ((pr.Max).Nig-(pr.Min).Nig)/((pr.Steps)[label-1]-1.0);
-				Nig += (uint)stepSize;
+				Nig += j*(uint)stepSize;
 				break;
 			case nsw:
 				stepSize = ((pr.Max).Nsw-(pr.Min).Nsw)/((pr.Steps)[label-1]-1.0);
-				Nsw += (uint)stepSize;
+				Nsw += j*(uint)stepSize;
 			case npsw:
 				stepSize = ((pr.Max).Npsw-(pr.Min).Npsw)/((pr.Steps)[label-1]-1.0);
-				Npsw += (uint)stepSize;
+				Npsw += j*(uint)stepSize;
 				break;
 			case k:
 				stepSize = ((pr.Max).K-(pr.Min).K)/((pr.Steps)[label-1]-1.0);
-				K += (uint)stepSize;
+				K += j*(uint)stepSize;
 				break;
 			case g:
 				stepSize = ((pr.Max).G-(pr.Min).G)/((pr.Steps)[label-1]-1.0);
-				G += stepSize;
+				G += j*stepSize;
 				break;
 			case b:
 				stepSize = ((pr.Max).B-(pr.Min).B)/((pr.Steps)[label-1]-1.0);
-				B += stepSize;
+				B += j*stepSize;
 				break;
 			case t:
 				stepSize = ((pr.Max).T-(pr.Min).T)/((pr.Steps)[label-1]-1.0);
-				T += stepSize;
+				T += j*stepSize;
 				break;
 			case epsi:
 				stepSize = ((pr.Max).Epsi-(pr.Min).Epsi)/((pr.Steps)[label-1]-1.0);
-				Epsi += stepSize;
+				Epsi += j*stepSize;
 				break;
 			case mu:
 				stepSize = ((pr.Max).Mu-(pr.Min).Mu)/((pr.Steps)[label-1]-1.0);
-				Mu += stepSize;
+				Mu += j*stepSize;
 				break;
 			case p1:
 				stepSize = ((pr.Max).P1-(pr.Min).P1)/((pr.Steps)[label-1]-1.0);
-				P1 += stepSize;
+				P1 += j*stepSize;
 				break;
 			case p2:
 				stepSize = ((pr.Max).P2-(pr.Min).P2)/((pr.Steps)[label-1]-1.0);
-				P2 += stepSize;
+				P2 += j*stepSize;
 				break;
 			case p3:
 				stepSize = ((pr.Max).P3-(pr.Min).P3)/((pr.Steps)[label-1]-1.0);
-				P4 += stepSize;
+				P4 += j*stepSize;
 				break;
 			case p4:
 				stepSize = ((pr.Max).P4-(pr.Min).P4)/((pr.Steps)[label-1]-1.0);
-				P4 += stepSize;
+				P4 += j*stepSize;
 				break;	
 			default:
 				cerr << "Parameters error: Label unknown" << endl;
@@ -103,6 +102,11 @@ void Parameters::step(const ParametersRange& pr, const Parameters::Label& label)
 	else {
 		cerr << "Parameters error: cannot step as Steps vector does not contain one nonZero element" << endl;
 	}
+}
+
+// step
+void Parameters::step(const ParametersRange& pr, const Parameters::Label& label) {
+	step(pr,label,1);
 }
 
 // operator<<
@@ -251,6 +255,49 @@ ParametersRange::ParametersRange(const Parameters& min, const Parameters& max, c
 // toStep
 bool ParametersRange::toStep(const Parameters::Label& stepNum) const {
 	return (Steps[stepNum-1]>0);
+}
+
+// totalSteps
+uint ParametersRange::totalSteps() const {
+	uint N = 1;
+	for (uint j=0; j<ParametersRange::Size; j++)
+		N *= (Steps[j]>0? Steps[j]: 1);
+	return N;
+}
+
+// position
+Parameters ParametersRange::position(const uint& pos) const {
+	Parameters p =  Min;
+	uint n, Nratio, local;
+	Nratio = totalSteps();
+	local = pos;
+	for (uint j=0; j<ParametersRange::Size; j++) {
+		if (Steps[ParametersRange::Size-j-1]>0) {
+			Nratio /= Steps[ParametersRange::Size-j-1];
+			n = local/Nratio;
+			local -= n*Nratio;
+			p.step(*this,static_cast<Parameters::Label>(ParametersRange::Size-j),n);
+		}
+	}
+	return p;
+}
+
+// neigh
+Parameters ParametersRange::neigh(const uint& pos) const {
+	if (pos==0) {
+		cerr << "ParametersRange::neigh error: position 0 has no neighbour" << endl;
+		return Min;
+	}
+	uint N = 1, k=0, npos = pos;
+	while (k<ParametersRange::Size && npos==pos) {
+		if (Steps[k]>0) {
+			if (pos%(N*Steps[k])!=0)
+				npos -= N;
+			N *= Steps[k];
+		}
+		k++;
+	}
+	return position(npos);
 }
 
 // save

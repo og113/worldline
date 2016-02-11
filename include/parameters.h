@@ -52,6 +52,7 @@ struct Parameters {
 	number P3;
 	number P4;
 	void step(const ParametersRange&, const Parameters::Label&);
+	void step(const ParametersRange&, const Parameters::Label&, const uint&);
 	void save(const string& filename) const;
 	void load(const string& filename);
 	bool empty() const;
@@ -84,7 +85,10 @@ struct ParametersRange {
 	Parameters 		Min;
 	Parameters 		Max;
 	vector<uint> 	Steps;
+	uint			totalSteps() const;
 	bool			toStep(const Parameters::Label&) const;
+	Parameters		position(const uint&) const;
+	Parameters		neigh(const uint&) const;
 	void save(const string& filename) const;
 	void load(const string& filename);
 	bool empty() const;

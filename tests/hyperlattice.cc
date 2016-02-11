@@ -1,5 +1,6 @@
 
 #include <iostream>
+#include <iomanip>
 #include <vector>
 
 using namespace std;
@@ -19,7 +20,9 @@ for (int j=0; j<D; j++) {
 }
 
 
-int test, pos = 0, Nratio, local;
+cout << setw(12) << "pos" << setw(12) << "npos" << setw(12) << "test" << endl;
+
+int test, pos = 0, Nratio, local, npos, k;
 for (int j=0; j<N; j++) {
 	test = -j;
 	local = pos;
@@ -30,8 +33,20 @@ for (int j=0; j<N; j++) {
 		local -= nvec[D-l-1]*Nratio;
 		test += nvec[D-l-1]*Nratio;
 	}
+	
+	k=0;
+	npos=pos;
+	Nratio = 1;
+	while (k<D && npos==pos) {
+		if (pos%(Nratio*Nvec[k])!=0)
+			npos -= Nratio;
+		Nratio *= Nvec[k];
+		k++;
+	}
+	
+	cout << setw(12) << pos << setw(12) << npos << setw(12) << test << endl;
+	
 	pos++;
-	cout << "test " << j << ": " << test << endl;
 }
 
 return 0;
