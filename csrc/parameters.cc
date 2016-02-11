@@ -31,8 +31,7 @@ const uint Parameters::Size = 15;
 const uint ParametersRange::Size = 15;
 
 // step
-void Parameters::step(const ParametersRange& pr) {
-	Label label = static_cast<Parameters::Label>(0);
+void Parameters::step(const ParametersRange& pr, const Parameters::Label& label) {
 	if (pr.toStep(label)) {
 		number stepSize;
 		switch (label){
@@ -250,15 +249,8 @@ ParametersRange::ParametersRange(const Parameters& min, const Parameters& max, c
 }
 
 // toStep
-bool ParametersRange::toStep(Parameters::Label& stepNum) const {
-	uint nonZeros = 0;
-	for (uint j=0; j<Size; j++) {
-		if (Steps[j]>0) {
-			stepNum = static_cast<Parameters::Label>(j+1);
-			nonZeros++;
-		}
-	}
-	return (nonZeros==1);
+bool ParametersRange::toStep(const Parameters::Label& stepNum) const {
+	return (Steps[stepNum-1]>0);
 }
 
 // save

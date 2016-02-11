@@ -31,11 +31,13 @@ set autoscale
 set title "Induced instanton, g=1.0, B=1.0, K=11"
 set xlabel "E"
 set ylabel "S"
+set arrow from (2-1/sqrt(pi)),10 to (2-1/sqrt(pi)),0.1 nohead
 
 set xrange [0:1.5]
 plot file1 u ($3==11? ($5==1? ($6==0.15? $7: 1/0): 1/0): 1/0):($3==11? ($5==1? ($6==0.15? $10: 1/0): 1/0): 1/0) title "a=0.15, {/Symbol m}=1.0" with points pointtype 1 lc rgb "red", \
 	file2 u ($3==11? ($5==1? ($6==0.15? $7: 1/0): 1/0): 1/0):($3==11? ($5==1? ($6==0.15? $8: 1/0): 1/0): 1/0) notitle with points pointtype 1 lc rgb "red", \
 	file4 u ($3==11? ($6==0.15? ($7==0.15? $8: 1/0): 1/0): 1/0):($3==11? ($6==0.15? ($7==0.15? $9: 1/0): 1/0): 1/0) title "a=0.15, {/Symbol m}=0.15" with points pointtype 2 lc rgb "blue", \
-	p(1.0,1.0,x) with lines title "weak coupling result" lc rgb "black"
+	file4 u ($3==11? ($6==0.15? ($7==0.5? $8: 1/0): 1/0): 1/0):($3==11? ($6==0.15? ($7==0.5? $9: 1/0): 1/0): 1/0) title "a=0.15, {/Symbol m}=0.5" with points pointtype 6 lc rgb "green", \
+	p(1.0,1.0,x) with lines title "weak coupling result" lc rgb "orange"
 
 pause -1
