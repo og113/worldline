@@ -10,6 +10,7 @@
 #include <Eigen/Dense>
 #include <iostream>
 #include "simple.h"
+#include "folder.h"
 #include "parameters.h"
 #include "genloop.h"
 
@@ -19,6 +20,7 @@
 		0 - typedefs
 		1 - nr loop functions
 		2 - loopToVector, vectorToLoop
+		3 - filename functions
 ----------------------------------------------------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------------------------------------------------*/
 
@@ -202,5 +204,12 @@ void printAsLoop(const string& f, const uint& Dim, const vec& v);
 // printAsLoop
 void printAsLoop(const string& f, const uint& Dim, const vec& v, const uint len);
 
+/*----------------------------------------------------------------------------------------------------------------------------
+	3 - filename functions
+----------------------------------------------------------------------------------------------------------------------------*/
+
+// filenameLoop
+template<uint Dim>
+Filename filenameLoopNR(const Parameters&);
 
 #endif // __NRLOOP_H_INCLUDED__

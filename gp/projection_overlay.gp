@@ -6,8 +6,8 @@ if (outFile ne 'gui') \
 set term fig size 1600,800; \
 set output outFile; \
 
-file1="data/temp/loop_G_1_B_1_M_1.439_a_0.15.dat"
-file2="data/temp/loop_G_1_B_0.99_M_1.439_a_0.15.dat"
+file1="data/temp/loop_G_1_B_1_M_1.435_a_0.15_mu_1.dat
+file2="data/temp/loop_G_1_B_1_M_1.435_a_0.15_mu_0.15.dat
 file3="data/temp/loop_G_1_B_0.98_M_1.439_a_0.15.dat"
 file4="data/temp/loop_G_1_B_0.97_M_1.439_a_0.15.dat"
 file5="data/temp/loop_G_1_B_0.96_M_1.439_a_0.15.dat"
@@ -28,17 +28,17 @@ set key below
 set autoscale
 set xtic auto
 set ytic auto
-set title "Lemons, a=0.15, g=1.0, K=11, E=1.439"
+set title "Lemons, a=0.15, B=1.0, g=1.0, K=11, E=1.435"
 set xlabel "z"
 set ylabel "t"
-#set xrange [-1:1]
-#set yrange [-1:1]
-plot file1 using 3:4 title "B=1.0" with lines lc rgb "red", \
-	file2 using 3:4 title "B=0.99" with lines lc rgb "orange", \
-	file3 using 3:4 title "B=0.98" with lines lc rgb "yellow", \
-	file4 using 3:4 title "B=0.97" with lines lc rgb "green", \
-	file5 using 3:4 title "B=0.96" with lines lc rgb "blue", \
-	file6 using 3:4 title "B=0.95" with lines lc rgb "violet"#, \
+set xrange [-0.02:0.02]
+set yrange [1.3:1.4]
+plot file1 using 3:4 title "{/Symbol m}=1.0" with lines lc rgb "red", \
+	file2 using 3:4 title "{/Symbol m}=0.15" lt 2 lc rgb "blue"#, \
+#	file3 using 3:4 title "B=0.98" with lines lc rgb "yellow", \
+#	file4 using 3:4 title "B=0.97" with lines lc rgb "green", \
+#	file5 using 3:4 title "B=0.96" with lines lc rgb "blue", \
+#	file6 using 3:4 title "B=0.95" with lines lc rgb "violet"#, \
 #	file7 using 3:4 title "B=0.94" with lines lc rgb "brown", \
 #	file8 using 3:4 title "B=0.93" with lines lc rgb "black", \
 #	file9 using 3:4 title "B=0.92" with lines lc rgb "grey", \

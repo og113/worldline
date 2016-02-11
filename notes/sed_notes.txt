@@ -1,3 +1,11 @@
 used sed to find lines beginning with abc in file1 and copy them to file2
 
 sed -ne '/^abc/ p' file1>file2
+
+in our case
+
+sed -ne '/^\([ ]*\)160208165923/ p' results/nr/nrmain_cosmos_4.dat>results/nr/nrmain_mu_a_0.15_E_1.43_K_11.dat
+
+rename is also useful. to rename files ending in .txt and containing abc to the same file with abc replaced by def
+
+rename -v 's/abc/def/' *.txt
