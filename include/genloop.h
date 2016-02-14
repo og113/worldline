@@ -161,9 +161,9 @@ class Loop;
 template <uint Dim>
 class Metropolis;
 
-// Interpolate - UNTESTED
+// interpolate
 template <uint Dim>
-void Interpolate (const Loop<Dim>& in, Loop<Dim>& out);
+void interpolate (const Loop<Dim>& in, Loop<Dim>& out);
 
 // Loop class
 template <uint Dim>
@@ -179,8 +179,8 @@ public:
 	// Metropolis
 	friend class Metropolis<Dim>;
 	
-	// Interpolate
-	friend void Interpolate<Dim>(const Loop<Dim>& in, Loop<Dim>& out);
+	// interpolate
+	friend void interpolate<Dim>(const Loop<Dim>& in, Loop<Dim>& out);
 	
 	// clear
 	void clear();

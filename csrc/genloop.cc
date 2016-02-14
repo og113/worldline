@@ -933,9 +933,9 @@ number DFGamma (const Loop<Dim>& l, const Point<Dim>& p, const uint& loc) {
 	return result;
 }
 
-// Interpolate - UNTESTED
+// interpolate
 template <uint Dim>
-void Interpolate (const Loop<Dim>& in, Loop<Dim>& out) {
+void interpolate (const Loop<Dim>& in, Loop<Dim>& out) {
 	if (in.K==out.K) {
 		out = in;
 	}
@@ -1145,6 +1145,7 @@ template number DS0<4> (const Loop<4>& l, const Point<4>& p, const uint& loc);
 template number FGamma<4> (const Loop<4>& l);
 template number DFGamma<4> (const Loop<4>& l, const Point<4>& p, const uint& loc);
 template class Metropolis<4>;
+template void interpolate<4>(const Loop<4>& in, Loop<4>& out);
 
 // V0, Dim=4, slightly changed for speed
 template <> number V0 <4>(const Loop<4>& l) {
@@ -1329,6 +1330,7 @@ template number L<2> (const Loop<2>& l);
 template number DL<2> (const Loop<2>& l, const Point<2>& p, const uint& loc);
 template number S0<2> (const Loop<2>& l);
 template class Metropolis<2>;
+template void interpolate<2>(const Loop<2>& in, Loop<2>& out);
 
 // V0, Dim=2, logarithmic, GF(x,y) = log(|x-y|)/2/PI
 template <> number V0 <2>(const Loop<2>& l) {
