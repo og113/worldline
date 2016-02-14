@@ -291,7 +291,7 @@ template <uint Dim>
 Loop<Dim>::Loop(const uint& k, const uint& seed): 
 		K(k), Seed(seed), Length(pow(2,k)), Grown(false) {
 	Points.resize(Length);
-	(Points[0]).zero();
+	clear();
 	Generator = gsl_rng_alloc(gsl_rng_taus); // could also use gsl_rng_mt19937 (mersener twist)
 }
 
@@ -361,7 +361,7 @@ void Loop<Dim>::centre() {
 template <uint Dim>
 void Loop<Dim>::clear() {
 	for (uint j=0; j<Length; j++)
-		Points[j].zero();
+		(Points[j]).zero();
 }
 
 // set seed
