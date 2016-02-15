@@ -101,7 +101,7 @@ if (!printOpts.empty()) {
 // parameters
 ParametersRange pr;
 pr.load(inputsFile);
-Parameters p = pr.Min;
+Parameters p = pr.Min, pold = pr.Min;
 if (p.empty()) {
 	cerr << "Parameters empty: nothing in inputs file" << endl;
 	return 1;
@@ -126,10 +126,12 @@ for (uint pl=0; pl<Npl; pl++) {
 	Filename loadFile, stepFile;
 	
 	// stepping parameters
-	if (pl>0) }
+	if (pl>0) {
 		p = pr.position(pl);
-		stepFile = filenameLoopNR<dim>(pr.neigh(pl));
+		pold = pr.neigh(pl);
+		stepFile = filenameLoopNR<dim>(pold);
 	}
+		
 	
 	// defining some derived parameters	
 	uint N = pow(2,p.K);
@@ -185,8 +187,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	vec kg_vec;
 	
 	// defining xLoop
-	uint Seed = time;
-	Loop<dim> xLoop(p.K,Seed);
+	Loop<dim> xLoop(p.K,0);
 	
 	// x file
 	if (pl==0 || !step) {
@@ -217,6 +218,12 @@ for (uint pl=0; pl<Npl; pl++) {
 	
 	// loading x
 	loadVectorBinary(loadFile,x);
+	if (pold.K!=p.K && loadFile==stepFile) {
+		Loop<dim> interpOld(pold.K,0), interpNew(p.K,0);
+		vectorToLoop(x,interpOld);
+		interpolate(interpOld,interpNew);
+		loopToVector(interpNew,x);
+	}
 	if (x.size()!=NT) {
 		x.conservativeResize(NT);
 		for (uint mu=0; mu<zm; mu++)
@@ -649,7 +656,6 @@ for (uint pl=0; pl<Npl; pl++) {
 			printf("%12s%50s\n","mds:",((string)file).c_str());
 		}
 	}
-
 }
 
 return 0;

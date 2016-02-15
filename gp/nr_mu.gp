@@ -28,16 +28,24 @@ set ytic auto
 #set format z "10^{%L}"
 set autoscale
 set title "Induced instanton, a=0.15, K=11"
-set xlabel "{/Symbol m}"
-set ylabel "d(dx^2)/2dx^2"
-set zlabel "E maximum"
+set xlabel "mu"
+set ylabel "K_G*a maximum"
+#set y2label "S"
+#set zlabel "E maximum"
 #set y2label "average K*a"
 
-set xrange [0:1.2]
+#set xrange [0:1.2]
 #set yrange [0:1.8]
-splot file2 u 7:15:8 title "E maximum" ls 1 lc rgb "blue"
+#splot file2 u 7:15:8 title "E maximum" ls 1 lc rgb "blue"
 
-#plot file1 u 7:($1==160208165923?$15:"1/0") title "d(dx^2)/2dx^2 at maximum E" ls 1 lc rgb "blue" axes x1y1, \
-#	file1 u 7:($1==160208165923?$16:"1/0") title "average K*a" ls 1 lc rgb "red" axes x1y2
+plot file1 u 7:($1==160208165923?($6==0.15?($8==1.43?$15:"1/0"):"1/0"):"1/0") title "NR results" ls 1 lc rgb "blue" axes x1y1
+
+#plot file1 u 8:($3==11?($4==1?($5==1?($6==0.15?($7==1?$15:"1/0"):"1/0"):"1/0"):"1/0"):"1/0") title "{/Symbol m}=1.0" ls 1 lc rgb "blue"#, \
+#	file1 u 8:($3==11?($4==1?($5==1?($6==0.15?($7==0.15?$15:"1/0"):"1/0"):"1/0"):"1/0"):"1/0") title "{/Symbol m}=0.15" ls 1 lc rgb "red"
+
+#plot file1 u 6:($1==160211025057?($7==1?($8==1?$15:"1/0"):"1/0"):"1/0") title "{/Symbol m}=1.0" ls 1 lc rgb "blue" axes x1y1, \
+#	file1 u 6:($1==160211120529?($7==1?($8==1?$15:"1/0"):"1/0"):"1/0") notitle ls 1 lc rgb "blue" axes x1y1, \
+#	file1 u 6:($1==160211031204?($7==0.15?($8==1?$15:"1/0"):"1/0"):"1/0") title "{/Symbol m}=0.15" ls 1 lc rgb "red" axes x1y1, \
+#	file1 u 6:($1==160211120434?($7==0.15?($8==1?$15:"1/0"):"1/0"):"1/0") notitle ls 1 lc rgb "red" axes x1y1
 
 pause -1
