@@ -57,27 +57,22 @@ cout << "using inputs file " << inputsFile << endl;
 
 ParametersRange pr;
 pr.load(inputsFile);
-if (pr.empty()) {
+Parameters p = pr.Min;
+if (p.empty()) {
 	cerr << "Parameters empty: nothing in inputs file" << endl;
 	return 1;
 }
-Parameters p = pr.Min;
 
 // parameter loops
-uint Npl = 1; // number of parameter loops
-Parameters::Label label = static_cast<Parameters::Label>(0);
-if (pr.toStep(label)) {
-	Npl = (pr.Steps)[label-1];
-	cout << "looping " << label << " over " << Npl << " steps" << endl;
-}
+uint Npl = pr.totalSteps();
+cout << "looping over " << Npl << " steps" << endl;
+
 
 // starting loop
 for (uint pl=0; pl<Npl; pl++) {
 	// stepping parameters
-	if (pr.toStep(label) && pl>0)
-		p.step(pr);
-	else if (pr.toStep(label) && label==Parameters::nl)
-		p.Nl = (pr.Max).Nl;
+	if (pl>0)
+		p = pr.position(pl);
 		
 	uint N = pow(2,p.K);
 

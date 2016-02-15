@@ -36,27 +36,27 @@ void Parameters::step(const ParametersRange& pr, const Parameters::Label& label,
 		number stepSize;
 		switch (label){
 			case nl:
-				stepSize = ((pr.Max).Nl-(pr.Min).Nl)/((pr.Steps)[label-1]-1.0);
-				Nl += j*(uint)stepSize;
+				stepSize = ((int)((pr.Max).Nl-(pr.Min).Nl))/((pr.Steps)[label-1]-1.0);
+				Nl += (int)j*stepSize;
 				break;
 			case ng:
-				stepSize = ((pr.Max).Ng-(pr.Min).Ng)/((pr.Steps)[label-1]-1.0);
-				Ng += j*(uint)stepSize;
+				stepSize = ((int)((pr.Max).Ng-(pr.Min).Ng))/((pr.Steps)[label-1]-1.0);
+				Ng += (int)j*stepSize;
 				break;
 			case nig:
-				stepSize = ((pr.Max).Nig-(pr.Min).Nig)/((pr.Steps)[label-1]-1.0);
-				Nig += j*(uint)stepSize;
+				stepSize = ((int)((pr.Max).Nig-(pr.Min).Nig))/((pr.Steps)[label-1]-1.0);
+				Nig += (int)j*stepSize;
 				break;
 			case nsw:
-				stepSize = ((pr.Max).Nsw-(pr.Min).Nsw)/((pr.Steps)[label-1]-1.0);
-				Nsw += j*(uint)stepSize;
+				stepSize = ((int)((pr.Max).Nsw-(pr.Min).Nsw))/((pr.Steps)[label-1]-1.0);
+				Nsw += (int)j*stepSize;
 			case npsw:
-				stepSize = ((pr.Max).Npsw-(pr.Min).Npsw)/((pr.Steps)[label-1]-1.0);
-				Npsw += j*(uint)stepSize;
+				stepSize = ((int)((pr.Max).Npsw-(pr.Min).Npsw))/((pr.Steps)[label-1]-1.0);
+				Npsw += (int)j*stepSize;
 				break;
 			case k:
-				stepSize = ((pr.Max).K-(pr.Min).K)/((pr.Steps)[label-1]-1.0);
-				K += j*(uint)stepSize;
+				stepSize = ((int)((pr.Max).K-(pr.Min).K))/((pr.Steps)[label-1]-1.0);
+				K += (int)j*stepSize;
 				break;
 			case g:
 				stepSize = ((pr.Max).G-(pr.Min).G)/((pr.Steps)[label-1]-1.0);
