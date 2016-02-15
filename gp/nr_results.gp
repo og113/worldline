@@ -26,22 +26,31 @@ unset log
 unset label
 set key below
 set xtic auto
-#set logscale y
-#set format y "10^{%L}"
+set logscale xy
+set format y "10^{%L}"
 set autoscale
-set title "Vacuum instanton, g=1.0, B=1.0, K=11"
+set title "Vacuum instanton, g=1.0, B=1.0"
 set xlabel "a"
 set ylabel "S"
-set arrow from (2-1/sqrt(pi)),10 to (2-1/sqrt(pi)),0.1 nohead
 
-set xrange [0.1:0.2]
+set y2tic auto
+set logscale y2
+set format y2 "10^{%L}"
+set y2label "K_g"
+
+#set arrow from (2-1/sqrt(pi)),10 to (2-1/sqrt(pi)),0.1 nohead
+
+#set xrange [0.1:0.2]
+plot file4 u 6:($3==11? ($5==1? ($8==0? $9: 1/0): 1/0): 1/0) title "S, K=11" with points pointtype 1 lc rgb "red", \
+	file4 u 6:($3==11? ($5==1? ($8==0? $15: 1/0): 1/0): 1/0) title "K_g, K=11, " with points pointtype 1 lc rgb "orange", \
+	file4 u 6:($3==8? ($5==1? ($8==0? $9: 1/0): 1/0): 1/0) title "S, K=8" with points pointtype 1 lc rgb "green", \
+	file4 u 6:($3==8? ($5==1? ($8==0? $15: 1/0): 1/0): 1/0) title "K_g, K=8" with points pointtype 1 lc rgb "cyan", \
+	am(1.0,1.0) with lines title "Affleck-Manton result" lc rgb "blue"
+	
 #plot file1 u ($3==11? ($5==1? ($6==0.15? $7: 1/0): 1/0): 1/0):($3==11? ($5==1? ($6==0.15? $10: 1/0): 1/0): 1/0) title "a=0.15, {/#Symbol m}=1.0" with points pointtype 1 lc rgb "red", \
 #	file2 u ($3==11? ($5==1? ($6==0.15? $7: 1/0): 1/0): 1/0):($3==11? ($5==1? ($6==0.15? $8: 1/0): 1/0): 1/0) notitle with points #pointtype 1 lc rgb "red", \
 #	file4 u ($3==11? ($6==0.15? ($7==0.15? $8: 1/0): 1/0): 1/0):($3==11? ($6==0.15? ($7==0.15? $9: 1/0): 1/0): 1/0) title "a=0.15, #{/Symbol m}=0.15" with points pointtype 2 lc rgb "blue", \
 #	file4 u ($3==11? ($6==0.15? ($7==0.5? $8: 1/0): 1/0): 1/0):($3==11? ($6==0.15? ($7==0.5? $9: 1/0): 1/0): 1/0) title "a=0.15, {/#Symbol m}=0.5" with points pointtype 6 lc rgb "green", \
 #	p(1.0,1.0,x) with lines title "weak coupling result" lc rgb "orange"
-
-plot file4 u 6:($3==11? ($5==1? ($7==1? ($8==0.00? $9: 1/0): 1/0): 1/0): 1/0) title "NR result" with points pointtype 1 lc rgb "red", \
-	am(1.0,1.0) with lines title "Affleck-Manton result" lc rgb "orange"
 
 pause -1
