@@ -50,6 +50,7 @@ bool weak = false;
 bool eigen = false;
 bool curvature = false;
 bool smooth = false;
+bool old = false;
 bool alltests = false; // doing alltests
 string printOpts = "";
 string inputsFile = "inputs4";
@@ -66,6 +67,7 @@ if (argc % 2 && argc>1) {
 		else if (id.compare("eigen")==0) eigen = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("curvature")==0) curvature = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("smooth")==0) smooth = (stn<uint>(argv[2*j+2])!=0);
+		else if (id.compare("old")==0) old = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("inputs")==0) inputsFile = (string)argv[2*j+2];
 		else if (id.compare("print")==0) printOpts = (string)argv[2*j+2];
 		else if (id.compare("alltests")==0) alltests = (stn<uint>(argv[2*j+2])!=0);
@@ -200,6 +202,9 @@ for (uint pl=0; pl<Npl; pl++) {
 			if (!loadFile.exists()) {
 				if (pl>0)
 					loadFile = stepFile;
+				if (!loadFile.exists() && old)
+					loadFile = "data/nr/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_G_"+nts(p.G)+"_B_"+nts(p.B)+"_M_"+nts(p.P4)\
+		+"_a_"+nts(p.Epsi)+".dat";
 				if (!loadFile.exists())
 					loadFile = "data/circle/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_R_"+nts(R)+"_rank_0.dat";
 			}
