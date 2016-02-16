@@ -382,7 +382,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		sm = Sm(xLoop,0,N/2-1);
 		checkSm.add(sm);
 		
-		// check dx<<a
+		// check dx<<a, using the average
 		checkDX.add(len/(number)N/p.Epsi);
 		
 		// check sc<<1, a*kg<<1
