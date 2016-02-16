@@ -49,6 +49,7 @@ bool step = true;
 bool weak = false;
 bool eigen = false;
 bool curvature = false;
+bool smooth = false;
 bool alltests = false; // doing alltests
 string printOpts = "";
 string inputsFile = "inputs4";
@@ -64,6 +65,7 @@ if (argc % 2 && argc>1) {
 		else if (id.compare("weak")==0) weak = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("eigen")==0) eigen = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("curvature")==0) curvature = (stn<uint>(argv[2*j+2])!=0);
+		else if (id.compare("smooth")==0) smooth = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("inputs")==0) inputsFile = (string)argv[2*j+2];
 		else if (id.compare("print")==0) printOpts = (string)argv[2*j+2];
 		else if (id.compare("alltests")==0) alltests = (stn<uint>(argv[2*j+2])!=0);
@@ -352,17 +354,24 @@ for (uint pl=0; pl<Npl; pl++) {
 			mdPX_nr(xLoop,0,P,1.0,mds);
 		
 			// dynamical field cusp regularisation
-			Gamma(N/2-1, xLoop, 1.0, gamma1);
-			Gamma(0, xLoop, 1.0, gamma0);
-			FGamma(N/2-1, xLoop, -cusp_scale, fgamma);
-			FGamma(0, xLoop, -cusp_scale, fgamma);
-			if (!weak) {
-				mdFGamma_nr(xLoop,N/2-1,-cusp_scale,mds);
-				mdFGamma_nr(xLoop,0,-cusp_scale,mds);
-				ddFGamma_nr(xLoop,N/2-1,-cusp_scale,dds);
-				ddFGamma_nr(xLoop,0,-cusp_scale,dds);
-			}
+			uint range = (smooth? 2*p.Ng+1: 1);
+			uint left = N/2-1 - (int)smooth*p.Ng;
+			uint right = 0 + (int)(smooth && p.Ng>0)*(N-p.Ng);
 			
+			for (uint k=0; k<range; k++) {
+				Gamma(left, xLoop, 1.0, gamma1);
+				Gamma(right, xLoop, 1.0, gamma0);
+				FGamma(left, xLoop, -cusp_scale, fgamma);
+				FGamma(right, xLoop, -cusp_scale, fgamma);
+				if (!weak) {
+					mdFGamma_nr(xLoop,left,-cusp_scale,mds);
+					mdFGamma_nr(xLoop,right,-cusp_scale,mds);
+					ddFGamma_nr(xLoop,left,-cusp_scale,dds);
+					ddFGamma_nr(xLoop,right,-cusp_scale,dds);
+				}
+				left = (left==(N-1)? 0: left+1);
+				right = (right==(N-1)? 0: right+1);
+			}
 		}
 		
 		// assigning scalar quantities
