@@ -1,0 +1,77 @@
+starting glmain with 32 nodes
+using inputs file jobinputs/inputs3
+looping 6 over 5 steps
+44.71user 2.27system 0:02.80elapsed 1675%CPU (0avgtext+0avgdata 17316maxresident)k
+8inputs+8outputs (0major+65753minor)pagefaults 0swaps
+starting loop2 with 32 nodes
+using inputs file jobinputs/inputs3
+looping 6 over 5 steps
+circle 0
+data/s0+v/loops/dim_4/K_4/loop_G_1_B_1_rank_0.dat
+1
+loading loops from:
+data/s0+v/loops/dim_4/K_4/loop_G_1_B_1_rank_0.dat
+gsl: exp.c:110: ERROR: overflow
+Default GSL error handler invoked.
+MPT: On host cosmos2, Program /nfs/home/users/dc-goul1/worldline/loop2, Rank 7, Process 1280484 received signal SIGABRT/SIGIOT(6)
+
+
+MPT: --------stack traceback-------
+MPT: Attaching to program: /proc/1280484/exe, process 1280484
+MPT: Try: zypper install -C "debuginfo(build-id)=d4191084441e39a7b480fc4b41f67083812e9811"
+MPT: (no debugging symbols found)...done.
+MPT: Try: zypper install -C "debuginfo(build-id)=2f51a06469a025d507534fe292dcf4e02235bd18"
+MPT: (no debugging symbols found)...done.
+MPT: Try: zypper install -C "debuginfo(build-id)=3b149eccd897f1f37dce50ad22614043eba757a2"
+MPT: (no debugging symbols found)...done.
+MPT: Try: zypper install -C "debuginfo(build-id)=4aee0c3923838575483ebd16be6db85ecb6f0b75"
+MPT: (no debugging symbols found)...done.
+MPT: Try: zypper install -C "debuginfo(build-id)=32c1c7a7a20b54ac3af6b2f436b3375ffeb12f0b"
+MPT: (no debugging symbols found)...done.
+MPT: Try: zypper install -C "debuginfo(build-id)=91334fd8105f0b62c0bdbbec14b45a9fd043f4c3"
+MPT: (no debugging symbols found)...done.
+MPT: [Thread debugging using libthread_db enabled]
+MPT: Using host libthread_db library "/lib64/libthread_db.so.1".
+MPT: Try: zypper install -C "debuginfo(build-id)=a95c0ce9f9752baf052d3b55b3b8ce19f662d2eb"
+MPT: (no debugging symbols found)...done.
+MPT: Try: zypper install -C "debuginfo(build-id)=682e4f7a27ee294a58f17249a0717861db546f2d"
+MPT: (no debugging symbols found)...done.
+MPT: 0x00002aaaadedb435 in waitpid () from /lib64/libc.so.6
+MPT: (gdb) #0  0x00002aaaadedb435 in waitpid () from /lib64/libc.so.6
+MPT: #1  0x00002aaaac34dd5c in mpi_sgi_system (command=<optimized out>) at sig.c:96
+MPT: #2  MPI_SGI_stacktraceback (header=<optimized out>) at sig.c:280
+MPT: #3  0x00002aaaac34e64f in first_arriver_handler (signo=6, 
+MPT:     stack_trace_sem=0x2aaab7000500) at sig.c:428
+MPT: #4  0x00002aaaac34e8df in slave_sig_handler (signo=6, siginfo=<optimized out>, 
+MPT:     extra=<optimized out>) at sig.c:502
+MPT: #5  <signal handler called>
+MPT: #6  0x00002aaaade65885 in raise () from /lib64/libc.so.6
+MPT: #7  0x00002aaaade66e61 in abort () from /lib64/libc.so.6
+MPT: #8  0x00002aaaab8d7003 in gsl_error (
+MPT:     reason=0x1389e4 <Address 0x1389e4 out of bounds>, 
+MPT:     file=0x1389e4 <Address 0x1389e4 out of bounds>, line=6, gsl_errno=-1)
+MPT:     at error.c:47
+MPT: #9  0x00002aaaaba4b7c6 in gsl_sf_exp_e (x=0, result=0x1389e4) at exp.c:110
+MPT: #10 0x00002aaaaba4b66d in gsl_sf_exp (x=0) at exp.c:588
+MPT: #11 0x0000000000405f2d in main (argc=3, argv=0x7fffffffc578)
+MPT:     at mpisrc/loop2.cc:241
+MPT: (gdb) A debugging session is active.
+MPT: 
+MPT: 	Inferior 1 [process 1280484] will be detached.
+MPT: 
+MPT: Quit anyway? (y or n) [answered Y; input not from terminal]
+MPT: Detaching from program: /proc/1280484/exe, process 1280484
+gsl: exp.c:110: ERROR: overflow
+Default GSL error handler invoked.
+gsl: exp.c:110: ERROR: overflow
+Default GSL error handler invoked.
+
+MPT: -----stack traceback ends-----
+MPT: On host cosmos2, Program /nfs/home/users/dc-goul1/worldline/loop2, Rank 7, Process 1280484: Dumping core on signal SIGABRT/SIGIOT(6) into directory /nfs/home/users/dc-goul1/worldline
+MPT: MPI_COMM_WORLD rank 7 has terminated without calling MPI_Finalize()
+	aborting job
+MPT: Received signal 6
+
+Command exited with non-zero status 1
+1.80user 0.80system 0:05.99elapsed 43%CPU (0avgtext+0avgdata 151044maxresident)k
+8inputs+297328outputs (0major+62836minor)pagefaults 0swaps
