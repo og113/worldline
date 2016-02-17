@@ -28,7 +28,7 @@ set ytic auto
 #set format z "10^{%L}"
 set autoscale
 set title "Induced instanton, a=0.15, K=11"
-set xlabel "mu"
+set xlabel "{/Symbol m}"
 set ylabel "K_G*a maximum"
 #set y2label "S"
 #set zlabel "E maximum"
