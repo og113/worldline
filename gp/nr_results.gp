@@ -34,10 +34,11 @@ set title "Instantons, g=1.0, B=1.0, K=11"
 set xlabel "a"
 set ylabel "S"
 
-set y2tic auto
-set logscale y2
-set format y2 "10^{%L}"
-set y2label "K_g maximum"
+#set y2tic auto
+#set logscale y2
+#set y2label "K_g"
+#set format y2 "10^{%L}"
+#set y2label "K_g maximum"
 
 # function for derivatives
 d(x,y) = ($0 == 0) ? (x1 = x, y1 = y, 1/0) : (x2 = x1, x1 = x, y2 = y1, y1 = y, (y1-y2)/(x1-x2))
@@ -48,24 +49,31 @@ d(x,y) = ($0 == 0) ? (x1 = x, y1 = y, 1/0) : (x2 = x1, x1 = x, y2 = y1, y1 = y, 
 	#file4t u 6:($3==11? ($5==1? ($8==0? $15: 1/0): 1/0): 1/0) title "K_g, E=0.0, " with points pointtype 1 lc rgb "orange", \
 
 #set xrange [0.1:0.2]
-#plot file4t u 6:($3==11? ($5==1? ($7==1? ($8==0.02? $9: 1/0): 1/0): 1/0): 1/0) title "S, E=0.02, {\Symbol m}=1.0" with points #pointtype 1 lc rgb "red", \
-#	file4t u 6:($3==11? ($5==1? ($7==1? ($8==0.02? $15: 1/0): 1/0): 1/0): 1/0) title "K_g, E=0.02, {\Symbol m}=1.0" with points #pointtype 1 lc rgb "orange", \
-#	file4t u 6:($3==11? ($5==1? ($7==0.15? ($8==0.02? $9: 1/0): 1/0): 1/0): 1/0) title "S, E=0.02, {\Symbol m}=0.15" with points #pointtype 1 lc rgb "yellow", \
-#	file4t u 6:($3==11? ($5==1? ($7==0.15? ($8==0.02? $15: 1/0): 1/0): 1/0): 1/0) title "K_g, E=0.04, {\Symbol m}=0.15" with #points pointtype 1 lc rgb "green", \
-#	file4t u 6:($3==11? ($5==1? ($7==1? ($8==0.04? $9: 1/0): 1/0): 1/0): 1/0) title "S, E=0.04, {\Symbol m}=1" with points #pointtype 1 lc rgb "blue", \
-#	file4t u 6:($3==11? ($5==1? ($7==1? ($8==0.04? $15: 1/0): 1/0): 1/0): 1/0) title "K_g, E=0.04, {\Symbol m}=1" with points #pointtype 1 lc rgb "violet", \
-#	file4t u 6:($3==11? ($5==1? ($7==0.15? ($8==0.04? $9: 1/0): 1/0): 1/0): 1/0) title "S, E=0.04, {\Symbol m}=0.15" with points #pointtype 1 lc rgb "black", \
-#	file4t u 6:($3==11? ($5==1? ($7==0.15? ($8==0.04? $15: 1/0): 1/0): 1/0): 1/0) title "K_g, E=0.04, {\Symbol m}=0.15" with #points pointtype 1 lc rgb "grey"
+#plot file4 u 6:($3==11? ($5==1? ($7==1? ($8==0.02? $15: 1/0): 1/0): 1/0): 1/0) title "K_g, E=0.02, {\Symbol m}=1" with points #pointtype 1 lc rgb "orange", \
+#	file4 u 6:($3==11? ($5==1? ($7==0.15? ($8==0.02? $15: 1/0): 1/0): 1/0): 1/0) title "K_g, E=0.04, {\Symbol m}=0.15" with points #pointtype 1 lc rgb "green", \
+#	file4 u 6:($3==11? ($5==1? ($7==1? ($8==0.04? $15: 1/0): 1/0): 1/0): 1/0) title "K_g, E=0.04, {\Symbol m}=1" with points #pointtype 1 lc rgb "violet", \
+#	file4 u 6:($3==11? ($5==1? ($7==0.15? ($8==0.04? $15: 1/0): 1/0): 1/0): 1/0) title "K_g, E=0.04, {\Symbol m}=0.15" with points #pointtype 1 lc rgb "grey"
+
+#set xrange [0.1:0.2]	
+plot file4 u 6:($3==11? ($5==1? ($7==1? ($8==0? $9: 1/0): 1/0): 1/0): 1/0) title "S, E=0" with points pointtype 1 lc rgb "violet" axes x1y1, \
+	file4 u 6:($3==11? ($5==1? ($7==1? ($8==0.1? $9: 1/0): 1/0): 1/0): 1/0) title "S, E=0.1, {\Symbol m}=1" with points pointtype 1 lc rgb "red" axes x1y1, \
+	file4 u 6:($3==11? ($5==1? ($7==1? ($8==0.2? $9: 1/0): 1/0): 1/0): 1/0) title "S, E=0.2, {\Symbol m}=1" with points pointtype 1 lc rgb "orange" axes x1y1, \
+	file4 u 6:($3==11? ($5==1? ($7==1? ($8==0.3? $9: 1/0): 1/0): 1/0): 1/0) title "S, E=0.3, {\Symbol m}=1" with points pointtype 1 lc rgb "blue" axes x1y1, \
+	file4 u 6:($3==11? ($5==1? ($7==1? ($8==0.4? $9: 1/0): 1/0): 1/0): 1/0) title "S, E=0.4, {\Symbol m}=1" with points pointtype 1 lc rgb "black" axes x1y1, \
+	file4 u 6:($3==11? ($5==1? ($7==1? ($8==0.5? $9: 1/0): 1/0): 1/0): 1/0) title "S, E=0.5, {\Symbol m}=1" with points pointtype 1 lc rgb "yellow" axes x1y1, \
+	file4 u 6:($3==11? ($5==1? ($7==1? ($8==1? $9: 1/0): 1/0): 1/0): 1/0) title "S, E=1.0, {\Symbol m}=1" with points pointtype 1 lc rgb "green" axes x1y1, \
+	file4 u 6:($3==11? ($5==1? ($7==1? ($8==1.2? $9: 1/0): 1/0): 1/0): 1/0) title "S, E=1.2, {\Symbol m}=1" with points pointtype 1 lc rgb "cyan" axes x1y1, \
+	file4 u 6:($3==11? ($5==1? ($7==1? ($8==1.4? $9: 1/0): 1/0): 1/0): 1/0) title "S, E=1.4, {\Symbol m}=1" with points pointtype 1 lc rgb "brown" axes x1y1, \
 
 
 #set xrange [0.1:0.2]
-plot file4 u 6:($3==8? ($5==1? ($8==0? $9: 1/0): 1/0): 1/0) title "S, K=8" with points pointtype 1 lc rgb "green", \
-	file4 u 6:($3==8? ($5==1? ($8==0? $13: 1/0): 1/0): 1/0) title "K_g, K=8" with points pointtype 1 lc rgb "cyan", \
-	file4 u 6:($3==11? ($5==1? ($8==0? $9: 1/0): 1/0): 1/0) title "S, K=11" with points pointtype 1 lc rgb "red", \
-	file4 u 6:($3==11? ($5==1? ($8==0? $13: 1/0): 1/0): 1/0) title "K_g, K=11, " with points pointtype 1 lc rgb "orange", \
-	file4t u 6:($3==12? ($5==1? ($8==0? $9: 1/0): 1/0): 1/0) title "S, K=12" with points pointtype 1 lc rgb "blue", \
-	file4t u 6:($3==12? ($5==1? ($8==0? $13: 1/0): 1/0): 1/0) title "K_g, K=12" with points pointtype 1 lc rgb "violet", \
-	am(1.0,1.0) with lines title "Affleck-Manton result" lc rgb "black"
+#plot file4 u 6:($3==8? ($5==1? ($8==0? $9: 1/0): 1/0): 1/0) title "S, K=8" with points pointtype 1 lc rgb "green", \
+#	file4 u 6:($3==8? ($5==1? ($8==0? $13: 1/0): 1/0): 1/0) title "K_g, K=8" with points pointtype 1 lc rgb "cyan", \
+#	file4 u 6:($3==11? ($5==1? ($8==0? $9: 1/0): 1/0): 1/0) title "S, K=11" with points pointtype 1 lc rgb "red", \
+#	file4 u 6:($3==11? ($5==1? ($8==0? $13: 1/0): 1/0): 1/0) title "K_g, K=11, " with points pointtype 1 lc rgb "orange", \
+#	file4t u 6:($3==12? ($5==1? ($8==0? $9: 1/0): 1/0): 1/0) title "S, K=12" with points pointtype 1 lc rgb "blue", \
+#	file4t u 6:($3==12? ($5==1? ($8==0? $13: 1/0): 1/0): 1/0) title "K_g, K=12" with points pointtype 1 lc rgb "violet", \
+#	am(1.0,1.0) with lines title "Affleck-Manton result" lc rgb "black"
 	
 #plot file1 u ($3==11? ($5==1? ($6==0.15? $7: 1/0): 1/0): 1/0):($3==11? ($5==1? ($6==0.15? $10: 1/0): 1/0): 1/0) title "a=0.15, {/#Symbol m}=1.0" with points pointtype 1 lc rgb "red", \
 #	file2 u ($3==11? ($5==1? ($6==0.15? $7: 1/0): 1/0): 1/0):($3==11? ($5==1? ($6==0.15? $8: 1/0): 1/0): 1/0) notitle with points #pointtype 1 lc rgb "red", \

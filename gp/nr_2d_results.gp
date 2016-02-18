@@ -31,8 +31,8 @@ set xlabel "B"
 set ylabel "E"
 set zlabel "S"
 
-set xrange [0:1]
-set yrange [0:1.8]
+#set xrange [0:1]
+#set yrange [0:1.8]
 splot file1 u 5:7:($6==0.15? ($3==11?$10:"1/0"): "1/0") title "NR results, 1" ls 1 lc rgb "blue", \
 	file2 u 5:7:($6==0.15? $8: "1/0") title "NR results, 2" ls 1 lc rgb "red", \
 	file3 u 5:7:($6==0.15? $8: "1/0") title "NR results, 3" ls 1 lc rgb "violet", \
