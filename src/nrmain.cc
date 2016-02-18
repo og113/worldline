@@ -49,8 +49,7 @@ bool step = true;
 bool weak = false;
 bool eigen = false;
 bool curvature = false;
-bool smooth = false;
-bool old = false;
+bool old = true;
 bool alltests = false; // doing alltests
 string printOpts = "";
 string inputsFile = "inputs4";
@@ -66,7 +65,6 @@ if (argc % 2 && argc>1) {
 		else if (id.compare("weak")==0) weak = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("eigen")==0) eigen = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("curvature")==0) curvature = (stn<uint>(argv[2*j+2])!=0);
-		else if (id.compare("smooth")==0) smooth = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("old")==0) old = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("inputs")==0) inputsFile = (string)argv[2*j+2];
 		else if (id.compare("print")==0) printOpts = (string)argv[2*j+2];
@@ -134,6 +132,8 @@ for (uint pl=0; pl<Npl; pl++) {
 		p = pr.position(pl);
 		pold = pr.neigh(pl);
 		stepFile = filenameLoopNR<dim>(pold);
+		if (pold.Ng>0)
+			(stepFile.Extras).push_back(StringPair("Ng",nts(pold.Ng)));
 	}
 		
 	
@@ -199,9 +199,15 @@ for (uint pl=0; pl<Npl; pl++) {
 			loadFile = "data/lemon/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_R_"+nts(R)+"_M_"+nts(M)+"_rank_0.dat";
 		else {
 			loadFile = filenameLoopNR<dim>(p);
+			if (p.Ng>0)
+				(loadFile.Extras).push_back(StringPair("Ng",nts(p.Ng)));
+			if (!loadFile.exists())
+				loadFile = filenameLoopNR<dim>(p);
 			if (!loadFile.exists()) {
 				if (pl>0)
 					loadFile = stepFile;
+					if (!loadFile.exists())
+						loadFile = filenameLoopNR<dim>(pold);
 				if (!loadFile.exists() && old)
 					loadFile = "data/nr/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_G_"+nts(p.G)+"_B_"+nts(p.B)+"_M_"+nts(p.P4)\
 		+"_a_"+nts(p.Epsi)+".dat";
@@ -359,9 +365,9 @@ for (uint pl=0; pl<Npl; pl++) {
 			mdPX_nr(xLoop,0,P,1.0,mds);
 		
 			// dynamical field cusp regularisation
-			uint range = (smooth? 2*p.Ng+1: 1);
-			uint left = N/2-1 - (int)smooth*p.Ng;
-			uint right = 0 + (int)(smooth && p.Ng>0)*(N-p.Ng);
+			uint range = 2*p.Ng+1;
+			uint left = N/2-1 - (int)p.Ng;
+			uint right = 0 + (int)(p.Ng>0)*(N-p.Ng);
 			
 			for (uint k=0; k<range; k++) {
 				Gamma(left, xLoop, 1.0, gamma1);
@@ -630,27 +636,29 @@ for (uint pl=0; pl<Npl; pl++) {
 		
 	// printing results to terminal
 	printf("\n");
-	printf("%8s%8s%8s%8s%8s%8s%8s%8s%12s%14s%14s%14s%14s\n","runs","time","K","G","B","T","a","mu","E","len",\
+	printf("%8s%8s%8s%8s%8s%8s%8s%8s%12s%14s%14s%14s%14s\n","runs","time","K","G","B","Ng","a","mu","E","len",\
 		"i0","vr","s");
-	printf("%8i%8.3g%8i%8.4g%8.4g%8.4g%8.4g%8.4g%12.5g%14.5g%14.5g%14.5g%14.5g\n",\
-		runsCount,realtime,p.K,p.G,p.B,p.T,p.Epsi,p.Mu,M,len,i0,vr,s);
+	printf("%8i%8.3g%8i%8.4g%8.4g%8i%8.4g%8.4g%12.5g%14.5g%14.5g%14.5g%14.5g\n",\
+		runsCount,realtime,p.K,p.G,p.B,p.Ng,p.Epsi,p.Mu,M,len,i0,vr,s);
 	printf("\n");
 	
 	
 	if (checkDelta.good()) {
 	
 		// printing results to file	
-		string resFile = "results/nr/nrmain_cosmos_4.dat";
+		string resFile = "results/nr/nrmain_cosmos_5.dat";
 		FILE* ros;
 		ros = fopen(resFile.c_str(),"a");
-		fprintf(ros,"%24s%24i%24i%24g%24g%24g%24g%24g%24g%24g%24g%24g%24g%24g%24g%24g\n",\
-					timenumber.c_str(),pl,p.K,p.G,p.B,p.Epsi,p.Mu,M,s,(gamma0+gamma1)/2.0,\
+		fprintf(ros,"%24s%24i%24i%24g%24g%24i%24g%24g%24g%24g%24g%24g%24g%24g%24g%24g%24g\n",\
+					timenumber.c_str(),pl,p.K,p.G,p.B,p.Ng,p.Epsi,p.Mu,M,s,(gamma0+gamma1)/2.0,\
 					checkSol.back(),checkDX.back(),checkSCMax.back(),checkSCAvg.back(),checkKGMax.back(),checkKGAvg.back());
 		fclose(ros);
 		printf("%12s%50s\n","results:",resFile.c_str());
 		
 		// printing loop to file
 		Filename loopRes = filenameLoopNR<dim>(p);
+		if (p.Ng>0)
+			(loopRes.Extras).push_back(StringPair("Ng",nts(p.Ng)));
 		saveVectorBinary(loopRes,x);
 		printf("%12s%50s\n","x:",((string)loopRes).c_str());
 		
@@ -660,6 +668,8 @@ for (uint pl=0; pl<Npl; pl++) {
 	if (po!=PrintOptions::none) {
 		Filename file = "data/temp/"+timenumber+"x_K_"+nts(p.K)+"_G_"+nts(p.G)+"_B_"+nts(p.B)+"_M_"+nts(M)\
 							+"_a_"+nts(p.Epsi)+"_mu_"+nts(p.Mu)+"_run_"+nts(runsCount)+".dat";
+		if (p.Ng>0)
+				(file.Extras).push_back(StringPair("Ng",nts(p.Ng)));
 		if (po==PrintOptions::x || po==PrintOptions::all) {
 			saveVectorAscii(file,x);
 			printf("%12s%50s\n","x:",((string)file).c_str());

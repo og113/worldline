@@ -8,7 +8,10 @@ set output outFile; \
 
 # files
 file1="results/nr/nrmain_cosmos_a_0.1.dat"
-file2="results/nr/nrmain_cosmos_24format.dat"
+file24="results/nr/nrmain_cosmos_24format.dat"
+file2="results/nr/nrmain_cosmos_2.dat"
+file3="results/nr/nrmain_cosmos_3.dat"
+file4="results/nr/nrmain_cosmos_4.dat"
 
 # approximate analytic results
 pi=3.1415926535897932
@@ -22,7 +25,7 @@ set logscale y
 set xtic auto
 set autoscale
 set format y "10^{%L}"
-set title "Vacuum NR results, K=11, a=0.15, g=1.0, B=1.0"
+set title "Vacuum NR results, a=0.15, g=1.0, B=1.0, {\Symbol m}=1.0"
 set xlabel "E"
 set ylabel "S"
 #set arrow from 0.5,6 to 0,(pi-0.25)
@@ -31,7 +34,10 @@ set ylabel "S"
 #set label "2-sqrt(g^3*B/PI)" at (2-1/sqrt(pi)+0.05),1
 
 set xrange [0:2]
-plot file2 u 7:($3==11? ($5==1? ($6==0.15?$10:"1/0"):"1/0"):"1/0") title "NR result" ls 1 lc rgb "blue", \
+plot file4 u 8:($3==11? ($5==1? ($6==0.15? ($7==1? $9: 1/0): 1/0): 1/0): 1/0) title "S, K=11" with points pointtype 1 lc rgb "blue", \
+	file2 u 7:($3==12? ($5==1? ($6==0.15? ($4==1? $8: 1/0): 1/0): 1/0): 1/0) title "S, K=12" with points pointtype 2 lc rgb "green", \
 	wc(1.0,1.0,x) title "Weak coupling result" with lines lc rgb "red"
 
 pause -1
+
+file2 u 5:7:($6==0.15? $8: "1/0") title "NR results, 2" ls 1 lc rgb "red", \
