@@ -643,7 +643,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	printf("\n");
 	
 	
-	if (checkDelta.good()) {
+	if (checkDelta.good() && checkSol.good() && checkSolMax.good()) {
 	
 		// printing results to file	
 		string resFile = "results/nr/nrmain_cosmos_5.dat";
