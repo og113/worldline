@@ -593,10 +593,10 @@ for (uint pl=0; pl<Npl; pl++) {
 		//printing tests to see convergence
 		if (verbose) {
 			if (runsCount==1) {
-				printf("%5s%5s%12s%12s%12s%12s%12s%12s%12s%12s%12s%12s\n","pl","run","len","i0","s","sol","solM","delta","Sm","dx","ic_max","cc_max");
+				printf("%5s%5s%12s%12s%12s%12s%12s%12s%12s%12s%12s%12s\n","pl","run","len","i0","s","sol","solM","delta","Sm","dx*kg_max","ic_max","cc_max");
 			}
 			printf("%5i%5i%12.5g%12.5g%12.5g%12.5g%12.5g%12.5g%12.5g%12.5g%12.5g%12.5g\n",pl,runsCount,len,i0,s,checkSol.back(),\
-				checkSolMax.back(),checkDelta.back(),checkSm.back(),checkDX.back(),checkICMax.back(),checkCCMax.back());
+				checkSolMax.back(),checkDelta.back(),checkSm.back(),checkKgDxMax.back(),checkICMax.back(),checkCCMax.back());
 		}
 	
 	}
