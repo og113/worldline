@@ -170,8 +170,10 @@ for (uint pl=0; pl<Npl; pl++) {
 	Check checkDX("dx<<a",2.0e-1);
 	Check checkSCMax("sc_max<<1",5.0e-1);
 	Check checkSCAvg("sc_avg<<1",2.0e-1);
-	Check checkKGMax("a*kg_max<<1",5.0e-1);
-	Check checkKGAvg("a*kg_avg<<1",2.0e-1);
+	Check checkKgAMax("a*kg_max<<1",5.0e-1);
+	Check checkKgAAvg("a*kg_avg<<1",2.0e-1);
+	Check checkKgDxMax("dx*kg_max<<1",5.0e-1);
+	Check checkKgDxAvg("dx*kg_avg<<1",2.0e-1);
 	Check checkSym("symmetric",1.0e-16*NT*NT);
 	Check checkInv("inverse",1.0e-16*NT*NT*NT);
 	Check checkNegEigenvalue("negative eigenvalue",0.1);
@@ -403,13 +405,16 @@ for (uint pl=0; pl<Npl; pl++) {
 		checkSm.add(sm);
 		
 		// check dx<<a, using the average
-		checkDX.add(len/(number)N/p.Epsi);
+		number dx = len/(number)N;
+		checkDX.add(dx/p.Epsi);
 		
-		// check sc<<1, a*kg<<1
+		// check sc<<1, a*kg<<1, dx*kg<<1
 		checkSCMax.add(sc_max);
 		checkSCAvg.add(sc_avg);
-		checkKGMax.add(p.Epsi*kg_max);
-		checkKGAvg.add(p.Epsi*kg_avg);
+		checkKgAMax.add(p.Epsi*kg_max);
+		checkKgAAvg.add(p.Epsi*kg_avg);
+		checkKgDxMax.add(dx*kg_max);
+		checkKgDxAvg.add(dx*kg_avg);
 				
 		if (alltests) {
 			// checking if dds is symmetric
@@ -582,10 +587,10 @@ for (uint pl=0; pl<Npl; pl++) {
 		//printing tests to see convergence
 		if (verbose) {
 			if (runsCount==1) {
-				printf("%5s%5s%12s%12s%12s%12s%12s%12s%12s%12s%12s%12s\n","pl","run","len","i0","s","sol","solM","delta","Sm","dx","sc_max","kg_max");
+				printf("%5s%5s%12s%12s%12s%12s%12s%12s%12s%12s%12s%12s\n","pl","run","len","i0","s","sol","solM","delta","Sm","dx","sc_max","kg_max*dx");
 			}
 			printf("%5i%5i%12.5g%12.5g%12.5g%12.5g%12.5g%12.5g%12.5g%12.5g%12.5g%12.5g\n",pl,runsCount,len,i0,s,checkSol.back(),\
-				checkSolMax.back(),checkDelta.back(),checkSm.back(),checkDX.back(),checkSCMax.back(),checkKGMax.back());
+				checkSolMax.back(),checkDelta.back(),checkSm.back(),checkDX.back(),checkSCMax.back(),checkKgDxMax.back());
 		}
 	
 	}
@@ -651,7 +656,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		ros = fopen(resFile.c_str(),"a");
 		fprintf(ros,"%24s%24i%24i%24g%24g%24i%24g%24g%24g%24g%24g%24g%24g%24g%24g%24g%24g\n",\
 					timenumber.c_str(),pl,p.K,p.G,p.B,p.Ng,p.Epsi,p.Mu,M,s,(gamma0+gamma1)/2.0,\
-					checkSol.back(),checkDX.back(),checkSCMax.back(),checkSCAvg.back(),checkKGMax.back(),checkKGAvg.back());
+					checkSol.back(),checkDX.back(),checkSCMax.back(),checkSCAvg.back(),checkKgAMax.back(),checkKgAAvg.back());
 		fclose(ros);
 		printf("%12s%50s\n","results:",resFile.c_str());
 		
