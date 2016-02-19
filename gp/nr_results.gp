@@ -12,7 +12,9 @@ file1="results/nr/nrmain_cosmos.dat"
 file2="results/nr/nrmain_cosmos_2.dat"
 file3="results/nr/nrmain_cosmos_3.dat"
 file4="results/nr/nrmain_cosmos_4.dat"
+file4="results/nr/nrmain_cosmos_5.dat"
 file4t="temp/nrmain_cosmos_4.dat"
+file5t="temp/nrmain_cosmos_5.dat"
 
 # approximate analytic result
 pi=3.1415926535897932
@@ -63,7 +65,9 @@ plot file4 u 6:($3==11? ($5==1? ($7==1? ($8==0? $9: 1/0): 1/0): 1/0): 1/0) title
 	file4 u 6:($3==11? ($5==1? ($7==1? ($8==0.5? $9: 1/0): 1/0): 1/0): 1/0) title "S, E=0.5, {\Symbol m}=1" with points pointtype 1 lc rgb "yellow" axes x1y1, \
 	file4 u 6:($3==11? ($5==1? ($7==1? ($8==1? $9: 1/0): 1/0): 1/0): 1/0) title "S, E=1.0, {\Symbol m}=1" with points pointtype 1 lc rgb "green" axes x1y1, \
 	file4 u 6:($3==11? ($5==1? ($7==1? ($8==1.2? $9: 1/0): 1/0): 1/0): 1/0) title "S, E=1.2, {\Symbol m}=1" with points pointtype 1 lc rgb "cyan" axes x1y1, \
+	file5 u 6:($3==11? ($5==1? ($7==1? ($8==1.2? $9: 1/0): 1/0): 1/0): 1/0) notitle with points pointtype 1 lc rgb "cyan" axes x1y1, \
 	file4 u 6:($3==11? ($5==1? ($7==1? ($8==1.4? $9: 1/0): 1/0): 1/0): 1/0) title "S, E=1.4, {\Symbol m}=1" with points pointtype 1 lc rgb "brown" axes x1y1, \
+	file5 u 6:($3==11? ($5==1? ($7==1? ($8==1.4? $9: 1/0): 1/0): 1/0): 1/0) notitle with points pointtype 1 lc rgb "brown" axes x1y1, \
 
 
 #set xrange [0.1:0.2]
