@@ -67,21 +67,25 @@ void V1r (const uint& j, const uint& k, const Loop<Dim>& l, const number& a, con
 template <uint Dim>
 void V2r (const uint& j, const uint& k, const Loop<Dim>& l, const number& a, const number& f, number& result);
 
-// SimpleCurvatureMax
+// InlineCurvatureMax
 template <uint Dim>
-void SimpleCurvatureMax (const uint& j, const Loop<Dim>& l, const number& f, number& result);
+void InlineCurvatureMax (const uint& j, const Loop<Dim>& l, const number& f, number& result);
 
-// SimpleCurvatureMax
+// InlineCurvatureMax
 template <uint Dim>
-void SimpleCurvatureMax (const uint& j, const Loop<Dim>& l, const uint& ex1, const uint& ex2, const number& f, number& result);
+void InlineCurvatureMax (const uint& j, const Loop<Dim>& l, const uint& ex1, const uint& ex2, const number& f, number& result);
 
-// SimpleCurvatureAvg
+// InlineCurvatureAvg
 template <uint Dim>
-void SimpleCurvatureAvg (const uint& j, const Loop<Dim>& l, const number& f, number& result);
+void InlineCurvatureAvg (const uint& j, const Loop<Dim>& l, const number& f, number& result);
 
-// SimpleCurvatureAvg
+// InlineCurvatureAvg
 template <uint Dim>
-void SimpleCurvatureAvg (const uint& j, const Loop<Dim>& l, const uint& ex1, const uint& ex2, const number& f, number& result);
+void InlineCurvatureAvg (const uint& j, const Loop<Dim>& l, const uint& ex1, const uint& ex2, const number& f, number& result);
+
+// CuspCurvatureMax
+template <uint Dim>
+void CuspCurvatureMax (const uint& j, const Loop<Dim>& l, const number& f, number& result);
 
 // KGMax
 template <uint Dim>

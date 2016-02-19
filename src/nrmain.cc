@@ -168,8 +168,9 @@ for (uint pl=0; pl<Npl; pl++) {
 	Check checkDelta("delta",1.0);
 	Check checkSm("smoothness",1.0);
 	Check checkDX("dx<<a",2.0e-1);
-	Check checkSCMax("sc_max<<1",5.0e-1);
-	Check checkSCAvg("sc_avg<<1",2.0e-1);
+	Check checkICMax("ic_max<<1",5.0e-1);
+	Check checkICAvg("ic_avg<<1",2.0e-1);
+	Check checkCCMax("cc_max<<1",5.0e-1);
 	Check checkKgAMax("a*kg_max<<1",5.0e-1);
 	Check checkKgAAvg("a*kg_avg<<1",2.0e-1);
 	Check checkKgDxMax("dx*kg_max<<1",5.0e-1);
@@ -181,7 +182,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	Check checkGamma("gamma",0.1);
 	
 	// defining scalar quantities
-	number len, i0, s, sm, v, vr, fgamma, gamma0, gamma1, sc_max, sc_avg, kg_max, kg_avg;
+	number len, i0, s, sm, v, vr, fgamma, gamma0, gamma1, ic_max, ic_avg, cc_max, kg_max, kg_avg;
 	
 	// defining vector and matrix quantities
 	vec x(N*dim);
@@ -261,7 +262,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		mds = Eigen::VectorXd::Zero(NT);
 		dds = Eigen::MatrixXd::Zero(NT,NT);
 		len = 0.0, i0 = 0.0, v = 0.0, fgamma = 0.0, gamma0 = 0.0, gamma1 = 0.0;//, s0 = 0.0;
-		sc_max = 0.0, sc_avg = 0.0, kg_max = 0.0, kg_avg = 0.0;
+		ic_max = 0.0, ic_avg = 0.0, cc_max = 0.0, kg_max = 0.0, kg_avg = 0.0;
 		if (curvature) {
 			sc_vec = Eigen::VectorXd::Zero(N);
 			kg_vec = Eigen::VectorXd::Zero(N);
@@ -280,7 +281,8 @@ for (uint pl=0; pl<Npl; pl++) {
 		number g = p.G*p.G/8.0/PI/PI;
 		number sqrt4s0 = 2.0*sqrt(S0(xLoop));
 		number cusp_scale = g*log(p.Mu/p.Epsi);
-		number sc_scale = 1.0;
+		number ic_scale = 1.0;
+		number cc_scale = 1.0;
 		number kg_scale = 1.0;
 		
 		Point<dim> P0;
@@ -294,18 +296,19 @@ for (uint pl=0; pl<Npl; pl++) {
 			
 			//curvatures
 			if (curvature) {
-					SimpleCurvatureMax(j, xLoop, sc_scale, sc_vec[j]);
+					InlineCurvatureMax(j, xLoop, ic_scale, sc_vec[j]);
 					KGMaxPlane(j, xLoop, kg_scale, kg_vec[j]);
 			}
 			if (!(P^=P0)) {
-				SimpleCurvatureMax(j, xLoop, 0, N/2-1, sc_scale, sc_max);
-				SimpleCurvatureAvg(j, xLoop, 0, N/2-1, sc_scale, sc_avg);
+				InlineCurvatureMax(j, xLoop, 0, N/2-1, ic_scale, ic_max);
+				InlineCurvatureAvg(j, xLoop, 0, N/2-1, ic_scale, ic_avg);
 				KGMaxPlane(j, xLoop, 0, N/2-1, kg_scale, kg_max);
 				KGAvgPlane(j, xLoop, 0, N/2-1, kg_scale, kg_avg);
 			}
 			else {
-				SimpleCurvatureMax(j, xLoop, sc_scale, sc_max);
-				SimpleCurvatureAvg(j, xLoop, sc_scale, sc_avg);
+				InlineCurvatureMax(j, xLoop, ic_scale, ic_max);
+				InlineCurvatureAvg(j, xLoop, ic_scale, ic_avg);
+				CuspCurvatureMax(j,xLoop,cc_scale,ic_max);
 				KGMaxPlane(j, xLoop, kg_scale, kg_max);
 				KGAvgPlane(j, xLoop, kg_scale, kg_avg);
 			}
@@ -376,6 +379,8 @@ for (uint pl=0; pl<Npl; pl++) {
 				Gamma(right, xLoop, 1.0, gamma0);
 				FGamma(left, xLoop, -cusp_scale, fgamma);
 				FGamma(right, xLoop, -cusp_scale, fgamma);
+				CuspCurvatureMax(left,xLoop,cc_scale,cc_max);
+				CuspCurvatureMax(right,xLoop,cc_scale,cc_max);
 				if (!weak) {
 					mdFGamma_nr(xLoop,left,-cusp_scale,mds);
 					mdFGamma_nr(xLoop,right,-cusp_scale,mds);
@@ -408,9 +413,10 @@ for (uint pl=0; pl<Npl; pl++) {
 		number dx = len/(number)N;
 		checkDX.add(dx/p.Epsi);
 		
-		// check sc<<1, a*kg<<1, dx*kg<<1
-		checkSCMax.add(sc_max);
-		checkSCAvg.add(sc_avg);
+		// check ic<<1, a*kg<<1, dx*kg<<1, cc<<1
+		checkICMax.add(ic_max);
+		checkICAvg.add(ic_avg);
+		checkCCMax.add(cc_max);
 		checkKgAMax.add(p.Epsi*kg_max);
 		checkKgAAvg.add(p.Epsi*kg_avg);
 		checkKgDxMax.add(dx*kg_max);
@@ -587,10 +593,10 @@ for (uint pl=0; pl<Npl; pl++) {
 		//printing tests to see convergence
 		if (verbose) {
 			if (runsCount==1) {
-				printf("%5s%5s%12s%12s%12s%12s%12s%12s%12s%12s%12s%12s\n","pl","run","len","i0","s","sol","solM","delta","Sm","dx","sc_max","kg_max*dx");
+				printf("%5s%5s%12s%12s%12s%12s%12s%12s%12s%12s%12s%12s\n","pl","run","len","i0","s","sol","solM","delta","Sm","dx","ic_max","cc_max");
 			}
 			printf("%5i%5i%12.5g%12.5g%12.5g%12.5g%12.5g%12.5g%12.5g%12.5g%12.5g%12.5g\n",pl,runsCount,len,i0,s,checkSol.back(),\
-				checkSolMax.back(),checkDelta.back(),checkSm.back(),checkDX.back(),checkSCMax.back(),checkKgDxMax.back());
+				checkSolMax.back(),checkDelta.back(),checkSm.back(),checkDX.back(),checkICMax.back(),checkCCMax.back());
 		}
 	
 	}
@@ -651,12 +657,13 @@ for (uint pl=0; pl<Npl; pl++) {
 	if (checkDelta.good() && checkSol.good() && checkSolMax.good()) {
 	
 		// printing results to file	
-		string resFile = "results/nr/nrmain_cosmos_5.dat";
+		string resFile = "results/nr/nrmain_cosmos_6.dat";
 		FILE* ros;
 		ros = fopen(resFile.c_str(),"a");
-		fprintf(ros,"%24s%24i%24i%24g%24g%24i%24g%24g%24g%24g%24g%24g%24g%24g%24g%24g%24g\n",\
+		fprintf(ros,"%24s%24i%24i%24g%24g%24i%24g%24g%24g%24g%24g%24g%24g%24g%24g%24g%24g%24g\n",\
 					timenumber.c_str(),pl,p.K,p.G,p.B,p.Ng,p.Epsi,p.Mu,M,s,(gamma0+gamma1)/2.0,\
-					checkSol.back(),checkDX.back(),checkSCMax.back(),checkSCAvg.back(),checkKgAMax.back(),checkKgAAvg.back());
+					checkSol.back(),checkDX.back(),checkICMax.back(),checkICAvg.back(),checkKgAMax.back(),checkKgAAvg.back()\
+					,checkCCMax.back());
 		fclose(ros);
 		printf("%12s%50s\n","results:",resFile.c_str());
 		

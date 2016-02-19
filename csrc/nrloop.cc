@@ -113,9 +113,9 @@ void V2r (const uint& j, const uint& k, const Loop<Dim>& l, const number& a, con
 	}
 }
 
-// SimpleCurvatureMax
+// InlineCurvatureMax
 template <uint Dim>
-void SimpleCurvatureMax (const uint& j, const Loop<Dim>& l, const number& f, number& result) {
+void InlineCurvatureMax (const uint& j, const Loop<Dim>& l, const number& f, number& result) {
 	uint pj = (j==(l.size()-1)? 0: j+1);
 	uint nj = (j==0? (l.size()-1):j-1);
 	Point<Dim> dd = l[pj] + l[nj] - 2.0*l[j];
@@ -124,9 +124,9 @@ void SimpleCurvatureMax (const uint& j, const Loop<Dim>& l, const number& f, num
 	result = (temp>result? temp: result);
 }
 
-// SimpleCurvatureMax
+// InlineCurvatureMax
 template <uint Dim>
-void SimpleCurvatureMax (const uint& j, const Loop<Dim>& l, const uint& ex1, const uint& ex2, const number& f, number& result) {
+void InlineCurvatureMax (const uint& j, const Loop<Dim>& l, const uint& ex1, const uint& ex2, const number& f, number& result) {
 	if (j!=ex1 && j!=ex2) {
 		uint pj = (j==(l.size()-1)? 0: j+1);
 		uint nj = (j==0? (l.size()-1):j-1);
@@ -137,9 +137,9 @@ void SimpleCurvatureMax (const uint& j, const Loop<Dim>& l, const uint& ex1, con
 	}
 }
 
-// SimpleCurvatureAvg
+// InlineCurvatureAvg
 template <uint Dim>
-void SimpleCurvatureAvg (const uint& j, const Loop<Dim>& l, const number& f, number& result) {
+void InlineCurvatureAvg (const uint& j, const Loop<Dim>& l, const number& f, number& result) {
 	uint pj = (j==(l.size()-1)? 0: j+1);
 	uint nj = (j==0? (l.size()-1):j-1);
 	Point<Dim> dd = l[pj] + l[nj] - 2.0*l[j];
@@ -148,9 +148,9 @@ void SimpleCurvatureAvg (const uint& j, const Loop<Dim>& l, const number& f, num
 	result += temp/(number)l.size();
 }
 
-// SimpleCurvatureAvg
+// InlineCurvatureAvg
 template <uint Dim>
-void SimpleCurvatureAvg (const uint& j, const Loop<Dim>& l, const uint& ex1, const uint& ex2, const number& f, number& result) {
+void InlineCurvatureAvg (const uint& j, const Loop<Dim>& l, const uint& ex1, const uint& ex2, const number& f, number& result) {
 	if (j!=ex1 && j!=ex2) {
 		uint pj = (j==(l.size()-1)? 0: j+1);
 		uint nj = (j==0? (l.size()-1):j-1);
@@ -159,6 +159,23 @@ void SimpleCurvatureAvg (const uint& j, const Loop<Dim>& l, const uint& ex1, con
 		number temp = f*abs(Dot(dd,d))/Dot(d,d);
 		result += temp/((number)l.size()-2.0);
 	}
+}
+
+// CuspCurvatureMax
+template <uint Dim>
+void CuspCurvatureMax (const uint& j, const Loop<Dim>& l, const number& f, number& result) {
+	uint nj = (j==0? (l.size()-1): j-1);
+	uint nnj = (nj==0? (l.size()-1): nj-1);
+	uint pj = (j==(l.size()-1)? 0: j+1);
+	uint ppj = (pj==(l.size()-1)? 0: pj+1);
+	Point<Dim> dd = l[ppj] + l[j] - 2.0*l[pj];
+	Point<Dim> dp = l[pj] - l[j];
+	Point<Dim> dn = l[j] - l[nj];
+	number temp1 = f*abs(Dot(dd,dn)/Dot(dp,dn)), temp2;
+	dd = l[nnj] + l[j] - 2.0*l[nj];
+	temp2 = f*abs(Dot(dd,dp)/Dot(dp,dn));
+	temp2 = (temp2>temp1? temp2: temp1);
+	result = (temp2>result? temp2: result);
 }
 
 // KGMax
@@ -677,10 +694,11 @@ template void S0<2>(const uint& j, const Loop<2>& l, const number& f, number& re
 template void Sm<2>(const uint& j, const Loop<2>& l, const number& f, number& result);
 template void Gamma<2>(const uint& j, const Loop<2>& l, const number& f, number& result);
 template void FGamma<2>(const uint& j, const Loop<2>& l, const number& f, number& result);
-template void SimpleCurvatureMax<2>(const uint& j, const Loop<2>& l, const number& f, number& result);
-template void SimpleCurvatureMax<2>(const uint& j, const Loop<2>& l, const uint& ex1, const uint& ex2, const number& f, number& result);
-template void SimpleCurvatureAvg<2>(const uint& j, const Loop<2>& l, const number& f, number& result);
-template void SimpleCurvatureAvg<2>(const uint& j, const Loop<2>& l, const uint& ex1, const uint& ex2, const number& f, number& result);
+template void InlineCurvatureMax<2>(const uint& j, const Loop<2>& l, const number& f, number& result);
+template void InlineCurvatureMax<2>(const uint& j, const Loop<2>& l, const uint& ex1, const uint& ex2, const number& f, number& result);
+template void InlineCurvatureAvg<2>(const uint& j, const Loop<2>& l, const number& f, number& result);
+template void InlineCurvatureAvg<2>(const uint& j, const Loop<2>& l, const uint& ex1, const uint& ex2, const number& f, number& result);
+template void CuspCurvatureMax<2>(const uint& j, const Loop<2>& l, const number& f, number& result);
 template void KGMax<2>(const uint& j, const Loop<2>& l, const number& f, number& result);
 template void KGMax<2>(const uint& j, const Loop<2>& l, const uint& ex1, const uint& ex2, const number& f, number& result);
 template void KGAvg<2>(const uint& j, const Loop<2>& l, const number& f, number& result);
@@ -747,10 +765,11 @@ template void S0<4>(const uint& j, const Loop<4>& l, const number& f, number& re
 template void Sm<4>(const uint& j, const Loop<4>& l, const number& f, number& result);
 template void Gamma<4>(const uint& j, const Loop<4>& l, const number& f, number& result);
 template void FGamma<4>(const uint& j, const Loop<4>& l, const number& f, number& result);
-template void SimpleCurvatureMax<4>(const uint& j, const Loop<4>& l, const number& f, number& result);
-template void SimpleCurvatureMax<4>(const uint& j, const Loop<4>& l, const uint& ex1, const uint& ex2, const number& f, number& result);
-template void SimpleCurvatureAvg<4>(const uint& j, const Loop<4>& l, const number& f, number& result);
-template void SimpleCurvatureAvg<4>(const uint& j, const Loop<4>& l, const uint& ex1, const uint& ex2, const number& f, number& result);
+template void InlineCurvatureMax<4>(const uint& j, const Loop<4>& l, const number& f, number& result);
+template void InlineCurvatureMax<4>(const uint& j, const Loop<4>& l, const uint& ex1, const uint& ex2, const number& f, number& result);
+template void InlineCurvatureAvg<4>(const uint& j, const Loop<4>& l, const number& f, number& result);
+template void InlineCurvatureAvg<4>(const uint& j, const Loop<4>& l, const uint& ex1, const uint& ex2, const number& f, number& result);
+template void CuspCurvatureMax<4>(const uint& j, const Loop<4>& l, const number& f, number& result);
 template void KGMax<4>(const uint& j, const Loop<4>& l, const number& f, number& result);
 template void KGMax<4>(const uint& j, const Loop<4>& l, const uint& ex1, const uint& ex2, const number& f, number& result);
 template void KGAvg<4>(const uint& j, const Loop<4>& l, const number& f, number& result);
