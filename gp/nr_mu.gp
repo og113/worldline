@@ -14,6 +14,7 @@ file3="results/nr/nrmain_cosmos_3.dat"
 file4="results/nr/nrmain_cosmos_4.dat"
 file5="results/nr/nrmain_cosmos_5.dat"
 file6="results/nr/nrmain_cosmos_6.dat"
+file7="results/nr/nrmain_cosmos_7.dat"
 file4t="temp/nrmain_cosmos_4.dat"
 file5t="temp/nrmain_cosmos_5.dat"
 
@@ -33,25 +34,25 @@ set ytic auto
 set logscale y
 set format y "10^{%L}"
 set autoscale
-set title "Induced instanton, a=0.15, K=11, {/Symbol m}=0.05"
+set title "Induced instanton, a=0.15, K=11, {/Symbol m}=0.15"
 set xlabel "E"
-set ylabel "cc max"
+set ylabel "angle"
 
 a=0.15
 B=1
 K=11
 mu=0.15
 
-ut6l='file6 u 7:($3==K? ($5==B? ($6==0? ($8==mu? ($9=='
-ut6r='? $18: 1/0): 1/0): 1/0): 1/0): 1/0)'
+ut6l='file7 u 7:($3==K? ($5==B? ($6==0? ($8==mu? ($9=='
+ut6r='? $19: 1/0): 1/0): 1/0): 1/0): 1/0)'
 style='with points'
-titleS(E) = sprintf("cc max, E=%g, {/Symbol m}=%g",E,mu)
+titleS(E) = sprintf("angle neighbouring cusp, E=%g, {/Symbol m}=%g",E,mu)
 
 #set xrange [0.01:1]	
-plot @ut6l 0.4 @ut6r t titleS(0.4) @style pt 2 lc rgb "orange", \
-	@ut6l 0.2 @ut6r t titleS(0.2) @style pt 4 lc rgb "green", \
-	@ut6l 0.7 @ut6r t titleS(0.7) @style pt 8 lc rgb "blue", \
-	@ut6l 1.2 @ut6r t titleS(1.2) @style pt 10 lc rgb "violet", \
+plot @ut6l 0.04 @ut6r t titleS(0.4) @style pt 2 lc rgb "orange"#, \
+	#@ut6l 0.2 @ut6r t titleS(0.2) @style pt 4 lc rgb "green", \
+	#@ut6l 0.7 @ut6r t titleS(0.7) @style pt 8 lc rgb "blue", \
+	#@ut6l 1.2 @ut6r t titleS(1.2) @style pt 10 lc rgb "violet", \
 	
 
 pause -1
