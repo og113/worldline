@@ -61,9 +61,9 @@ void I0 (const uint& j, const Loop<Dim>& l, const number& f, number& result) {
 	cerr << "mdI_nr error: not defined for dim = " << Dim << endl;
 }
 
-// Gamma
+// Angle
 template <uint Dim>
-void Gamma (const uint& j, const Loop<Dim>& l, const number& f, number& result) {
+void Angle (const uint& j, const Loop<Dim>& l, const number& f, number& result) {
 	uint pj = (j==(l.size()-1)? 0: j+1);
 	uint nj = (j==0? (l.size()-1): j-1);
 	number cos_gamma;
@@ -692,7 +692,7 @@ Filename filenameLoopNR(const Parameters& p) {
 template void L<2>(const uint& j, const Loop<2>& l, const number& f, number& result);
 template void S0<2>(const uint& j, const Loop<2>& l, const number& f, number& result);
 template void Sm<2>(const uint& j, const Loop<2>& l, const number& f, number& result);
-template void Gamma<2>(const uint& j, const Loop<2>& l, const number& f, number& result);
+template void Angle<2>(const uint& j, const Loop<2>& l, const number& f, number& result);
 template void FGamma<2>(const uint& j, const Loop<2>& l, const number& f, number& result);
 template void InlineCurvatureMax<2>(const uint& j, const Loop<2>& l, const number& f, number& result);
 template void InlineCurvatureMax<2>(const uint& j, const Loop<2>& l, const uint& ex1, const uint& ex2, const number& f, number& result);
@@ -763,7 +763,7 @@ template <> void I0<2> (const uint& j, const Loop<2>& l, const number& f, number
 template void L<4>(const uint& j, const Loop<4>& l, const number& f, number& result);
 template void S0<4>(const uint& j, const Loop<4>& l, const number& f, number& result);
 template void Sm<4>(const uint& j, const Loop<4>& l, const number& f, number& result);
-template void Gamma<4>(const uint& j, const Loop<4>& l, const number& f, number& result);
+template void Angle<4>(const uint& j, const Loop<4>& l, const number& f, number& result);
 template void FGamma<4>(const uint& j, const Loop<4>& l, const number& f, number& result);
 template void InlineCurvatureMax<4>(const uint& j, const Loop<4>& l, const number& f, number& result);
 template void InlineCurvatureMax<4>(const uint& j, const Loop<4>& l, const uint& ex1, const uint& ex2, const number& f, number& result);

@@ -168,6 +168,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	Check checkDelta("delta",1.0);
 	Check checkSm("smoothness",1.0);
 	Check checkDX("dx<<a",2.0e-1);
+	Check checkStraight("angle_neigh<<1",2.0e-1);
 	Check checkICMax("ic_max<<1",5.0e-1);
 	Check checkICAvg("ic_avg<<1",2.0e-1);
 	Check checkCCMax("cc_max<<1",5.0e-1);
@@ -182,7 +183,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	Check checkGamma("gamma",0.1);
 	
 	// defining scalar quantities
-	number len, i0, s, sm, v, vr, fgamma, gamma0, gamma1, ic_max, ic_avg, cc_max, kg_max, kg_avg;
+	number len, i0, s, sm, v, vr, fgamma, gamma, angle_neigh, ic_max, ic_avg, cc_max, kg_max, kg_avg;
 	
 	// defining vector and matrix quantities
 	vec x(N*dim);
@@ -261,7 +262,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		// initializing to zero
 		mds = Eigen::VectorXd::Zero(NT);
 		dds = Eigen::MatrixXd::Zero(NT,NT);
-		len = 0.0, i0 = 0.0, v = 0.0, fgamma = 0.0, gamma0 = 0.0, gamma1 = 0.0;//, s0 = 0.0;
+		len = 0.0, i0 = 0.0, v = 0.0, fgamma = 0.0, gamma = 0.0, angle_neigh = 0.0;//, s0 = 0.0;
 		ic_max = 0.0, ic_avg = 0.0, cc_max = 0.0, kg_max = 0.0, kg_avg = 0.0;
 		if (curvature) {
 			sc_vec = Eigen::VectorXd::Zero(N);
@@ -371,12 +372,15 @@ for (uint pl=0; pl<Npl; pl++) {
 		
 			// dynamical field cusp regularisation
 			uint range = 2*p.Ng+1;
-			uint left = N/2-1 - (int)p.Ng;
+			uint left = N/2-1 - (int)p.Ng - 1;
 			uint right = 0 + (int)(p.Ng>0)*(N-p.Ng);
 			
-			for (uint k=0; k<range; k++) {
-				Gamma(left, xLoop, 1.0, gamma1);
-				Gamma(right, xLoop, 1.0, gamma0);
+			Angle(left, xLoop, 0.5, angle_neigh);
+			left = (left==(N-1)? 0: left+1);
+			
+			for (uint k=0; k<range; k++) {			
+				Angle(left, xLoop, 0.5/(number)range, gamma);
+				Angle(right, xLoop, 0.5/(number)range, gamma);
 				FGamma(left, xLoop, -cusp_scale, fgamma);
 				FGamma(right, xLoop, -cusp_scale, fgamma);
 				CuspCurvatureMax(left,xLoop,cc_scale,cc_max);
@@ -390,6 +394,8 @@ for (uint pl=0; pl<Npl; pl++) {
 				left = (left==(N-1)? 0: left+1);
 				right = (right==(N-1)? 0: right+1);
 			}
+			
+			Angle(right, xLoop, 0.5, angle_neigh);
 		}
 		
 		// assigning scalar quantities
@@ -413,7 +419,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		number dx = len/(number)N;
 		checkDX.add(dx/p.Epsi);
 		
-		// check ic<<1, a*kg<<1, dx*kg<<1, cc<<1
+		// check ic<<1, a*kg<<1, dx*kg<<1, cc<<1, angle_neigh<<1
 		checkICMax.add(ic_max);
 		checkICAvg.add(ic_avg);
 		checkCCMax.add(cc_max);
@@ -421,6 +427,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		checkKgAAvg.add(p.Epsi*kg_avg);
 		checkKgDxMax.add(dx*kg_max);
 		checkKgDxAvg.add(dx*kg_avg);
+		checkStraight.add(angle_neigh);
 				
 		if (alltests) {
 			// checking if dds is symmetric
@@ -456,7 +463,7 @@ for (uint pl=0; pl<Npl; pl++) {
 			number gamma_ratio = 0.0;
 			if (abs(M)>MIN_NUMBER && abs(M)<2.0) {
 				number gamma_weak = PI-2.0*asin(sqrt(1.0-pow(M,2)/4.0));
-				gamma_ratio = (gamma0+gamma1)/2.0/gamma_weak;
+				gamma_ratio = gamma/gamma_weak;
 			}
 			checkGamma.add(gamma_ratio);
 			checkGamma.checkMessage();
@@ -657,13 +664,13 @@ for (uint pl=0; pl<Npl; pl++) {
 	if (checkDelta.good() && checkSol.good() && checkSolMax.good()) {
 	
 		// printing results to file	
-		string resFile = "results/nr/nrmain_cosmos_6.dat";
+		string resFile = "results/nr/nrmain_cosmos_7.dat";
 		FILE* ros;
 		ros = fopen(resFile.c_str(),"a");
-		fprintf(ros,"%24s%24i%24i%24g%24g%24i%24g%24g%24g%24g%24g%24g%24g%24g%24g%24g%24g%24g\n",\
-					timenumber.c_str(),pl,p.K,p.G,p.B,p.Ng,p.Epsi,p.Mu,M,s,(gamma0+gamma1)/2.0,\
-					checkSol.back(),checkDX.back(),checkICMax.back(),checkICAvg.back(),checkKgAMax.back(),checkKgAAvg.back()\
-					,checkCCMax.back());
+		fprintf(ros,"%24s%24i%24i%24g%24g%24i%24g%24g%24g%24g%24g%24g%24g%24g%24g%24g%24g%24g%24g\n",\
+					timenumber.c_str(),pl,p.K,p.G,p.B,p.Ng,p.Epsi,p.Mu,M,s,gamma,\
+					checkSol.back(),checkDX.back(),checkICMax.back(),checkICAvg.back(),checkKgAMax.back(),\
+					checkKgAAvg.back(),checkCCMax.back(),checkStraight.back());
 		fclose(ros);
 		printf("%12s%50s\n","results:",resFile.c_str());
 		

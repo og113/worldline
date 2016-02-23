@@ -7,8 +7,15 @@ set term png size 1600,800; \
 set output outFile; \
 
 # files where results are
-file1="results/nr/nrmain_cosmos_4.dat"
-file2="results/nr/nrmain_failures.dat"
+file0="results/nr/nrmain.dat"
+file1="results/nr/nrmain_cosmos.dat"
+file2="results/nr/nrmain_cosmos_2.dat"
+file3="results/nr/nrmain_cosmos_3.dat"
+file4="results/nr/nrmain_cosmos_4.dat"
+file5="results/nr/nrmain_cosmos_5.dat"
+file6="results/nr/nrmain_cosmos_6.dat"
+file4t="temp/nrmain_cosmos_4.dat"
+file5t="temp/nrmain_cosmos_5.dat"
 
 # approximate analytic result
 #pi=3.1415926535897932
@@ -23,29 +30,28 @@ unset label
 set key below
 set xtic auto
 set ytic auto
-#set y2tic auto
-#set logscale z
-#set format z "10^{%L}"
+set logscale y
+set format y "10^{%L}"
 set autoscale
-set title "Induced instanton, a=0.15, K=11"
-set xlabel "{/Symbol m}"
-set ylabel "K_G*a maximum"
-#set y2label "S"
-#set zlabel "E maximum"
-#set y2label "average K*a"
+set title "Induced instanton, a=0.15, K=11, {/Symbol m}=0.05"
+set xlabel "E"
+set ylabel "cc max"
 
-#set xrange [0:1.2]
-#set yrange [0:1.8]
-#splot file2 u 7:15:8 title "E maximum" ls 1 lc rgb "blue"
+a=0.15
+B=1
+K=11
+mu=0.15
 
-plot file1 u 7:($1==160208165923?($6==0.15?($8==1.43?$15:"1/0"):"1/0"):"1/0") title "NR results" ls 1 lc rgb "blue" axes x1y1
+ut6l='file6 u 7:($3==K? ($5==B? ($6==0? ($8==mu? ($9=='
+ut6r='? $18: 1/0): 1/0): 1/0): 1/0): 1/0)'
+style='with points'
+titleS(E) = sprintf("cc max, E=%g, {/Symbol m}=%g",E,mu)
 
-#plot file1 u 8:($3==11?($4==1?($5==1?($6==0.15?($7==1?$15:"1/0"):"1/0"):"1/0"):"1/0"):"1/0") title "{/Symbol m}=1.0" ls 1 lc rgb "blue"#, \
-#	file1 u 8:($3==11?($4==1?($5==1?($6==0.15?($7==0.15?$15:"1/0"):"1/0"):"1/0"):"1/0"):"1/0") title "{/Symbol m}=0.15" ls 1 lc rgb "red"
-
-#plot file1 u 6:($1==160211025057?($7==1?($8==1?$15:"1/0"):"1/0"):"1/0") title "{/Symbol m}=1.0" ls 1 lc rgb "blue" axes x1y1, \
-#	file1 u 6:($1==160211120529?($7==1?($8==1?$15:"1/0"):"1/0"):"1/0") notitle ls 1 lc rgb "blue" axes x1y1, \
-#	file1 u 6:($1==160211031204?($7==0.15?($8==1?$15:"1/0"):"1/0"):"1/0") title "{/Symbol m}=0.15" ls 1 lc rgb "red" axes x1y1, \
-#	file1 u 6:($1==160211120434?($7==0.15?($8==1?$15:"1/0"):"1/0"):"1/0") notitle ls 1 lc rgb "red" axes x1y1
+#set xrange [0.01:1]	
+plot @ut6l 0.4 @ut6r t titleS(0.4) @style pt 2 lc rgb "orange", \
+	@ut6l 0.2 @ut6r t titleS(0.2) @style pt 4 lc rgb "green", \
+	@ut6l 0.7 @ut6r t titleS(0.7) @style pt 8 lc rgb "blue", \
+	@ut6l 1.2 @ut6r t titleS(1.2) @style pt 10 lc rgb "violet", \
+	
 
 pause -1

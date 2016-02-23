@@ -51,9 +51,9 @@ void S0 (const uint& j, const Loop<Dim>& l, const number& f, number& result);
 template <uint Dim>
 void I0 (const uint& j, const Loop<Dim>& l, const number& f, number& result);
 
-// Gamma
+// Angle
 template <uint Dim>
-void Gamma (const uint& j, const Loop<Dim>& l, const number& f, number& result);
+void Angle (const uint& j, const Loop<Dim>& l, const number& f, number& result);
 
 // FGamma
 template <uint Dim>
