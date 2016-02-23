@@ -31,8 +31,8 @@ unset label
 set key below
 set xtic auto
 set ytic auto
-set logscale y
-set format y "10^{%L}"
+#set logscale y
+#set format y "10^{%L}"
 set autoscale
 set title "Induced instanton, a=0.15, K=11, {/Symbol m}=0.15"
 set xlabel "E"

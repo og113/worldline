@@ -55,6 +55,10 @@ void I0 (const uint& j, const Loop<Dim>& l, const number& f, number& result);
 template <uint Dim>
 void Angle (const uint& j, const Loop<Dim>& l, const number& f, number& result);
 
+// PseudoAngle, in 3-4 plane
+template <uint Dim>
+void PseudoAngle (const uint& j, const Loop<Dim>& l, const number& f, number& result);
+
 // FGamma
 template <uint Dim>
 void FGamma (const uint& j, const Loop<Dim>& l, const number& f, number& result);

@@ -375,7 +375,7 @@ for (uint pl=0; pl<Npl; pl++) {
 			uint left = N/2-1 - (int)p.Ng - 1;
 			uint right = 0 + (int)(p.Ng>0)*(N-p.Ng);
 			
-			Angle(left, xLoop, 0.5, angle_neigh);
+			PseudoAngle(left, xLoop, 0.5, angle_neigh);
 			left = (left==(N-1)? 0: left+1);
 			
 			for (uint k=0; k<range; k++) {			
@@ -395,7 +395,7 @@ for (uint pl=0; pl<Npl; pl++) {
 				right = (right==(N-1)? 0: right+1);
 			}
 			
-			Angle(right, xLoop, 0.5, angle_neigh);
+			PseudoAngle(right, xLoop, 0.5, angle_neigh);
 		}
 		
 		// assigning scalar quantities

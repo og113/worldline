@@ -74,6 +74,12 @@ void Angle (const uint& j, const Loop<Dim>& l, const number& f, number& result) 
 	result += f*(acos(cos_gamma));
 }
 
+// PseudoAngle, in 3-4 plane
+template <uint Dim>
+void PseudoAngle (const uint& j, const Loop<Dim>& l, const number& f, number& result) {
+	cerr << "PseudoAngle error: not defined in dimension " << Dim << endl;
+}
+
 // FGamma
 template <uint Dim>
 void FGamma (const uint& j,const Loop<Dim>& l,  const number& f, number& result) {
@@ -693,6 +699,7 @@ template void L<2>(const uint& j, const Loop<2>& l, const number& f, number& res
 template void S0<2>(const uint& j, const Loop<2>& l, const number& f, number& result);
 template void Sm<2>(const uint& j, const Loop<2>& l, const number& f, number& result);
 template void Angle<2>(const uint& j, const Loop<2>& l, const number& f, number& result);
+template void PseudoAngle<2>(const uint& j, const Loop<2>& l, const number& f, number& result);
 template void FGamma<2>(const uint& j, const Loop<2>& l, const number& f, number& result);
 template void InlineCurvatureMax<2>(const uint& j, const Loop<2>& l, const number& f, number& result);
 template void InlineCurvatureMax<2>(const uint& j, const Loop<2>& l, const uint& ex1, const uint& ex2, const number& f, number& result);
@@ -792,6 +799,17 @@ template void ddFGamma_nr<4>(const Loop<4>& l, const uint& loc, const number& p,
 template void loopToVector<4>(const Loop<4>&,vec&);
 template void vectorToLoop<4>(const vec&, Loop<4>&);
 template Filename filenameLoopNR<4>(const Parameters& p);
+
+template <> void PseudoAngle<4>(const uint& j, const Loop<4>& l, const number& f, number& result) {
+	uint pj = (j==(l.size()-1)? 0: j+1);
+	uint nj = (j==0? (l.size()-1): j-1);
+	number sin_gamma;
+	
+	sin_gamma = (l[pj]-l[j])[2]*(l[j]-l[nj])[3] - (l[pj]-l[j])[3]*(l[j]-l[nj])[2];
+	sin_gamma /= sqrt((pow((l[pj]-l[j])[2],2)+pow((l[pj]-l[j])[3],2))*(pow((l[j]-l[nj])[2],2)+pow((l[j]-l[nj])[3],2)));
+	
+	result += f*(asin(sin_gamma));
+}
 
 // V1r
 template <> void V1r<4>(const uint& j, const uint& k, const Loop<4>& l, const number& a, const number& f, number& result) {
