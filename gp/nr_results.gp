@@ -1,10 +1,10 @@
 #gnuplot program to plot results from each group of loops, should give a gaussian plot
 
 #if you want to save directly to a file, use the following two lines of code
-if (exists("outFile")) \
-if (outFile ne 'gui') \
+if (exists("oSEFile")) \
+if (oSEFile ne 'gui') \
 set term png size 1600,800; \
-set output outFile; \
+set oSEpSE oSEFile; \
 
 # files where results are
 file0="results/nr/nrmain.dat"
@@ -29,15 +29,15 @@ p(g,B,E)=pi/g/B-(2.0/g/B)*( asin(E/2.0) + (E/2.0)*sqrt(1.0-(E/2.0)**2) )
 unset log
 unset label
 set key below
-set xtic auto
+set xtic aSEo
 set logscale xy
 set format y "10^{%L}"
-set autoscale
+set aSEoscale
 set title "Instantons, g=1.0, B=1.0, K=11"
 set xlabel "a"
 set ylabel "S"
 
-#set y2tic auto
+#set y2tic aSEo
 #set logscale y2
 #set y2label "K_g"
 #set format y2 "10^{%L}"
@@ -55,41 +55,41 @@ K=11
 mu=1
 
 SE4l='file4 u 6:($3==K? ($5==B? ($7==mu? ($8=='
-ut4r='? $9: 1/0): 1/0): 1/0): 1/0)'
+SE4r='? $9: 1/0): 1/0): 1/0): 1/0)'
 SE5l='file5 u 7:($3==K? ($5==B? ($6==Ng? ($8==mu? ($9=='
-ut5r='? $10: 1/0): 1/0): 1/0): 1/0): 1/0)'
+SE5r='? $10: 1/0): 1/0): 1/0): 1/0): 1/0)'
 SE6l='file6 u 7:($3==K? ($5==B? ($6==Ng? ($8==mu? ($9=='
-ut6r='? $10: 1/0): 1/0): 1/0): 1/0): 1/0)'
+SE6r='? $10: 1/0): 1/0): 1/0): 1/0): 1/0)'
 style='with points pointtype 1'
 titleS(E) = sprintf("S, E=%g, {/Symbol m}=%g",E,mu)
 
 set xrange [0.01:1]	
-plot @SE4l 0 @ut4r t titleS(0) @style lc rgb "red", \
-	@SE5l 0 @ut5r notitle @style lc rgb "red", \
-	@SE6l 0 @ut6r notitle @style lc rgb "red", \
-	@SE4l 0.2 @ut4r t titleS(0.2) @style lc rgb "orange", \
-	@SE5l 0.2 @ut5r notitle @style lc rgb "orange", \
-	@SE6l 0.2 @ut6r notitle @style lc rgb "orange", \
-	@SE4l 0.3 @ut4r t titleS(0.3) @style lc rgb "green", \
-	@SE5l 0.3 @ut5r notitle @style lc rgb "green", \
-	@SE6l 0.3 @ut6r notitle @style lc rgb "green", \
-	@SE4l 0.4 @ut4r t titleS(0.4) @style lc rgb "blue", \
-	@SE5l 0.4 @ut5r notitle @style lc rgb "blue", \
-	@SE6l 0.4 @ut6r notitle @style lc rgb "blue", \
-	@SE4l 0.5 @ut4r t titleS(0.5) @style lc rgb "black", \
-	@SE5l 0.5 @ut5r notitle @style lc rgb "black", \
-	@SE6l 0.5 @ut6r notitle @style lc rgb "black", \
-	@SE4l 0.7 @ut4r t titleS(0.7) @style lc rgb "pink", \
-	@SE5l 0.7 @ut5r notitle @style lc rgb "pink", \
-	@SE6l 0.7 @ut6r notitle @style lc rgb "pink", \
-	@SE4l 1.0 @ut4r t titleS(1.0) @style lc rgb "yellow", \
-	@SE5l 1.0 @ut5r notitle @style lc rgb "yellow", \
-	@SE6l 1.0 @ut6r notitle @style lc rgb "yellow", \
-	@SE4l 1.2 @ut4r t titleS(1.2) @style lc rgb "cyan", \
-	@SE5l 1.2 @ut5r notitle @style lc rgb "cyan", \
-	@SE6l 1.2 @ut6r notitle @style lc rgb "cyan", \
-	@SE4l 1.4 @ut4r t titleS(1.4) @style lc rgb "brown", \
-	@SE5l 1.4 @ut5r notitle @style lc rgb "brown", \
-	@SE6l 1.4 @ut6r notitle @style lc rgb "brown", \
+plot @SE4l 0 @SE4r t titleS(0) @style lc rgb "red", \
+	@SE5l 0 @SE5r notitle @style lc rgb "red", \
+	@SE6l 0 @SE6r notitle @style lc rgb "red", \
+	@SE4l 0.2 @SE4r t titleS(0.2) @style lc rgb "orange", \
+	@SE5l 0.2 @SE5r notitle @style lc rgb "orange", \
+	@SE6l 0.2 @SE6r notitle @style lc rgb "orange", \
+	@SE4l 0.3 @SE4r t titleS(0.3) @style lc rgb "green", \
+	@SE5l 0.3 @SE5r notitle @style lc rgb "green", \
+	@SE6l 0.3 @SE6r notitle @style lc rgb "green", \
+	@SE4l 0.4 @SE4r t titleS(0.4) @style lc rgb "blue", \
+	@SE5l 0.4 @SE5r notitle @style lc rgb "blue", \
+	@SE6l 0.4 @SE6r notitle @style lc rgb "blue", \
+	@SE4l 0.5 @SE4r t titleS(0.5) @style lc rgb "black", \
+	@SE5l 0.5 @SE5r notitle @style lc rgb "black", \
+	@SE6l 0.5 @SE6r notitle @style lc rgb "black", \
+	@SE4l 0.7 @SE4r t titleS(0.7) @style lc rgb "pink", \
+	@SE5l 0.7 @SE5r notitle @style lc rgb "pink", \
+	@SE6l 0.7 @SE6r notitle @style lc rgb "pink", \
+	@SE4l 1.0 @SE4r t titleS(1.0) @style lc rgb "yellow", \
+	@SE5l 1.0 @SE5r notitle @style lc rgb "yellow", \
+	@SE6l 1.0 @SE6r notitle @style lc rgb "yellow", \
+	@SE4l 1.2 @SE4r t titleS(1.2) @style lc rgb "cyan", \
+	@SE5l 1.2 @SE5r notitle @style lc rgb "cyan", \
+	@SE6l 1.2 @SE6r notitle @style lc rgb "cyan", \
+	@SE4l 1.4 @SE4r t titleS(1.4) @style lc rgb "brown", \
+	@SE5l 1.4 @SE5r notitle @style lc rgb "brown", \
+	@SE6l 1.4 @SE6r notitle @style lc rgb "brown", \
 
 pause -1

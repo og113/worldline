@@ -670,7 +670,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		fprintf(ros,"%24s%24i%24i%24g%24g%24i%24g%24g%24g%24g%24g%24g%24g%24g%24g%24g%24g%24g%24g\n",\
 					timenumber.c_str(),pl,p.K,p.G,p.B,p.Ng,p.Epsi,p.Mu,M,s,gamma,\
 					checkSol.back(),checkDX.back(),checkICMax.back(),checkICAvg.back(),checkKgAMax.back(),\
-					checkKgAAvg.back(),checkCCMax.back(),checkStraight.back());
+					checkKgAAvg.back(),checkCCMax.back(),angle_neigh);
 		fclose(ros);
 		printf("%12s%50s\n","results:",resFile.c_str());
 		
