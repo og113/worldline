@@ -34,19 +34,19 @@ set ytic auto
 #set logscale y
 #set format y "10^{%L}"
 set autoscale
-set xlabel "{/Symbol m}"
+set xlabel "{/Symbol l}"
 set ylabel "angle"
 set grid xtics ytics
 
 a=0.15
 B=1
-E=0.04
+E=0.02
 mu=0.15
 
 set title sprintf("Induced instanton, a=%g, E=%g",a,E)
 
 ut7l='file7 u 8:($9==E? ($5==B? ($6==0? ($7==a? ($3=='
-ut7r='? $19: 1/0): 1/0): 1/0): 1/0): 1/0)'
+ut7r='? -$19: 1/0): 1/0): 1/0): 1/0): 1/0)'
 style='with points'
 titleS(K) = sprintf("angle neighbouring cusp, K=%g",K)
 

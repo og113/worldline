@@ -28,7 +28,7 @@ set key below
 set autoscale
 set xtic auto
 set ytic auto
-set title "Lemons, a=0.15, B=1.0, g=1.0, K=11, E=0.02"
+set title "Lemons, a=0.15, B=1.0, g=1.0, K=12, E=0.02"
 set xlabel "z"
 set ylabel "t"
 set xrange [-0.002:0.002]
