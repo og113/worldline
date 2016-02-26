@@ -34,25 +34,29 @@ set ytic auto
 set logscale y
 set format y "10^{%L}"
 set autoscale
-set title "Induced instanton, K=11, {/Symbol m}=0.15"
-set xlabel "a"
+set xlabel "{/Symbol l}"
 set ylabel "angle"
+set grid xtics ytics
 
 a=0.15
 B=1
-K=11
+E=0.02
 mu=0.15
 
-ut6l='file7 u 7:($3==K? ($5==B? ($6==0? ($8==mu? ($9=='
-ut6r='? $19: 1/0): 1/0): 1/0): 1/0): 1/0)'
-style='with points'
-titleS(E) = sprintf("angle neighbouring cusp, E=%g, {/Symbol m}=%g",E,mu)
+set title sprintf("Induced instanton, a=%g, E=%g",a,E)
 
-#set xrange [0.01:1]	
-plot @ut6l 0.04 @ut6r t titleS(0.4) @style pt 2 lc rgb "orange"#, \
-	#@ut6l 0.2 @ut6r t titleS(0.2) @style pt 4 lc rgb "green", \
-	#@ut6l 0.7 @ut6r t titleS(0.7) @style pt 8 lc rgb "blue", \
-	#@ut6l 1.2 @ut6r t titleS(1.2) @style pt 10 lc rgb "violet", \
+ut7l='file7 u 8:($9==E? ($5==B? ($6==0? ($7==a? ($3=='
+ut7r='? -$19: 1/0): 1/0): 1/0): 1/0): 1/0)'
+style='with points'
+titleS(K) = sprintf("angle neighbouring cusp, K=%g",K)
+
+set xrange [0.1:0.2]	
+plot @ut7l 8 @ut7r t titleS(8) @style pt 2 lc rgb "black", \
+	@ut7l 9 @ut7r t titleS(9) @style pt 2 lc rgb "orange", \
+	@ut7l 10 @ut7r t titleS(10) @style pt 2 lc rgb "red", \
+	@ut7l 11 @ut7r t titleS(11) @style pt 4 lc rgb "green", \
+	@ut7l 12 @ut7r t titleS(12) @style pt 8 lc rgb "blue", \
+	#@ut7l 1.2 @ut7r t titleS(1.2) @style pt 10 lc rgb "violet", \
 	
 
 pause -1

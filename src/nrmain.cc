@@ -217,7 +217,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		+"_a_"+nts(p.Epsi)+".dat";
 				if (!loadFile.exists())
 					loadFile = "data/lemon/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_R_"+nts(R)+"_M_"+nts(M)+"_rank_0.dat";
-				else if (!loadFile.exists())
+				if (!loadFile.exists())
 					loadFile = "data/circle/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_R_"+nts(R)+"_rank_0.dat";
 			}
 		}
@@ -672,7 +672,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		fprintf(ros,"%24s%24i%24i%24g%24g%24i%24g%24g%24g%24g%24g%24g%24g%24g%24g%24g%24g%24g%24g\n",\
 					timenumber.c_str(),pl,p.K,p.G,p.B,p.Ng,p.Epsi,p.Mu,M,s,gamma,\
 					checkSol.back(),checkDX.back(),checkICMax.back(),checkICAvg.back(),checkKgAMax.back(),\
-					checkKgAAvg.back(),checkCCMax.back(),checkStraight.back());
+					checkKgAAvg.back(),checkCCMax.back(),angle_neigh);
 		fclose(ros);
 		printf("%12s%50s\n","results:",resFile.c_str());
 		
