@@ -40,21 +40,23 @@ set grid xtics ytics
 
 a=0.15
 B=1
-E=0.02
+E=0.04
 mu=0.15
 
 set title sprintf("Induced instanton, a=%g, E=%g",a,E)
 
-ut6l='file7 u 8:($9==E? ($5==B? ($6==0? ($7==a? ($3=='
-ut6r='? $19: 1/0): 1/0): 1/0): 1/0): 1/0)'
+ut7l='file7 u 8:($9==E? ($5==B? ($6==0? ($7==a? ($3=='
+ut7r='? $19: 1/0): 1/0): 1/0): 1/0): 1/0)'
 style='with points'
 titleS(K) = sprintf("angle neighbouring cusp, K=%g",K)
 
 set xrange [0.1:0.2]	
-plot @ut6l 10 @ut6r t titleS(10) @style pt 2 lc rgb "red", \
-	@ut6l 11 @ut6r t titleS(11) @style pt 4 lc rgb "green", \
-	@ut6l 12 @ut6r t titleS(12) @style pt 8 lc rgb "blue", \
-	#@ut6l 1.2 @ut6r t titleS(1.2) @style pt 10 lc rgb "violet", \
+plot @ut7l 8 @ut7r t titleS(8) @style pt 2 lc rgb "black", \
+	@ut7l 9 @ut7r t titleS(9) @style pt 2 lc rgb "orange", \
+	@ut7l 10 @ut7r t titleS(10) @style pt 2 lc rgb "red", \
+	@ut7l 11 @ut7r t titleS(11) @style pt 4 lc rgb "green", \
+	@ut7l 12 @ut7r t titleS(12) @style pt 8 lc rgb "blue", \
+	#@ut7l 1.2 @ut7r t titleS(1.2) @style pt 10 lc rgb "violet", \
 	
 
 pause -1
