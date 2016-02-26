@@ -6,6 +6,16 @@ in our case
 
 sed -ne '/^\([ ]*\)160208165923/ p' results/nr/nrmain_cosmos_4.dat>results/nr/nrmain_mu_a_0.15_E_1.43_K_11.dat
 
+
+
 rename is also useful. to rename files ending in .txt and containing abc to the same file with abc replaced by def
 
 rename -v 's/abc/def/' *.txt
+
+
+
+a quick bash script to apply binaryToAscii to a bunch of files:
+
+for f in data/nr/loops/dim_4/K_12/loop_G_1_B_1_M_0.02_a_0.15_mu_0.1*.dat; 
+do ./binaryToAscii -b $f -a data/temp/$(basename $f) -loop 1 -K 12; 
+done
