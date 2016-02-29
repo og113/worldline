@@ -21,8 +21,8 @@ set ytic auto
 set title "4d loop"
 set xlabel "z"
 set ylabel "t"
-set xrange [-0.04:0.04]
-set yrange [-0.99:-1.00]
+#set xrange [-0.04:0.04]
+#set yrange [-0.99:-1.00]
 plot file using 3:4 with linespoints pt 2
 
 pause -1
