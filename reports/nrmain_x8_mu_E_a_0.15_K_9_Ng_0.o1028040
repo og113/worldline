@@ -1,0 +1,470 @@
+using inputs file nrinputs/inputs5
+timenumber: 160226092103
+looping over 42 steps
+loading loops from:
+data/nr/loops/dim_4/K_9/loop_G_1_B_1_M_0.02_a_0.15.dat
+   pl  run         len          i0           s         sol        solM       delta          Sm   dx*kg_max      ic_max      cc_max
+    0    1      6.1437     -3.0035      2.8236   0.0016562    0.021477  9.0512e-06  7.6715e-05    0.027886  0.00044463  0.00056962
+    0    2      6.1437     -3.0035      2.8236  5.5748e-07  6.3756e-06  9.2678e-07  7.4848e-05    0.016099  0.00014836  0.00070018
+    0    3      6.1437     -3.0035      2.8236  3.6442e-13  3.9272e-12  6.6062e-11  7.4847e-05      0.0161  0.00014836  0.00070655
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       3     8.4       9       1       1       0    0.15    0.17        0.02        6.1437       -3.0035      -0.27719        2.8236
+
+    results:                    results/nr/nrmain_cosmos_7.dat
+          x:data/nr/loops/dim_4/K_9/loop_G_1_B_1_M_0.02_a_0.15_mu_0.17.dat
+loading loops from:
+data/nr/loops/dim_4/K_9/loop_G_1_B_1_M_0.02_a_0.15_mu_0.17.dat
+   pl  run         len          i0           s         sol        solM       delta          Sm   dx*kg_max      ic_max      cc_max
+    1    1      6.1437     -3.0035      2.8236  4.1856e-05  0.00054279  2.4619e-07  7.4847e-05      0.0161  0.00014836  0.00070655
+    1    2      6.1437     -3.0035      2.8236  2.3094e-10  2.6646e-09  6.1982e-10  7.4813e-05    0.015796  0.00014836  0.00070322
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       2    5.61       9       1       1       0    0.15   0.168        0.02        6.1437       -3.0035      -0.27719        2.8236
+
+    results:                    results/nr/nrmain_cosmos_7.dat
+          x:data/nr/loops/dim_4/K_9/loop_G_1_B_1_M_0.02_a_0.15_mu_0.168.dat
+loading loops from:
+data/nr/loops/dim_4/K_9/loop_G_1_B_1_M_0.02_a_0.15_mu_0.168.dat
+   pl  run         len          i0           s         sol        solM       delta          Sm   dx*kg_max      ic_max      cc_max
+    2    1      6.1437     -3.0035      2.8236   4.316e-05   0.0005597  2.5976e-07  7.4813e-05    0.015796  0.00014836  0.00070322
+    2    2      6.1437     -3.0035      2.8236  1.0127e-10  1.1956e-09  6.8888e-10  7.4778e-05    0.015477  0.00014836  0.00069935
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       2     5.6       9       1       1       0    0.15   0.166        0.02        6.1437       -3.0035      -0.27719        2.8236
+
+    results:                    results/nr/nrmain_cosmos_7.dat
+          x:data/nr/loops/dim_4/K_9/loop_G_1_B_1_M_0.02_a_0.15_mu_0.166.dat
+loading loops from:
+data/nr/loops/dim_4/K_9/loop_G_1_B_1_M_0.02_a_0.15_mu_0.166.dat
+   pl  run         len          i0           s         sol        solM       delta          Sm   dx*kg_max      ic_max      cc_max
+    3    1      6.1437     -3.0035      2.8236  4.4537e-05  0.00057755  2.7453e-07  7.4778e-05    0.015477  0.00014836  0.00069935
+    3    2      6.1437     -3.0035      2.8236  7.0899e-11  8.1842e-10  7.6968e-10  7.4743e-05    0.015141  0.00014836  0.00069487
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       2     5.6       9       1       1       0    0.15   0.164        0.02        6.1437       -3.0035      -0.27719        2.8236
+
+    results:                    results/nr/nrmain_cosmos_7.dat
+          x:data/nr/loops/dim_4/K_9/loop_G_1_B_1_M_0.02_a_0.15_mu_0.164.dat
+loading loops from:
+data/nr/loops/dim_4/K_9/loop_G_1_B_1_M_0.02_a_0.15_mu_0.164.dat
+   pl  run         len          i0           s         sol        solM       delta          Sm   dx*kg_max      ic_max      cc_max
+    4    1      6.1437     -3.0035      2.8236  4.5993e-05  0.00059643  2.9065e-07  7.4743e-05    0.015141  0.00014836  0.00069487
+    4    2      6.1437     -3.0035      2.8236  2.7116e-10  3.1155e-09  8.6323e-10  7.4706e-05    0.014786  0.00014836  0.00068969
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       2    5.61       9       1       1       0    0.15   0.162        0.02        6.1437       -3.0035      -0.27719        2.8236
+
+    results:                    results/nr/nrmain_cosmos_7.dat
+          x:data/nr/loops/dim_4/K_9/loop_G_1_B_1_M_0.02_a_0.15_mu_0.162.dat
+loading loops from:
+data/nr/loops/dim_4/K_9/loop_G_1_B_1_M_0.02_a_0.15_mu_0.162.dat
+   pl  run         len          i0           s         sol        solM       delta          Sm   dx*kg_max      ic_max      cc_max
+    5    1      6.1437     -3.0035      2.8236  4.7536e-05  0.00061644  3.0829e-07  7.4706e-05    0.014786  0.00014836  0.00068968
+    5    2      6.1437     -3.0035      2.8236  5.2333e-10  5.9627e-09  9.7265e-10  7.4668e-05    0.014412  0.00014836  0.00068371
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       2     5.6       9       1       1       0    0.15    0.16        0.02        6.1437       -3.0035      -0.27719        2.8236
+
+    results:                    results/nr/nrmain_cosmos_7.dat
+          x:data/nr/loops/dim_4/K_9/loop_G_1_B_1_M_0.02_a_0.15_mu_0.16.dat
+loading loops from:
+data/nr/loops/dim_4/K_9/loop_G_1_B_1_M_0.02_a_0.15_mu_0.16.dat
+   pl  run         len          i0           s         sol        solM       delta          Sm   dx*kg_max      ic_max      cc_max
+    6    1      6.1437     -3.0035      2.8236  4.9172e-05  0.00063765  3.2767e-07  7.4668e-05    0.014412  0.00014836   0.0006837
+    6    2      6.1437     -3.0035      2.8236  8.3609e-10  9.4877e-09  1.1002e-09   7.463e-05    0.014016  0.00014836  0.00067681
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       2    5.61       9       1       1       0    0.15   0.158        0.02        6.1437       -3.0035      -0.27719        2.8236
+
+    results:                    results/nr/nrmain_cosmos_7.dat
+          x:data/nr/loops/dim_4/K_9/loop_G_1_B_1_M_0.02_a_0.15_mu_0.158.dat
+loading loops from:
+data/nr/loops/dim_4/K_9/loop_G_1_B_1_M_0.02_a_0.15_mu_0.158.dat
+   pl  run         len          i0           s         sol        solM       delta          Sm   dx*kg_max      ic_max      cc_max
+    7    1      6.1437     -3.0035      2.8236   5.091e-05  0.00066019    3.49e-07   7.463e-05    0.014016  0.00014836  0.00067681
+    7    2      6.1437     -3.0035      2.8236  1.2234e-09   1.385e-08  1.2512e-09   7.459e-05    0.013597  0.00014836  0.00066888
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       2    5.58       9       1       1       0    0.15   0.156        0.02        6.1437       -3.0035      -0.27719        2.8236
+
+    results:                    results/nr/nrmain_cosmos_7.dat
+          x:data/nr/loops/dim_4/K_9/loop_G_1_B_1_M_0.02_a_0.15_mu_0.156.dat
+loading loops from:
+data/nr/loops/dim_4/K_9/loop_G_1_B_1_M_0.02_a_0.15_mu_0.156.dat
+   pl  run         len          i0           s         sol        solM       delta          Sm   dx*kg_max      ic_max      cc_max
+    8    1      6.1437     -3.0035      2.8236   5.276e-05  0.00068418  3.7257e-07   7.459e-05    0.013597  0.00014836  0.00066886
+    8    2      6.1437     -3.0035      2.8236  1.7032e-09  1.9253e-08   1.429e-09   7.455e-05    0.013152  0.00014836  0.00065974
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       2    5.53       9       1       1       0    0.15   0.154        0.02        6.1437       -3.0035      -0.27719        2.8236
+
+    results:                    results/nr/nrmain_cosmos_7.dat
+          x:data/nr/loops/dim_4/K_9/loop_G_1_B_1_M_0.02_a_0.15_mu_0.154.dat
+loading loops from:
+data/nr/loops/dim_4/K_9/loop_G_1_B_1_M_0.02_a_0.15_mu_0.154.dat
+   pl  run         len          i0           s         sol        solM       delta          Sm   dx*kg_max      ic_max      cc_max
+    9    1      6.1437     -3.0035      2.8236  5.4733e-05  0.00070975  3.9872e-07   7.455e-05    0.013152  0.00014836  0.00065972
+    9    2      6.1437     -3.0035      2.8236  2.2983e-09  2.5951e-08  1.6394e-09  7.4508e-05     0.01268  0.00014836  0.00064921
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       2    5.55       9       1       1       0    0.15   0.152        0.02        6.1437       -3.0035      -0.27719        2.8236
+
+    results:                    results/nr/nrmain_cosmos_7.dat
+          x:data/nr/loops/dim_4/K_9/loop_G_1_B_1_M_0.02_a_0.15_mu_0.152.dat
+loading loops from:
+data/nr/loops/dim_4/K_9/loop_G_1_B_1_M_0.02_a_0.15_mu_0.152.dat
+   pl  run         len          i0           s         sol        solM       delta          Sm   dx*kg_max      ic_max      cc_max
+   10    1      6.1437     -3.0035      2.8236   5.684e-05  0.00073707  4.2782e-07  7.4508e-05     0.01268  0.00014836  0.00064919
+   10    2      6.1437     -3.0035      2.8236  3.0375e-09   3.427e-08  1.8918e-09  7.4466e-05    0.012308  0.00014836  0.00063708
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       2    5.53       9       1       1       0    0.15    0.15        0.02        6.1437       -3.0035      -0.27719        2.8236
+
+    results:                    results/nr/nrmain_cosmos_7.dat
+          x:data/nr/loops/dim_4/K_9/loop_G_1_B_1_M_0.02_a_0.15_mu_0.15.dat
+loading loops from:
+data/nr/loops/dim_4/K_9/loop_G_1_B_1_M_0.02_a_0.15_mu_0.15.dat
+   pl  run         len          i0           s         sol        solM       delta          Sm   dx*kg_max      ic_max      cc_max
+   11    1      6.1437     -3.0035      2.8236  5.9095e-05  0.00076631  4.6036e-07  7.4466e-05    0.012308  0.00014836  0.00063704
+   11    2      6.1437     -3.0035      2.8236  3.9581e-09   4.463e-08  2.1933e-09  7.4423e-05    0.012308  0.00014836  0.00062308
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       2    5.55       9       1       1       0    0.15   0.148        0.02        6.1437       -3.0035      -0.27719        2.8236
+
+    results:                    results/nr/nrmain_cosmos_7.dat
+          x:data/nr/loops/dim_4/K_9/loop_G_1_B_1_M_0.02_a_0.15_mu_0.148.dat
+loading loops from:
+data/nr/loops/dim_4/K_9/loop_G_1_B_1_M_0.02_a_0.15_mu_0.148.dat
+   pl  run         len          i0           s         sol        solM       delta          Sm   dx*kg_max      ic_max      cc_max
+   12    1      6.1437     -3.0035      2.8236  6.1513e-05  0.00079767   4.969e-07  7.4423e-05    0.012308  0.00014836  0.00062303
+   12    2      6.1437     -3.0035      2.8236  5.1084e-09  5.7572e-08  2.5584e-09   7.438e-05    0.012308  0.00014836   0.0006069
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       2    5.54       9       1       1       0    0.15   0.146        0.02        6.1437       -3.0035      -0.27719        2.8236
+
+    results:                    results/nr/nrmain_cosmos_7.dat
+          x:data/nr/loops/dim_4/K_9/loop_G_1_B_1_M_0.02_a_0.15_mu_0.146.dat
+loading loops from:
+data/nr/loops/dim_4/K_9/loop_G_1_B_1_M_0.02_a_0.15_mu_0.146.dat
+   pl  run         len          i0           s         sol        solM       delta          Sm   dx*kg_max      ic_max      cc_max
+   13    1      6.1437     -3.0035      2.8236  6.4114e-05  0.00083139  5.3812e-07   7.438e-05    0.012308  0.00014836  0.00060684
+   13    2      6.1437     -3.0035      2.8236  6.5508e-09    7.38e-08  3.0008e-09  7.4337e-05    0.012308  0.00014836  0.00058816
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       2    5.54       9       1       1       0    0.15   0.144        0.02        6.1437       -3.0035      -0.27719        2.8236
+
+    results:                    results/nr/nrmain_cosmos_7.dat
+          x:data/nr/loops/dim_4/K_9/loop_G_1_B_1_M_0.02_a_0.15_mu_0.144.dat
+loading loops from:
+data/nr/loops/dim_4/K_9/loop_G_1_B_1_M_0.02_a_0.15_mu_0.144.dat
+   pl  run         len          i0           s         sol        solM       delta          Sm   dx*kg_max      ic_max      cc_max
+   14    1      6.1437     -3.0035      2.8236  6.6916e-05  0.00086772  5.8487e-07  7.4337e-05    0.012308  0.00014836  0.00058809
+   14    2      6.1437     -3.0035      2.8236  8.3678e-09   9.424e-08  3.5416e-09  7.4293e-05    0.012308  0.00014836  0.00056642
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       2    5.54       9       1       1       0    0.15   0.142        0.02        6.1437       -3.0035      -0.27719        2.8236
+
+    results:                    results/nr/nrmain_cosmos_7.dat
+          x:data/nr/loops/dim_4/K_9/loop_G_1_B_1_M_0.02_a_0.15_mu_0.142.dat
+loading loops from:
+data/nr/loops/dim_4/K_9/loop_G_1_B_1_M_0.02_a_0.15_mu_0.142.dat
+   pl  run         len          i0           s         sol        solM       delta          Sm   dx*kg_max      ic_max      cc_max
+   15    1      6.1437     -3.0035      2.8236  6.9945e-05  0.00090699  6.3818e-07  7.4293e-05    0.012308  0.00014836  0.00056633
+   15    2      6.1437     -3.0035      2.8236  1.0668e-08  1.2011e-07  4.2072e-09   7.425e-05    0.012308  0.00014836  0.00054112
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       2    5.54       9       1       1       0    0.15    0.14        0.02        6.1437       -3.0035      -0.27719        2.8236
+
+    results:                    results/nr/nrmain_cosmos_7.dat
+          x:data/nr/loops/dim_4/K_9/loop_G_1_B_1_M_0.02_a_0.15_mu_0.14.dat
+loading loops from:
+data/nr/loops/dim_4/K_9/loop_G_1_B_1_M_0.02_a_0.15_mu_0.14.dat
+   pl  run         len          i0           s         sol        solM       delta          Sm   dx*kg_max      ic_max      cc_max
+   16    1      6.1437     -3.0035      2.8236  7.3227e-05  0.00094954  6.9936e-07   7.425e-05    0.012308  0.00014836    0.000541
+   16    2      6.1437     -3.0035      2.8236  1.3598e-08  1.5306e-07  5.0317e-09  7.4208e-05    0.012308  0.00014836  0.00051158
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       2    5.54       9       1       1       0    0.15   0.138        0.02        6.1437       -3.0035      -0.27719        2.8236
+
+    results:                    results/nr/nrmain_cosmos_7.dat
+          x:data/nr/loops/dim_4/K_9/loop_G_1_B_1_M_0.02_a_0.15_mu_0.138.dat
+loading loops from:
+data/nr/loops/dim_4/K_9/loop_G_1_B_1_M_0.02_a_0.15_mu_0.138.dat
+   pl  run         len          i0           s         sol        solM       delta          Sm   dx*kg_max      ic_max      cc_max
+   17    1      6.1437     -3.0035      2.8236  7.6794e-05  0.00099579  7.7002e-07  7.4208e-05    0.012308  0.00014836  0.00051143
+   17    2      6.1437     -3.0035      2.8236  1.7352e-08  1.9529e-07  6.0639e-09  7.4168e-05    0.012308  0.00014836  0.00047697
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       2    5.54       9       1       1       0    0.15   0.136        0.02        6.1437       -3.0035      -0.27719        2.8236
+
+    results:                    results/nr/nrmain_cosmos_7.dat
+          x:data/nr/loops/dim_4/K_9/loop_G_1_B_1_M_0.02_a_0.15_mu_0.136.dat
+loading loops from:
+data/nr/loops/dim_4/K_9/loop_G_1_B_1_M_0.02_a_0.15_mu_0.136.dat
+   pl  run         len          i0           s         sol        solM       delta          Sm   dx*kg_max      ic_max      cc_max
+   18    1      6.1437     -3.0035      2.8236  8.0685e-05   0.0010462  8.5223e-07  7.4168e-05    0.012308  0.00014836  0.00047678
+   18    2      6.1437     -3.0035      2.8236    2.22e-08  2.4981e-07  7.3641e-09   7.413e-05    0.012308  0.00014836  0.00043623
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       2    5.54       9       1       1       0    0.15   0.134        0.02        6.1437       -3.0035      -0.27719        2.8236
+
+    results:                    results/nr/nrmain_cosmos_7.dat
+          x:data/nr/loops/dim_4/K_9/loop_G_1_B_1_M_0.02_a_0.15_mu_0.134.dat
+loading loops from:
+data/nr/loops/dim_4/K_9/loop_G_1_B_1_M_0.02_a_0.15_mu_0.134.dat
+   pl  run         len          i0           s         sol        solM       delta          Sm   dx*kg_max      ic_max      cc_max
+   19    1      6.1437     -3.0035      2.8236  8.4943e-05   0.0011014  9.4861e-07   7.413e-05    0.012308  0.00014836  0.00043598
+   19    2      6.1437     -3.0035      2.8236  2.8513e-08  3.2079e-07  9.0199e-09  7.4096e-05    0.012308  0.00014836  0.00038807
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       2    5.56       9       1       1       0    0.15   0.132        0.02        6.1437       -3.0035      -0.27719        2.8236
+
+    results:                    results/nr/nrmain_cosmos_7.dat
+          x:data/nr/loops/dim_4/K_9/loop_G_1_B_1_M_0.02_a_0.15_mu_0.132.dat
+loading loops from:
+data/nr/loops/dim_4/K_9/loop_G_1_B_1_M_0.02_a_0.15_mu_0.132.dat
+   pl  run         len          i0           s         sol        solM       delta          Sm   dx*kg_max      ic_max      cc_max
+   20    1      6.1437     -3.0035      2.8236  8.9623e-05   0.0011621  1.0626e-06  7.4096e-05    0.012308  0.00014836  0.00038775
+   20    2      6.1437     -3.0035      2.8236  3.6808e-08  4.1406e-07  1.1151e-08  7.4069e-05    0.012308  0.00014836  0.00033084
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       2    5.56       9       1       1       0    0.15    0.13        0.02        6.1437       -3.0035      -0.27719        2.8236
+
+    results:                    results/nr/nrmain_cosmos_7.dat
+          x:data/nr/loops/dim_4/K_9/loop_G_1_B_1_M_0.02_a_0.15_mu_0.13.dat
+loading loops from:
+data/nr/loops/dim_4/K_9/loop_G_1_B_1_M_0.02_a_0.15_mu_0.17.dat
+   pl  run         len          i0           s         sol        solM       delta          Sm   dx*kg_max      ic_max      cc_max
+   21    1      6.1437     -3.0035      2.7842   0.0012867    0.020283    0.007603  7.4847e-05      0.0161  0.00014836  0.00070655
+   21    2      6.1043     -2.9646      2.7842  1.0537e-05  0.00015771  2.3336e-05  7.4036e-05    0.018753  0.00016358   0.0012099
+   21    3      6.1041     -2.9645      2.7842  3.5633e-10  4.1704e-09  1.1743e-09  7.4017e-05    0.018754  0.00014632   0.0012366
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       3    8.43       9       1       1       0    0.15    0.17        0.04        6.1041       -2.9645      -0.27664        2.7842
+
+    results:                    results/nr/nrmain_cosmos_7.dat
+          x:data/nr/loops/dim_4/K_9/loop_G_1_B_1_M_0.04_a_0.15_mu_0.17.dat
+loading loops from:
+data/nr/loops/dim_4/K_9/loop_G_1_B_1_M_0.04_a_0.15_mu_0.17.dat
+   pl  run         len          i0           s         sol        solM       delta          Sm   dx*kg_max      ic_max      cc_max
+   22    1      6.1041     -2.9645      2.7842  7.1696e-05  0.00092281  4.1937e-07  7.4017e-05    0.018754  0.00014632   0.0012366
+   22    2      6.1041     -2.9645      2.7842  7.0032e-10   7.997e-09  1.3467e-09  7.3948e-05    0.018238  0.00014632   0.0012218
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       2    5.63       9       1       1       0    0.15   0.168        0.04        6.1041       -2.9645      -0.27664        2.7842
+
+    results:                    results/nr/nrmain_cosmos_7.dat
+          x:data/nr/loops/dim_4/K_9/loop_G_1_B_1_M_0.04_a_0.15_mu_0.168.dat
+loading loops from:
+data/nr/loops/dim_4/K_9/loop_G_1_B_1_M_0.04_a_0.15_mu_0.168.dat
+   pl  run         len          i0           s         sol        solM       delta          Sm   dx*kg_max      ic_max      cc_max
+   23    1      6.1041     -2.9645      2.7842  7.3937e-05  0.00095164  4.4258e-07  7.3948e-05    0.018238  0.00014632   0.0012218
+   23    2      6.1041     -2.9645      2.7842  3.2819e-10  3.7601e-09  1.4675e-09  7.3878e-05    0.017695  0.00014632   0.0012053
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       2    5.62       9       1       1       0    0.15   0.166        0.04        6.1041       -2.9645      -0.27664        2.7842
+
+    results:                    results/nr/nrmain_cosmos_7.dat
+          x:data/nr/loops/dim_4/K_9/loop_G_1_B_1_M_0.04_a_0.15_mu_0.166.dat
+loading loops from:
+data/nr/loops/dim_4/K_9/loop_G_1_B_1_M_0.04_a_0.15_mu_0.166.dat
+   pl  run         len          i0           s         sol        solM       delta          Sm   dx*kg_max      ic_max      cc_max
+   24    1      6.1041     -2.9645      2.7842  7.6303e-05  0.00098209  4.6787e-07  7.3878e-05    0.017695  0.00014632   0.0012053
+   24    2      6.1041     -2.9645      2.7842  2.0331e-10  2.0577e-09  1.6051e-09  7.3807e-05    0.017124  0.00014632   0.0011867
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       2    5.63       9       1       1       0    0.15   0.164        0.04        6.1041       -2.9645      -0.27664        2.7842
+
+    results:                    results/nr/nrmain_cosmos_7.dat
+          x:data/nr/loops/dim_4/K_9/loop_G_1_B_1_M_0.04_a_0.15_mu_0.164.dat
+loading loops from:
+data/nr/loops/dim_4/K_9/loop_G_1_B_1_M_0.04_a_0.15_mu_0.164.dat
+   pl  run         len          i0           s         sol        solM       delta          Sm   dx*kg_max      ic_max      cc_max
+   25    1      6.1041     -2.9645      2.7842  7.8807e-05   0.0010143  4.9549e-07  7.3807e-05    0.017124  0.00014632   0.0011867
+   25    2      6.1041     -2.9645      2.7842  7.7267e-10  8.7046e-09   1.763e-09  7.3734e-05    0.016521  0.00014632   0.0011657
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       2    5.63       9       1       1       0    0.15   0.162        0.04        6.1041       -2.9645      -0.27664        2.7842
+
+    results:                    results/nr/nrmain_cosmos_7.dat
+          x:data/nr/loops/dim_4/K_9/loop_G_1_B_1_M_0.04_a_0.15_mu_0.162.dat
+loading loops from:
+data/nr/loops/dim_4/K_9/loop_G_1_B_1_M_0.04_a_0.15_mu_0.162.dat
+   pl  run         len          i0           s         sol        solM       delta          Sm   dx*kg_max      ic_max      cc_max
+   26    1      6.1041     -2.9645      2.7842   8.146e-05   0.0010484  5.2575e-07  7.3734e-05    0.016521  0.00014632   0.0011657
+   26    2      6.1042     -2.9645      2.7842  1.5072e-09  1.6955e-08  1.9446e-09   7.366e-05    0.015885  0.00014632   0.0011421
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       2    5.61       9       1       1       0    0.15    0.16        0.04        6.1042       -2.9645      -0.27664        2.7842
+
+    results:                    results/nr/nrmain_cosmos_7.dat
+          x:data/nr/loops/dim_4/K_9/loop_G_1_B_1_M_0.04_a_0.15_mu_0.16.dat
+loading loops from:
+data/nr/loops/dim_4/K_9/loop_G_1_B_1_M_0.04_a_0.15_mu_0.16.dat
+   pl  run         len          i0           s         sol        solM       delta          Sm   dx*kg_max      ic_max      cc_max
+   27    1      6.1042     -2.9645      2.7842  8.4274e-05   0.0010846  5.5901e-07   7.366e-05    0.015885  0.00014632   0.0011421
+   27    2      6.1042     -2.9645      2.7842  2.4212e-09  2.7182e-08  2.1557e-09  7.3586e-05    0.015211  0.00014632   0.0011155
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       2    5.62       9       1       1       0    0.15   0.158        0.04        6.1042       -2.9645      -0.27664        2.7842
+
+    results:                    results/nr/nrmain_cosmos_7.dat
+          x:data/nr/loops/dim_4/K_9/loop_G_1_B_1_M_0.04_a_0.15_mu_0.158.dat
+loading loops from:
+data/nr/loops/dim_4/K_9/loop_G_1_B_1_M_0.04_a_0.15_mu_0.158.dat
+   pl  run         len          i0           s         sol        solM       delta          Sm   dx*kg_max      ic_max      cc_max
+   28    1      6.1042     -2.9645      2.7842  8.7265e-05   0.0011231  5.9566e-07  7.3586e-05    0.015211  0.00014632   0.0011155
+   28    2      6.1042     -2.9645      2.7842  3.5552e-09  3.9856e-08  2.4015e-09  7.3511e-05    0.014498  0.00014632   0.0010855
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       2    5.54       9       1       1       0    0.15   0.156        0.04        6.1042       -2.9645      -0.27664        2.7842
+
+    results:                    results/nr/nrmain_cosmos_7.dat
+          x:data/nr/loops/dim_4/K_9/loop_G_1_B_1_M_0.04_a_0.15_mu_0.156.dat
+loading loops from:
+data/nr/loops/dim_4/K_9/loop_G_1_B_1_M_0.04_a_0.15_mu_0.156.dat
+   pl  run         len          i0           s         sol        solM       delta          Sm   dx*kg_max      ic_max      cc_max
+   29    1      6.1042     -2.9645      2.7842  9.0448e-05   0.0011641  6.3622e-07  7.3511e-05    0.014498  0.00014632   0.0010854
+   29    2      6.1042     -2.9645      2.7842  4.9619e-09   5.557e-08  2.6906e-09  7.3436e-05     0.01374  0.00014632   0.0010515
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       2    5.57       9       1       1       0    0.15   0.154        0.04        6.1042       -2.9645      -0.27664        2.7842
+
+    results:                    results/nr/nrmain_cosmos_7.dat
+          x:data/nr/loops/dim_4/K_9/loop_G_1_B_1_M_0.04_a_0.15_mu_0.154.dat
+loading loops from:
+data/nr/loops/dim_4/K_9/loop_G_1_B_1_M_0.04_a_0.15_mu_0.154.dat
+   pl  run         len          i0           s         sol        solM       delta          Sm   dx*kg_max      ic_max      cc_max
+   30    1      6.1042     -2.9645      2.7842  9.3844e-05   0.0012078  6.8124e-07  7.3436e-05     0.01374  0.00014632   0.0010515
+   30    2      6.1042     -2.9645      2.7842  6.7087e-09  7.5077e-08  3.0315e-09  7.3361e-05    0.012935  0.00014632    0.001013
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       2    5.54       9       1       1       0    0.15   0.152        0.04        6.1042       -2.9645      -0.27664        2.7842
+
+    results:                    results/nr/nrmain_cosmos_7.dat
+          x:data/nr/loops/dim_4/K_9/loop_G_1_B_1_M_0.04_a_0.15_mu_0.152.dat
+loading loops from:
+data/nr/loops/dim_4/K_9/loop_G_1_B_1_M_0.04_a_0.15_mu_0.152.dat
+   pl  run         len          i0           s         sol        solM       delta          Sm   dx*kg_max      ic_max      cc_max
+   31    1      6.1042     -2.9645      2.7842  9.7471e-05   0.0012544  7.3144e-07  7.3361e-05    0.012935  0.00014632   0.0010129
+   31    2      6.1042     -2.9645      2.7842  8.8816e-09   9.934e-08  3.4376e-09  7.3286e-05    0.012219  0.00014632  0.00096933
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       2    5.56       9       1       1       0    0.15    0.15        0.04        6.1042       -2.9645      -0.27664        2.7842
+
+    results:                    results/nr/nrmain_cosmos_7.dat
+          x:data/nr/loops/dim_4/K_9/loop_G_1_B_1_M_0.04_a_0.15_mu_0.15.dat
+loading loops from:
+data/nr/loops/dim_4/K_9/loop_G_1_B_1_M_0.04_a_0.15_mu_0.15.dat
+   pl  run         len          i0           s         sol        solM       delta          Sm   dx*kg_max      ic_max      cc_max
+   32    1      6.1042     -2.9645      2.7842  0.00010136   0.0013044  7.8763e-07  7.3286e-05    0.012219  0.00014632  0.00096923
+   32    2      6.1042     -2.9645      2.7842  1.1592e-08  1.2959e-07  3.9239e-09  7.3213e-05    0.012219  0.00014632  0.00091962
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       2    5.54       9       1       1       0    0.15   0.148        0.04        6.1042       -2.9645      -0.27664        2.7842
+
+    results:                    results/nr/nrmain_cosmos_7.dat
+          x:data/nr/loops/dim_4/K_9/loop_G_1_B_1_M_0.04_a_0.15_mu_0.148.dat
+loading loops from:
+data/nr/loops/dim_4/K_9/loop_G_1_B_1_M_0.04_a_0.15_mu_0.148.dat
+   pl  run         len          i0           s         sol        solM       delta          Sm   dx*kg_max      ic_max      cc_max
+   33    1      6.1042     -2.9645      2.7842  0.00010552    0.001358  8.5084e-07  7.3213e-05    0.012219  0.00014632  0.00091949
+   33    2      6.1042     -2.9645      2.7842  1.4982e-08  1.6744e-07  4.5105e-09  7.3142e-05    0.012219  0.00014632  0.00086292
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       2    5.56       9       1       1       0    0.15   0.146        0.04        6.1042       -2.9645      -0.27664        2.7842
+
+    results:                    results/nr/nrmain_cosmos_7.dat
+          x:data/nr/loops/dim_4/K_9/loop_G_1_B_1_M_0.04_a_0.15_mu_0.146.dat
+loading loops from:
+data/nr/loops/dim_4/K_9/loop_G_1_B_1_M_0.04_a_0.15_mu_0.146.dat
+   pl  run         len          i0           s         sol        solM       delta          Sm   dx*kg_max      ic_max      cc_max
+   34    1      6.1042     -2.9645      2.7842  0.00011001   0.0014157  9.2227e-07  7.3142e-05    0.012219  0.00014632  0.00086275
+   34    2      6.1042     -2.9645      2.7842   1.924e-08  2.1498e-07  5.2234e-09  7.3074e-05    0.012219  0.00014632  0.00079804
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       2    5.55       9       1       1       0    0.15   0.144        0.04        6.1042       -2.9645      -0.27664        2.7842
+
+    results:                    results/nr/nrmain_cosmos_7.dat
+          x:data/nr/loops/dim_4/K_9/loop_G_1_B_1_M_0.04_a_0.15_mu_0.144.dat
+loading loops from:
+data/nr/loops/dim_4/K_9/loop_G_1_B_1_M_0.04_a_0.15_mu_0.144.dat
+   pl  run         len          i0           s         sol        solM       delta          Sm   dx*kg_max      ic_max      cc_max
+   35    1      6.1042     -2.9645      2.7842  0.00011484   0.0014779  1.0034e-06  7.3074e-05    0.012219  0.00014632  0.00079783
+   35    2      6.1042     -2.9645      2.7842  2.4612e-08  2.7494e-07  6.0964e-09  7.3011e-05    0.012219  0.00014632  0.00072358
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       2    5.57       9       1       1       0    0.15   0.142        0.04        6.1042       -2.9645      -0.27664        2.7842
+
+    results:                    results/nr/nrmain_cosmos_7.dat
+          x:data/nr/loops/dim_4/K_9/loop_G_1_B_1_M_0.04_a_0.15_mu_0.142.dat
+loading loops from:
+data/nr/loops/dim_4/K_9/loop_G_1_B_1_M_0.04_a_0.15_mu_0.142.dat
+   pl  run         len          i0           s         sol        solM       delta          Sm   dx*kg_max      ic_max      cc_max
+   36    1      6.1042     -2.9645      2.7842  0.00012007   0.0015451  1.0962e-06  7.3011e-05    0.012219  0.00014632   0.0007233
+   36    2      6.1042     -2.9645      2.7842  3.1426e-08  3.5099e-07  7.1747e-09  7.2954e-05    0.012219  0.00014632   0.0006378
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       2    5.57       9       1       1       0    0.15    0.14        0.04        6.1042       -2.9645      -0.27664        2.7842
+
+    results:                    results/nr/nrmain_cosmos_7.dat
+          x:data/nr/loops/dim_4/K_9/loop_G_1_B_1_M_0.04_a_0.15_mu_0.14.dat
+loading loops from:
+data/nr/loops/dim_4/K_9/loop_G_1_B_1_M_0.04_a_0.15_mu_0.14.dat
+   pl  run         len          i0           s         sol        solM       delta          Sm   dx*kg_max      ic_max      cc_max
+   37    1      6.1042     -2.9645      2.7842  0.00012573   0.0016179  1.2029e-06  7.2954e-05    0.012219  0.00014632  0.00063745
+   37    2      6.1042     -2.9645      2.7842  4.0118e-08  4.4801e-07  8.5173e-09  7.2905e-05    0.012219  0.00014632  0.00053859
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       2    5.54       9       1       1       0    0.15   0.138        0.04        6.1042       -2.9645      -0.27664        2.7842
+
+    results:                    results/nr/nrmain_cosmos_7.dat
+          x:data/nr/loops/dim_4/K_9/loop_G_1_B_1_M_0.04_a_0.15_mu_0.138.dat
+loading loops from:
+data/nr/loops/dim_4/K_9/loop_G_1_B_1_M_0.04_a_0.15_mu_0.138.dat
+   pl  run         len          i0           s         sol        solM       delta          Sm   dx*kg_max      ic_max      cc_max
+   38    1      6.1042     -2.9645      2.7842  0.00013189   0.0016972  1.3265e-06  7.2905e-05    0.012219  0.00014632  0.00053814
+   38    2      6.1042     -2.9645      2.7842  5.1283e-08  5.7262e-07  1.0205e-08  7.2868e-05    0.012219  0.00014632  0.00042333
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       2    5.57       9       1       1       0    0.15   0.136        0.04        6.1042       -2.9645      -0.27664        2.7842
+
+    results:                    results/nr/nrmain_cosmos_7.dat
+          x:data/nr/loops/dim_4/K_9/loop_G_1_B_1_M_0.04_a_0.15_mu_0.136.dat
+loading loops from:
+data/nr/loops/dim_4/K_9/loop_G_1_B_1_M_0.04_a_0.15_mu_0.136.dat
+   pl  run         len          i0           s         sol        solM       delta          Sm   dx*kg_max      ic_max      cc_max
+   39    1      6.1042     -2.9645      2.7842  0.00013862   0.0017837  1.4706e-06  7.2868e-05    0.012219  0.00014632  0.00042275
+   39    2      6.1042     -2.9645      2.7842  6.5733e-08   7.339e-07  1.2346e-08  7.2846e-05    0.012219  0.00014632  0.00028876
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       2    5.57       9       1       1       0    0.15   0.134        0.04        6.1042       -2.9645      -0.27664        2.7842
+
+    results:                    results/nr/nrmain_cosmos_7.dat
+          x:data/nr/loops/dim_4/K_9/loop_G_1_B_1_M_0.04_a_0.15_mu_0.134.dat
+loading loops from:
+data/nr/loops/dim_4/K_9/loop_G_1_B_1_M_0.04_a_0.15_mu_0.134.dat
+   pl  run         len          i0           s         sol        solM       delta          Sm   dx*kg_max      ic_max      cc_max
+   40    1      6.1042     -2.9645      2.7842  0.00014599   0.0018784  1.6402e-06  7.2846e-05    0.012219  0.00014632  0.00028803
+   40    2      6.1042     -2.9645      2.7842  8.4598e-08  9.4443e-07  1.5092e-08  7.2844e-05    0.012219  0.00014632  0.00013082
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       2    5.56       9       1       1       0    0.15   0.132        0.04        6.1042       -2.9645      -0.27664        2.7842
+
+    results:                    results/nr/nrmain_cosmos_7.dat
+          x:data/nr/loops/dim_4/K_9/loop_G_1_B_1_M_0.04_a_0.15_mu_0.132.dat
+loading loops from:
+data/nr/loops/dim_4/K_9/loop_G_1_B_1_M_0.04_a_0.15_mu_0.132.dat
+   pl  run         len          i0           s         sol        solM       delta          Sm   dx*kg_max      ic_max      cc_max
+   41    1      6.1042     -2.9645      2.7842  0.00015409   0.0019826  1.8415e-06  7.2844e-05    0.012219  0.00014632  0.00012988
+   41    2      6.1042     -2.9645      2.7842  1.0946e-07  1.2219e-06  1.8653e-08  7.2869e-05    0.012219  0.00014632  0.00017597
+   41    3      6.1042     -2.9645      2.7842  1.3203e-14  1.4904e-13  8.4596e-14  7.2869e-05    0.012219  0.00014632   0.0001772
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       3    8.36       9       1       1       0    0.15    0.13        0.04        6.1042       -2.9645      -0.27664        2.7842
+
+    results:                    results/nr/nrmain_cosmos_7.dat
+          x:data/nr/loops/dim_4/K_9/loop_G_1_B_1_M_0.04_a_0.15_mu_0.13.dat
+241.35user 1.22system 4:02.67elapsed 99%CPU (0avgtext+0avgdata 76464maxresident)k
+48inputs+2168outputs (0major+182537minor)pagefaults 0swaps

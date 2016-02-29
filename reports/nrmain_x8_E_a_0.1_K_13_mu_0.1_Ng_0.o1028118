@@ -1,0 +1,78 @@
+using inputs file nrinputs/inputs3
+looping over 10 steps
+generating 1 lemon shaped unit loops each of 8192 points in 4 dimensions
+printing to data/lemon/loops/dim_4/K_13/loop_R_1_M_0.02_rank_0.dat, with runs from 0...1
+generating 1 lemon shaped unit loops each of 8192 points in 4 dimensions
+printing to data/lemon/loops/dim_4/K_13/loop_R_1_M_0.04_rank_0.dat, with runs from 0...1
+generating 1 lemon shaped unit loops each of 8192 points in 4 dimensions
+printing to data/lemon/loops/dim_4/K_13/loop_R_1_M_0.06_rank_0.dat, with runs from 0...1
+generating 1 lemon shaped unit loops each of 8192 points in 4 dimensions
+printing to data/lemon/loops/dim_4/K_13/loop_R_1_M_0.08_rank_0.dat, with runs from 0...1
+generating 1 lemon shaped unit loops each of 8192 points in 4 dimensions
+printing to data/lemon/loops/dim_4/K_13/loop_R_1_M_0.1_rank_0.dat, with runs from 0...1
+generating 1 lemon shaped unit loops each of 8192 points in 4 dimensions
+printing to data/lemon/loops/dim_4/K_13/loop_R_1_M_0.12_rank_0.dat, with runs from 0...1
+generating 1 lemon shaped unit loops each of 8192 points in 4 dimensions
+printing to data/lemon/loops/dim_4/K_13/loop_R_1_M_0.14_rank_0.dat, with runs from 0...1
+generating 1 lemon shaped unit loops each of 8192 points in 4 dimensions
+printing to data/lemon/loops/dim_4/K_13/loop_R_1_M_0.16_rank_0.dat, with runs from 0...1
+generating 1 lemon shaped unit loops each of 8192 points in 4 dimensions
+printing to data/lemon/loops/dim_4/K_13/loop_R_1_M_0.18_rank_0.dat, with runs from 0...1
+generating 1 lemon shaped unit loops each of 8192 points in 4 dimensions
+printing to data/lemon/loops/dim_4/K_13/loop_R_1_M_0.2_rank_0.dat, with runs from 0...1
+0.03user 0.00system 0:00.18elapsed 23%CPU (0avgtext+0avgdata 3316maxresident)k
+8inputs+5128outputs (0major+955minor)pagefaults 0swaps
+using inputs file nrinputs/inputs3
+timenumber: 160228114002
+looping over 10 steps
+loading loops from:
+data/lemon/loops/dim_4/K_13/loop_R_1_M_0.02_rank_0.dat
+   pl  run         len          i0           s         sol        solM       delta          Sm   dx*kg_max      ic_max      cc_max
+    0    1      6.2432     -3.1016       2.855   0.0020385    0.019045    0.003745  3.1668e-07    0.020761  0.00021553  0.00023135
+    0    2      6.2216     -3.0802       2.855  2.4775e-06  0.00014783  0.00071195  2.6514e-07  0.00077059  0.00014287  0.00016748
+    0    3      6.2216     -3.0801       2.855  8.7945e-10  4.6969e-08  3.2173e-07  2.8745e-07  0.00077057  5.7991e-07  2.6915e-05
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       39.66e+03      13       1       1       0     0.1     0.1        0.02        6.2216       -3.0801      -0.24656         2.855
+
+    results:                    results/nr/nrmain_cosmos_7.dat
+          x:data/nr/loops/dim_4/K_13/loop_G_1_B_1_M_0.02_a_0.1_mu_0.1.dat
+loading loops from:
+data/nr/loops/dim_4/K_13/loop_G_1_B_1_M_0.02_a_0.1_mu_0.1.dat
+   pl  run         len          i0           s         sol        solM       delta          Sm   dx*kg_max      ic_max      cc_max
+    1    1      6.2216     -3.0801      2.8151  0.00031765    0.020021   0.0075723  2.8746e-07  0.00077057  5.7991e-07  2.6898e-05
+    1    2      6.1818     -3.0403      2.8151   2.096e-06  0.00013179  2.2828e-05  2.8035e-07  0.00077406  6.2312e-07  5.3035e-05
+    1    3      6.1817     -3.0402      2.8151   1.137e-10  7.1538e-09  1.2384e-09  2.7997e-07   0.0007741  5.7204e-07   5.294e-05
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       39.71e+03      13       1       1       0     0.1     0.1        0.04        6.1817       -3.0402      -0.24653        2.8151
+
+    results:                    results/nr/nrmain_cosmos_7.dat
+          x:data/nr/loops/dim_4/K_13/loop_G_1_B_1_M_0.04_a_0.1_mu_0.1.dat
+loading loops from:
+data/nr/loops/dim_4/K_13/loop_G_1_B_1_M_0.04_a_0.1_mu_0.1.dat
+   pl  run         len          i0           s         sol        solM       delta          Sm   dx*kg_max      ic_max      cc_max
+    2    1      6.1817     -3.0402      2.7751  0.00031973    0.020001   0.0076422  2.7997e-07   0.0007741  5.7204e-07   5.294e-05
+    2    2       6.142     -3.0004      2.7751  2.1339e-06  0.00013318  2.2767e-05  2.7214e-07  0.00077754  6.7962e-07  7.9457e-05
+    2    3      6.1419     -3.0003      2.7751  1.1095e-10  6.9278e-09  1.2356e-09  2.7179e-07  0.00077759  5.6423e-07  7.9361e-05
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       3 9.6e+03      13       1       1       0     0.1     0.1        0.06        6.1419       -3.0003      -0.24656        2.7751
+
+    results:                    results/nr/nrmain_cosmos_7.dat
+          x:data/nr/loops/dim_4/K_13/loop_G_1_B_1_M_0.06_a_0.1_mu_0.1.dat
+loading loops from:
+data/nr/loops/dim_4/K_13/loop_G_1_B_1_M_0.06_a_0.1_mu_0.1.dat
+   pl  run         len          i0           s         sol        solM       delta          Sm   dx*kg_max      ic_max      cc_max
+    3    1      6.1419     -3.0003      2.7351  0.00032185    0.019982   0.0077134  2.7179e-07  0.00077759  5.6423e-07  7.9361e-05
+    3    2      6.1023     -2.9605      2.7351  2.1727e-06  0.00013459  2.2713e-05  2.6326e-07  0.00078098  7.4502e-07  0.00010632
+    3    3      6.1022     -2.9604      2.7351  1.0818e-10   6.704e-09  1.2342e-09  2.6292e-07  0.00078103  5.5648e-07  0.00010623
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       39.65e+03      13       1       1       0     0.1     0.1        0.08        6.1022       -2.9604      -0.24666        2.7351
+
+    results:                    results/nr/nrmain_cosmos_7.dat
+          x:data/nr/loops/dim_4/K_13/loop_G_1_B_1_M_0.08_a_0.1_mu_0.1.dat
+loading loops from:
+data/nr/loops/dim_4/K_13/loop_G_1_B_1_M_0.08_a_0.1_mu_0.1.dat
+=>> PBS: job killed: walltime 43243 exceeded limit 43200
