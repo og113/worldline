@@ -814,22 +814,22 @@ template <> void PseudoAngle<4>(const uint& j, const Loop<4>& l, const number& f
 // V1r
 template <> void V1r<4>(const uint& j, const uint& k, const Loop<4>& l, const number& a, const number& f, number& result) {
 
-	if (k<j) {
+	if (k<=j) {
 		uint pj = (j==(l.size()-1)? 0: j+1);
 		uint pk = (k==(l.size()-1)? 0: k+1);
 	
-		result += f*2.0*Dot(l[pj],l[j],l[pk],l[k])/(DistanceSquared(l[j],l[k])+a*a);	
+		result += f*(1.0+(number)k<j)*Dot(l[pj],l[j],l[pk],l[k])/(DistanceSquared(l[j],l[k])+a*a);	
 	}
 }
 
 // V2r
 template <> void V2r<4>(const uint& j, const uint& k, const Loop<4>& l, const number& a, const number& f, number& result) {
 
-	if (k<j) {
+	if (k<=j) {
 		uint pj = (j==(l.size()-1)? 0: j+1);
 		uint pk = (k==(l.size()-1)? 0: k+1);
 	
-		result += f*2.0*Dot(l[pj],l[j],l[pk],l[k])/(0.25*DistanceSquared(l[pj]+l[j],l[pk]+l[k])+a*a);	
+		result += f*(1.0+(number)k<j)*Dot(l[pj],l[j],l[pk],l[k])/(0.25*DistanceSquared(l[pj]+l[j],l[pk]+l[k])+a*a);	
 	}
 }
 
@@ -843,12 +843,21 @@ template <> void mdV1r_nr<4>(const uint& j, const uint& mu, const uint& i, const
 	if (i!=j) {
 		number B_ij = a*a + DistanceSquared(l[i],l[j]);
 		number T_ij = Dot(l[pi],l[i],l[pj],l[j]);
-		res += 2.0*DX(l,i,pi,mu)/B_ij - 4*DX(l,j,i,mu)*T_ij/pow(B_ij,2);
+		res += 2.0*DX(l,i,pi,mu)/B_ij - 4.0*DX(l,j,i,mu)*T_ij/pow(B_ij,2);
 	}
+	
 	if (i!=mj) {
 		number B_imj = a*a + DistanceSquared(l[i],l[mj]);
 		res += -2.0*DX(l,i,pi,mu)/B_imj;
 	}
+	
+	//coincident terms
+	if (i==j)
+		res += 2.0*(l[j])[mu]/a/a;
+	if (i==mj)
+		res += -(l[mj])[mu]/a/a;
+	if (i==pj)
+		res += -(l[pj])[mu]/a/a;
 
 	v[j*4+mu] += -f*res;
 }
@@ -874,6 +883,14 @@ template <> void mdV2r_nr<4>(const uint& j, const uint& mu, const uint& i, const
 				+( - (-DX(l,mj,i,mu) - DX(l,j,pi,mu)) \
 				+ (DX(l,mj,i,mu) + DX(l,j,pi,mu)) )*T_imj/(2.0*pow(B_imj,2));
 	}
+		
+	//coincident terms
+	if (i==j)
+		res += 2.0*(l[j])[mu]/a/a;
+	if (i==mj)
+		res += -(l[mj])[mu]/a/a;
+	if (i==pj)
+		res += -(l[pj])[mu]/a/a;
 
 	v[j*4+mu] += -f*res;
 }
@@ -944,6 +961,14 @@ template <> void ddV1r_nr<4>(const uint& j, const uint& mu, const uint& k, const
 			
 		}		
 	}
+	
+	//coincident terms
+	if (k==j && mu==nu)
+		res += 2.0/a/a;
+	if (k==mj && mu==nu)
+		res += -1.0/a/a;
+	if (k==pj && mu==nu)
+		res += -1.0/a/a;
 	
 	m(4*j+mu,4*k+nu) += f*res;
 	
@@ -1080,6 +1105,14 @@ template <> void ddV2r_nr<4>(const uint& j, const uint& mu, const uint& k, const
 			}
 		}		
 	}
+	
+	//coincident terms
+	if (k==j && mu==nu)
+		res += 2.0/a/a;
+	if (k==mj && mu==nu)
+		res += -1.0/a/a;
+	if (k==pj && mu==nu)
+		res += -1.0/a/a;
 	
 	m(4*j+mu,4*k+nu) += f*res;
 	

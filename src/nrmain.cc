@@ -666,7 +666,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	if (checkDelta.good() && checkSol.good() && checkSolMax.good()) {
 	
 		// printing results to file	
-		string resFile = "results/nr/nrmain_cosmos_7.dat";
+		string resFile = "results/nr/nrmain_cosmos_8.dat";
 		FILE* ros;
 		ros = fopen(resFile.c_str(),"a");
 		fprintf(ros,"%24s%24i%24i%24g%24g%24i%24g%24g%24g%24g%24g%24g%24g%24g%24g%24g%24g%24g%24g\n",\

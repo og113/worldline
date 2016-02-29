@@ -36,11 +36,12 @@ set ytic auto
 set autoscale
 set xlabel "{/Symbol l}"
 set ylabel "angle"
+set xtics 0.01
 set grid xtics ytics
 
 a=0.15
 B=1
-E=0.02
+E=0.04
 
 set title sprintf("Induced instanton, a=%g, E=%g",a,E)
 
