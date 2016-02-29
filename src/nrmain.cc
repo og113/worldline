@@ -464,7 +464,7 @@ for (uint pl=0; pl<Npl; pl++) {
 			// checking if angle gamma agrees with weak coupling result
 			number gamma_ratio = 0.0;
 			if (abs(M)>MIN_NUMBER && abs(M)<2.0) {
-				number gamma_weak = PI-2.0*asin(sqrt(1.0-pow(M,2)/4.0));
+				number gamma_weak = 2.0*asin(M/p.G/p.B/2.0);
 				gamma_ratio = gamma/gamma_weak;
 			}
 			checkGamma.add(gamma_ratio);
