@@ -41,7 +41,7 @@ set grid xtics ytics
 
 a=0.15
 B=1
-E=0.04
+E=0.02
 
 set title sprintf("Induced instanton, a=%g, E=%g",a,E)
 
@@ -55,8 +55,8 @@ plot @ut7l 8 @ut7r t titleS(8) @style pt 1 lc rgb "red", \
 	@ut7l 9 @ut7r t titleS(9) @style pt 2 lc rgb "orange", \
 	@ut7l 10 @ut7r t titleS(10) @style pt 4 lc rgb "violet", \
 	@ut7l 11 @ut7r t titleS(11) @style pt 4 lc rgb "green", \
-	@ut7l 12 @ut7r t titleS(12) @style pt 8 lc rgb "blue"#, \
-	#@ut7l 1.2 @ut7r t titleS(1.2) @style pt 10 lc rgb "violet", \
+	@ut7l 12 @ut7r t titleS(12) @style pt 8 lc rgb "blue", \
+	@ut7l 13 @ut7r t titleS(13) @style pt 10 lc rgb "black"#, \
 	
 
 pause -1

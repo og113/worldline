@@ -401,6 +401,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		}
 		
 		// assigning scalar quantities
+		gamma = PI - gamma;
 		vr = v;
 		vr -= (abs(p.Epsi)>MIN_NUMBER? g*PI*len/p.Epsi : 0.0);
 		vr -= (!(P^=P0)? cusp_scale*fgamma : 0.0);
@@ -464,10 +465,10 @@ for (uint pl=0; pl<Npl; pl++) {
 			// checking if angle gamma agrees with weak coupling result
 			number gamma_ratio = 0.0;
 			if (abs(M)>MIN_NUMBER && abs(M)<2.0) {
-				number gamma_weak = 2.0*asin(M/p.G/p.B/2.0);
-				gamma_ratio = gamma/gamma_weak;
+				number gamma_free = 2.0*asin(M/2.0);
+				gamma_ratio = gamma/gamma_free;
 			}
-			checkGamma.add(gamma_ratio);
+			checkGamma.add(gamma_ratio-1.0);
 			checkGamma.checkMessage();
 		}		
 	
