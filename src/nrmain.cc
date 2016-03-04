@@ -401,7 +401,6 @@ for (uint pl=0; pl<Npl; pl++) {
 		}
 		
 		// assigning scalar quantities
-		gamma = PI - gamma;
 		vr = v;
 		vr -= (abs(p.Epsi)>MIN_NUMBER? g*PI*len/p.Epsi : 0.0);
 		vr -= (!(P^=P0)? cusp_scale*fgamma : 0.0);
