@@ -680,6 +680,8 @@ for (uint pl=0; pl<Npl; pl++) {
 		Filename loopRes = filenameLoopNR<dim>(p);
 		if (p.Ng>0)
 			(loopRes.Extras).push_back(StringPair("Ng",nts(p.Ng)));
+		if (weak)
+			(loopRes.Extras).push_back(StringPair("weak","1"));
 		saveVectorBinary(loopRes,x);
 		printf("%12s%50s\n","x:",((string)loopRes).c_str());
 		
