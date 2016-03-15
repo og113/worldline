@@ -6,8 +6,7 @@ if (outFile ne 'gui') \
 set term png size 1600,800; \
 set output outFile; \
 
-# files where results are
-file0="results/nr/nrmain.dat"
+# files
 file1="results/nr/nrmain_cosmos.dat"
 file2="results/nr/nrmain_cosmos_2.dat"
 file3="results/nr/nrmain_cosmos_3.dat"
@@ -28,6 +27,10 @@ pi=3.1415926535897932
 
 # gamma free
 mass(g,a)=(1.0-g**2/8.0/pi/a)
+
+# approximate analytic results
+pi=3.1415926535897932
+mass(g,a)=1-g**2/8.0/pi/a
 gamma_free(E,g,a)=2.0*asin(E/2.0/mass(g,a))
 
 unset log
@@ -43,7 +46,7 @@ set ylabel "{/Symbol g}"
 #set xtics 0.01
 set grid xtics ytics
 
-a=0.15
+a=0.1
 B=1
 g=1
 E=0.02
@@ -80,7 +83,5 @@ plot @ut7l 8 @ut7r t titleS(8) @style pt 1 lc rgb "red", \
 	@ut5l 12 @ut5r notitle @style pt 8 lc rgb "blue", \
 	@ut5l 13 @ut5r notitle @style pt 10 lc rgb "black", \
 	gamma_free(x,g,a) t "{/Symbol g}, continuum free theory including counterterms" with lines lc rgb "black"
-	
-	
 
 pause -1

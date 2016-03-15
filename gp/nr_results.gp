@@ -29,15 +29,15 @@ p(g,B,E)=pi/g/B-(2.0/g/B)*( asin(E/2.0) + (E/2.0)*sqrt(1.0-(E/2.0)**2) )
 unset log
 unset label
 set key below
-set xtic aSEo
+set xtic auto
 set logscale xy
 set format y "10^{%L}"
-set aSEoscale
+set autoscale
 set title "Instantons, g=1.0, B=1.0, K=11"
 set xlabel "a"
 set ylabel "S"
 
-#set y2tic aSEo
+#set y2tic auto
 #set logscale y2
 #set y2label "K_g"
 #set format y2 "10^{%L}"

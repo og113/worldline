@@ -39,11 +39,11 @@ set ylabel "{/Symbol g}"
 set xtics 0.01
 set grid xtics ytics
 
-a=0.15
+a=0.125
 B=1
 E=1
 
-#set arrow from 0.1,(2.0*asin(E/2.0)) to 0.2,(2.0*asin(E/2.0)) nohead
+set arrow from 0.1,(2.0*asin(E/2.0)) to 0.2,(2.0*asin(E/2.0)) nohead
 
 set title sprintf("Induced instanton, a=%g, E=%g",a,E)
 
