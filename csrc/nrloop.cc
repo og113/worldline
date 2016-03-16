@@ -95,9 +95,9 @@ void FGamma (const uint& j,const Loop<Dim>& l,  const number& f, number& result)
 	result += f*(cot_gamma*atan(1.0/cot_gamma)-1.0);	
 }
 
-// V1r
+// Vor
 template <uint Dim>
-void V1r (const uint& j, const uint& k, const Loop<Dim>& l, const number& a, const number& f, number& result) {
+void Vor (const uint& j, const uint& k, const Loop<Dim>& l, const number& a, const number& f, number& result) {
 
 	if (k<j) {
 		uint pj = (j==(l.size()-1)? 0: j+1);
@@ -107,15 +107,40 @@ void V1r (const uint& j, const uint& k, const Loop<Dim>& l, const number& a, con
 	}
 }
 
-// V2r
+// Vlr
 template <uint Dim>
-void V2r (const uint& j, const uint& k, const Loop<Dim>& l, const number& a, const number& f, number& result) {
+void Vlr (const uint& j, const uint& k, const Loop<Dim>& l, const number& a, const number& f, number& result) {
 
 	if (k<j) {
 		uint pj = (j==(l.size()-1)? 0: j+1);
 		uint pk = (k==(l.size()-1)? 0: k+1);
 	
 		result += f*2.0*Dot(l[pj],l[j],l[pk],l[k])*pow(0.25*DistanceSquared(l[pj]+l[j],l[pk]+l[k])+a*a,(2.0-Dim)/2.0);	
+	}
+}
+
+// Ver
+template <uint Dim>
+void Ver (const uint& j, const uint& k, const Loop<Dim>& l, const number& a, const number& f, number& result) {
+
+	if (k<j) {
+		uint pj = (j==(l.size()-1)? 0: j+1);
+		uint pk = (k==(l.size()-1)? 0: k+1);
+		number d2 = DistanceSquared(l[j],l[k]);
+	
+		result += f*2.0*Dot(l[pj],l[j],l[pk],l[k])*pow(d2,(2.0-Dim)/2.0)*exp(-a*a/d2);
+	}
+}
+
+// Vdr
+template <uint Dim>
+void Vdr (const uint& j, const uint& k, const Loop<Dim>& l, const number& a, const number& f, number& result) {
+
+	if (k<j) {
+		uint pj = (j==(l.size()-1)? 0: j+1);
+		uint pk = (k==(l.size()-1)? 0: k+1);
+	
+		result += f*2.0*Dot(l[pj],l[j],l[pk],l[k])*pow(DistanceSquared(l[j],l[k]),(2.0-Dim+a)/2.0);	
 	}
 }
 
@@ -425,48 +450,92 @@ void ddsqrtS0_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, \
 	
 }
 
-// mdV1r_nr
+// mdVor_nr
 template<uint Dim>
-void mdV1r_nr(const uint& j, const uint& mu, const Loop<Dim>& l, const number& a, const number& f, vec& v) {
+void mdVor_nr(const uint& j, const uint& mu, const Loop<Dim>& l, const number& a, const number& f, vec& v) {
 
 	for (uint i=0; i<l.size(); i++)
-		mdV1r_nr( j, mu, i, l, a, f, v);
+		mdVor_nr( j, mu, i, l, a, f, v);
 	
 }
 
-// mdV1r_nr
+// mdVor_nr
 template<uint Dim>
-void mdV1r_nr(const uint& j, const uint& mu, const uint& i, const Loop<Dim>& l, const number& a, const number& f, vec& v) {
-	cerr << "mdV1r_nr Error: no script written for dim = " << Dim << endl;
+void mdVor_nr(const uint& j, const uint& mu, const uint& i, const Loop<Dim>& l, const number& a, const number& f, vec& v) {
+	cerr << "mdVor_nr Error: no script written for dim = " << Dim << endl;
 }
 
-// ddV1r_nr
+// ddVor_nr
 template<uint Dim>
-void ddV1r_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l,\
+void ddVor_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l,\
 						 const number& a, const number& f, mat& m) {
-	cerr << "mddV1r_nr Error: no script written for dim = " << Dim << endl;
+	cerr << "mddVor_nr Error: no script written for dim = " << Dim << endl;
 }
 
-// mdV2r_nr
+// mdVlr_nr
 template<uint Dim>
-void mdV2r_nr(const uint& j, const uint& mu, const Loop<Dim>& l, const number& a, const number& f, vec& v) {
+void mdVlr_nr(const uint& j, const uint& mu, const Loop<Dim>& l, const number& a, const number& f, vec& v) {
 
 	for (uint i=0; i<l.size(); i++)
-		mdV2r_nr( j, mu, i, l, a, f, v);
+		mdVlr_nr( j, mu, i, l, a, f, v);
 	
 }
 
-// mdV2r_nr
+// mdVlr_nr
 template<uint Dim>
-void mdV2r_nr(const uint& j, const uint& mu, const uint& i, const Loop<Dim>& l, const number& a, const number& f, vec& v) {
-	cerr << "mdV2r_nr Error: no script written for dim = " << Dim << endl;
+void mdVlr_nr(const uint& j, const uint& mu, const uint& i, const Loop<Dim>& l, const number& a, const number& f, vec& v) {
+	cerr << "mdVlr_nr Error: no script written for dim = " << Dim << endl;
 }
 
-// ddV2r_nr
+// ddVlr_nr
 template<uint Dim>
-void ddV2r_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l,\
+void ddVlr_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l,\
 						 const number& a, const number& f, mat& m) {
-	cerr << "mddV2r_nr Error: no script written for dim = " << Dim << endl;
+	cerr << "mddVlr_nr Error: no script written for dim = " << Dim << endl;
+}
+
+// mdVer_nr
+template<uint Dim>
+void mdVer_nr(const uint& j, const uint& mu, const Loop<Dim>& l, const number& a, const number& f, vec& v) {
+
+	for (uint i=0; i<l.size(); i++)
+		mdVer_nr( j, mu, i, l, a, f, v);
+	
+}
+
+// mdVer_nr
+template<uint Dim>
+void mdVer_nr(const uint& j, const uint& mu, const uint& i, const Loop<Dim>& l, const number& a, const number& f, vec& v) {
+	cerr << "mdVer_nr Error: no script written for dim = " << Dim << endl;
+}
+
+// ddVer_nr
+template<uint Dim>
+void ddVer_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l,\
+						 const number& a, const number& f, mat& m) {
+	cerr << "mddVer_nr Error: no script written for dim = " << Dim << endl;
+}
+
+// mdVdr_nr
+template<uint Dim>
+void mdVdr_nr(const uint& j, const uint& mu, const Loop<Dim>& l, const number& a, const number& f, vec& v) {
+
+	for (uint i=0; i<l.size(); i++)
+		mdVdr_nr( j, mu, i, l, a, f, v);
+	
+}
+
+// mdVdr_nr
+template<uint Dim>
+void mdVdr_nr(const uint& j, const uint& mu, const uint& i, const Loop<Dim>& l, const number& a, const number& f, vec& v) {
+	cerr << "mdVdr_nr Error: no script written for dim = " << Dim << endl;
+}
+
+// ddVdr_nr
+template<uint Dim>
+void ddVdr_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l,\
+						 const number& a, const number& f, mat& m) {
+	cerr << "mddVdr_nr Error: no script written for dim = " << Dim << endl;
 }
 
 // mdGamma_nr
@@ -687,6 +756,8 @@ template<uint Dim>
 Filename filenameLoopNR(const Parameters& p) {
 	Filename f = "data/nr/loops/dim_"+nts(Dim)+"/K_"+nts(p.K)+"/loop_G_"+nts(p.G)+"_B_"+nts(p.B)+"_M_"+nts(p.P4)\
 		+"_a_"+nts(p.Epsi)+"_mu_"+nts(p.Mu)+".dat";
+	if (p.Ng>0)
+		(f.Extras).push_back(StringPair("Ng",nts(p.Ng)));
 	return f;
 }
 
@@ -722,7 +793,7 @@ template void ddS0_nr<2>(const uint& j, const uint& mu, const uint& k, const uin
 template void mdsqrtS0_nr<2>(const uint& j, const uint& mu, const Loop<2>& l, const number& sqrt4s0, const number& p, vec& v);
 template void ddsqrtS0_nr<2>(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<2>& l,\
 								 const number& sqrt4s0, const number& p, mat& m);
-template void mdV1r_nr<2>(const uint& j, const uint& mu, const Loop<2>& l, const number& a, const number& p, vec& v);
+template void mdVor_nr<2>(const uint& j, const uint& mu, const Loop<2>& l, const number& a, const number& p, vec& v);
 template void mdFGamma_nr<2>(const Loop<2>& l, const uint& loc, const number& f, vec& v);
 template void ddFGamma_nr<2>(const Loop<2>& l, const uint& loc, const number& f, mat& v);
 template void loopToVector<2>(const Loop<2>&,vec&);
@@ -793,7 +864,7 @@ template void ddS0_nr<4>(const uint& j, const uint& mu, const uint& k, const uin
 template void mdsqrtS0_nr<4>(const uint& j, const uint& mu, const Loop<4>& l, const number& sqrt4s0, const number& p, vec& v);
 template void ddsqrtS0_nr<4>(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<4>& l,\
 								 const number& sqrt4s0, const number& p, mat& m);
-template void mdV1r_nr<4>(const uint& j, const uint& mu, const Loop<4>& l, const number& a, const number& p, vec& v);
+template void mdVor_nr<4>(const uint& j, const uint& mu, const Loop<4>& l, const number& a, const number& p, vec& v);
 template void mdFGamma_nr<4>(const Loop<4>& l, const uint& loc, const number& p, vec& v);
 template void ddFGamma_nr<4>(const Loop<4>& l, const uint& loc, const number& p, mat& v);
 template void loopToVector<4>(const Loop<4>&,vec&);
@@ -811,8 +882,8 @@ template <> void PseudoAngle<4>(const uint& j, const Loop<4>& l, const number& f
 	result += f*(asin(sin_gamma));
 }
 
-// V1r
-template <> void V1r<4>(const uint& j, const uint& k, const Loop<4>& l, const number& a, const number& f, number& result) {
+// Vor
+template <> void Vor<4>(const uint& j, const uint& k, const Loop<4>& l, const number& a, const number& f, number& result) {
 
 	if (k<j) {
 		uint pj = (j==(l.size()-1)? 0: j+1);
@@ -822,8 +893,8 @@ template <> void V1r<4>(const uint& j, const uint& k, const Loop<4>& l, const nu
 	}
 }
 
-// V2r
-template <> void V2r<4>(const uint& j, const uint& k, const Loop<4>& l, const number& a, const number& f, number& result) {
+// Vlr
+template <> void Vlr<4>(const uint& j, const uint& k, const Loop<4>& l, const number& a, const number& f, number& result) {
 
 	if (k<j) {
 		uint pj = (j==(l.size()-1)? 0: j+1);
@@ -833,8 +904,31 @@ template <> void V2r<4>(const uint& j, const uint& k, const Loop<4>& l, const nu
 	}
 }
 
-// mdV1r_nr
-template <> void mdV1r_nr<4>(const uint& j, const uint& mu, const uint& i, const Loop<4>& l, const number& a, const number& f, vec& v) {
+// Ver
+template <> void Ver<4>(const uint& j, const uint& k, const Loop<4>& l, const number& a, const number& f, number& result) {
+
+	if (k<j) {
+		uint pj = (j==(l.size()-1)? 0: j+1);
+		uint pk = (k==(l.size()-1)? 0: k+1);
+		number d2 = DistanceSquared(l[j],l[k]);
+	
+		result += f*2.0*Dot(l[pj],l[j],l[pk],l[k])*exp(-a*a/d2)/d2;	
+	}
+}
+
+// Vdr
+template <> void Vdr<4>(const uint& j, const uint& k, const Loop<4>& l, const number& a, const number& f, number& result) {
+
+	if (k<j) {
+		uint pj = (j==(l.size()-1)? 0: j+1);
+		uint pk = (k==(l.size()-1)? 0: k+1);
+	
+		result += f*2.0*Dot(l[pj],l[j],l[pk],l[k])/pow(DistanceSquared(l[j],l[k]),1.0-a/2.0);	
+	}
+}
+
+// mdVor_nr
+template <> void mdVor_nr<4>(const uint& j, const uint& mu, const uint& i, const Loop<4>& l, const number& a, const number& f, vec& v) {
 	number res = 0.0;
 	uint pj = (j==(l.size()-1)? 0: j+1);
 	uint mj = (j==0? (l.size()-1): j-1);
@@ -843,7 +937,7 @@ template <> void mdV1r_nr<4>(const uint& j, const uint& mu, const uint& i, const
 	if (i!=j) {
 		number B_ij = a*a + DistanceSquared(l[i],l[j]);
 		number T_ij = Dot(l[pi],l[i],l[pj],l[j]);
-		res += 2.0*DX(l,i,pi,mu)/B_ij - 4*DX(l,j,i,mu)*T_ij/pow(B_ij,2);
+		res += 2.0*DX(l,i,pi,mu)/B_ij - 4.0*DX(l,j,i,mu)*T_ij/pow(B_ij,2);
 	}
 	if (i!=mj) {
 		number B_imj = a*a + DistanceSquared(l[i],l[mj]);
@@ -853,8 +947,8 @@ template <> void mdV1r_nr<4>(const uint& j, const uint& mu, const uint& i, const
 	v[j*4+mu] += -f*res;
 }
 
-// mdV2r_nr
-template <> void mdV2r_nr<4>(const uint& j, const uint& mu, const uint& i, const Loop<4>& l, const number& a, const number& f, vec& v) {
+// mdVlr_nr
+template <> void mdVlr_nr<4>(const uint& j, const uint& mu, const uint& i, const Loop<4>& l, const number& a, const number& f, vec& v) {
 	number B_ij, B_imj, T_ij, T_imj, res = 0.0;
 	uint pj = (j==(l.size()-1)? 0: j+1);
 	uint mj = (j==0? (l.size()-1): j-1);
@@ -878,8 +972,52 @@ template <> void mdV2r_nr<4>(const uint& j, const uint& mu, const uint& i, const
 	v[j*4+mu] += -f*res;
 }
 
-// ddV1r_nr
-template <> void ddV1r_nr<4>(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<4>& l,\
+// mdVer_nr
+template <> void mdVer_nr<4>(const uint& j, const uint& mu, const uint& i, const Loop<4>& l, const number& a, const number& f, vec& v) {
+	number res = 0.0;
+	uint pj = (j==(l.size()-1)? 0: j+1);
+	uint mj = (j==0? (l.size()-1): j-1);
+	uint pi = (i==(l.size()-1)? 0: i+1);
+		
+	if (i!=j) {
+		number B_ij = DistanceSquared(l[i],l[j]);
+		number T_ij = Dot(l[pi],l[i],l[pj],l[j]);
+		number E_ij = exp(-a*a/B_ij);
+		res += (+ (2.0*DX(l,i,pi,mu))/B_ij \
+ 				+ (4.0*pow(a,2)*DX(l,j,i,mu)*T_ij)/pow(B_ij,3) \
+ 				- (4.0*DX(l,j,i,mu)*T_ij)/pow(B_ij,2) )*E_ij;
+	}
+	if (i!=mj) {
+		number B_imj = DistanceSquared(l[i],l[mj]);
+		number E_imj = exp(-a*a/B_imj);
+		res += (-2.0*DX(l,i,pi,mu)/B_imj)*E_imj;
+	}
+
+	v[j*4+mu] += -f*res;
+}
+
+// mdVdr_nr
+template <> void mdVdr_nr<4>(const uint& j, const uint& mu, const uint& i, const Loop<4>& l, const number& a, const number& f, vec& v) {
+	number res = 0.0;
+	uint pj = (j==(l.size()-1)? 0: j+1);
+	uint mj = (j==0? (l.size()-1): j-1);
+	uint pi = (i==(l.size()-1)? 0: i+1);
+		
+	if (i!=j) {
+		number B_ij = DistanceSquared(l[i],l[j]);
+		number T_ij = Dot(l[pi],l[i],l[pj],l[j]);
+		res += 2.0*pow(B_ij,-1.0 + a/2.0)*DX(l,i,pi,mu) + 2.0*(-2.0 + a)*pow(B_ij,-2.0 + a/2.0)*DX(l,j,i,mu)*T_ij;
+	}
+	if (i!=mj) {
+		number B_imj = DistanceSquared(l[i],l[mj]);
+		res += -2.0*pow(B_imj,-1.0 + a/2.0)*DX(l,i,pi,mu);
+	}
+
+	v[j*4+mu] += -f*res;
+}
+
+// ddVor_nr
+template <> void ddVor_nr<4>(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<4>& l,\
 						 const number& a, const number& f, mat& m) {
 	number res = 0.0;
 	
@@ -949,8 +1087,8 @@ template <> void ddV1r_nr<4>(const uint& j, const uint& mu, const uint& k, const
 	
 }
 
-// ddV2r_nr
-template <> void ddV2r_nr<4>(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<4>& l,\
+// ddVlr_nr
+template <> void ddVlr_nr<4>(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<4>& l,\
 						 const number& a, const number& f, mat& m) {
 	number res = 0.0;
 	
@@ -1078,6 +1216,183 @@ template <> void ddV2r_nr<4>(const uint& j, const uint& mu, const uint& k, const
 				if (mu==nu)
 					res += - T_ij/pow(B_ij,2);
 			}
+		}		
+	}
+	
+	m(4*j+mu,4*k+nu) += f*res;
+	
+}
+
+// ddVer_nr
+template <> void ddVer_nr<4>(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<4>& l,\
+						 const number& a, const number& f, mat& m) {
+	number res = 0.0;
+	
+	uint mj = (j==0? (l.size()-1): j-1);
+	uint pj = (j==(l.size()-1)? 0: j+1);		
+	uint mk = (k==0? (l.size()-1): k-1);
+	uint pk = (k==(l.size()-1)? 0: k+1);
+	
+	number B_jk = DistanceSquared(l[j],l[k]);
+	number B_mjk = DistanceSquared(l[mj],l[k]);
+	number B_jmk = DistanceSquared(l[j],l[mk]);
+	number B_mjmk = DistanceSquared(l[mj],l[mk]);
+	
+	number E_jk = exp(-a*a/B_jk);
+	number E_mjk = exp(-a*a/B_mjk);
+	number E_jmk = exp(-a*a/B_jmk);
+	number E_mjmk = exp(-a*a/B_mjmk);
+	
+	number T_jk = Dot(l[pj],l[j],l[pk],l[k]);
+	
+	// terms where mu==nu, without sums
+	if (mu==nu) {
+		if (k!=j)
+			res += 	 + (2.0*E_mjmk)/B_mjmk \
+					 + (2.0*E_jk)/B_jk \
+					 - (4.0*pow(a,2)*E_jk*T_jk)/pow(B_jk,3) \
+					 + (4.0*E_jk*T_jk)/pow(B_jk,2);
+		if (k!=mj)
+			res +=  - (2.0*E_mjk)/B_mjk; //
+		if (k!=pj)
+			res += - (2.0*E_jmk)/B_jmk; //
+	}
+	
+	// terms where mu not nexcessarily equal to nu, without sums
+	if (k!=j)
+		res +=   + (4.0*pow(a,2)*E_jk*DX(l,j,pj,nu)*DX(l,j,k,mu))/pow(B_jk,3) \
+ 				- (4.0*E_jk*DX(l,j,pj,nu)*DX(l,j,k,mu))/pow(B_jk,2) \
+ 				- (4.0*pow(a,2)*E_jk*DX(l,j,k,nu)*DX(l,k,pk,mu))/pow(B_jk,3) \
+				 + (4.0*E_jk*DX(l,j,k,nu)*DX(l,k,pk,mu))/pow(B_jk,2) \
+				 - (8.0*pow(a,4)*E_jk*DX(l,j,k,mu)*DX(l,j,k,nu)*T_jk)/pow(B_jk,5) \
+				 + (32.0*pow(a,2)*E_jk*DX(l,j,k,mu)*DX(l,j,k,nu)*T_jk)/pow(B_jk,4) \
+				 - (16.0*E_jk*DX(l,j,k,mu)*DX(l,j,k,nu)*T_jk)/pow(B_jk,3); //
+	if (k!=mj)
+		res +=  + (4.0*pow(a,2)*E_mjk*DX(l,mj,k,nu)*DX(l,k,pk,mu))/pow(B_mjk,3) \
+ 				- (4.0*E_mjk*DX(l,mj,k,nu)*DX(l,k,pk,mu))/pow(B_mjk,2); //
+	if (k!=pj)
+		res += - (4.0*pow(a,2)*E_jmk*DX(l,j,pj,nu)*DX(l,j,mk,mu))/pow(B_jmk,3) \
+ 				+ (4.0*E_jmk*DX(l,j,pj,nu)*DX(l,j,mk,mu))/pow(B_jmk,2) ; //
+	
+	// terms with sums
+	if (k==j || k==mj || k==pj) {
+	
+		uint pi;
+		number B_ij, B_imj, E_ij, E_imj, T_ij;
+		
+		for (uint i=0; i<l.size(); i++) {
+		
+			pi = (i==(l.size()-1)? 0: i+1);
+			B_ij = DistanceSquared(l[i],l[j]);
+			B_imj = DistanceSquared(l[i],l[mj]);
+			E_ij = exp(-a*a/B_ij);
+			E_imj = exp(-a*a/B_imj);
+			T_ij = Dot(l[pi],l[i],l[pj],l[j]);
+			
+			if (k==j && i!=j) {
+				res += 	 + (4.0*pow(a,2)*E_ij*DX(l,i,pi,nu)*DX(l,j,i,mu))/pow(B_ij,3) \
+						 - (4.0*E_ij*DX(l,i,pi,nu)*DX(l,j,i,mu))/pow(B_ij,2) \
+						 + (4.0*pow(a,2)*E_ij*DX(l,i,pi,mu)*DX(l,j,i,nu))/pow(B_ij,3) \
+						 - (4.0*E_ij*DX(l,i,pi,mu)*DX(l,j,i,nu))/pow(B_ij,2) \
+						 + (8.0*pow(a,4)*E_ij*DX(l,j,i,mu)*DX(l,j,i,nu)*T_ij)/pow(B_ij,5) \
+						 - (32.0*pow(a,2)*E_ij*DX(l,j,i,mu)*DX(l,j,i,nu)*T_ij)/pow(B_ij,4) \
+						 + (16.0*E_ij*DX(l,j,i,mu)*DX(l,j,i,nu)*T_ij)/pow(B_ij,3);
+				if (mu==nu)
+					res +=  + (4.0*pow(a,2)*E_ij*T_ij)/pow(B_ij,3) \
+ 							- (4.0*E_ij*T_ij)/pow(B_ij,2); //
+			}
+			if (k==mj && i!=mj) 
+				res +=  (-4.0*pow(a,2)*E_imj*DX(l,i,pi,mu)*DX(l,mj,i,nu))/pow(B_imj,3) \
+ 						+ (4.0*E_imj*DX(l,i,pi,mu)*DX(l,mj,i,nu))/pow(B_imj,2);
+			if (k==pj && i!=j) 
+				res += - (4.0*pow(a,2)*E_ij*DX(l,i,pi,nu)*DX(l,j,i,mu))/pow(B_ij,3) \
+ 						+ (4.0*E_ij*DX(l,i,pi,nu)*DX(l,j,i,mu))/pow(B_ij,2);
+			
+		}		
+	}
+	
+	m(4*j+mu,4*k+nu) += f*res;
+	
+}
+
+// ddVdr_nr
+template <> void ddVdr_nr<4>(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<4>& l,\
+						 const number& a, const number& f, mat& m) {
+	number res = 0.0;
+	
+	uint mj = (j==0? (l.size()-1): j-1);
+	uint pj = (j==(l.size()-1)? 0: j+1);		
+	uint mk = (k==0? (l.size()-1): k-1);
+	uint pk = (k==(l.size()-1)? 0: k+1);
+	
+	number B_jk = DistanceSquared(l[j],l[k]);
+	number B_mjk = DistanceSquared(l[mj],l[k]);
+	number B_jmk = DistanceSquared(l[j],l[mk]);
+	number B_mjmk = DistanceSquared(l[mj],l[mk]);
+	
+	number T_jk = Dot(l[pj],l[j],l[pk],l[k]);
+	
+	// terms where mu==nu, without sums
+	if (mu==nu) {
+		if (k!=j)
+			res += 	 + 2.0*pow(B_mjmk,-1.0 + a/2.0) \
+					+ 2.0*pow(B_jk,-1.0 + a/2.0) \
+ 					+ 4.0*pow(B_jk,-2.0 + a/2.0)*T_jk \
+ 					- 2.0*a*pow(B_jk,-2.0 + a/2.0)*T_jk;
+		if (k!=mj)
+			res += - 2.0*pow(B_mjk,-1.0 + a/2.0); //
+		if (k!=pj)
+			res += - 2.0*pow(B_jmk,-1.0 + a/2.0); //
+	}
+	
+	// terms where mu not nexcessarily equal to nu, without sums
+	if (k!=j)
+		res +=  - 4.0*pow(B_jk,-2.0 + a/2.0)*DX(l,j,pj,nu)*DX(l,j,k,mu) \
+				 + 2.0*a*pow(B_jk,-2.0 + a/2.0)*DX(l,j,pj,nu)*DX(l,j,k,mu) \
+				 + 4.0*pow(B_jk,-2.0 + a/2.0)*DX(l,j,k,nu)*DX(l,k,pk,mu) \
+				 - 2.0*a*pow(B_jk,-2.0 + a/2.0)*DX(l,j,k,nu)*DX(l,k,pk,mu) \
+				 - 16.0*pow(B_jk,-3.0 + a/2.0)*DX(l,j,k,mu)*DX(l,j,k,nu)*T_jk \
+				 + 12.0*a*pow(B_jk,-3.0 + a/2.0)*DX(l,j,k,mu)*DX(l,j,k,nu)*T_jk \
+				 - 2.0*pow(a,2)*pow(B_jk,-3.0 + a/2.0)*DX(l,j,k,mu)*DX(l,j,k,nu)*T_jk; //
+	if (k!=mj)
+		res += - 4.0*pow(B_mjk,-2.0 + a/2.0)*DX(l,mj,k,nu)*DX(l,k,pk,mu) \
+ 				+ 2.0*a*pow(B_mjk,-2.0 + a/2.0)*DX(l,mj,k,nu)*DX(l,k,pk,mu); //
+	if (k!=pj)
+		res += + 4.0*pow(B_jmk,-2.0 + a/2.0)*DX(l,j,pj,nu)*DX(l,j,mk,mu) \
+ 				- 2.0*a*pow(B_jmk,-2.0 + a/2.0)*DX(l,j,pj,nu)*DX(l,j,mk,mu); //
+	
+	// terms with sums
+	if (k==j || k==mj || k==pj) {
+	
+		uint pi;
+		number B_ij, B_imj, T_ij;
+		
+		for (uint i=0; i<l.size(); i++) {
+		
+			pi = (i==(l.size()-1)? 0: i+1);
+			B_ij = DistanceSquared(l[i],l[j]);
+			B_imj = DistanceSquared(l[i],l[mj]);
+			T_ij = Dot(l[pi],l[i],l[pj],l[j]);
+			
+			if (k==j && i!=j) {
+				res += 	 - 4.0*pow(B_ij,-2.0 + a/2.0)*DX(l,i,pi,nu)*DX(l,j,i,mu) \
+						 + 2.0*a*pow(B_ij,-2.0 + a/2.0)*DX(l,i,pi,nu)*DX(l,j,i,mu) \
+						 - 4.0*pow(B_ij,-2.0 + a/2.0)*DX(l,i,pi,mu)*DX(l,j,i,nu) \
+						 + 2.0*a*pow(B_ij,-2.0 + a/2.0)*DX(l,i,pi,mu)*DX(l,j,i,nu) \
+						 + 16.0*pow(B_ij,-3.0 + a/2.0)*DX(l,j,i,mu)*DX(l,j,i,nu)*T_ij \
+						 - 12.0*a*pow(B_ij,-3.0 + a/2.0)*DX(l,j,i,mu)*DX(l,j,i,nu)*T_ij \
+						 + 2.0*pow(a,2)*pow(B_ij,-3.0 + a/2.0)*DX(l,j,i,mu)*DX(l,j,i,nu)*T_ij;
+				if (mu==nu)
+					res +=  - 4.0*pow(B_ij,-2.0 + a/2.0)*T_ij \
+ 							+ 2.0*a*pow(B_ij,-2.0 + a/2.0)*T_ij; //
+			}
+			if (k==mj && i!=mj) 
+				res +=  4.0*pow(B_imj,-2.0 + a/2.0)*DX(l,i,pi,mu)*DX(l,mj,i,nu) \
+ 						- 2.0*a*pow(B_imj,-2.0 + a/2.0)*DX(l,i,pi,mu)*DX(l,mj,i,nu);
+			if (k==pj && i!=j) 
+				res += + 4.0*pow(B_ij,-2.0 + a/2.0)*DX(l,i,pi,nu)*DX(l,j,i,mu) \
+ 						- 2.0*a*pow(B_ij,-2.0 + a/2.0)*DX(l,i,pi,nu)*DX(l,j,i,mu);
+			
 		}		
 	}
 	

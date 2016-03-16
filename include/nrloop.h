@@ -63,13 +63,21 @@ void PseudoAngle (const uint& j, const Loop<Dim>& l, const number& f, number& re
 template <uint Dim>
 void FGamma (const uint& j, const Loop<Dim>& l, const number& f, number& result);
 
-// V1r
+// Vor
 template <uint Dim>
-void V1r (const uint& j, const uint& k, const Loop<Dim>& l, const number& a, const number& f, number& result);
+void Vor (const uint& j, const uint& k, const Loop<Dim>& l, const number& a, const number& f, number& result);
 
-// V2r
+// Vlr
 template <uint Dim>
-void V2r (const uint& j, const uint& k, const Loop<Dim>& l, const number& a, const number& f, number& result);
+void Vlr (const uint& j, const uint& k, const Loop<Dim>& l, const number& a, const number& f, number& result);
+
+// Ver
+template <uint Dim>
+void Ver (const uint& j, const uint& k, const Loop<Dim>& l, const number& a, const number& f, number& result);
+
+// Vdr
+template <uint Dim>
+void Vdr (const uint& j, const uint& k, const Loop<Dim>& l, const number& a, const number& f, number& result);
 
 // InlineCurvatureMax
 template <uint Dim>
@@ -160,30 +168,56 @@ template<uint Dim>
 void ddsqrtS0_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, \
 						const Loop<Dim>& l, const number& sqrt4s0, const number& f, mat& m);
 						
-// mdV1r_nr
+// mdVor_nr
 template<uint Dim>
-void mdV1r_nr(const uint& j, const uint& mu, const Loop<Dim>& l, const number& a, const number& f, vec& v);
+void mdVor_nr(const uint& j, const uint& mu, const Loop<Dim>& l, const number& a, const number& f, vec& v);
 
-// mdV2r_nr
+// mdVlr_nr
 template<uint Dim>
-void mdV2r_nr(const uint& j, const uint& mu, const Loop<Dim>& l, const number& a, const number& f, vec& v);
+void mdVlr_nr(const uint& j, const uint& mu, const Loop<Dim>& l, const number& a, const number& f, vec& v);
 
-// mdV1r_nr
+// mdVer_nr
 template<uint Dim>
-void mdV1r_nr(const uint& j, const uint& mu, const uint& i, const Loop<Dim>& l, const number& a, const number& f, vec& v);
+void mdVer_nr(const uint& j, const uint& mu, const Loop<Dim>& l, const number& a, const number& f, vec& v);
 
-// mdV2r_nr
+// mdVdr_nr
 template<uint Dim>
-void mdV2r_nr(const uint& j, const uint& mu, const uint& i, const Loop<Dim>& l, const number& a, const number& f, vec& v);
+void mdVdr_nr(const uint& j, const uint& mu, const Loop<Dim>& l, const number& a, const number& f, vec& v);
 
-// ddV1r_nr
+// mdVor_nr
 template<uint Dim>
-void ddV1r_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l,\
+void mdVor_nr(const uint& j, const uint& mu, const uint& i, const Loop<Dim>& l, const number& a, const number& f, vec& v);
+
+// mdVlr_nr
+template<uint Dim>
+void mdVlr_nr(const uint& j, const uint& mu, const uint& i, const Loop<Dim>& l, const number& a, const number& f, vec& v);
+
+// mdVer_nr
+template<uint Dim>
+void mdVer_nr(const uint& j, const uint& mu, const uint& i, const Loop<Dim>& l, const number& a, const number& f, vec& v);
+
+// mdVdr_nr
+template<uint Dim>
+void mdVdr_nr(const uint& j, const uint& mu, const uint& i, const Loop<Dim>& l, const number& a, const number& f, vec& v);
+
+// ddVor_nr
+template<uint Dim>
+void ddVor_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l,\
 						 const number& a, const number& f, mat& m);
 
-// ddV2r_nr
+// ddVlr_nr
 template<uint Dim>
-void ddV2r_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l,\
+void ddVlr_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l,\
+						 const number& a, const number& f, mat& m);
+						 
+// ddVer_nr
+template<uint Dim>
+void ddVer_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l,\
+						 const number& a, const number& f, mat& m);
+						 
+// ddVdr_nr
+template<uint Dim>
+void ddVdr_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l,\
 						 const number& a, const number& f, mat& m);
 						 
 // mdFGamma_nr
