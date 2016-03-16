@@ -30,11 +30,15 @@ using namespace std;
 ----------------------------------------------------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------------------------------------------------*/
 /*----------------------------------------------------------------------------------------------------------------------------
-	0 - print options enum
+	0 - enums
 ----------------------------------------------------------------------------------------------------------------------------*/
 
 struct PrintOptions {
 	enum Option { none, all, x, mds, dds, delta, curvature};
+};
+
+struct PotentialOptions {
+	enum Option { original, link, exponential, dimreg};
 };
 
 int main(int argc, char** argv) {
@@ -52,6 +56,7 @@ bool curvature = false;
 bool old = true;
 bool alltests = false; // doing alltests
 string printOpts = "";
+string potOpts = "";
 string inputsFile = "inputs4";
 
 // getting argv
@@ -68,6 +73,7 @@ if (argc % 2 && argc>1) {
 		else if (id.compare("old")==0) old = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("inputs")==0) inputsFile = (string)argv[2*j+2];
 		else if (id.compare("print")==0) printOpts = (string)argv[2*j+2];
+		else if (id.compare("pot")==0 || id.compare("potential")==0) potOpts = (string)argv[2*j+2];
 		else if (id.compare("alltests")==0) alltests = (stn<uint>(argv[2*j+2])!=0);
 		else {
 			cerr << "argv id " << id << " not understood" << endl;
@@ -96,6 +102,22 @@ if (!printOpts.empty()) {
 	}
 	else
 		cerr << "print options not understood: " << printOpts << endl;
+}
+
+PotentialOptions::Option poto = PotentialOptions::original;
+if (!potOpts.empty()) {
+	if (potOpts.compare("original")==0)
+		poto = PotentialOptions::original;
+	else if (potOpts.compare("link")==0)
+		poto = PotentialOptions::link;
+	else if (potOpts.compare("exponential")==0 || potOpts.compare("exp")==0)
+		poto = PotentialOptions::exponential;
+	else if (potOpts.compare("dimreg")==0)
+		poto = PotentialOptions::dimreg;
+	else {
+		cerr << "potential options not understood: " << potOpts << endl;
+		return 1;
+	}
 }
 //dimension
 #define dim 4
@@ -132,8 +154,10 @@ for (uint pl=0; pl<Npl; pl++) {
 		p = pr.position(pl);
 		pold = pr.neigh(pl);
 		stepFile = filenameLoopNR<dim>(pold);
-		if (pold.Ng>0)
-			(stepFile.Extras).push_back(StringPair("Ng",nts(pold.Ng)));
+		if (weak)
+			(stepFile.Extras).push_back(StringPair("weak","1"));
+		if (poto!=PotentialOptions::original)
+			(stepFile.Extras).push_back(StringPair("pot",nts((int)poto)));
 	}
 		
 	
@@ -203,8 +227,10 @@ for (uint pl=0; pl<Npl; pl++) {
 			loadFile = "data/lemon/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_R_"+nts(R)+"_M_"+nts(M)+"_rank_0.dat";
 		else {
 			loadFile = filenameLoopNR<dim>(p);
-			if (p.Ng>0)
-				(loadFile.Extras).push_back(StringPair("Ng",nts(p.Ng)));
+			if (weak)
+				(stepFile.Extras).push_back(StringPair("weak","1"));
+			if (poto!=PotentialOptions::original)
+				(stepFile.Extras).push_back(StringPair("pot",nts((int)poto)));
 			if (!loadFile.exists())
 				loadFile = filenameLoopNR<dim>(p);
 			if (!loadFile.exists()) {
@@ -282,8 +308,11 @@ for (uint pl=0; pl<Npl; pl++) {
 		uint j, k, mu, nu;
 		number gb = p.G*p.B;
 		number g = p.G*p.G/8.0/PI/PI;
+		if (poto==PotentialOptions::dimreg)
+			g *= pow(p.Mu,-p.Epsi);
 		number sqrt4s0 = 2.0*sqrt(S0(xLoop));
-		number cusp_scale = g*log(p.Mu/p.Epsi);
+		number dm = (poto==PotentialOptions::exponential? -g*sqrt(PI)/p.Epsi: -g*PI/p.Epsi);
+		number cusp_scale = (poto==PotentialOptions::dimreg? g/p.Epsi: g*log(p.Mu/p.Epsi));
 		number ic_scale = 1.0;
 		number cc_scale = 1.0;
 		number kg_scale = 1.0;
@@ -325,15 +354,32 @@ for (uint pl=0; pl<Npl; pl++) {
 				mdI_nr(j,mu,xLoop,-gb,mds);
 				
 				// dynamical field self-energy regularisation
-				if (!weak) mdL_nr(j,mu,xLoop,-g*PI/p.Epsi,mds);
+				if (!weak && poto!=PotentialOptions::dimreg) mdL_nr(j,mu,xLoop,dm,mds);
 				
 				for (k=0; k<N; k++) {
 				
-					if (mu==0)
-						V1r(j, k, xLoop, p.Epsi, g, v);
+					if (mu==0) {
+						if (poto==PotentialOptions::original)
+							Vor(j, k, xLoop, p.Epsi, g, v);
+						else if (poto==PotentialOptions::link)
+							Vlr(j, k, xLoop, p.Epsi, g, v);
+						else if (poto==PotentialOptions::exponential)
+							Ver(j, k, xLoop, p.Epsi, g, v);
+						else if (poto==PotentialOptions::dimreg)
+							Vdr(j, k, xLoop, p.Epsi, g, v);
+					}
 					
 					// dynamical field
-					if (!weak) mdV1r_nr(j, mu, k, xLoop, p.Epsi, g, mds);
+					if (!weak) {
+						if (poto==PotentialOptions::original)
+							mdVor_nr(j, mu, k, xLoop, p.Epsi, g, mds);
+						if (poto==PotentialOptions::link)
+							mdVlr_nr(j, mu, k, xLoop, p.Epsi, g, mds);
+						if (poto==PotentialOptions::exponential)
+							mdVer_nr(j, mu, k, xLoop, p.Epsi, g, mds);
+						else if (poto==PotentialOptions::dimreg)
+							mdVdr_nr(j, mu, k, xLoop, p.Epsi, g, mds);
+					}
 				
 					for (nu=0; nu<dim; nu++) {
 					
@@ -344,10 +390,19 @@ for (uint pl=0; pl<Npl; pl++) {
 						ddI_nr(j,mu,k,nu,xLoop,-gb,dds);
 						
 						// dynamical field	
-						if (!weak) ddV1r_nr(j, mu, k, nu, xLoop, p.Epsi, g, dds);
+						if (!weak) {
+							if (poto==PotentialOptions::original)
+								ddVor_nr(j, mu, k, nu, xLoop, p.Epsi, g, dds);
+							else if (poto==PotentialOptions::link)
+								ddVlr_nr(j, mu, k, nu, xLoop, p.Epsi, g, dds);
+							else if (poto==PotentialOptions::exponential)
+								ddVer_nr(j, mu, k, nu, xLoop, p.Epsi, g, dds);
+							else if (poto==PotentialOptions::dimreg)
+								ddVdr_nr(j, mu, k, nu, xLoop, p.Epsi, g, dds);
+						}		
 						
 						// dynamical field self-energy regularisation
-						if (!weak) ddL_nr(j,mu,k,nu,xLoop,-g*PI/p.Epsi,dds);
+						if (!weak && poto!=PotentialOptions::dimreg) ddL_nr(j,mu,k,nu,xLoop,dm,dds);
 						
 					}
 				}
@@ -402,7 +457,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		
 		// assigning scalar quantities
 		vr = v;
-		vr -= (abs(p.Epsi)>MIN_NUMBER? g*PI*len/p.Epsi : 0.0);
+		vr += (abs(p.Epsi)>MIN_NUMBER && poto!=PotentialOptions::dimreg? dm*len : 0.0);
 		vr -= (!(P^=P0)? cusp_scale*fgamma : 0.0);
 		s = sqrt4s0 + i0;
 		if (!weak) s += vr;
@@ -602,10 +657,10 @@ for (uint pl=0; pl<Npl; pl++) {
 		//printing tests to see convergence
 		if (verbose) {
 			if (runsCount==1) {
-				printf("%5s%5s%12s%12s%12s%12s%12s%12s%12s%12s%12s%12s\n","pl","run","len","i0","s","sol","solM","delta","Sm","dx*kg_max","ic_max","cc_max");
+				printf("%4s%4s%12s%12s%12s%12s%12s%12s%12s%12s%12s%12s%12s\n","pl","run","len","i0","s","sol","solM","delta","Sm","dx*kg_max","ic_max","cc_max","dx/a");
 			}
-			printf("%5i%5i%12.5g%12.5g%12.5g%12.5g%12.5g%12.5g%12.5g%12.5g%12.5g%12.5g\n",pl,runsCount,len,i0,s,checkSol.back(),\
-				checkSolMax.back(),checkDelta.back(),checkSm.back(),checkKgDxMax.back(),checkICMax.back(),checkCCMax.back());
+			printf("%4i%4i%12.5g%12.5g%12.5g%12.5g%12.5g%12.5g%12.5g%12.5g%12.5g%12.5g%12.5g\n",pl,runsCount,len,i0,s,checkSol.back(),\
+				checkSolMax.back(),checkDelta.back(),checkSm.back(),checkKgDxMax.back(),checkICMax.back(),checkCCMax.back(),checkDX.back());
 		}
 	
 	}
@@ -678,10 +733,10 @@ for (uint pl=0; pl<Npl; pl++) {
 		
 		// printing loop to file
 		Filename loopRes = filenameLoopNR<dim>(p);
-		if (p.Ng>0)
-			(loopRes.Extras).push_back(StringPair("Ng",nts(p.Ng)));
 		if (weak)
 			(loopRes.Extras).push_back(StringPair("weak","1"));
+		if (poto!=PotentialOptions::original)
+			(loopRes.Extras).push_back(StringPair("pot",nts((int)poto)));
 		saveVectorBinary(loopRes,x);
 		printf("%12s%50s\n","x:",((string)loopRes).c_str());
 		
@@ -691,8 +746,6 @@ for (uint pl=0; pl<Npl; pl++) {
 	if (po!=PrintOptions::none) {
 		Filename file = "data/temp/"+timenumber+"x_K_"+nts(p.K)+"_G_"+nts(p.G)+"_B_"+nts(p.B)+"_M_"+nts(M)\
 							+"_a_"+nts(p.Epsi)+"_mu_"+nts(p.Mu)+"_run_"+nts(runsCount)+".dat";
-		if (p.Ng>0)
-				(file.Extras).push_back(StringPair("Ng",nts(p.Ng)));
 		if (po==PrintOptions::x || po==PrintOptions::all) {
 			saveVectorAscii(file,x);
 			printf("%12s%50s\n","x:",((string)file).c_str());

@@ -12,6 +12,7 @@ else
 	sed -i 's/\\\[Rho\]/mu/g' $1
 	sed -i 's/\\\[Sigma\]/nu/g' $1
 	sed -i 's/\\\[Delta\]/d/g' $1
+	sed -i 's/\\\[Epsilon\]/a/g' $1
 	sed -i 's/TT(/Dot(/g' $1
 	sed -i 's/T(/DX(/g' $1
 	sed -i 's/Power(/pow(/g' $1
@@ -22,6 +23,14 @@ else
 	sed -i 's/B(\([a-z]\),-1 + \([a-z]\),\([a-z]\),1 + \([a-z]\))/B_m\1\3/g' $1
 	sed -i 's/B(\([a-z]\),1 + \([a-z]\),\([a-z]\),-1 + \([a-z]\))/B_\1m\3/g' $1
 	sed -i 's/B(\([a-z]\),-1 + \([a-z]\),\([a-z]\),-1 + \([a-z]\))/B_m\1m\3/g' $1
+	sed -i 's/B(\([a-z]*\),\([a-z]*\))/B_\1\2/g' $1
+	sed -i 's/B(\([a-z]\),-1 + \([a-z]\))/B_\1m\2/g' $1
+	sed -i 's/B(-1 + \([a-z]\),\([a-z]\))/B_m\1\2/g' $1
+	sed -i 's/B(-1 + \([a-z]\),-1 + \([a-z]\))/B_m\1m\2/g' $1
+	sed -i 's/EE(\([a-z]*\),\([a-z]*\))/E_\1\2/g' $1
+	sed -i 's/EE(\([a-z]\),-1 + \([a-z]\))/E_\1m\2/g' $1
+	sed -i 's/EE(-1 + \([a-z]\),\([a-z]\))/E_m\1\2/g' $1
+	sed -i 's/EE(-1 + \([a-z]\),-1 + \([a-z]\))/E_m\1m\2/g' $1
 	sed -i 's/Dot(\([a-z]\),1 + \([a-z]\),\([a-z]\),1 + \([a-z]\))/T_\1\3/g' $1
 	sed -i 's/Dot(\([a-z]\),-1 + \([a-z]\),\([a-z]\),1 + \([a-z]\))/T_m\1\3/g' $1
 	sed -i 's/Dot(\([a-z]\),1 + \([a-z]\),\([a-z]\),-1 + \([a-z]\))/T_\1m\3/g' $1
@@ -31,9 +40,8 @@ else
 	sed -i 's/l/k/g' $1
 	sed -i 's/y/i/g' $1
 	sed -i 's/z/j/g' $1
-	sed -i 's/-1 + \([a-z]\)/m\1/g' $1
-	sed -i 's/1 + \([a-z]\)/p\1/g' $1
-	sed -i 's/B(\([a-z]*\),\([a-z]*\))/B_\1\2/g' $1
+	sed -i 's/-1 + \([b-z]\)/m\1/g' $1
+	sed -i 's/1 + \([b-z]\)/p\1/g' $1
 	sed -i 's/DX(/DX(l,/g' $1
 	
 fi
