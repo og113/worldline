@@ -39,7 +39,7 @@ set ylabel "{/Symbol g}"
 set xtics 0.01
 set grid xtics ytics
 
-a=0.125
+a=0.075
 B=1
 E=1
 

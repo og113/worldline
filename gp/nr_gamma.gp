@@ -46,11 +46,11 @@ set ylabel "{/Symbol g}"
 #set xtics 0.01
 set grid xtics ytics
 
-a=0.1
+a=0.125
 B=1
 g=1
 E=0.02
-mu=0.15
+mu=0.13
 
 set title sprintf("Induced instanton, a=%g, mu=%g",a,mu)
 
@@ -82,6 +82,6 @@ plot @ut7l 8 @ut7r t titleS(8) @style pt 1 lc rgb "red", \
 	@ut5l 11 @ut5r notitle @style pt 4 lc rgb "green", \
 	@ut5l 12 @ut5r notitle @style pt 8 lc rgb "blue", \
 	@ut5l 13 @ut5r notitle @style pt 10 lc rgb "black", \
-	gamma_free(x,g,a) t "{/Symbol g}, continuum free theory including counterterms" with lines lc rgb "black"
+	gamma_free(x,0.0,a) t "{/Symbol g}, continuum free theory" with lines lc rgb "black"
 
 pause -1
