@@ -1,4 +1,4 @@
-used sed to find lines beginning with abc in file1 and copy them to file2
+using sed to find lines beginning with abc in file1 and copy them to file2
 
 sed -ne '/^abc/ p' file1>file2
 
@@ -6,6 +6,10 @@ in our case
 
 sed -ne '/^\([ ]*\)160208165923/ p' results/nr/nrmain_cosmos_4.dat>results/nr/nrmain_mu_a_0.15_E_1.43_K_11.dat
 
+
+using sed to remove some bogus results with a specific timenumber:
+
+sed -i '/^\([ ]*\)160226091231/d' results/nr/nrmain_cosmos_7.dat
 
 
 rename is also useful. to rename files ending in .txt and containing abc to the same file with abc replaced by def
@@ -19,3 +23,8 @@ a quick bash script to apply binaryToAscii to a bunch of files:
 for f in data/nr/loops/dim_4/K_12/loop_G_1_B_1_M_0.02_a_0.15_mu_0.1*.dat; 
 do ./binaryToAscii -b $f -a data/temp/$(basename $f) -loop 1 -K 12; 
 done
+
+
+removing repeated lines using sort:
+
+sort -u results/nr/nrmain_cosmos_7.dat -o results/nr/nrmain_cosmos_7.dat

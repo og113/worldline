@@ -39,6 +39,10 @@ typedef Eigen::MatrixXd mat;
 template <uint Dim>
 void L (const uint& j, const Loop<Dim>& l, const number& f, number& result);
 
+// DistPow
+template <uint Dim>
+void DistPow (const uint& j, const Loop<Dim>& l, const number& w, const number& f, number& result);
+
 // Sm
 template <uint Dim>
 void Sm (const uint& j, const Loop<Dim>& l, const number& f, number& result);
@@ -142,6 +146,14 @@ void mdL_nr(const uint& j, const uint& mu, const Loop<Dim>& l, const number& f, 
 // ddL_nr
 template<uint Dim>
 void ddL_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l, const number& f, mat& m);
+
+// mdDistPow_nr
+template<uint Dim>
+void mdDistPow_nr(const uint& j, const uint& mu, const Loop<Dim>& l, const number& w, const number& f, vec& v);
+
+// ddDistPow_nr
+template<uint Dim>
+void ddDistPow_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l, const number& w, const number& f, mat& m);
 
 // mdI_nr
 template<uint Dim>

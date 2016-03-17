@@ -34,6 +34,13 @@ void L (const uint& j, const Loop<Dim>& l, const number& f, number& result) {
 	result += f*Distance(l[pos],l[j]);
 }
 
+// DistPow
+template <uint Dim>
+void DistPow (const uint& j, const Loop<Dim>& l, const number& w, const number& f, number& result) {
+	uint pos = (j==(l.size()-1)? 0: j+1);
+	result += f*pow(DistanceSquared(l[pos],l[j]),w/2.0);
+}
+
 // Sm
 template <uint Dim>
 void Sm (const uint& j, const Loop<Dim>& l, const number& f, number& result) {
@@ -386,6 +393,60 @@ void ddL_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const 
 		if (mu==nu)
 			temp -= 1.0/norm;
 		temp += ((l[j])[mu]-(l[pj])[mu])*((l[j])[nu]-(l[pj])[nu])/pow(norm,3);
+		m(j*Dim+mu,k*Dim+nu) += f*temp;
+	}
+}
+
+// mdDistPow_nr
+template<uint Dim>
+void mdDistPow_nr(const uint& j, const uint& mu, const Loop<Dim>& l, const number& w,  const number& f, vec& v) {
+	uint pj = (j==(l.size()-1)? 0: j+1);
+	uint mj = (j==0? (l.size()-1): j-1);
+	
+	number B_jmj = DistanceSquared(l[j],l[mj]);
+	number B_jpj = DistanceSquared(l[j],l[pj]);
+	
+	number temp =  w*pow(B_jmj,-1 + w/2.)*DX(l,j,mj,mu) \
+				+ w*pow(B_jpj,-1 + w/2.)*DX(l,j,pj,mu);
+	
+	v[j*Dim+mu] += -f*temp;
+}
+
+// ddDistPow_nr
+template<uint Dim>
+void ddDistPow_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l, const number& w\
+				, const number& f, mat& m) {
+	uint pj = (j==(l.size()-1)? 0: j+1);
+	uint mj = (j==0? (l.size()-1): j-1);
+	
+	number B_jmj, B_jpj, temp = 0.0; 
+	
+	if (k==j) {
+		B_jmj = DistanceSquared(l[j],l[mj]);
+		B_jpj = DistanceSquared(l[j],l[pj]);
+		if (mu==nu)
+			temp += w*pow(B_jmj,-1 + w/2.) \
+ 					+ w*pow(B_jpj,-1 + w/2.);
+		temp += - 2.0*w*pow(B_jmj,-2 + w/2.)*DX(l,j,mj,mu)*DX(l,j,mj,nu) \
+				 + pow(w,2)*pow(B_jmj,-2 + w/2.)*DX(l,j,mj,mu)*DX(l,j,mj,nu) \
+				 - 2.0*w*pow(B_jpj,-2 + w/2.)*DX(l,j,pj,mu)*DX(l,j,pj,nu) \
+				 + pow(w,2)*pow(B_jpj,-2 + w/2.)*DX(l,j,pj,mu)*DX(l,j,pj,nu);
+		m(j*Dim+mu,k*Dim+nu) += f*temp;
+	}
+	else if (k==mj) {
+		B_jmj = DistanceSquared(l[j],l[mj]);
+		if (mu==nu)
+			temp += - w*pow(B_jmj,-1 + w/2.);
+		temp += 2.0*w*pow(B_jmj,-2 + w/2.)*DX(l,j,mj,mu)*DX(l,j,mj,nu) \
+ 				- pow(w,2)*pow(B_jmj,-2 + w/2.)*DX(l,j,mj,mu)*DX(l,j,mj,nu);
+		m(j*Dim+mu,k*Dim+nu) += f*temp;
+	}
+	else if (k==pj) {
+		B_jpj = DistanceSquared(l[j],l[pj]);
+		if (mu==nu)
+			temp +=  - w*pow(B_jpj,-1 + w/2.);
+		temp += + 2.0*w*pow(B_jpj,-2 + w/2.)*DX(l,j,pj,mu)*DX(l,j,pj,nu) \
+ 				- pow(w,2)*pow(B_jpj,-2 + w/2.)*DX(l,j,pj,mu)*DX(l,j,pj,nu);
 		m(j*Dim+mu,k*Dim+nu) += f*temp;
 	}
 }
@@ -839,6 +900,7 @@ template <> void I0<2> (const uint& j, const Loop<2>& l, const number& f, number
 
 // dim 4
 template void L<4>(const uint& j, const Loop<4>& l, const number& f, number& result);
+template void DistPow<4>(const uint& j, const Loop<4>& l, const number& w, const number& f, number& result);
 template void S0<4>(const uint& j, const Loop<4>& l, const number& f, number& result);
 template void Sm<4>(const uint& j, const Loop<4>& l, const number& f, number& result);
 template void Angle<4>(const uint& j, const Loop<4>& l, const number& f, number& result);
@@ -859,6 +921,8 @@ template void KGAvgPlane<4>(const uint& j, const Loop<4>& l, const uint& ex1, co
 template void mdPX_nr<4>(const Loop<4>& l, const uint& loc, const Point<4>& P, const number& f, vec& v);
 template void mdL_nr<4>(const uint& j, const uint& mu, const Loop<4>& l, const number& p, vec& v);
 template void ddL_nr<4>(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<4>& l, const number& p, mat& m);
+template void mdDistPow_nr<4>(const uint& j, const uint& mu, const Loop<4>& l, const number& w, const number& p, vec& v);
+template void ddDistPow_nr<4>(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<4>& l, const number& w, const number& p, mat& m);
 template void mdS0_nr<4>(const uint& j, const uint& mu, const Loop<4>& l, const number& p, vec& v);
 template void ddS0_nr<4>(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<4>& l, const number& p, mat& m);
 template void mdsqrtS0_nr<4>(const uint& j, const uint& mu, const Loop<4>& l, const number& sqrt4s0, const number& p, vec& v);
@@ -885,22 +949,22 @@ template <> void PseudoAngle<4>(const uint& j, const Loop<4>& l, const number& f
 // Vor
 template <> void Vor<4>(const uint& j, const uint& k, const Loop<4>& l, const number& a, const number& f, number& result) {
 
-	if (k<j) {
+	if (k<=j) {
 		uint pj = (j==(l.size()-1)? 0: j+1);
 		uint pk = (k==(l.size()-1)? 0: k+1);
 	
-		result += f*2.0*Dot(l[pj],l[j],l[pk],l[k])/(DistanceSquared(l[j],l[k])+a*a);	
+		result += f*(1.0+(number)k<j)*Dot(l[pj],l[j],l[pk],l[k])/(DistanceSquared(l[j],l[k])+a*a);	
 	}
 }
 
 // Vlr
 template <> void Vlr<4>(const uint& j, const uint& k, const Loop<4>& l, const number& a, const number& f, number& result) {
 
-	if (k<j) {
+	if (k<=j) {
 		uint pj = (j==(l.size()-1)? 0: j+1);
 		uint pk = (k==(l.size()-1)? 0: k+1);
 	
-		result += f*2.0*Dot(l[pj],l[j],l[pk],l[k])/(0.25*DistanceSquared(l[pj]+l[j],l[pk]+l[k])+a*a);	
+		result += f*(1.0+(number)k<j)*Dot(l[pj],l[j],l[pk],l[k])/(0.25*DistanceSquared(l[pj]+l[j],l[pk]+l[k])+a*a);	
 	}
 }
 
@@ -939,10 +1003,19 @@ template <> void mdVor_nr<4>(const uint& j, const uint& mu, const uint& i, const
 		number T_ij = Dot(l[pi],l[i],l[pj],l[j]);
 		res += 2.0*DX(l,i,pi,mu)/B_ij - 4.0*DX(l,j,i,mu)*T_ij/pow(B_ij,2);
 	}
+	
 	if (i!=mj) {
 		number B_imj = a*a + DistanceSquared(l[i],l[mj]);
 		res += -2.0*DX(l,i,pi,mu)/B_imj;
 	}
+	
+	//coincident terms
+	if (i==j)
+		res += 2.0*(l[j])[mu]/a/a;
+	if (i==mj)
+		res += -(l[mj])[mu]/a/a;
+	if (i==pj)
+		res += -(l[pj])[mu]/a/a;
 
 	v[j*4+mu] += -f*res;
 }
@@ -968,6 +1041,14 @@ template <> void mdVlr_nr<4>(const uint& j, const uint& mu, const uint& i, const
 				+( - (-DX(l,mj,i,mu) - DX(l,j,pi,mu)) \
 				+ (DX(l,mj,i,mu) + DX(l,j,pi,mu)) )*T_imj/(2.0*pow(B_imj,2));
 	}
+		
+	//coincident terms
+	if (i==j)
+		res += 2.0*(l[j])[mu]/a/a;
+	if (i==mj)
+		res += -(l[mj])[mu]/a/a;
+	if (i==pj)
+		res += -(l[pj])[mu]/a/a;
 
 	v[j*4+mu] += -f*res;
 }
@@ -1082,6 +1163,14 @@ template <> void ddVor_nr<4>(const uint& j, const uint& mu, const uint& k, const
 			
 		}		
 	}
+	
+	//coincident terms
+	if (k==j && mu==nu)
+		res += 2.0/a/a;
+	if (k==mj && mu==nu)
+		res += -1.0/a/a;
+	if (k==pj && mu==nu)
+		res += -1.0/a/a;
 	
 	m(4*j+mu,4*k+nu) += f*res;
 	
@@ -1218,6 +1307,14 @@ template <> void ddVlr_nr<4>(const uint& j, const uint& mu, const uint& k, const
 			}
 		}		
 	}
+	
+	//coincident terms
+	if (k==j && mu==nu)
+		res += 2.0/a/a;
+	if (k==mj && mu==nu)
+		res += -1.0/a/a;
+	if (k==pj && mu==nu)
+		res += -1.0/a/a;
 	
 	m(4*j+mu,4*k+nu) += f*res;
 	

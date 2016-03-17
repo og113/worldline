@@ -3,7 +3,7 @@
 #if you want to save directly to a file, use the following two lines of code
 if (exists("outFile")) \
 if (outFile ne 'gui') \
-set term svg size 1600,800; \
+set term png size 1600,800; \
 set output outFile; \
 
 # files
@@ -24,72 +24,52 @@ gamma_free(E,g,a)=2.0*asin(E/2.0/mass(g,a))
 unset log
 unset label
 set key below
+set xtic auto
+set ytic auto
 #set logscale y
 #set format y "10^{%L}"
-set xtic auto
 set autoscale
 set xlabel "E"
 set ylabel "{/Symbol g}"
+#set xtics 0.01
+set grid xtics ytics
 
+a=0.125
 B=1
 g=1
-K=11
-Ng=0
+E=0.02
+mu=0.13
 
-# 
-GE4l='file4 u 8:($3==K? ($5==B? ($6=='
-GE4m='? ($7=='
-GE4r='? $10: 1/0): 1/0): 1/0): 1/0)'
-GE5l='file5 u 9:($3==K? ($5==B? ($6==Ng? ($7=='
-GE5m='? ($8=='
-GE5r='? $11: 1/0): 1/0): 1/0): 1/0): 1/0)'
-GE6l='file6 u 9:($3==K? ($5==B? ($6==Ng? ($7=='
-GE6m='? ($8=='
-GE6r='? $11: 1/0): 1/0): 1/0): 1/0): 1/0)'
-GE7l='file7 u 9:($3==K? ($5==B? ($6==Ng? ($7=='
-GE7m='? ($8=='
-GE7r='? $11: 1/0): 1/0): 1/0): 1/0): 1/0)'
-style1='with points pointtype 1 lc rgb "red"'
-style2='with points pointtype 2 lc rgb "blue"'
-style3='with points pointtype 4 lc rgb "green"'
-style4='with points pointtype 8 lc rgb "violet"'
-style5='with points pointtype 10 lc rgb "orange"'
-style6='with points pointtype 19 lc rgb "cyan"'
-titleS(a,mu) = sprintf("a=%g, {/Symbol m}=%g",a,mu)
-titleF(a)=sprintf("Free result, a=%g",a)
-set title sprintf("NR results, g=%g, B=%g, K=%g",g,B,K)
+set title sprintf("Induced instanton, a=%g, mu=%g",a,mu)
 
-set xrange [0:2]
-plot @GE4l 0.2 @GE4m 0.2 @GE4r t titleS(0.2,0.2) @style4, \
-	@GE5l 0.2 @GE5m 0.2 @GE5r notitle @style4, \
-	@GE6l 0.2 @GE6m 0.2 @GE6r notitle @style4, \
-	@GE7l 0.2 @GE7m 0.2 @GE7r notitle @style4, \
-	gamma_free(x,g,0.2) title titleF(0.2) with lines lc rgb "violet", \
-	@GE4l 0.15 @GE4m 0.15 @GE4r t titleS(0.15,0.15) @style1, \
-	@GE5l 0.15 @GE5m 0.15 @GE5r notitle @style1, \
-	@GE6l 0.15 @GE6m 0.15 @GE6r notitle @style1, \
-	@GE7l 0.15 @GE7m 0.15 @GE7r notitle @style1, \
-	gamma_free(x,g,0.15) title titleF(0.15) with lines lc rgb "red", \
-	@GE4l 0.125 @GE4m 0.125 @GE4r t titleS(0.125,0.125) @style3, \
-	@GE5l 0.125 @GE5m 0.125 @GE5r notitle @style3, \
-	@GE6l 0.125 @GE6m 0.125 @GE6r notitle @style3, \
-	@GE7l 0.125 @GE7m 0.125 @GE7r notitle @style3, \
-	gamma_free(x,g,0.125) title titleF(0.125) with lines lc rgb "green", \
-	@GE4l 0.1 @GE4m 0.1 @GE4r t titleS(0.1,0.1) @style2, \
-	@GE5l 0.1 @GE5m 0.1 @GE5r notitle @style2, \
-	@GE6l 0.1 @GE6m 0.1 @GE6r notitle @style2, \
-	@GE7l 0.1 @GE7m 0.1 @GE7r notitle @style2, \
-	gamma_free(x,g,0.1) title titleF(0.1) with lines lc rgb "blue", \
-	@GE4l 0.075 @GE4m 0.075 @GE4r t titleS(0.075,0.075) @style5, \
-	@GE5l 0.075 @GE5m 0.075 @GE5r notitle @style5, \
-	@GE6l 0.075 @GE6m 0.075 @GE6r notitle @style5, \
-	@GE7l 0.075 @GE7m 0.075 @GE7r notitle @style5, \
-	gamma_free(x,g,0.075) title titleF(0.075) with lines lc rgb "orange", \
-	@GE4l 0.05 @GE4m 0.05 @GE4r t titleS(0.05,0.05) @style6, \
-	@GE5l 0.05 @GE5m 0.05 @GE5r notitle @style6, \
-	@GE6l 0.05 @GE6m 0.05 @GE6r notitle @style6, \
-	@GE7l 0.05 @GE7m 0.05 @GE7r notitle @style6, \
-	gamma_free(x,g,0.05) title titleF(0.05) with lines lc rgb "cyan", \
-	gamma_free(x,0,0.15) title "Free result without counterterms" with lines lc rgb "black"
+ut5l='file5 u 9:($7==a? ($5==B? ($6==0? ($8==mu? ($3=='
+ut5r='? $11: 1/0): 1/0): 1/0): 1/0): 1/0)'
+ut6l='file6 u 9:($8==mu? ($5==B? ($6==0? ($7==a? ($3=='
+ut6r='? $11: 1/0): 1/0): 1/0): 1/0): 1/0)'
+ut7l='file7 u 9:($8==mu? ($5==B? ($6==0? ($7==a? ($3=='
+ut7r='? $11: 1/0): 1/0): 1/0): 1/0): 1/0)'
+style='with points'
+titleS(K) = sprintf("{/Symbol g}, K=%g",K)
+
+#set xrange [0.1:0.2]	
+plot @ut7l 8 @ut7r t titleS(8) @style pt 1 lc rgb "red", \
+	@ut7l 9 @ut7r t titleS(9) @style pt 2 lc rgb "orange", \
+	@ut7l 10 @ut7r t titleS(10) @style pt 4 lc rgb "violet", \
+	@ut7l 11 @ut7r t titleS(11) @style pt 4 lc rgb "green", \
+	@ut7l 12 @ut7r t titleS(12) @style pt 8 lc rgb "blue", \
+	@ut7l 13 @ut7r t titleS(13) @style pt 10 lc rgb "black", \
+	@ut6l 8 @ut6r notitle @style pt 1 lc rgb "red", \
+	@ut6l 9 @ut6r notitle @style pt 2 lc rgb "orange", \
+	@ut6l 10 @ut6r notitle @style pt 4 lc rgb "violet", \
+	@ut6l 11 @ut6r notitle @style pt 4 lc rgb "green", \
+	@ut6l 12 @ut6r notitle @style pt 8 lc rgb "blue", \
+	@ut6l 13 @ut6r notitle @style pt 10 lc rgb "black", \
+	@ut5l 8 @ut5r notitle @style pt 1 lc rgb "red", \
+	@ut5l 9 @ut5r notitle @style pt 2 lc rgb "orange", \
+	@ut5l 10 @ut5r notitle @style pt 4 lc rgb "violet", \
+	@ut5l 11 @ut5r notitle @style pt 4 lc rgb "green", \
+	@ut5l 12 @ut5r notitle @style pt 8 lc rgb "blue", \
+	@ut5l 13 @ut5r notitle @style pt 10 lc rgb "black", \
+	gamma_free(x,0.0,a) t "{/Symbol g}, continuum free theory" with lines lc rgb "black"
 
 pause -1

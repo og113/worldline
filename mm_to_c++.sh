@@ -27,6 +27,9 @@ else
 	sed -i 's/B(\([a-z]\),-1 + \([a-z]\))/B_\1m\2/g' $1
 	sed -i 's/B(-1 + \([a-z]\),\([a-z]\))/B_m\1\2/g' $1
 	sed -i 's/B(-1 + \([a-z]\),-1 + \([a-z]\))/B_m\1m\2/g' $1
+	sed -i 's/B(\([a-z]\),1 + \([a-z]\))/B_\1p\2/g' $1
+	sed -i 's/B(1 + \([a-z]\),\([a-z]\))/B_p\1\2/g' $1
+	sed -i 's/B(1 + \([a-z]\),1 + \([a-z]\))/B_p\1p\2/g' $1
 	sed -i 's/EE(\([a-z]*\),\([a-z]*\))/E_\1\2/g' $1
 	sed -i 's/EE(\([a-z]\),-1 + \([a-z]\))/E_\1m\2/g' $1
 	sed -i 's/EE(-1 + \([a-z]\),\([a-z]\))/E_m\1\2/g' $1
@@ -40,8 +43,8 @@ else
 	sed -i 's/l/k/g' $1
 	sed -i 's/y/i/g' $1
 	sed -i 's/z/j/g' $1
-	sed -i 's/-1 + \([b-z]\)/m\1/g' $1
-	sed -i 's/1 + \([b-z]\)/p\1/g' $1
+	sed -i 's/-1 + \([b-v]\)/m\1/g' $1
+	sed -i 's/1 + \([b-v]\)/p\1/g' $1
 	sed -i 's/DX(/DX(l,/g' $1
 	
 fi

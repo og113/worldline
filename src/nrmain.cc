@@ -3,6 +3,7 @@
 */
 
 #include <Eigen/Dense>
+#include <gsl/gsl_sf_zeta.h>
 #include "check.h"
 #include "folder.h"
 #include "genloop.h"
@@ -313,6 +314,8 @@ for (uint pl=0; pl<Npl; pl++) {
 		number sqrt4s0 = 2.0*sqrt(S0(xLoop));
 		number dm = (poto==PotentialOptions::exponential? -g*sqrt(PI)/p.Epsi: -g*PI/p.Epsi);
 		number cusp_scale = (poto==PotentialOptions::dimreg? g/p.Epsi: g*log(p.Mu/p.Epsi));
+		number dim_reg_scale = (poto==PotentialOptions::dimreg? -g*2.0*gsl_sf_zeta(2.0-p.Epsi): 0.0);
+		number d_dim_reg = 0.0;
 		number ic_scale = 1.0;
 		number cc_scale = 1.0;
 		number kg_scale = 1.0;
@@ -325,6 +328,8 @@ for (uint pl=0; pl<Npl; pl++) {
 			//S0(j, xLoop, s0norm, s0norm);
 			L		(j, xLoop, 1.0, len);
 			I0		(j, xLoop, -gb, i0);
+			if (poto==PotentialOptions::dimreg)
+				DistPow	(j, xLoop, p.Epsi, dim_reg_scale, d_dim_reg);
 			
 			//curvatures
 			if (curvature) {
@@ -354,7 +359,12 @@ for (uint pl=0; pl<Npl; pl++) {
 				mdI_nr(j,mu,xLoop,-gb,mds);
 				
 				// dynamical field self-energy regularisation
-				if (!weak && poto!=PotentialOptions::dimreg) mdL_nr(j,mu,xLoop,dm,mds);
+				if (!weak && poto!=PotentialOptions::dimreg)
+					mdL_nr(j,mu,xLoop,dm,mds);
+				
+				// dim reg regularisation
+				if (poto==PotentialOptions::dimreg)
+					mdDistPow_nr(j, mu, xLoop, p.Epsi, dim_reg_scale, mds);
 				
 				for (k=0; k<N; k++) {
 				
@@ -402,7 +412,12 @@ for (uint pl=0; pl<Npl; pl++) {
 						}		
 						
 						// dynamical field self-energy regularisation
-						if (!weak && poto!=PotentialOptions::dimreg) ddL_nr(j,mu,k,nu,xLoop,dm,dds);
+						if (!weak && poto!=PotentialOptions::dimreg)
+							ddL_nr(j,mu,k,nu,xLoop,dm,dds);
+						
+						// dim reg regularisation
+						if (poto==PotentialOptions::dimreg)
+							ddDistPow_nr(j,mu,k,nu,xLoop,p.Epsi,dim_reg_scale,dds);
 						
 					}
 				}
@@ -457,8 +472,13 @@ for (uint pl=0; pl<Npl; pl++) {
 		
 		// assigning scalar quantities
 		vr = v;
-		vr += (abs(p.Epsi)>MIN_NUMBER && poto!=PotentialOptions::dimreg? dm*len : 0.0);
-		vr -= (!(P^=P0)? cusp_scale*fgamma : 0.0);
+		if (abs(p.Epsi)>MIN_NUMBER) {
+			if (poto!=PotentialOptions::dimreg)
+				vr += dm*len;
+			else 
+				vr += d_dim_reg;
+			vr -= (!(P^=P0)? cusp_scale*fgamma : 0.0);
+		}
 		s = sqrt4s0 + i0;
 		if (!weak) s += vr;
 		if (!(P^=P0))
@@ -519,10 +539,10 @@ for (uint pl=0; pl<Npl; pl++) {
 			// checking if angle gamma agrees with weak coupling result
 			number gamma_ratio = 0.0;
 			if (abs(M)>MIN_NUMBER && abs(M)<2.0) {
-				number gamma_weak = PI-2.0*asin(sqrt(1.0-pow(M,2)/4.0));
-				gamma_ratio = gamma/gamma_weak;
+				number gamma_free = 2.0*asin(M/2.0);
+				gamma_ratio = gamma/gamma_free;
 			}
-			checkGamma.add(gamma_ratio);
+			checkGamma.add(gamma_ratio-1.0);
 			checkGamma.checkMessage();
 		}		
 	
@@ -657,9 +677,9 @@ for (uint pl=0; pl<Npl; pl++) {
 		//printing tests to see convergence
 		if (verbose) {
 			if (runsCount==1) {
-				printf("%4s%4s%12s%12s%12s%12s%12s%12s%12s%12s%12s%12s%12s\n","pl","run","len","i0","s","sol","solM","delta","Sm","dx*kg_max","ic_max","cc_max","dx/a");
+				printf("%4s%4s%11s%11s%11s%11s%11s%11s%11s%11s%11s%11s%11s\n","pl","run","len","i0","s","sol","solM","delta","Sm","dx*kg_max","ic_max","cc_max","dx/a");
 			}
-			printf("%4i%4i%12.5g%12.5g%12.5g%12.5g%12.5g%12.5g%12.5g%12.5g%12.5g%12.5g%12.5g\n",pl,runsCount,len,i0,s,checkSol.back(),\
+			printf("%4i%4i%11.4g%11.4g%11.4g%11.4g%11.4g%11.4g%11.4g%11.4g%11.4g%11.4g%11.4g\n",pl,runsCount,len,i0,s,checkSol.back(),\
 				checkSolMax.back(),checkDelta.back(),checkSm.back(),checkKgDxMax.back(),checkICMax.back(),checkCCMax.back(),checkDX.back());
 		}
 	
@@ -721,11 +741,11 @@ for (uint pl=0; pl<Npl; pl++) {
 	if (checkDelta.good() && checkSol.good() && checkSolMax.good()) {
 	
 		// printing results to file	
-		string resFile = "results/nr/nrmain_laptop_7.dat";
+		string resFile = "results/nr/nrmain_cosmos_8.dat";
 		FILE* ros;
 		ros = fopen(resFile.c_str(),"a");
-		fprintf(ros,"%24s%24i%24i%24g%24g%24i%24g%24g%24g%24g%24g%24g%24g%24g%24g%24g%24g%24g%24g\n",\
-					timenumber.c_str(),pl,p.K,p.G,p.B,p.Ng,p.Epsi,p.Mu,M,s,gamma,\
+		fprintf(ros,"%24s%24i%24i%24i%24g%24g%24i%24g%24g%24g%24g%24g%24g%24g%24g%24g%24g%24g%24g%24g\n",\
+					timenumber.c_str(),pl,(int)poto,p.K,p.G,p.B,p.Ng,p.Epsi,p.Mu,M,s,gamma,\
 					checkSol.back(),checkDX.back(),checkICMax.back(),checkICAvg.back(),checkKgAMax.back(),\
 					checkKgAAvg.back(),checkCCMax.back(),angle_neigh);
 		fclose(ros);
