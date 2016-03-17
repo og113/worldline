@@ -14,19 +14,7 @@ file4="results/nr/nrmain_cosmos_4.dat"
 file5="results/nr/nrmain_cosmos_5.dat"
 file6="results/nr/nrmain_cosmos_6.dat"
 file7="results/nr/nrmain_cosmos_7.dat"
-file4t="temp/nrmain_cosmos_4.dat"
-file5t="temp/nrmain_cosmos_5.dat"
-
-# approximate analytic result
-pi=3.1415926535897932
-#p(g,B,E)=pi/g/B-(2.0/g/B)*( asin(E/2.0) + (E/2.0)*sqrt(1.0-(E/2.0)**2) )
-
-# fitting data
-#f(x) = a+b*x
-#fit f(x) file using (log($4)):(log($9)) via a, b
-
-# gamma free
-mass(g,a)=(1.0-g**2/8.0/pi/a)
+filel7="results/nr/nrmain_laptop_7.dat"
 
 # approximate analytic results
 pi=3.1415926535897932

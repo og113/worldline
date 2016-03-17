@@ -39,7 +39,7 @@ set ylabel "{/Symbol g}"
 set xtics 0.01
 set grid xtics ytics
 
-a=0.075
+a=0.1
 B=1
 E=1
 
@@ -58,7 +58,8 @@ plot @ut7l 8 @ut7r t titleS(8) @style pt 1 lc rgb "red", \
 	@ut7l 10 @ut7r t titleS(10) @style pt 4 lc rgb "violet", \
 	@ut7l 11 @ut7r t titleS(11) @style pt 4 lc rgb "green", \
 	@ut7l 12 @ut7r t titleS(12) @style pt 8 lc rgb "blue", \
-	@ut7l 13 @ut7r t titleS(13) @style pt 10 lc rgb "black"#, \
+	@ut7l 13 @ut7r t titleS(13) @style pt 10 lc rgb "violet", \
+	#@ut7l 1.2 @ut7r t titleS(1.2) @style pt 10 lc rgb "cyan", \
 	
 
 pause -1

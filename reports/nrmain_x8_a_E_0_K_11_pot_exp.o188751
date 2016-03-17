@@ -1,0 +1,38 @@
+using inputs file nrinputs/inputs4
+timenumber: 160316172003
+looping over 3 steps
+loading loops from:
+data/lemon/loops/dim_4/K_11/loop_R_1_M_0_rank_0.dat
+  pl run         len          i0           s         sol        solM       delta          Sm   dx*kg_max      ic_max      cc_max        dx/a
+   0   1      6.2832     -3.1416      2.9022   0.0020034   0.0010087   0.0018817  4.7062e-06    0.003068  1.4119e-05           0     0.03068
+   0   2      6.2726      -3.131      2.9022  3.3232e-09  3.5167e-09  6.0048e-07  4.7108e-06   0.0030758   1.882e-05           0    0.030628
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       2     199      11       1       1       0     0.1     0.1           0        6.2726        -3.131      -0.23941        2.9022
+
+    results:                    results/nr/nrmain_laptop_7.dat
+          x:data/nr/loops/dim_4/K_11/loop_G_1_B_1_M_0_a_0.1_mu_0.1_pot_2.dat
+loading loops from:
+data/nr/loops/dim_4/K_11/loop_G_1_B_1_M_0_a_0.1_mu_0.1_pot_2.dat
+  pl run         len          i0           s         sol        solM       delta          Sm   dx*kg_max      ic_max      cc_max        dx/a
+   1   1      6.2726      -3.131      2.9048  1.2881e-06  1.2887e-06  0.00042162  4.7108e-06   0.0030758  1.8817e-05           0    0.024502
+   1   2      6.2699     -3.1284      2.9048  6.2544e-12  8.8196e-12  3.6626e-06  4.7108e-06   0.0030758  1.8815e-05           0    0.024492
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       2     203      11       1       1       0   0.125     0.1           0        6.2699       -3.1284      -0.23676        2.9048
+
+    results:                    results/nr/nrmain_laptop_7.dat
+          x:data/nr/loops/dim_4/K_11/loop_G_1_B_1_M_0_a_0.125_mu_0.1_pot_2.dat
+loading loops from:
+data/nr/loops/dim_4/K_11/loop_G_1_B_1_M_0_a_0.125_mu_0.1_pot_2.dat
+  pl run         len          i0           s         sol        solM       delta          Sm   dx*kg_max      ic_max      cc_max        dx/a
+   2   1      6.2699     -3.1284      2.9075  1.2847e-06  1.2853e-06  0.00042085  4.7108e-06   0.0030758  1.8815e-05           0     0.02041
+   2   2      6.2673     -3.1257      2.9075  6.6241e-12  9.3792e-12  1.6823e-06  4.7108e-06   0.0030757  1.8813e-05           0    0.020401
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       2     203      11       1       1       0    0.15     0.1           0        6.2673       -3.1257      -0.23412        2.9075
+
+    results:                    results/nr/nrmain_laptop_7.dat
+          x:data/nr/loops/dim_4/K_11/loop_G_1_B_1_M_0_a_0.15_mu_0.1_pot_2.dat
+603.28user 1.00system 10:04.51elapsed 99%CPU (0avgtext+0avgdata 1074840maxresident)k
+136inputs+464outputs (0major+10073minor)pagefaults 0swaps
