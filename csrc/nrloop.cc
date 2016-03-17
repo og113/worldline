@@ -34,6 +34,13 @@ void L (const uint& j, const Loop<Dim>& l, const number& f, number& result) {
 	result += f*Distance(l[pos],l[j]);
 }
 
+// DistPow
+template <uint Dim>
+void DistPow (const uint& j, const Loop<Dim>& l, const number& w, const number& f, number& result) {
+	uint pos = (j==(l.size()-1)? 0: j+1);
+	result += f*pow(DistanceSquared(l[pos],l[j]),w/2.0);
+}
+
 // Sm
 template <uint Dim>
 void Sm (const uint& j, const Loop<Dim>& l, const number& f, number& result) {
@@ -386,6 +393,60 @@ void ddL_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const 
 		if (mu==nu)
 			temp -= 1.0/norm;
 		temp += ((l[j])[mu]-(l[pj])[mu])*((l[j])[nu]-(l[pj])[nu])/pow(norm,3);
+		m(j*Dim+mu,k*Dim+nu) += f*temp;
+	}
+}
+
+// mdDistPow_nr
+template<uint Dim>
+void mdDistPow_nr(const uint& j, const uint& mu, const Loop<Dim>& l, const number& w,  const number& f, vec& v) {
+	uint pj = (j==(l.size()-1)? 0: j+1);
+	uint mj = (j==0? (l.size()-1): j-1);
+	
+	number B_jmj = DistanceSquared(l[j],l[mj]);
+	number B_jpj = DistanceSquared(l[j],l[pj]);
+	
+	number temp =  w*pow(B_jmj,-1 + w/2.)*DX(l,j,mj,mu) \
+				+ w*pow(B_jpj,-1 + w/2.)*DX(l,j,pj,mu);
+	
+	v[j*Dim+mu] += -f*temp;
+}
+
+// ddDistPow_nr
+template<uint Dim>
+void ddDistPow_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l, const number& w\
+				, const number& f, mat& m) {
+	uint pj = (j==(l.size()-1)? 0: j+1);
+	uint mj = (j==0? (l.size()-1): j-1);
+	
+	number B_jmj, B_jpj, temp = 0.0; 
+	
+	if (k==j) {
+		B_jmj = DistanceSquared(l[j],l[mj]);
+		B_jpj = DistanceSquared(l[j],l[pj]);
+		if (mu==nu)
+			temp += w*pow(B_jmj,-1 + w/2.) \
+ 					+ w*pow(B_jpj,-1 + w/2.);
+		temp += - 2.0*w*pow(B_jmj,-2 + w/2.)*DX(l,j,mj,mu)*DX(l,j,mj,nu) \
+				 + pow(w,2)*pow(B_jmj,-2 + w/2.)*DX(l,j,mj,mu)*DX(l,j,mj,nu) \
+				 - 2.0*w*pow(B_jpj,-2 + w/2.)*DX(l,j,pj,mu)*DX(l,j,pj,nu) \
+				 + pow(w,2)*pow(B_jpj,-2 + w/2.)*DX(l,j,pj,mu)*DX(l,j,pj,nu);
+		m(j*Dim+mu,k*Dim+nu) += f*temp;
+	}
+	else if (k==mj) {
+		B_jmj = DistanceSquared(l[j],l[mj]);
+		if (mu==nu)
+			temp += - w*pow(B_jmj,-1 + w/2.);
+		temp += 2.0*w*pow(B_jmj,-2 + w/2.)*DX(l,j,mj,mu)*DX(l,j,mj,nu) \
+ 				- pow(w,2)*pow(B_jmj,-2 + w/2.)*DX(l,j,mj,mu)*DX(l,j,mj,nu);
+		m(j*Dim+mu,k*Dim+nu) += f*temp;
+	}
+	else if (k==pj) {
+		B_jpj = DistanceSquared(l[j],l[pj]);
+		if (mu==nu)
+			temp +=  - w*pow(B_jpj,-1 + w/2.);
+		temp += + 2.0*w*pow(B_jpj,-2 + w/2.)*DX(l,j,pj,mu)*DX(l,j,pj,nu) \
+ 				- pow(w,2)*pow(B_jpj,-2 + w/2.)*DX(l,j,pj,mu)*DX(l,j,pj,nu);
 		m(j*Dim+mu,k*Dim+nu) += f*temp;
 	}
 }
@@ -839,6 +900,7 @@ template <> void I0<2> (const uint& j, const Loop<2>& l, const number& f, number
 
 // dim 4
 template void L<4>(const uint& j, const Loop<4>& l, const number& f, number& result);
+template void DistPow<4>(const uint& j, const Loop<4>& l, const number& w, const number& f, number& result);
 template void S0<4>(const uint& j, const Loop<4>& l, const number& f, number& result);
 template void Sm<4>(const uint& j, const Loop<4>& l, const number& f, number& result);
 template void Angle<4>(const uint& j, const Loop<4>& l, const number& f, number& result);
@@ -859,6 +921,8 @@ template void KGAvgPlane<4>(const uint& j, const Loop<4>& l, const uint& ex1, co
 template void mdPX_nr<4>(const Loop<4>& l, const uint& loc, const Point<4>& P, const number& f, vec& v);
 template void mdL_nr<4>(const uint& j, const uint& mu, const Loop<4>& l, const number& p, vec& v);
 template void ddL_nr<4>(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<4>& l, const number& p, mat& m);
+template void mdDistPow_nr<4>(const uint& j, const uint& mu, const Loop<4>& l, const number& w, const number& p, vec& v);
+template void ddDistPow_nr<4>(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<4>& l, const number& w, const number& p, mat& m);
 template void mdS0_nr<4>(const uint& j, const uint& mu, const Loop<4>& l, const number& p, vec& v);
 template void ddS0_nr<4>(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<4>& l, const number& p, mat& m);
 template void mdsqrtS0_nr<4>(const uint& j, const uint& mu, const Loop<4>& l, const number& sqrt4s0, const number& p, vec& v);
