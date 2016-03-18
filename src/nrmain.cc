@@ -4,6 +4,7 @@
 
 #include <Eigen/Dense>
 #include <gsl/gsl_sf_zeta.h>
+#include <gsl/gsl_sf_gamma.h>
 #include "check.h"
 #include "folder.h"
 #include "genloop.h"
@@ -310,9 +311,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		// some simple scalars
 		uint j, k, mu, nu;
 		number gb = p.G*p.B;
-		number g = p.G*p.G/8.0/PI/PI;
-		if (poto==PotentialOptions::dimreg)
-			g *= pow(p.Mu,-p.Epsi);
+		number g = (poto==PotentialOptions::dimreg? pow(p.Mu,-p.Epsi)*p.G*p.G*pow(PI,-2.0+p.Epsi/2.0)*gsl_sf_gamma(2.0-p.Epsi/2.0)/4.0/(2.0-p.Epsi) : p.G*p.G/8.0/PI/PI);
 		number sqrt4s0 = 2.0*sqrt(S0(xLoop));
 		number dm = (poto==PotentialOptions::exponential? -g*sqrt(PI)/p.Epsi: -g*PI/p.Epsi);
 		number cusp_scale = (poto==PotentialOptions::dimreg? g/p.Epsi: g*log(p.Mu/p.Epsi));
