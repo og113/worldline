@@ -27,8 +27,8 @@ CONTENTS
 -------------------------------------------------------------------------------------------------------------------------*/
 
 // Size
-const uint Parameters::Size = 15;
-const uint ParametersRange::Size = 15;
+const uint Parameters::Size = 16;
+const uint ParametersRange::Size = 16;
 
 // step
 void Parameters::step(const ParametersRange& pr, const Parameters::Label& label, const uint& j) {
@@ -94,6 +94,10 @@ void Parameters::step(const ParametersRange& pr, const Parameters::Label& label,
 				stepSize = ((pr.Max).P4-(pr.Min).P4)/((pr.Steps)[label-1]-1.0);
 				P4 += j*stepSize;
 				break;	
+			case lambda:
+				stepSize = ((pr.Max).P4-(pr.Min).P4)/((pr.Steps)[label-1]-1.0);
+				Lambda += j*stepSize;
+				break;	
 			default:
 				cerr << "Parameters error: Label unknown" << endl;
 				break;
@@ -127,6 +131,7 @@ ostream& operator<<(ostream& os, const Parameters& p) {
 	os << setw(20) << "P2" << setw(20) << p.P2 << endl;
 	os << setw(20) << "P3" << setw(20) << p.P3 << endl;
 	os << setw(20) << "P4" << setw(20) << p.P4 << endl;
+	os << setw(20) << "Lambda" << setw(20) << p.Lambda << endl;
 	return os;
 }
 
@@ -169,6 +174,7 @@ void Parameters::load(const string& filename) {
 	is >> dross >> P2;
 	is >> dross >> P3;
 	is >> dross >> P4;
+	is >> dross >> Lambda;
 	is.close();
 }
 
@@ -176,14 +182,15 @@ void Parameters::load(const string& filename) {
 bool Parameters::empty() const {
 	return (Nl==0 && Ng==0 && Nig==0 && Nsw==0 && Npsw==0 && K==0 && abs(G)<MIN_NUMBER && abs(B)<MIN_NUMBER\
 	 && abs(T)<MIN_NUMBER && abs(Epsi)<MIN_NUMBER && abs(Mu)<MIN_NUMBER && abs(P1)<MIN_NUMBER && abs(P2)<MIN_NUMBER\
-	  && abs(P3)<MIN_NUMBER && abs(P4)<MIN_NUMBER);
+	  && abs(P3)<MIN_NUMBER && abs(P4)<MIN_NUMBER && abs(Lambda)<MIN_NUMBER);
 }
 
 // operator==
 bool operator==(const Parameters& l, const Parameters& r){
 	return (l.Nl==r.Nl && l.Ng==r.Ng && l.Nig==r.Nig && l.Nsw==r.Nsw && l.Npsw==r.Npsw && l.K==r.K && abs(l.G-r.G)<MIN_NUMBER\
 	 && abs(l.B-r.B)<MIN_NUMBER && abs(l.T-r.T)<MIN_NUMBER && abs(l.Epsi-r.Epsi)<MIN_NUMBER && abs(l.Mu-r.Mu)<MIN_NUMBER\
-	 && abs(l.P1-r.P1)<MIN_NUMBER && abs(l.P2-r.P2)<MIN_NUMBER && abs(l.P3-r.P3)<MIN_NUMBER && abs(l.P4-r.P4)<MIN_NUMBER);
+	 && abs(l.P1-r.P1)<MIN_NUMBER && abs(l.P2-r.P2)<MIN_NUMBER && abs(l.P3-r.P3)<MIN_NUMBER \
+	 && abs(l.Lambda-r.Lambda)<MIN_NUMBER);
 }
 
 // writeBinary
@@ -203,6 +210,7 @@ ostream& Parameters::writeBinary(ostream& os) const {
 	os.write(reinterpret_cast<const char*>(&P2),sizeof(number));
 	os.write(reinterpret_cast<const char*>(&P3),sizeof(number));
 	os.write(reinterpret_cast<const char*>(&P4),sizeof(number));
+	os.write(reinterpret_cast<const char*>(&Lambda),sizeof(number));
 	return os;
 }
 
@@ -223,6 +231,7 @@ istream& Parameters::readBinary(istream& is) {
 	is.read(reinterpret_cast<char*>(&P2),sizeof(number));
 	is.read(reinterpret_cast<char*>(&P3),sizeof(number));
 	is.read(reinterpret_cast<char*>(&P4),sizeof(number));
+	is.read(reinterpret_cast<char*>(&Lambda),sizeof(number));
 	return is;
 }
 
@@ -327,8 +336,8 @@ void ParametersRange::load(const string& filename) {
 	// THIS NEEDS REDOING SO THAT THERE AREN'T MISTAKES WHEN SPACES DISAPPEAR
 	is >> dross >> dross >> Min.Nl >> dross >> Max.Nl >> dross >> Steps[0] >> dross;
 	is >> dross >> dross >> Min.Ng >> dross >> Max.Ng >> dross >> Steps[1] >> dross;
-	is >> dross >> dross >> Min.Nig >> dross >> Max.Nig >> dross >> Steps[3] >> dross;
-	is >> dross >> dross >> Min.Nsw >> dross >> Max.Nsw >> dross >> Steps[2] >> dross;
+	is >> dross >> dross >> Min.Nig >> dross >> Max.Nig >> dross >> Steps[2] >> dross;
+	is >> dross >> dross >> Min.Nsw >> dross >> Max.Nsw >> dross >> Steps[3] >> dross;
 	is >> dross >> dross >> Min.Npsw >> dross >> Max.Npsw >> dross >> Steps[4] >> dross;
 	is >> dross >> dross >> Min.K >> dross >> Max.K >> dross >> Steps[5] >> dross;
 	is >> dross >> dross >> Min.G >> dross >> Max.G >> dross >> Steps[6] >> dross;
@@ -340,6 +349,7 @@ void ParametersRange::load(const string& filename) {
 	is >> dross >> dross >> Min.P2 >> dross >> Max.P2 >> dross >> Steps[12] >> dross;
 	is >> dross >> dross >> Min.P3 >> dross >> Max.P3 >> dross >> Steps[13] >> dross;
 	is >> dross >> dross >> Min.P4 >> dross >> Max.P4 >> dross >> Steps[14] >> dross;
+	is >> dross >> dross >> Min.Lambda >> dross >> Max.Lambda >> dross >> Steps[15] >> dross;
 	is.close();
 }
 
@@ -372,9 +382,9 @@ ostream& operator<<(ostream& os, const ParametersRange& pr) {
 	os << setw(20) << "Ng" << "[ " << setw(12) <<  (pr.Min).Ng << " , " \
 						<< setw(12) << (pr.Max).Ng << " , " << setw(12) << (pr.Steps)[1] << " ]" << endl;
 	os << setw(20) << "Nig" << "[ " << setw(12) << (pr.Min).Nig << " , " \
-						<< setw(12) << (pr.Max).Nig << " , " << setw(12) << (pr.Steps)[3] << " ]" << endl;
+						<< setw(12) << (pr.Max).Nig << " , " << setw(12) << (pr.Steps)[2] << " ]" << endl;
 	os << setw(20) << "Nsw" << "[ " << setw(12) << (pr.Min).Nsw << " , " \
-						<< setw(12) << (pr.Max).Nsw << " , " << setw(12) << (pr.Steps)[2] << " ]" << endl;
+						<< setw(12) << (pr.Max).Nsw << " , " << setw(12) << (pr.Steps)[3] << " ]" << endl;
 	os << setw(20) << "Npsw" << "[ " << setw(12) << (pr.Min).Npsw << " , " \
 						<< setw(12) << (pr.Max).Npsw << " , " << setw(12) << (pr.Steps)[4] << " ]" << endl;
 	os << setw(20) << "K" << "[ " << setw(12) << setw(12) << (pr.Min).K << " , " \
@@ -397,6 +407,8 @@ ostream& operator<<(ostream& os, const ParametersRange& pr) {
 						<< setw(12) << (pr.Max).P3 << " , " << setw(12) << (pr.Steps)[13] << " ]" << endl;
 	os << setw(20) << "P4" << "[ " << setw(12) << (pr.Min).P4 << " , " \
 						<< setw(12) << (pr.Max).P4 << " , " << setw(12) << (pr.Steps)[14] << " ]" << endl;
+	os << setw(20) << "Lambda" << "[ " << setw(12) << (pr.Min).Lambda << " , " \
+						<< setw(12) << (pr.Max).Lambda << " , " << setw(12) << (pr.Steps)[15] << " ]" << endl;
 	
 	return os;
 }
