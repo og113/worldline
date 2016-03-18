@@ -87,8 +87,10 @@ cout << "using inputs file " << inputsFile << endl;
 
 PrintOptions::Option po = PrintOptions::none;
 if (!printOpts.empty()) {
-	if (printOpts.compare("all")==0)
+	if (printOpts.compare("all")==0) {
 		po = PrintOptions::all;
+		curvature = true;
+	}
 	else if (printOpts.compare("x")==0)
 		po = PrintOptions::x;
 	else if (printOpts.compare("mds")==0)
@@ -229,9 +231,9 @@ for (uint pl=0; pl<Npl; pl++) {
 		else {
 			loadFile = filenameLoopNR<dim>(p);
 			if (weak)
-				(stepFile.Extras).push_back(StringPair("weak","1"));
+				(loadFile.Extras).push_back(StringPair("weak","1"));
 			if (poto!=PotentialOptions::original)
-				(stepFile.Extras).push_back(StringPair("pot",nts((int)poto)));
+				(loadFile.Extras).push_back(StringPair("pot",nts((int)poto)));
 			if (!loadFile.exists())
 				loadFile = filenameLoopNR<dim>(p);
 			if (!loadFile.exists()) {
@@ -358,13 +360,13 @@ for (uint pl=0; pl<Npl; pl++) {
 				// external field
 				mdI_nr(j,mu,xLoop,-gb,mds);
 				
-				// dynamical field self-energy regularisation
-				if (!weak && poto!=PotentialOptions::dimreg)
-					mdL_nr(j,mu,xLoop,dm,mds);
-				
-				// dim reg regularisation
-				if (poto==PotentialOptions::dimreg)
-					mdDistPow_nr(j, mu, xLoop, p.Epsi, dim_reg_scale, mds);
+				if (!weak) {
+					// self-energy regularisation
+					if (poto!=PotentialOptions::dimreg)
+						mdL_nr(j,mu,xLoop,dm,mds);
+					else
+						mdDistPow_nr(j, mu, xLoop, p.Epsi, dim_reg_scale, mds);
+				}
 				
 				for (k=0; k<N; k++) {
 				
@@ -399,8 +401,8 @@ for (uint pl=0; pl<Npl; pl++) {
 						// external field
 						ddI_nr(j,mu,k,nu,xLoop,-gb,dds);
 						
-						// dynamical field	
 						if (!weak) {
+							// dynamical field	
 							if (poto==PotentialOptions::original)
 								ddVor_nr(j, mu, k, nu, xLoop, p.Epsi, g, dds);
 							else if (poto==PotentialOptions::link)
@@ -409,16 +411,13 @@ for (uint pl=0; pl<Npl; pl++) {
 								ddVer_nr(j, mu, k, nu, xLoop, p.Epsi, g, dds);
 							else if (poto==PotentialOptions::dimreg)
 								ddVdr_nr(j, mu, k, nu, xLoop, p.Epsi, g, dds);
-						}		
-						
-						// dynamical field self-energy regularisation
-						if (!weak && poto!=PotentialOptions::dimreg)
-							ddL_nr(j,mu,k,nu,xLoop,dm,dds);
-						
-						// dim reg regularisation
-						if (poto==PotentialOptions::dimreg)
-							ddDistPow_nr(j,mu,k,nu,xLoop,p.Epsi,dim_reg_scale,dds);
-						
+								
+							// self-energy regularisation
+							if (poto!=PotentialOptions::dimreg)
+								ddL_nr(j,mu,k,nu,xLoop,dm,dds);
+							else 
+								ddDistPow_nr(j,mu,k,nu,xLoop,p.Epsi,dim_reg_scale,dds);
+						}								
 					}
 				}
 			}		
@@ -450,7 +449,7 @@ for (uint pl=0; pl<Npl; pl++) {
 			PseudoAngle(left, xLoop, 0.5, angle_neigh);
 			left = (left==(N-1)? 0: left+1);
 			
-			for (uint k=0; k<range; k++) {			
+			for (k=0; k<range; k++) {			
 				Angle(left, xLoop, 0.5/(number)range, gamma);
 				Angle(right, xLoop, 0.5/(number)range, gamma);
 				FGamma(left, xLoop, -cusp_scale, fgamma);
