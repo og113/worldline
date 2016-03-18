@@ -742,8 +742,8 @@ for (uint pl=0; pl<Npl; pl++) {
 		string resFile = "results/nr/nrmain_cosmos_8.dat";
 		FILE* ros;
 		ros = fopen(resFile.c_str(),"a");
-		fprintf(ros,"%24s%24i%24i%24i%24g%24g%24i%24g%24g%24g%24g%24g%24g%24g%24g%24g%24g%24g%24g%24g\n",\
-					timenumber.c_str(),pl,(int)poto,p.K,p.G,p.B,p.Ng,p.Epsi,p.Mu,M,s,gamma,\
+		fprintf(ros,"%24s%24i%24i%24i%24g%24g%24i%24g%24g%24g%24g%24g%24g%24g%24g%24g%24g%24g%24g%24g%24g\n",\
+					timenumber.c_str(),pl,(int)poto,p.K,p.G,p.B,p.Ng,p.Epsi,p.Mu,p.Lambda,M,s,gamma,\
 					checkSol.back(),checkDX.back(),checkICMax.back(),checkICAvg.back(),checkKgAMax.back(),\
 					checkKgAAvg.back(),checkCCMax.back(),angle_neigh);
 		fclose(ros);
