@@ -1087,11 +1087,12 @@ template <> void mdVdr_nr<4>(const uint& j, const uint& mu, const uint& i, const
 	if (i!=j) {
 		number B_ij = DistanceSquared(l[i],l[j]);
 		number T_ij = Dot(l[pi],l[i],l[pj],l[j]);
-		res += 2.0*pow(B_ij,-1.0 + a/2.0)*DX(l,i,pi,mu) + 2.0*(-2.0 + a)*pow(B_ij,-2.0 + a/2.0)*DX(l,j,i,mu)*T_ij;
+		res +=   2.0*pow(B_ij,-1.0 + a/2.0)*DX(l,i,pi,mu) \
+ 				+  2.0*(-2.0 + a)*pow(B_ij,-2.0 + a/2.0)*DX(l,j,i,mu)*T_ij;
 	}
 	if (i!=mj) {
 		number B_imj = DistanceSquared(l[i],l[mj]);
-		res += -2.0*pow(B_imj,-1.0 + a/2.0)*DX(l,i,pi,mu);
+		res += - 2.0*(pow(B_imj,-1.0 + a/2.0)*DX(l,i,pi,mu));
 	}
 
 	v[j*4+mu] += -f*res;
@@ -1432,10 +1433,10 @@ template <> void ddVdr_nr<4>(const uint& j, const uint& mu, const uint& k, const
 	// terms where mu==nu, without sums
 	if (mu==nu) {
 		if (k!=j)
-			res += 	 + 2.0*pow(B_mjmk,-1.0 + a/2.0) \
-					+ 2.0*pow(B_jk,-1.0 + a/2.0) \
- 					+ 4.0*pow(B_jk,-2.0 + a/2.0)*T_jk \
- 					- 2.0*a*pow(B_jk,-2.0 + a/2.0)*T_jk;
+			res += + 2.0*pow(B_mjmk,-1.0 + a/2.0) \
+					 + 2.0*pow(B_jk,-1.0 + a/2.0) \
+					 + 4.0*pow(B_jk,-2.0 + a/2.0)*T_jk \
+					 - 2.0*a*pow(B_jk,-2.0 + a/2.0)*T_jk ;
 		if (k!=mj)
 			res += - 2.0*pow(B_mjk,-1.0 + a/2.0); //
 		if (k!=pj)
@@ -1455,7 +1456,7 @@ template <> void ddVdr_nr<4>(const uint& j, const uint& mu, const uint& k, const
 		res += - 4.0*pow(B_mjk,-2.0 + a/2.0)*DX(l,mj,k,nu)*DX(l,k,pk,mu) \
  				+ 2.0*a*pow(B_mjk,-2.0 + a/2.0)*DX(l,mj,k,nu)*DX(l,k,pk,mu); //
 	if (k!=pj)
-		res += + 4.0*pow(B_jmk,-2.0 + a/2.0)*DX(l,j,pj,nu)*DX(l,j,mk,mu) \
+		res += 	 + 4.0*pow(B_jmk,-2.0 + a/2.0)*DX(l,j,pj,nu)*DX(l,j,mk,mu) \
  				- 2.0*a*pow(B_jmk,-2.0 + a/2.0)*DX(l,j,pj,nu)*DX(l,j,mk,mu); //
 	
 	// terms with sums
@@ -1485,10 +1486,10 @@ template <> void ddVdr_nr<4>(const uint& j, const uint& mu, const uint& k, const
 			}
 			if (k==mj && i!=mj) 
 				res +=  4.0*pow(B_imj,-2.0 + a/2.0)*DX(l,i,pi,mu)*DX(l,mj,i,nu) \
- 						- 2.0*a*pow(B_imj,-2.0 + a/2.0)*DX(l,i,pi,mu)*DX(l,mj,i,nu);
+ 					- 2.0*a*pow(B_imj,-2.0 + a/2.0)*DX(l,i,pi,mu)*DX(l,mj,i,nu);
 			if (k==pj && i!=j) 
 				res += + 4.0*pow(B_ij,-2.0 + a/2.0)*DX(l,i,pi,nu)*DX(l,j,i,mu) \
- 						- 2.0*a*pow(B_ij,-2.0 + a/2.0)*DX(l,i,pi,nu)*DX(l,j,i,mu);
+ 					- 2.0*a*pow(B_ij,-2.0 + a/2.0)*DX(l,i,pi,nu)*DX(l,j,i,mu);
 			
 		}		
 	}
