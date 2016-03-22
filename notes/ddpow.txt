@@ -1,0 +1,23 @@
+ mj==k
+ 2.0*w*pow(B_jmj,-2 + w/2.)*DX(l,j,mj,mu)*DX(l,j,mj,nu) \
+ - pow(w,2)*pow(B_jmj,-2 + w/2.)*DX(l,j,mj,mu)*DX(l,j,mj,nu) \
+ 
+ j==k
+ - 2.0*w*pow(B_jmj,-2 + w/2.)*DX(l,j,mj,mu)*DX(l,j,mj,nu) \
+ + pow(w,2)*pow(B_jmj,-2 + w/2.)*DX(l,j,mj,mu)*DX(l,j,mj,nu) \
+ - 2.0*w*pow(B_jpj,-2 + w/2.)*DX(l,j,pj,mu)*DX(l,j,pj,nu) \
+ + pow(w,2)*pow(B_jpj,-2 + w/2.)*DX(l,j,pj,mu)*DX(l,j,pj,nu) \
+ 
+ pj==k
+ + 2.0*w*pow(B_jpj,-2 + w/2.)*DX(l,j,pj,mu)*DX(l,j,pj,nu) \
+ - pow(w,2)*pow(B_jpj,-2 + w/2.)*DX(l,j,pj,mu)*DX(l,j,pj,nu) \
+ 
+ mu==nu, mj==k
+ - w*pow(B_jmj,-1 + w/2.) \
+ 
+ mu==nu, j==k
+ + w*pow(B_jmj,-1 + w/2.) \
+ + w*pow(B_jpj,-1 + w/2.) \
+ 
+ mu==nu, pj==k
+ - w*pow(B_jpj,-1 + w/2.)

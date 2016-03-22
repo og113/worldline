@@ -4,6 +4,7 @@
 
 #include <Eigen/Dense>
 #include <gsl/gsl_sf_zeta.h>
+#include <gsl/gsl_sf_gamma.h>
 #include "check.h"
 #include "folder.h"
 #include "genloop.h"
@@ -42,6 +43,8 @@ struct PotentialOptions {
 	enum Option { original, link, exponential, dimreg};
 };
 
+uint NumberPotentialOptions = 4;
+
 int main(int argc, char** argv) {
 /*----------------------------------------------------------------------------------------------------------------------------
 	1 - argv, parameters etc
@@ -55,6 +58,7 @@ bool weak = false;
 bool eigen = false;
 bool curvature = false;
 bool old = true;
+bool repulsion = false;
 bool alltests = false; // doing alltests
 string printOpts = "";
 string potOpts = "";
@@ -72,6 +76,7 @@ if (argc % 2 && argc>1) {
 		else if (id.compare("eigen")==0) eigen = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("curvature")==0) curvature = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("old")==0) old = (stn<uint>(argv[2*j+2])!=0);
+		else if (id.compare("repulsion")==0 || id.compare("rep")==0) repulsion = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("inputs")==0) inputsFile = (string)argv[2*j+2];
 		else if (id.compare("print")==0) printOpts = (string)argv[2*j+2];
 		else if (id.compare("pot")==0 || id.compare("potential")==0) potOpts = (string)argv[2*j+2];
@@ -87,8 +92,10 @@ cout << "using inputs file " << inputsFile << endl;
 
 PrintOptions::Option po = PrintOptions::none;
 if (!printOpts.empty()) {
-	if (printOpts.compare("all")==0)
+	if (printOpts.compare("all")==0) {
 		po = PrintOptions::all;
+		curvature = true;
+	}
 	else if (printOpts.compare("x")==0)
 		po = PrintOptions::x;
 	else if (printOpts.compare("mds")==0)
@@ -106,6 +113,7 @@ if (!printOpts.empty()) {
 }
 
 PotentialOptions::Option poto = PotentialOptions::original;
+StringPair potExtras("pot",nts((int)poto));
 if (!potOpts.empty()) {
 	if (potOpts.compare("original")==0)
 		poto = PotentialOptions::original;
@@ -118,6 +126,9 @@ if (!potOpts.empty()) {
 	else {
 		cerr << "potential options not understood: " << potOpts << endl;
 		return 1;
+	}
+	if (poto!=PotentialOptions::original) {
+		potExtras.second = nts((int)poto+(int)repulsion*NumberPotentialOptions);
 	}
 }
 //dimension
@@ -158,7 +169,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		if (weak)
 			(stepFile.Extras).push_back(StringPair("weak","1"));
 		if (poto!=PotentialOptions::original)
-			(stepFile.Extras).push_back(StringPair("pot",nts((int)poto)));
+			(stepFile.Extras).push_back(potExtras);
 	}
 		
 	
@@ -229,9 +240,9 @@ for (uint pl=0; pl<Npl; pl++) {
 		else {
 			loadFile = filenameLoopNR<dim>(p);
 			if (weak)
-				(stepFile.Extras).push_back(StringPair("weak","1"));
+				(loadFile.Extras).push_back(StringPair("weak","1"));
 			if (poto!=PotentialOptions::original)
-				(stepFile.Extras).push_back(StringPair("pot",nts((int)poto)));
+				(loadFile.Extras).push_back(potExtras);
 			if (!loadFile.exists())
 				loadFile = filenameLoopNR<dim>(p);
 			if (!loadFile.exists()) {
@@ -308,14 +319,14 @@ for (uint pl=0; pl<Npl; pl++) {
 		// some simple scalars
 		uint j, k, mu, nu;
 		number gb = p.G*p.B;
-		number g = p.G*p.G/8.0/PI/PI;
-		if (poto==PotentialOptions::dimreg)
-			g *= pow(p.Mu,-p.Epsi);
+		number g = (poto==PotentialOptions::dimreg? pow(p.Lambda,-p.Epsi)*p.G*p.G*pow(PI,-2.0+p.Epsi/2.0)*gsl_sf_gamma(2.0-p.Epsi/2.0)/4.0/(2.0-p.Epsi) : p.G*p.G/8.0/PI/PI);
 		number sqrt4s0 = 2.0*sqrt(S0(xLoop));
 		number dm = (poto==PotentialOptions::exponential? -g*sqrt(PI)/p.Epsi: -g*PI/p.Epsi);
 		number cusp_scale = (poto==PotentialOptions::dimreg? g/p.Epsi: g*log(p.Mu/p.Epsi));
 		number dim_reg_scale = (poto==PotentialOptions::dimreg? -g*2.0*gsl_sf_zeta(2.0-p.Epsi): 0.0);
 		number d_dim_reg = 0.0;
+		number rep_scale = (poto==PotentialOptions::exponential? g: g*sqrt(PI));
+		number rep = 0.0;
 		number ic_scale = 1.0;
 		number cc_scale = 1.0;
 		number kg_scale = 1.0;
@@ -358,13 +369,13 @@ for (uint pl=0; pl<Npl; pl++) {
 				// external field
 				mdI_nr(j,mu,xLoop,-gb,mds);
 				
-				// dynamical field self-energy regularisation
-				if (!weak && poto!=PotentialOptions::dimreg)
-					mdL_nr(j,mu,xLoop,dm,mds);
-				
-				// dim reg regularisation
-				if (poto==PotentialOptions::dimreg)
-					mdDistPow_nr(j, mu, xLoop, p.Epsi, dim_reg_scale, mds);
+				if (!weak && !repulsion) {
+					// self-energy regularisation
+					if (poto!=PotentialOptions::dimreg)
+						mdL_nr(j,mu,xLoop,dm,mds);
+					else
+						mdDistPow_nr(j, mu, xLoop, p.Epsi, dim_reg_scale, mds);
+				}
 				
 				for (k=0; k<N; k++) {
 				
@@ -377,6 +388,9 @@ for (uint pl=0; pl<Npl; pl++) {
 							Ver(j, k, xLoop, p.Epsi, g, v);
 						else if (poto==PotentialOptions::dimreg)
 							Vdr(j, k, xLoop, p.Epsi, g, v);
+							
+						if (repulsion)
+							Repulsion(j, k, xLoop, p.Epsi, rep_scale, rep);
 					}
 					
 					// dynamical field
@@ -389,6 +403,9 @@ for (uint pl=0; pl<Npl; pl++) {
 							mdVer_nr(j, mu, k, xLoop, p.Epsi, g, mds);
 						else if (poto==PotentialOptions::dimreg)
 							mdVdr_nr(j, mu, k, xLoop, p.Epsi, g, mds);
+							
+						if (repulsion)
+							mdRepulsion_nr(j, mu, k, xLoop, p.Epsi, rep_scale, mds);
 					}
 				
 					for (nu=0; nu<dim; nu++) {
@@ -399,8 +416,8 @@ for (uint pl=0; pl<Npl; pl++) {
 						// external field
 						ddI_nr(j,mu,k,nu,xLoop,-gb,dds);
 						
-						// dynamical field	
 						if (!weak) {
+							// dynamical field	
 							if (poto==PotentialOptions::original)
 								ddVor_nr(j, mu, k, nu, xLoop, p.Epsi, g, dds);
 							else if (poto==PotentialOptions::link)
@@ -409,16 +426,18 @@ for (uint pl=0; pl<Npl; pl++) {
 								ddVer_nr(j, mu, k, nu, xLoop, p.Epsi, g, dds);
 							else if (poto==PotentialOptions::dimreg)
 								ddVdr_nr(j, mu, k, nu, xLoop, p.Epsi, g, dds);
-						}		
-						
-						// dynamical field self-energy regularisation
-						if (!weak && poto!=PotentialOptions::dimreg)
-							ddL_nr(j,mu,k,nu,xLoop,dm,dds);
-						
-						// dim reg regularisation
-						if (poto==PotentialOptions::dimreg)
-							ddDistPow_nr(j,mu,k,nu,xLoop,p.Epsi,dim_reg_scale,dds);
-						
+								
+							if (repulsion)
+								ddRepulsion_nr(j, mu, k, nu, xLoop, p.Epsi, rep_scale, dds);
+								
+							// self-energy regularisation
+							if (!repulsion) {
+								if (poto!=PotentialOptions::dimreg)
+									ddL_nr(j,mu,k,nu,xLoop,dm,dds);
+								else
+									ddDistPow_nr(j,mu,k,nu,xLoop,p.Epsi,dim_reg_scale,dds);
+							}
+						}								
 					}
 				}
 			}		
@@ -450,7 +469,7 @@ for (uint pl=0; pl<Npl; pl++) {
 			PseudoAngle(left, xLoop, 0.5, angle_neigh);
 			left = (left==(N-1)? 0: left+1);
 			
-			for (uint k=0; k<range; k++) {			
+			for (k=0; k<range; k++) {			
 				Angle(left, xLoop, 0.5/(number)range, gamma);
 				Angle(right, xLoop, 0.5/(number)range, gamma);
 				FGamma(left, xLoop, -cusp_scale, fgamma);
@@ -473,11 +492,14 @@ for (uint pl=0; pl<Npl; pl++) {
 		// assigning scalar quantities
 		vr = v;
 		if (abs(p.Epsi)>MIN_NUMBER) {
-			if (poto!=PotentialOptions::dimreg)
+			if (poto!=PotentialOptions::dimreg && !repulsion)
 				vr += dm*len;
 			else 
 				vr += d_dim_reg;
 			vr -= (!(P^=P0)? cusp_scale*fgamma : 0.0);
+			
+			if (repulsion)
+				vr += rep;
 		}
 		s = sqrt4s0 + i0;
 		if (!weak) s += vr;
@@ -744,8 +766,8 @@ for (uint pl=0; pl<Npl; pl++) {
 		string resFile = "results/nr/nrmain_cosmos_8.dat";
 		FILE* ros;
 		ros = fopen(resFile.c_str(),"a");
-		fprintf(ros,"%24s%24i%24i%24i%24g%24g%24i%24g%24g%24g%24g%24g%24g%24g%24g%24g%24g%24g%24g%24g\n",\
-					timenumber.c_str(),pl,(int)poto,p.K,p.G,p.B,p.Ng,p.Epsi,p.Mu,M,s,gamma,\
+		fprintf(ros,"%24s%24i%24i%24i%24g%24g%24i%24g%24g%24g%24g%24g%24g%24g%24g%24g%24g%24g%24g%24g%24g\n",\
+					timenumber.c_str(),pl,(int)poto+(int)repulsion*NumberPotentialOptions,p.K,p.G,p.B,p.Ng,p.Epsi,p.Mu,p.Lambda,M,s,gamma,\
 					checkSol.back(),checkDX.back(),checkICMax.back(),checkICAvg.back(),checkKgAMax.back(),\
 					checkKgAAvg.back(),checkCCMax.back(),angle_neigh);
 		fclose(ros);
@@ -756,7 +778,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		if (weak)
 			(loopRes.Extras).push_back(StringPair("weak","1"));
 		if (poto!=PotentialOptions::original)
-			(loopRes.Extras).push_back(StringPair("pot",nts((int)poto)));
+			(loopRes.Extras).push_back(potExtras);
 		saveVectorBinary(loopRes,x);
 		printf("%12s%50s\n","x:",((string)loopRes).c_str());
 		

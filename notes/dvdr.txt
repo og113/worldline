@@ -1,2 +1,12 @@
+<<<<<<< HEAD
  2.0*Sum(-(pow(B_imj,-1 + a/2.)*DX(l,i,pi,mu)) + pow(B_ij,-1 + a/2.)*DX(l,i,pi,mu) \
  + (-2 + a)*pow(B_ij,-2 + a/2.)*DX(l,j,i,mu)*T_ij,i)
+=======
+Sum(
+ 
+ - 2.0*(pow(B_imj,-1.0 + a/2.0)*DX(l,i,pi,mu)) \
+ +  2.0*pow(B_ij,-1.0 + a/2.0)*DX(l,i,pi,mu) \
+ +  2.0*(-2.0 + a)*pow(B_ij,-2.0 + a/2.0)*DX(l,j,i,mu)*T_ij
+ 
+ ,i)
+>>>>>>> 29ede6061ef96b278fe9a879263512dd63b902ed
