@@ -16,12 +16,11 @@ file5="results/nr/nrmain_cosmos_5.dat"
 file6="results/nr/nrmain_cosmos_6.dat"
 file7="results/nr/nrmain_cosmos_7.dat"
 filel7="results/nr/nrmain_laptop_7.dat"
-file4t="temp/nrmain_cosmos_4.dat"
-file5t="temp/nrmain_cosmos_5.dat"
+filewkb="results/wkb/wkb_schwinger_rate.dat"
 
 # approximate analytic result
-#pi=3.1415926535897932
-#p(g,B,E)=pi/g/B-(2.0/g/B)*( asin(E/2.0) + (E/2.0)*sqrt(1.0-(E/2.0)**2) )
+pi=3.1415926535897932
+p(g,B,E)=pi/g/B-(2.0/g/B)*( asin(E/2.0) + (E/2.0)*sqrt(1.0-(E/2.0)**2) )
 
 # fitting data
 #f(x) = a+b*x
@@ -62,5 +61,8 @@ plot @utl7l 0.15 @utl7r t "exp, a=0.15" @style pt 1 lc rgb "red", \
 	@ut7l 0.125 @ut7r t "original, a=0.125" @style pt 10 lc rgb "cyan", \
 	@ut7l 0.1 @ut7r t "original, a=0.1" @style pt 1 lc rgb "pink", \
 	@ut6l 0.15 @ut6m 0.15 @ut6r notitle @style pt 8 lc rgb "orange", \
+	filewkb u 1:2 title "WKB non-relativistic result, a=0" @style pt 1 lc rgb "brown", \
+	p(g,B,x) title "weak coupling result" lc rgb "black"
+
 
 pause -1

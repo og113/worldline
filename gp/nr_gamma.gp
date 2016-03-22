@@ -34,11 +34,10 @@ set ylabel "{/Symbol g}"
 #set xtics 0.01
 set grid xtics ytics
 
-a=0.125
+a=0.10
 B=1
 g=1
-E=0.02
-mu=0.13
+mu=0.10
 
 set title sprintf("Induced instanton, a=%g, mu=%g",a,mu)
 
@@ -48,16 +47,24 @@ ut6l='file6 u 9:($8==mu? ($5==B? ($6==0? ($7==a? ($3=='
 ut6r='? $11: 1/0): 1/0): 1/0): 1/0): 1/0)'
 ut7l='file7 u 9:($8==mu? ($5==B? ($6==0? ($7==a? ($3=='
 ut7r='? $11: 1/0): 1/0): 1/0): 1/0): 1/0)'
+utl7l='filel7 u 9:($8==mu? ($5==B? ($6==0? ($7==a? ($3=='
+utl7r='? $11: 1/0): 1/0): 1/0): 1/0): 1/0)'
 style='with points'
 titleS(K) = sprintf("{/Symbol g}, K=%g",K)
 
 #set xrange [0.1:0.2]	
-plot @ut7l 8 @ut7r t titleS(8) @style pt 1 lc rgb "red", \
-	@ut7l 9 @ut7r t titleS(9) @style pt 2 lc rgb "orange", \
-	@ut7l 10 @ut7r t titleS(10) @style pt 4 lc rgb "violet", \
-	@ut7l 11 @ut7r t titleS(11) @style pt 4 lc rgb "green", \
-	@ut7l 12 @ut7r t titleS(12) @style pt 8 lc rgb "blue", \
-	@ut7l 13 @ut7r t titleS(13) @style pt 10 lc rgb "black", \
+plot @utl7l 8 @utl7r t titleS(8) @style pt 1 lc rgb "red", \
+	@utl7l 9 @utl7r t titleS(9) @style pt 2 lc rgb "orange", \
+	@utl7l 10 @utl7r t titleS(10) @style pt 4 lc rgb "violet", \
+	@utl7l 11 @utl7r t titleS(11) @style pt 4 lc rgb "green", \
+	@utl7l 12 @utl7r t titleS(12) @style pt 8 lc rgb "blue", \
+	@utl7l 13 @utl7r t titleS(13) @style pt 10 lc rgb "black", \
+	@ut7l 8 @ut7r notitle @style pt 1 lc rgb "red", \
+	@ut7l 9 @ut7r notitle @style pt 2 lc rgb "orange", \
+	@ut7l 10 @ut7r notitle @style pt 4 lc rgb "violet", \
+	@ut7l 11 @ut7r notitle @style pt 4 lc rgb "green", \
+	@ut7l 12 @ut7r notitle @style pt 8 lc rgb "blue", \
+	@ut7l 13 @ut7r notitle @style pt 10 lc rgb "black", \
 	@ut6l 8 @ut6r notitle @style pt 1 lc rgb "red", \
 	@ut6l 9 @ut6r notitle @style pt 2 lc rgb "orange", \
 	@ut6l 10 @ut6r notitle @style pt 4 lc rgb "violet", \

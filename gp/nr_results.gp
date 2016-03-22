@@ -16,6 +16,7 @@ file5="results/nr/nrmain_cosmos_5.dat"
 file6="results/nr/nrmain_cosmos_6.dat"
 file4t="temp/nrmain_cosmos_4.dat"
 file5t="temp/nrmain_cosmos_5.dat"
+filewkb="results/wkb/wkb_schwinger _rate.dat"
 
 # approximate analytic result
 pi=3.1415926535897932
