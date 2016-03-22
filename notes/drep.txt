@@ -1,0 +1,7 @@
+ Sum(
+ 
+ (2.0*pow(a,2)*DX(l,k,i,pi,mu))/pow(E,B_imi/pow(a,2)) \
+ - (2.0*pow(a,2)*DX(l,k,i,pi,mu))/pow(E,B_ii/pow(a,2)) \
+ + (4.0*DX(l,k,i,i,mu)*T_ii)/pow(E,B_ii/pow(a,2))
+ 
+ ,i)/pow(a,4)

@@ -12,9 +12,9 @@ p(m,g,B)=pi/g/B - (2.0/g/B)*( asin(m/2.0) + (m/2.0)*sqrt(1-m*m/4.0) )
 
 # files
 file1="results/nr/nr_a_0.15_K_11.dat"
-#file2="results/nr/nr_a_0.10_K_10.dat"
-#file3="results/nr/nr_a_0.05_K_10.dat"
-#file4="results/nr/nr_a_0.02_K_10.dat"
+file2="results/nr/nr_a_0.10_K_10.dat"
+file3="results/nr/nr_a_0.05_K_10.dat"
+file4="results/nr/nr_a_0.02_K_10.dat"
 
 unset log
 unset label

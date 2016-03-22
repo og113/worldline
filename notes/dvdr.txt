@@ -1,0 +1,7 @@
+Sum(
+ 
+ - 2.0*(pow(B_imj,-1.0 + a/2.0)*DX(l,i,pi,mu)) \
+ +  2.0*pow(B_ij,-1.0 + a/2.0)*DX(l,i,pi,mu) \
+ +  2.0*(-2.0 + a)*pow(B_ij,-2.0 + a/2.0)*DX(l,j,i,mu)*T_ij
+ 
+ ,i)
