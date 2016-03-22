@@ -83,6 +83,10 @@ void Ver (const uint& j, const uint& k, const Loop<Dim>& l, const number& a, con
 template <uint Dim>
 void Vdr (const uint& j, const uint& k, const Loop<Dim>& l, const number& a, const number& f, number& result);
 
+// Repulsion
+template <uint Dim>
+void Repulsion (const uint& j, const uint& k, const Loop<Dim>& l, const number& a, const number& f, number& result);
+
 // InlineCurvatureMax
 template <uint Dim>
 void InlineCurvatureMax (const uint& j, const Loop<Dim>& l, const number& f, number& result);
@@ -212,6 +216,10 @@ void mdVer_nr(const uint& j, const uint& mu, const uint& i, const Loop<Dim>& l, 
 template<uint Dim>
 void mdVdr_nr(const uint& j, const uint& mu, const uint& i, const Loop<Dim>& l, const number& a, const number& f, vec& v);
 
+// mdRepulsion_nr
+template<uint Dim>
+void mdRepulsion_nr(const uint& j, const uint& mu, const uint& i, const Loop<Dim>& l, const number& a, const number& f, vec& v);
+
 // ddVor_nr
 template<uint Dim>
 void ddVor_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l,\
@@ -230,6 +238,11 @@ void ddVer_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, cons
 // ddVdr_nr
 template<uint Dim>
 void ddVdr_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l,\
+						 const number& a, const number& f, mat& m);
+						 
+// ddRepulsion_nr
+template<uint Dim>
+void ddRepulsion_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l,\
 						 const number& a, const number& f, mat& m);
 						 
 // mdFGamma_nr

@@ -56,6 +56,7 @@ bool weak = false;
 bool eigen = false;
 bool curvature = false;
 bool old = true;
+bool repulsion = false;
 bool alltests = false; // doing alltests
 string printOpts = "";
 string potOpts = "";
@@ -73,6 +74,7 @@ if (argc % 2 && argc>1) {
 		else if (id.compare("eigen")==0) eigen = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("curvature")==0) curvature = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("old")==0) old = (stn<uint>(argv[2*j+2])!=0);
+		else if (id.compare("repulsion")==0 || id.compare("rep")==0) repulsion = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("inputs")==0) inputsFile = (string)argv[2*j+2];
 		else if (id.compare("print")==0) printOpts = (string)argv[2*j+2];
 		else if (id.compare("pot")==0 || id.compare("potential")==0) potOpts = (string)argv[2*j+2];
@@ -317,6 +319,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		number cusp_scale = (poto==PotentialOptions::dimreg? g/p.Epsi: g*log(p.Mu/p.Epsi));
 		number dim_reg_scale = (poto==PotentialOptions::dimreg? -g*2.0*gsl_sf_zeta(2.0-p.Epsi): 0.0);
 		number d_dim_reg = 0.0;
+		number rep = 0.0;
 		number ic_scale = 1.0;
 		number cc_scale = 1.0;
 		number kg_scale = 1.0;
@@ -378,6 +381,9 @@ for (uint pl=0; pl<Npl; pl++) {
 							Ver(j, k, xLoop, p.Epsi, g, v);
 						else if (poto==PotentialOptions::dimreg)
 							Vdr(j, k, xLoop, p.Epsi, g, v);
+							
+						if (repulsion)
+							Repulsion(j, k, xLoop, p.Epsi, g, rep);
 					}
 					
 					// dynamical field
@@ -390,6 +396,9 @@ for (uint pl=0; pl<Npl; pl++) {
 							mdVer_nr(j, mu, k, xLoop, p.Epsi, g, mds);
 						else if (poto==PotentialOptions::dimreg)
 							mdVdr_nr(j, mu, k, xLoop, p.Epsi, g, mds);
+							
+						if (repulsion)
+							mdRepulsion_nr(j, mu, k, xLoop, p.Epsi, g, mds);
 					}
 				
 					for (nu=0; nu<dim; nu++) {
@@ -410,6 +419,9 @@ for (uint pl=0; pl<Npl; pl++) {
 								ddVer_nr(j, mu, k, nu, xLoop, p.Epsi, g, dds);
 							else if (poto==PotentialOptions::dimreg)
 								ddVdr_nr(j, mu, k, nu, xLoop, p.Epsi, g, dds);
+								
+							if (repulsion)
+								ddRepulsion_nr(j, mu, k, nu, xLoop, p.Epsi, g, dds);
 								
 							// self-energy regularisation
 							if (poto!=PotentialOptions::dimreg)
@@ -476,6 +488,9 @@ for (uint pl=0; pl<Npl; pl++) {
 			else 
 				vr += d_dim_reg;
 			vr -= (!(P^=P0)? cusp_scale*fgamma : 0.0);
+			
+			if (repulsion)
+				vr += rep;
 		}
 		s = sqrt4s0 + i0;
 		if (!weak) s += vr;

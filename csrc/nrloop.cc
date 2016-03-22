@@ -151,6 +151,19 @@ void Vdr (const uint& j, const uint& k, const Loop<Dim>& l, const number& a, con
 	}
 }
 
+// Repulsion
+template <uint Dim>
+void Repulsion (const uint& j, const uint& k, const Loop<Dim>& l, const number& a, const number& f, number& result) {
+	
+	if (k<j) {
+		uint pj = (j==(l.size()-1)? 0: j+1);
+		uint pk = (k==(l.size()-1)? 0: k+1);
+	
+		result += -f*2.0*Dot(l[pj],l[j],l[pk],l[k])*exp(-DistanceSquared(l[j],l[k])/a/a)/a/a;	
+	}
+	
+}
+
 // InlineCurvatureMax
 template <uint Dim>
 void InlineCurvatureMax (const uint& j, const Loop<Dim>& l, const number& f, number& result) {
@@ -599,6 +612,29 @@ void ddVdr_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, cons
 	cerr << "mddVdr_nr Error: no script written for dim = " << Dim << endl;
 }
 
+
+// mdRepulsion_nr
+template<uint Dim>
+void mdRepulsion_nr(const uint& j, const uint& mu, const Loop<Dim>& l, const number& a, const number& f, vec& v) {
+
+	for (uint i=0; i<l.size(); i++)
+		mdRepulsion_nr( j, mu, i, l, a, f, v);
+	
+}
+
+// mdRepulsion_nr
+template<uint Dim>
+void mdRepulsion_nr(const uint& j, const uint& mu, const uint& i, const Loop<Dim>& l, const number& a, const number& f, vec& v) {
+	cerr << "mdRepulsion_nr Error: no script written for dim = " << Dim << endl;
+}
+
+// ddRepulsion_nr
+template<uint Dim>
+void ddRepulsion_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l,\
+						 const number& a, const number& f, mat& m) {
+	cerr << "ddRepulsion_nr Error: no script written for dim = " << Dim << endl;
+}
+
 // mdGamma_nr
 template<uint Dim>
 void mdFGamma_nr(const Loop<Dim>& l, const uint& j, const number& f, vec& v) {
@@ -905,6 +941,7 @@ template void S0<4>(const uint& j, const Loop<4>& l, const number& f, number& re
 template void Sm<4>(const uint& j, const Loop<4>& l, const number& f, number& result);
 template void Angle<4>(const uint& j, const Loop<4>& l, const number& f, number& result);
 template void FGamma<4>(const uint& j, const Loop<4>& l, const number& f, number& result);
+template void Repulsion<4>(const uint& j, const uint& k, const Loop<4>& l, const number& a, const number& f, number& result);
 template void InlineCurvatureMax<4>(const uint& j, const Loop<4>& l, const number& f, number& result);
 template void InlineCurvatureMax<4>(const uint& j, const Loop<4>& l, const uint& ex1, const uint& ex2, const number& f, number& result);
 template void InlineCurvatureAvg<4>(const uint& j, const Loop<4>& l, const number& f, number& result);
@@ -1096,6 +1133,32 @@ template <> void mdVdr_nr<4>(const uint& j, const uint& mu, const uint& i, const
 	}
 
 	v[j*4+mu] += -f*res;
+}
+
+
+// mdRepulsion_nr
+template <> void mdRepulsion_nr<4>(const uint& j, const uint& mu, const uint& i, const Loop<4>& l, const number& a, const number& f, vec& v) {
+ 
+	number res = 0.0;
+	uint pj = (j==(l.size()-1)? 0: j+1);
+	uint mj = (j==0? (l.size()-1): j-1);
+	uint pi = (i==(l.size()-1)? 0: i+1);
+		
+	if (i!=j) {
+		number B_ij = DistanceSquared(l[i],l[j]);
+		number T_ij = Dot(l[pi],l[i],l[pj],l[j]);
+		number E_ij = exp(-B_ij/a/a);
+		res += (- 2.0*pow(a,2)*E_ij*DX(l,i,pi,mu) \
+ 				+ 4.0*E_ij*DX(l,j,i,mu)*T_ij)/pow(a,4);
+	}
+	if (i!=mj) {
+		number B_imj = DistanceSquared(l[i],l[mj]);
+		number E_imj = exp(-B_imj/a/a);
+		res += 2.0*pow(a,2)*E_imj*DX(l,i,pi,mu);
+	}
+
+	v[j*4+mu] += -f*res;
+
 }
 
 // ddVor_nr
@@ -1490,6 +1553,84 @@ template <> void ddVdr_nr<4>(const uint& j, const uint& mu, const uint& k, const
 			if (k==pj && i!=j) 
 				res += + 4.0*pow(B_ij,-2.0 + a/2.0)*DX(l,i,pi,nu)*DX(l,j,i,mu) \
  					- 2.0*a*pow(B_ij,-2.0 + a/2.0)*DX(l,i,pi,nu)*DX(l,j,i,mu);
+			
+		}		
+	}
+	
+	m(4*j+mu,4*k+nu) += f*res;
+	
+}
+
+// ddRepulsion_nr
+template <> void ddRepulsion_nr<4> (const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<4>& l,\
+						 const number& a, const number& f, mat& m) {
+	number res = 0.0;
+	
+	uint mj = (j==0? (l.size()-1): j-1);
+	uint pj = (j==(l.size()-1)? 0: j+1);		
+	uint mk = (k==0? (l.size()-1): k-1);
+	uint pk = (k==(l.size()-1)? 0: k+1);
+	
+	number B_jk = DistanceSquared(l[j],l[k]);
+	number B_mjk = DistanceSquared(l[mj],l[k]);
+	number B_jmk = DistanceSquared(l[j],l[mk]);
+	number B_mjmk = DistanceSquared(l[mj],l[mk]);
+	
+	number E_jk = exp(-B_jk/a/a);
+	number E_mjk = exp(-B_mjk/a/a);
+	number E_jmk = exp(-B_jmk/a/a);
+	number E_mjmk = exp(-B_mjmk/a/a);
+	
+	number T_jk = Dot(l[pj],l[j],l[pk],l[k]);
+
+	// terms where mu==nu, without sums
+	if (mu==nu) {
+		if (k!=j)
+			res += 	- (2.0*E_mjmk)/pow(a,2) \
+					- (2.0*E_jk)/pow(a,2) \
+ 					- (4.0*E_jk*T_jk)/pow(a,4);
+		if (k!=mj)
+			res +=  + (2.0*E_mjk)/pow(a,2); //
+		if (k!=pj)
+			res += + (2.0*E_jmk)/pow(a,2); //
+	}
+
+	// terms where mu not nexcessarily equal to nu, without sums
+	if (k!=j)
+		res +=   + (4.0*E_jk*DX(l,j,pj,nu)*DX(l,j,k,mu))/pow(a,4) \
+			 	- (4.0*E_jk*DX(l,j,k,nu)*DX(l,k,pk,mu))/pow(a,4) \
+			 	+ (8*E_jk*DX(l,j,k,mu)*DX(l,j,k,nu)*T_jk)/pow(a,6); //
+	if (k!=mj)
+		res +=  + (4.0*E_mjk*DX(l,mj,k,nu)*DX(l,k,pk,mu))/pow(a,4); //
+	if (k!=pj)
+		res += - (4.0*E_jmk*DX(l,j,pj,nu)*DX(l,j,mk,mu))/pow(a,4); //
+	
+	// terms with sums
+	if (k==j || k==mj || k==pj) {
+	
+		uint pi;
+		number B_ij, B_imj, E_ij, E_imj, T_ij;
+		
+		for (uint i=0; i<l.size(); i++) {
+		
+			pi = (i==(l.size()-1)? 0: i+1);
+			B_ij = DistanceSquared(l[i],l[j]);
+			B_imj = DistanceSquared(l[i],l[mj]);
+			E_ij = exp(-a*a/B_ij);
+			E_imj = exp(-a*a/B_imj);
+			T_ij = Dot(l[pi],l[i],l[pj],l[j]);
+			
+			if (k==j && i!=j) {
+				res += 	 + (4.0*E_ij*DX(l,i,pi,nu)*DX(l,j,i,mu))/pow(a,4) \
+						 + (4.0*E_ij*DX(l,i,pi,mu)*DX(l,j,i,nu))/pow(a,4) \
+						 - (8*E_ij*DX(l,j,i,mu)*DX(l,j,i,nu)*T_ij)/pow(a,6);
+				if (mu==nu)
+					res +=  (4.0*E_ij*T_ij)/pow(a,4); //
+			}
+			if (k==mj && i!=mj) 
+				res +=  (-4.0*E_imj*DX(l,i,pi,mu)*DX(l,mj,i,nu))/pow(a,4);
+			if (k==pj && i!=j) 
+				res += - (4.0*E_ij*DX(l,i,pi,nu)*DX(l,j,i,mu))/pow(a,4);
 			
 		}		
 	}

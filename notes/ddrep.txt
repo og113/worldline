@@ -1,15 +1,30 @@
- Sum((-4.0*DX(l,i,pi,mu)*DX(l,mj,i,nu)*d(mj,k))/(pow(a,4)*pow(E,B_imj/pow(a,2))) \
- + (4.0*DX(l,i,pi,nu)*DX(l,j,i,mu)*d(j,k))/(pow(a,4)*pow(E,B_ij/pow(a,2))) \
- + (4.0*DX(l,i,pi,mu)*DX(l,j,i,nu)*d(j,k))/(pow(a,4)*pow(E,B_ij/pow(a,2))) \
- - (8*DX(l,j,i,mu)*DX(l,j,i,nu)*T_ij*d(j,k))/(pow(a,6)*pow(E,B_ij/pow(a,2))) \
- - (4.0*DX(l,i,pi,nu)*DX(l,j,i,mu)*d(pj,k))/(pow(a,4)*pow(E,B_ij/pow(a,2))) \
- + (4.0*T_ij*d(j,k)*d(mu,nu))/(pow(a,4)*pow(E,B_ij/pow(a,2))),i) \
- - (4.0*DX(l,j,pj,nu)*DX(l,j,mk,mu))/(pow(a,4)*pow(E,B_jmk/pow(a,2))) \
- + (4.0*DX(l,j,pj,nu)*DX(l,j,k,mu))/(pow(a,4)*pow(E,B_jk/pow(a,2))) \
- + (4.0*DX(l,mj,k,nu)*DX(l,k,pk,mu))/(pow(a,4)*pow(E,B_mjk/pow(a,2))) \
- - (4.0*DX(l,j,k,nu)*DX(l,k,pk,mu))/(pow(a,4)*pow(E,B_jk/pow(a,2))) \
- + (8*DX(l,j,k,mu)*DX(l,j,k,nu)*T_jk)/(pow(a,6)*pow(E,B_jk/pow(a,2))) \
- - (2.0*d(mu,nu))/(pow(a,2)*pow(E,B_mjmk/pow(a,2))) \
- + (2.0*d(mu,nu))/(pow(a,2)*pow(E,B_mjk/pow(a,2))) + (2.0*d(mu,nu))/(pow(a,2)*pow(E,B_jmk/pow(a,2))) \
- - (2.0*d(mu,nu))/(pow(a,2)*pow(E,B_jk/pow(a,2))) \
- - (4.0*T_jk*d(mu,nu))/(pow(a,4)*pow(E,B_jk/pow(a,2)))
+ Sum(
+ 
+ mj==k
+ (-4.0*E_imj*DX(l,i,pi,mu)*DX(l,mj,i,nu))/pow(a,4) \
+ 
+ j==k
+ + (4.0*E_ij*DX(l,i,pi,nu)*DX(l,j,i,mu))/pow(a,4) \
+ + (4.0*E_ij*DX(l,i,pi,mu)*DX(l,j,i,nu))/pow(a,4) \
+ - (8*E_ij*DX(l,j,i,mu)*DX(l,j,i,nu)*T_ij)/pow(a,6) \
+ 
+ pj==k
+ - (4.0*E_ij*DX(l,i,pi,nu)*DX(l,j,i,mu))/pow(a,4) \
+ 
+ mu==nu, j==k
+ + (4.0*E_ij*T_ij)/pow(a,4)
+ 
+ ,i) \
+ 
+ - (4.0*E_jmk*DX(l,j,pj,nu)*DX(l,j,mk,mu))/pow(a,4) \
+ + (4.0*E_jk*DX(l,j,pj,nu)*DX(l,j,k,mu))/pow(a,4) \
+ + (4.0*E_mjk*DX(l,mj,k,nu)*DX(l,k,pk,mu))/pow(a,4) \
+ - (4.0*E_jk*DX(l,j,k,nu)*DX(l,k,pk,mu))/pow(a,4) \
+ + (8*E_jk*DX(l,j,k,mu)*DX(l,j,k,nu)*T_jk)/pow(a,6) \
+ 
+ mu==nu
+ - (2.0*E_mjmk)/pow(a,2) \
+ + (2.0*E_mjk)/pow(a,2) \
+ + (2.0*E_jmk)/pow(a,2) \
+ - (2.0*E_jk)/pow(a,2) \
+ - (4.0*E_jk*T_jk)/pow(a,4)
