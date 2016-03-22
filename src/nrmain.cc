@@ -325,7 +325,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		number cusp_scale = (poto==PotentialOptions::dimreg? g/p.Epsi: g*log(p.Mu/p.Epsi));
 		number dim_reg_scale = (poto==PotentialOptions::dimreg? -g*2.0*gsl_sf_zeta(2.0-p.Epsi): 0.0);
 		number d_dim_reg = 0.0;
-		number rep_scale = (poto==PotentialOptions::exponential? g: g*sqrt(PI));
+		number rep_scale = -dm*p.Epsi/sqrt(PI);
 		number rep = 0.0;
 		number ic_scale = 1.0;
 		number cc_scale = 1.0;
@@ -425,18 +425,15 @@ for (uint pl=0; pl<Npl; pl++) {
 							else if (poto==PotentialOptions::exponential)
 								ddVer_nr(j, mu, k, nu, xLoop, p.Epsi, g, dds);
 							else if (poto==PotentialOptions::dimreg)
-								ddVdr_nr(j, mu, k, nu, xLoop, p.Epsi, g, dds);
-								
-							if (repulsion)
-								ddRepulsion_nr(j, mu, k, nu, xLoop, p.Epsi, rep_scale, dds);
+								ddVdr_nr(j, mu, k, nu, xLoop, p.Epsi, g, dds);				
 								
 							// self-energy regularisation
-							if (!repulsion) {
-								if (poto!=PotentialOptions::dimreg)
-									ddL_nr(j,mu,k,nu,xLoop,dm,dds);
-								else
-									ddDistPow_nr(j,mu,k,nu,xLoop,p.Epsi,dim_reg_scale,dds);
-							}
+							if (repulsion)
+								ddRepulsion_nr(j, mu, k, nu, xLoop, p.Epsi, rep_scale, dds);
+							else if (poto!=PotentialOptions::dimreg)
+								ddL_nr(j,mu,k,nu,xLoop,dm,dds);
+							else
+								ddDistPow_nr(j,mu,k,nu,xLoop,p.Epsi,dim_reg_scale,dds);
 						}								
 					}
 				}
@@ -492,14 +489,14 @@ for (uint pl=0; pl<Npl; pl++) {
 		// assigning scalar quantities
 		vr = v;
 		if (abs(p.Epsi)>MIN_NUMBER) {
-			if (poto!=PotentialOptions::dimreg && !repulsion)
+			if (repulsion)
+				vr += rep;
+			else if (poto!=PotentialOptions::dimreg)
 				vr += dm*len;
 			else 
 				vr += d_dim_reg;
+
 			vr -= (!(P^=P0)? cusp_scale*fgamma : 0.0);
-			
-			if (repulsion)
-				vr += rep;
 		}
 		s = sqrt4s0 + i0;
 		if (!weak) s += vr;

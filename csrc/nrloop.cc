@@ -155,11 +155,11 @@ void Vdr (const uint& j, const uint& k, const Loop<Dim>& l, const number& a, con
 template <uint Dim>
 void Repulsion (const uint& j, const uint& k, const Loop<Dim>& l, const number& a, const number& f, number& result) {
 	
-	if (k<j) {
+	if (k<=j) {
 		uint pj = (j==(l.size()-1)? 0: j+1);
 		uint pk = (k==(l.size()-1)? 0: k+1);
 	
-		result += -f*2.0*Dot(l[pj],l[j],l[pk],l[k])*exp(-DistanceSquared(l[j],l[k])/a/a)/a/a;	
+		result += -f*(1.0+(number)k<j)*Dot(l[pj],l[j],l[pk],l[k])*exp(-DistanceSquared(l[j],l[k])/a/a)/a/a;	
 	}
 	
 }
@@ -1156,6 +1156,14 @@ template <> void mdRepulsion_nr<4>(const uint& j, const uint& mu, const uint& i,
 		number E_imj = exp(-B_imj/a/a);
 		res += 2.0*E_imj*DX(l,i,pi,mu)/pow(a,2);
 	}
+	
+	//coincident terms
+	if (i==j)
+		res += -2.0*(l[j])[mu]/a/a;
+	if (i==mj)
+		res += (l[mj])[mu]/a/a;
+	if (i==pj)
+		res += (l[pj])[mu]/a/a;
 
 	v[j*4+mu] += -f*res;
 
@@ -1634,6 +1642,14 @@ template <> void ddRepulsion_nr<4> (const uint& j, const uint& mu, const uint& k
 			
 		}		
 	}
+	
+	//coincident terms
+	if (k==j && mu==nu)
+		res += -2.0/a/a;
+	if (k==mj && mu==nu)
+		res += 1.0/a/a;
+	if (k==pj && mu==nu)
+		res += 1.0/a/a;
 	
 	m(4*j+mu,4*k+nu) += f*res;
 	
