@@ -14,6 +14,8 @@ file4="results/nr/nrmain_cosmos_4.dat"
 file5="results/nr/nrmain_cosmos_5.dat"
 file6="results/nr/nrmain_cosmos_6.dat"
 file7="results/nr/nrmain_cosmos_7.dat"
+file7l="results/nr/nrmain_laptop_7.dat"
+file8="results/nr/nrmain_cosmos_8.dat"
 
 # approximate analytic results
 pi=3.1415926535897932
