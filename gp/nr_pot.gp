@@ -76,20 +76,20 @@ plot @utl7l 0.15 @utl7r t "exp, a=0.15" @style pt 1 lc rgb "red", \
 	p(g,B,x) title "weak coupling result" lc rgb "black"
 	
 if (pot==4) \
-plot @ut8l 4 @ut8m 0.15 @ut8r t "original + repulsion, a=0.15" @style pt 6 lc rgb "orange", \
-	@ut8l 4 @ut8m 0.125 @ut8r t "original + repulsion, a=0.125" @style pt 8 lc rgb "cyan", \
-	@ut8l 4 @ut8m 0.1 @ut8r t "original + repulsion, a=0.1" @style pt 10 lc rgb "pink", \
-	@ut8l 4 @ut8m 0.075 @ut8r t "original + repulsion, a=0.075" @style pt 1 lc rgb "blue", \
-	@ut8l 4 @ut8m 0.05 @ut8r t "original + repulsion, a=0.05" @style pt 2 lc rgb "red", \
+plot @ut8l 4 @ut8m 0.15 @ut8r t "original + gaussian, a=0.15" @style pt 6 lc rgb "orange", \
+	@ut8l 4 @ut8m 0.125 @ut8r t "original + gaussian, a=0.125" @style pt 8 lc rgb "cyan", \
+	@ut8l 4 @ut8m 0.1 @ut8r t "original + gaussian, a=0.1" @style pt 10 lc rgb "pink", \
+	@ut8l 4 @ut8m 0.075 @ut8r t "original + gaussian, a=0.075" @style pt 1 lc rgb "blue", \
+	@ut8l 4 @ut8m 0.05 @ut8r t "original + gaussian, a=0.05" @style pt 2 lc rgb "red", \
 	filewkb u 1:2 title "WKB non-relativistic result, a=0" with lines lc rgb "green", \
 	p(g,B,x) title "weak coupling result" lc rgb "black"
 
 if (pot==6) \
-plot @ut8l 6 @ut8m 0.15 @ut8r t "exp + repulsion, a=0.15" @style pt 6 lc rgb "orange", \
-	@ut8l 6 @ut8m 0.125 @ut8r t "exp + repulsion, a=0.125" @style pt 8 lc rgb "cyan", \
-	@ut8l 6 @ut8m 0.1 @ut8r t "exp + repulsion, a=0.1" @style pt 10 lc rgb "pink", \
-	@ut8l 6 @ut8m 0.075 @ut8r t "exp + repulsion, a=0.075" @style pt 1 lc rgb "blue", \
-	@ut8l 6 @ut8m 0.05 @ut8r t "exp + repulsion, a=0.05" @style pt 2 lc rgb "red", \
+plot @ut8l 6 @ut8m 0.15 @ut8r t "exp + gaussian, a=0.15" @style pt 6 lc rgb "orange", \
+	@ut8l 6 @ut8m 0.125 @ut8r t "exp + gaussian, a=0.125" @style pt 8 lc rgb "cyan", \
+	@ut8l 6 @ut8m 0.1 @ut8r t "exp + gaussian, a=0.1" @style pt 10 lc rgb "pink", \
+	@ut8l 6 @ut8m 0.075 @ut8r t "exp + gaussian, a=0.075" @style pt 1 lc rgb "blue", \
+	@ut8l 6 @ut8m 0.05 @ut8r t "exp + gaussian, a=0.05" @style pt 2 lc rgb "red", \
 	filewkb u 1:2 title "WKB non-relativistic result, a=0" with lines lc rgb "green", \
 	p(g,B,x) title "weak coupling result" lc rgb "black"
 
