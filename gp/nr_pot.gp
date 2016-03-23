@@ -44,6 +44,7 @@ set xrange[0:2]
 B=1
 g=1
 K=11
+pot=6
 
 set title sprintf("Induced instanton, K=%g, {/Symbol m}=a",K)
 
@@ -59,26 +60,36 @@ ut8m='? ($4==K? ($5==g? ($6==B? ($7==0? ($8=='
 ut8r='? $12: 1/0): 1/0): 1/0): 1/0): 1/0): 1/0)'
 style='with points'
 
-pot=0
+if (pot==0) \
+plot @ut7l 0.15 @ut7r t "original, a=0.15" @style pt 1 lc rgb "red", \
+	@ut6l 0.15 @ut6m 0.15 @ut6r notitle @style pt 1 lc rgb "red", \
+	@ut7l 0.125 @ut7r t "original, a=0.125" @style pt 2 lc rgb "blue", \
+	@ut7l 0.1 @ut7r t "original, a=0.1" @style pt 4 lc rgb "green", \
+	filewkb u 1:2 title "WKB non-relativistic result, a=0" with lines lc rgb "brown", \
+	p(g,B,x) title "weak coupling result" lc rgb "black"
 
 if (pot==2) \
 plot @utl7l 0.15 @utl7r t "exp, a=0.15" @style pt 1 lc rgb "red", \
 	@utl7l 0.125 @utl7r t "exp, a=0.125" @style pt 2 lc rgb "blue", \
 	@utl7l 0.1 @utl7r t "exp, a=0.1" @style pt 4 lc rgb "green", \
-	@ut8l 6 @ut8m 0.15 @ut8r t "exp + repulsion, a=0.15" @style pt 1 lc rgb "orange", \
-	@ut8l 6 @ut8m 0.125 @ut8r t "exp + repulsion, a=0.125" @style pt 1 lc rgb "cyan", \
-	@ut8l 6 @ut8m 0.1 @ut8r t "exp + repulsion, a=0.1" @style pt 1 lc rgb "pink", \
 	filewkb u 1:2 title "WKB non-relativistic result, a=0" with lines lc rgb "brown", \
 	p(g,B,x) title "weak coupling result" lc rgb "black"
 	
-if (pot==0) \
-plot @ut7l 0.15 @ut7r t "original, a=0.15" @style pt 8 lc rgb "red", \
-	@ut6l 0.15 @ut6m 0.15 @ut6r notitle @style pt 8 lc rgb "red", \
-	@ut7l 0.125 @ut7r t "original, a=0.125" @style pt 10 lc rgb "blue", \
-	@ut7l 0.1 @ut7r t "original, a=0.1" @style pt 1 lc rgb "green", \
-	@ut8l 4 @ut8m 0.15 @ut8r t "original + repulsion, a=0.15" @style pt 1 lc rgb "orange", \
-	@ut8l 4 @ut8m 0.125 @ut8r t "original + repulsion, a=0.125" @style pt 1 lc rgb "cyan", \
-	@ut8l 4 @ut8m 0.1 @ut8r t "original + repulsion, a=0.1" @style pt 1 lc rgb "pink", \
+if (pot==4) \
+plot @ut8l 4 @ut8m 0.15 @ut8r t "original + repulsion, a=0.15" @style pt 6 lc rgb "orange", \
+	@ut8l 4 @ut8m 0.125 @ut8r t "original + repulsion, a=0.125" @style pt 8 lc rgb "cyan", \
+	@ut8l 4 @ut8m 0.1 @ut8r t "original + repulsion, a=0.1" @style pt 10 lc rgb "pink", \
+	@ut8l 4 @ut8m 0.075 @ut8r t "original + repulsion, a=0.075" @style pt 1 lc rgb "blue", \
+	@ut8l 4 @ut8m 0.05 @ut8r t "original + repulsion, a=0.05" @style pt 2 lc rgb "red", \
+	filewkb u 1:2 title "WKB non-relativistic result, a=0" with lines lc rgb "brown", \
+	p(g,B,x) title "weak coupling result" lc rgb "black"
+
+if (pot==6) \
+plot @ut8l 6 @ut8m 0.15 @ut8r t "exp + repulsion, a=0.15" @style pt 6 lc rgb "orange", \
+	@ut8l 6 @ut8m 0.125 @ut8r t "exp + repulsion, a=0.125" @style pt 8 lc rgb "cyan", \
+	@ut8l 6 @ut8m 0.1 @ut8r t "exp + repulsion, a=0.1" @style pt 10 lc rgb "pink", \
+	@ut8l 6 @ut8m 0.075 @ut8r t "exp + repulsion, a=0.075" @style pt 1 lc rgb "blue", \
+	@ut8l 6 @ut8m 0.05 @ut8r t "exp + repulsion, a=0.05" @style pt 2 lc rgb "red", \
 	filewkb u 1:2 title "WKB non-relativistic result, a=0" with lines lc rgb "brown", \
 	p(g,B,x) title "weak coupling result" lc rgb "black"
 
