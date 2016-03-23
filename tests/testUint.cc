@@ -35,5 +35,9 @@ v += n*u1;
 cout << n*u1 << endl;
 cout << v << endl;
 
+cout << endl << "testing bool conversion" << endl;
+cout << (1.0+(number)(u2>u1)) << endl;
+cout << (1.0+(number)(u2>u2)) << endl;
+
 return 0;
 }

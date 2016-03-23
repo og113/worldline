@@ -106,11 +106,11 @@ void FGamma (const uint& j,const Loop<Dim>& l,  const number& f, number& result)
 template <uint Dim>
 void Vor (const uint& j, const uint& k, const Loop<Dim>& l, const number& a, const number& f, number& result) {
 
-	if (k<j) {
+	if (k<=j) {
 		uint pj = (j==(l.size()-1)? 0: j+1);
 		uint pk = (k==(l.size()-1)? 0: k+1);
 	
-		result += f*2.0*Dot(l[pj],l[j],l[pk],l[k])*pow(DistanceSquared(l[j],l[k])+a*a,(2.0-Dim)/2.0);	
+		result += f*(1.0+(number)(k<j))*Dot(l[pj],l[j],l[pk],l[k])*pow(DistanceSquared(l[j],l[k])+a*a,(2.0-Dim)/2.0);	
 	}
 }
 
@@ -118,11 +118,11 @@ void Vor (const uint& j, const uint& k, const Loop<Dim>& l, const number& a, con
 template <uint Dim>
 void Vlr (const uint& j, const uint& k, const Loop<Dim>& l, const number& a, const number& f, number& result) {
 
-	if (k<j) {
+	if (k<=j) {
 		uint pj = (j==(l.size()-1)? 0: j+1);
 		uint pk = (k==(l.size()-1)? 0: k+1);
 	
-		result += f*2.0*Dot(l[pj],l[j],l[pk],l[k])*pow(0.25*DistanceSquared(l[pj]+l[j],l[pk]+l[k])+a*a,(2.0-Dim)/2.0);	
+		result += f*(1.0+(number)(k<j))*Dot(l[pj],l[j],l[pk],l[k])*pow(0.25*DistanceSquared(l[pj]+l[j],l[pk]+l[k])+a*a,(2.0-Dim)/2.0);	
 	}
 }
 
@@ -151,15 +151,15 @@ void Vdr (const uint& j, const uint& k, const Loop<Dim>& l, const number& a, con
 	}
 }
 
-// Repulsion
+// Gaussian
 template <uint Dim>
-void Repulsion (const uint& j, const uint& k, const Loop<Dim>& l, const number& a, const number& f, number& result) {
+void Gaussian (const uint& j, const uint& k, const Loop<Dim>& l, const number& a, const number& f, number& result) {
 	
 	if (k<=j) {
 		uint pj = (j==(l.size()-1)? 0: j+1);
 		uint pk = (k==(l.size()-1)? 0: k+1);
 	
-		result += -f*(1.0+(number)k<j)*Dot(l[pj],l[j],l[pk],l[k])*exp(-DistanceSquared(l[j],l[k])/a/a)/a/a;	
+		result += f*(1.0+(number)(k<j))*Dot(l[pj],l[j],l[pk],l[k])*exp(-DistanceSquared(l[j],l[k])/a/a);	
 	}
 	
 }
@@ -613,26 +613,26 @@ void ddVdr_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, cons
 }
 
 
-// mdRepulsion_nr
+// mdGaussian_nr
 template<uint Dim>
-void mdRepulsion_nr(const uint& j, const uint& mu, const Loop<Dim>& l, const number& a, const number& f, vec& v) {
+void mdGaussian_nr(const uint& j, const uint& mu, const Loop<Dim>& l, const number& a, const number& f, vec& v) {
 
 	for (uint i=0; i<l.size(); i++)
-		mdRepulsion_nr( j, mu, i, l, a, f, v);
+		mdGaussian_nr( j, mu, i, l, a, f, v);
 	
 }
 
-// mdRepulsion_nr
+// mdGaussian_nr
 template<uint Dim>
-void mdRepulsion_nr(const uint& j, const uint& mu, const uint& i, const Loop<Dim>& l, const number& a, const number& f, vec& v) {
-	cerr << "mdRepulsion_nr Error: no script written for dim = " << Dim << endl;
+void mdGaussian_nr(const uint& j, const uint& mu, const uint& i, const Loop<Dim>& l, const number& a, const number& f, vec& v) {
+	cerr << "mdGaussian_nr Error: no script written for dim = " << Dim << endl;
 }
 
-// ddRepulsion_nr
+// ddGaussian_nr
 template<uint Dim>
-void ddRepulsion_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l,\
+void ddGaussian_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l,\
 						 const number& a, const number& f, mat& m) {
-	cerr << "ddRepulsion_nr Error: no script written for dim = " << Dim << endl;
+	cerr << "ddGaussian_nr Error: no script written for dim = " << Dim << endl;
 }
 
 // mdGamma_nr
@@ -941,7 +941,7 @@ template void S0<4>(const uint& j, const Loop<4>& l, const number& f, number& re
 template void Sm<4>(const uint& j, const Loop<4>& l, const number& f, number& result);
 template void Angle<4>(const uint& j, const Loop<4>& l, const number& f, number& result);
 template void FGamma<4>(const uint& j, const Loop<4>& l, const number& f, number& result);
-template void Repulsion<4>(const uint& j, const uint& k, const Loop<4>& l, const number& a, const number& f, number& result);
+template void Gaussian<4>(const uint& j, const uint& k, const Loop<4>& l, const number& a, const number& f, number& result);
 template void InlineCurvatureMax<4>(const uint& j, const Loop<4>& l, const number& f, number& result);
 template void InlineCurvatureMax<4>(const uint& j, const Loop<4>& l, const uint& ex1, const uint& ex2, const number& f, number& result);
 template void InlineCurvatureAvg<4>(const uint& j, const Loop<4>& l, const number& f, number& result);
@@ -990,7 +990,7 @@ template <> void Vor<4>(const uint& j, const uint& k, const Loop<4>& l, const nu
 		uint pj = (j==(l.size()-1)? 0: j+1);
 		uint pk = (k==(l.size()-1)? 0: k+1);
 	
-		result += f*(1.0+(number)k<j)*Dot(l[pj],l[j],l[pk],l[k])/(DistanceSquared(l[j],l[k])+a*a);	
+		result += f*(1.0+(number)(k<j))*Dot(l[pj],l[j],l[pk],l[k])/(DistanceSquared(l[j],l[k])+a*a);	
 	}
 }
 
@@ -1001,7 +1001,7 @@ template <> void Vlr<4>(const uint& j, const uint& k, const Loop<4>& l, const nu
 		uint pj = (j==(l.size()-1)? 0: j+1);
 		uint pk = (k==(l.size()-1)? 0: k+1);
 	
-		result += f*(1.0+(number)k<j)*Dot(l[pj],l[j],l[pk],l[k])/(0.25*DistanceSquared(l[pj]+l[j],l[pk]+l[k])+a*a);	
+		result += f*(1.0+(number)(k<j))*Dot(l[pj],l[j],l[pk],l[k])/(0.25*DistanceSquared(l[pj]+l[j],l[pk]+l[k])+a*a);	
 	}
 }
 
@@ -1136,8 +1136,8 @@ template <> void mdVdr_nr<4>(const uint& j, const uint& mu, const uint& i, const
 }
 
 
-// mdRepulsion_nr
-template <> void mdRepulsion_nr<4>(const uint& j, const uint& mu, const uint& i, const Loop<4>& l, const number& a, const number& f, vec& v) {
+// mdGaussian_nr
+template <> void mdGaussian_nr<4>(const uint& j, const uint& mu, const uint& i, const Loop<4>& l, const number& a, const number& f, vec& v) {
  
 	number res = 0.0;
 	uint pj = (j==(l.size()-1)? 0: j+1);
@@ -1148,22 +1148,22 @@ template <> void mdRepulsion_nr<4>(const uint& j, const uint& mu, const uint& i,
 		number B_ij = DistanceSquared(l[i],l[j]);
 		number T_ij = Dot(l[pi],l[i],l[pj],l[j]);
 		number E_ij = exp(-B_ij/a/a);
-		res += (- 2.0*pow(a,2)*E_ij*DX(l,i,pi,mu) \
- 				+ 4.0*E_ij*DX(l,j,i,mu)*T_ij)/pow(a,4);
+		res += + 2.0*E_ij*DX(l,i,pi,mu) \
+ 			- (4.0*E_ij*DX(l,j,i,mu)*T_ij)/pow(a,2);
 	}
 	if (i!=mj) {
 		number B_imj = DistanceSquared(l[i],l[mj]);
 		number E_imj = exp(-B_imj/a/a);
-		res += 2.0*E_imj*DX(l,i,pi,mu)/pow(a,2);
+		res += - 2.0*E_imj*DX(l,i,pi,mu);
 	}
 	
 	//coincident terms
 	if (i==j)
-		res += -2.0*(l[j])[mu]/a/a;
+		res += 2.0*(l[j])[mu];
 	if (i==mj)
-		res += (l[mj])[mu]/a/a;
+		res += -(l[mj])[mu];
 	if (i==pj)
-		res += (l[pj])[mu]/a/a;
+		res += -(l[pj])[mu];
 
 	v[j*4+mu] += -f*res;
 
@@ -1569,8 +1569,8 @@ template <> void ddVdr_nr<4>(const uint& j, const uint& mu, const uint& k, const
 	
 }
 
-// ddRepulsion_nr
-template <> void ddRepulsion_nr<4> (const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<4>& l,\
+// ddGaussian_nr
+template <> void ddGaussian_nr<4> (const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<4>& l,\
 						 const number& a, const number& f, mat& m) {
 	number res = 0.0;
 	
@@ -1594,24 +1594,24 @@ template <> void ddRepulsion_nr<4> (const uint& j, const uint& mu, const uint& k
 	// terms where mu==nu, without sums
 	if (mu==nu) {
 		if (k!=j)
-			res += 	- (2.0*E_mjmk)/pow(a,2) \
-					- (2.0*E_jk)/pow(a,2) \
- 					- (4.0*E_jk*T_jk)/pow(a,4);
+			res += 	+ 2.0*E_mjmk \
+					 + 2.0*E_jk \
+					 + (4.0*E_jk*T_jk)/pow(a,2);
 		if (k!=mj)
-			res +=  + (2.0*E_mjk)/pow(a,2); //
+			res +=  - 2.0*E_mjk; //
 		if (k!=pj)
-			res += + (2.0*E_jmk)/pow(a,2); //
+			res += - 2.0*E_jmk; //
 	}
 
 	// terms where mu not nexcessarily equal to nu, without sums
 	if (k!=j)
-		res +=   + (4.0*E_jk*DX(l,j,pj,nu)*DX(l,j,k,mu))/pow(a,4) \
-			 	- (4.0*E_jk*DX(l,j,k,nu)*DX(l,k,pk,mu))/pow(a,4) \
-			 	+ (8*E_jk*DX(l,j,k,mu)*DX(l,j,k,nu)*T_jk)/pow(a,6); //
+		res +=  - (4.0*E_jk*DX(l,j,pj,nu)*DX(l,j,k,mu))/pow(a,2) \
+				 + (4.0*E_jk*DX(l,j,k,nu)*DX(l,k,pk,mu))/pow(a,2) \
+				 - (8.0*E_jk*DX(l,j,k,mu)*DX(l,j,k,nu)*T_jk)/pow(a,4); //
 	if (k!=mj)
-		res +=  + (4.0*E_mjk*DX(l,mj,k,nu)*DX(l,k,pk,mu))/pow(a,4); //
+		res +=  - (4.0*E_mjk*DX(l,mj,k,nu)*DX(l,k,pk,mu))/pow(a,2); //
 	if (k!=pj)
-		res += - (4.0*E_jmk*DX(l,j,pj,nu)*DX(l,j,mk,mu))/pow(a,4); //
+		res += + (4.0*E_jmk*DX(l,j,pj,nu)*DX(l,j,mk,mu))/pow(a,2); //
 	
 	// terms with sums
 	if (k==j || k==mj || k==pj) {
@@ -1629,27 +1629,27 @@ template <> void ddRepulsion_nr<4> (const uint& j, const uint& mu, const uint& k
 			T_ij = Dot(l[pi],l[i],l[pj],l[j]);
 			
 			if (k==j && i!=j) {
-				res += 	 + (4.0*E_ij*DX(l,i,pi,nu)*DX(l,j,i,mu))/pow(a,4) \
-						 + (4.0*E_ij*DX(l,i,pi,mu)*DX(l,j,i,nu))/pow(a,4) \
-						 - (8*E_ij*DX(l,j,i,mu)*DX(l,j,i,nu)*T_ij)/pow(a,6);
+				res += - (4.0*E_ij*DX(l,i,pi,nu)*DX(l,j,i,mu))/pow(a,2) \
+						 - (4.0*E_ij*DX(l,i,pi,mu)*DX(l,j,i,nu))/pow(a,2) \
+						 + (8.0*E_ij*DX(l,j,i,mu)*DX(l,j,i,nu)*T_ij)/pow(a,4);
 				if (mu==nu)
-					res +=  (4.0*E_ij*T_ij)/pow(a,4); //
+					res +=  - (4.0*E_ij*T_ij)/pow(a,2); //
 			}
 			if (k==mj && i!=mj) 
-				res +=  (-4.0*E_imj*DX(l,i,pi,mu)*DX(l,mj,i,nu))/pow(a,4);
+				res +=  (4.0*E_imj*DX(l,i,pi,mu)*DX(l,mj,i,nu))/pow(a,2);
 			if (k==pj && i!=j) 
-				res += - (4.0*E_ij*DX(l,i,pi,nu)*DX(l,j,i,mu))/pow(a,4);
+				res += + (4.0*E_ij*DX(l,i,pi,nu)*DX(l,j,i,mu))/pow(a,2);
 			
 		}		
 	}
 	
 	//coincident terms
 	if (k==j && mu==nu)
-		res += -2.0/a/a;
+		res += 2.0;
 	if (k==mj && mu==nu)
-		res += 1.0/a/a;
+		res += -1.0;
 	if (k==pj && mu==nu)
-		res += 1.0/a/a;
+		res += -1.0;
 	
 	m(4*j+mu,4*k+nu) += f*res;
 	

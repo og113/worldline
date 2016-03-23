@@ -58,7 +58,7 @@ bool weak = false;
 bool eigen = false;
 bool curvature = false;
 bool old = true;
-bool repulsion = false;
+bool gaussian = false;
 bool alltests = false; // doing alltests
 string printOpts = "";
 string potOpts = "";
@@ -76,7 +76,7 @@ if (argc % 2 && argc>1) {
 		else if (id.compare("eigen")==0) eigen = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("curvature")==0) curvature = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("old")==0) old = (stn<uint>(argv[2*j+2])!=0);
-		else if (id.compare("repulsion")==0 || id.compare("rep")==0) repulsion = (stn<uint>(argv[2*j+2])!=0);
+		else if (id.compare("gaussian")==0 || id.compare("repulsion")==0) gaussian = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("inputs")==0) inputsFile = (string)argv[2*j+2];
 		else if (id.compare("print")==0) printOpts = (string)argv[2*j+2];
 		else if (id.compare("pot")==0 || id.compare("potential")==0) potOpts = (string)argv[2*j+2];
@@ -127,10 +127,10 @@ if (!potOpts.empty()) {
 		cerr << "potential options not understood: " << potOpts << endl;
 		return 1;
 	}
-	if (poto!=PotentialOptions::original) {
-		potExtras.second = nts((int)poto+(int)repulsion*NumberPotentialOptions);
-	}
 }
+if (poto!=PotentialOptions::original || gaussian)
+	potExtras.second = nts((int)poto+(int)gaussian*NumberPotentialOptions);
+	
 //dimension
 #define dim 4
 
@@ -168,7 +168,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		stepFile = filenameLoopNR<dim>(pold);
 		if (weak)
 			(stepFile.Extras).push_back(StringPair("weak","1"));
-		if (poto!=PotentialOptions::original)
+		if (poto!=PotentialOptions::original || gaussian)
 			(stepFile.Extras).push_back(potExtras);
 	}
 		
@@ -241,7 +241,7 @@ for (uint pl=0; pl<Npl; pl++) {
 			loadFile = filenameLoopNR<dim>(p);
 			if (weak)
 				(loadFile.Extras).push_back(StringPair("weak","1"));
-			if (poto!=PotentialOptions::original)
+			if (poto!=PotentialOptions::original || gaussian)
 				(loadFile.Extras).push_back(potExtras);
 			if (!loadFile.exists())
 				loadFile = filenameLoopNR<dim>(p);
@@ -319,17 +319,38 @@ for (uint pl=0; pl<Npl; pl++) {
 		// some simple scalars
 		uint j, k, mu, nu;
 		number gb = p.G*p.B;
-		number g = (poto==PotentialOptions::dimreg? pow(p.Lambda,-p.Epsi)*p.G*p.G*pow(PI,-2.0+p.Epsi/2.0)*gsl_sf_gamma(2.0-p.Epsi/2.0)/4.0/(2.0-p.Epsi) : p.G*p.G/8.0/PI/PI);
 		number sqrt4s0 = 2.0*sqrt(S0(xLoop));
-		number dm = (poto==PotentialOptions::exponential? -g*sqrt(PI)/p.Epsi: -g*PI/p.Epsi);
-		number cusp_scale = (poto==PotentialOptions::dimreg? g/p.Epsi: g*log(p.Mu/p.Epsi));
-		number dim_reg_scale = (poto==PotentialOptions::dimreg? -g*2.0*gsl_sf_zeta(2.0-p.Epsi): 0.0);
-		number d_dim_reg = 0.0;
-		number rep_scale = -dm*p.Epsi/sqrt(PI);
-		number rep = 0.0;
+		number g, dm, cusp_scale;
+		number dim_reg_scale = 0.0, d_dim_reg = 0.0;
+		number repulsion_scale, repulsion = 0.0;
 		number ic_scale = 1.0;
 		number cc_scale = 1.0;
 		number kg_scale = 1.0;
+		if (poto==PotentialOptions::original) {
+			g = p.G*p.G/8.0/PI/PI;
+			dm = -g*PI/p.Epsi;
+			cusp_scale = -g*log(p.Mu/p.Epsi);
+			repulsion_scale = -g*sqrt(PI)/p.Epsi/p.Epsi;
+		}
+		else if (poto==PotentialOptions::link) {
+			g = p.G*p.G/8.0/PI/PI;
+			dm = -g*PI/p.Epsi;
+			cusp_scale = -g*log(p.Mu/p.Epsi);
+			repulsion_scale = -g*sqrt(PI)/p.Epsi/p.Epsi;
+		}
+		else if (poto==PotentialOptions::exponential) {
+			g = p.G*p.G/8.0/PI/PI;
+			dm = -g*sqrt(PI)/p.Epsi;
+			cusp_scale = -g*log(p.Mu/p.Epsi);
+			repulsion_scale = -g/p.Epsi/p.Epsi;
+		}
+		else if (poto==PotentialOptions::dimreg) {
+			g = pow(p.Lambda,-p.Epsi)*p.G*p.G*pow(PI,-2.0+p.Epsi/2.0)*gsl_sf_gamma(2.0-p.Epsi/2.0)/4.0/(2.0-p.Epsi);
+			dm = 0.0;
+			cusp_scale = -g/p.Epsi;
+			repulsion_scale = 0.0;
+			dim_reg_scale = -g*2.0*gsl_sf_zeta(2.0-p.Epsi);
+		}
 		
 		Point<dim> P0;
 		
@@ -369,7 +390,7 @@ for (uint pl=0; pl<Npl; pl++) {
 				// external field
 				mdI_nr(j,mu,xLoop,-gb,mds);
 				
-				if (!weak && !repulsion) {
+				if (!weak && !gaussian) {
 					// self-energy regularisation
 					if (poto!=PotentialOptions::dimreg)
 						mdL_nr(j,mu,xLoop,dm,mds);
@@ -389,8 +410,8 @@ for (uint pl=0; pl<Npl; pl++) {
 						else if (poto==PotentialOptions::dimreg)
 							Vdr(j, k, xLoop, p.Epsi, g, v);
 							
-						if (repulsion)
-							Repulsion(j, k, xLoop, p.Epsi, rep_scale, rep);
+						if (gaussian)
+							Gaussian(j, k, xLoop, p.Epsi, repulsion_scale, repulsion);
 					}
 					
 					// dynamical field
@@ -404,8 +425,8 @@ for (uint pl=0; pl<Npl; pl++) {
 						else if (poto==PotentialOptions::dimreg)
 							mdVdr_nr(j, mu, k, xLoop, p.Epsi, g, mds);
 							
-						if (repulsion)
-							mdRepulsion_nr(j, mu, k, xLoop, p.Epsi, rep_scale, mds);
+						if (gaussian)
+							mdGaussian_nr(j, mu, k, xLoop, p.Epsi, repulsion_scale, mds);
 					}
 				
 					for (nu=0; nu<dim; nu++) {
@@ -428,8 +449,8 @@ for (uint pl=0; pl<Npl; pl++) {
 								ddVdr_nr(j, mu, k, nu, xLoop, p.Epsi, g, dds);				
 								
 							// self-energy regularisation
-							if (repulsion)
-								ddRepulsion_nr(j, mu, k, nu, xLoop, p.Epsi, rep_scale, dds);
+							if (gaussian)
+								ddGaussian_nr(j, mu, k, nu, xLoop, p.Epsi, repulsion_scale, dds);
 							else if (poto!=PotentialOptions::dimreg)
 								ddL_nr(j,mu,k,nu,xLoop,dm,dds);
 							else
@@ -469,15 +490,15 @@ for (uint pl=0; pl<Npl; pl++) {
 			for (k=0; k<range; k++) {			
 				Angle(left, xLoop, 0.5/(number)range, gamma);
 				Angle(right, xLoop, 0.5/(number)range, gamma);
-				FGamma(left, xLoop, -cusp_scale, fgamma);
-				FGamma(right, xLoop, -cusp_scale, fgamma);
+				FGamma(left, xLoop, cusp_scale, fgamma);
+				FGamma(right, xLoop, cusp_scale, fgamma);
 				CuspCurvatureMax(left,xLoop,cc_scale,cc_max);
 				CuspCurvatureMax(right,xLoop,cc_scale,cc_max);
 				if (!weak) {
-					mdFGamma_nr(xLoop,left,-cusp_scale,mds);
-					mdFGamma_nr(xLoop,right,-cusp_scale,mds);
-					ddFGamma_nr(xLoop,left,-cusp_scale,dds);
-					ddFGamma_nr(xLoop,right,-cusp_scale,dds);
+					mdFGamma_nr(xLoop,left,cusp_scale,mds);
+					mdFGamma_nr(xLoop,right,cusp_scale,mds);
+					ddFGamma_nr(xLoop,left,cusp_scale,dds);
+					ddFGamma_nr(xLoop,right,cusp_scale,dds);
 				}
 				left = (left==(N-1)? 0: left+1);
 				right = (right==(N-1)? 0: right+1);
@@ -489,14 +510,14 @@ for (uint pl=0; pl<Npl; pl++) {
 		// assigning scalar quantities
 		vr = v;
 		if (abs(p.Epsi)>MIN_NUMBER) {
-			if (repulsion)
-				vr += rep;
+			if (gaussian)
+				vr += repulsion;
 			else if (poto!=PotentialOptions::dimreg)
 				vr += dm*len;
 			else 
 				vr += d_dim_reg;
 
-			vr -= (!(P^=P0)? cusp_scale*fgamma : 0.0);
+			vr += (!(P^=P0)? cusp_scale*fgamma : 0.0);
 		}
 		s = sqrt4s0 + i0;
 		if (!weak) s += vr;
@@ -764,7 +785,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		FILE* ros;
 		ros = fopen(resFile.c_str(),"a");
 		fprintf(ros,"%24s%24i%24i%24i%24g%24g%24i%24g%24g%24g%24g%24g%24g%24g%24g%24g%24g%24g%24g%24g%24g\n",\
-					timenumber.c_str(),pl,(int)poto+(int)repulsion*NumberPotentialOptions,p.K,p.G,p.B,p.Ng,p.Epsi,p.Mu,p.Lambda,M,s,gamma,\
+					timenumber.c_str(),pl,(int)poto+(int)gaussian*NumberPotentialOptions,p.K,p.G,p.B,p.Ng,p.Epsi,p.Mu,p.Lambda,M,s,gamma,\
 					checkSol.back(),checkDX.back(),checkICMax.back(),checkICAvg.back(),checkKgAMax.back(),\
 					checkKgAAvg.back(),checkCCMax.back(),angle_neigh);
 		fclose(ros);
@@ -774,7 +795,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		Filename loopRes = filenameLoopNR<dim>(p);
 		if (weak)
 			(loopRes.Extras).push_back(StringPair("weak","1"));
-		if (poto!=PotentialOptions::original)
+		if (poto!=PotentialOptions::original || gaussian)
 			(loopRes.Extras).push_back(potExtras);
 		saveVectorBinary(loopRes,x);
 		printf("%12s%50s\n","x:",((string)loopRes).c_str());
