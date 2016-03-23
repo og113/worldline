@@ -74,7 +74,7 @@ style5='with points pointtype 10 lc rgb "orange"'
 style6='with points pointtype 19 lc rgb "cyan"'
 titleS(a,mu) = sprintf("a=%g, {/Symbol m}=%g",a,mu)
 titleF(a)=sprintf("Free result, a=%g",a)
-set title sprintf("Exponential regularisation and Gaussian repulsion, g=%g, B=%g, K=%g",g,B,K)
+set title sprintf("Original regularisation and Gaussian repulsion, g=%g, B=%g, K=%g",g,B,K)
 set xrange [0:2]
 
 plotnumber=3

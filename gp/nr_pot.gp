@@ -44,9 +44,9 @@ set xrange[0:2]
 B=1
 g=1
 K=11
-pot=6
+pot=4
 
-set title sprintf("Induced instanton, K=%g, {/Symbol m}=a",K)
+set title sprintf("Original regularisation with Gaussian repulsion, K=%g, {/Symbol m}=a",K)
 
 ut6l='file6 u 9:($3==K? ($4==g? ($5==B? ($6==0? ($7=='
 ut6m='? ($8=='
