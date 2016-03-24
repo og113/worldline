@@ -16,9 +16,10 @@ to convert space or tab separated file to csv
 
 rename is also useful. to rename files ending in .txt and containing abc to the same file with abc replaced by def
 
+with the n it is just a test, it doesn't do anything
+rename -vn 's/abc/def/' *.txt
+
 rename -v 's/abc/def/' *.txt
-
-
 
 a quick bash script to apply binaryToAscii to a bunch of files:
 

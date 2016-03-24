@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# program to convert space/tab separated data to a csv
 if [ -z "$1" ]
   then
     echo "must supply input file"
