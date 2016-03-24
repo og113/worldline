@@ -11,12 +11,15 @@ using sed to remove some bogus results with a specific timenumber:
 
 sed -i '/^\([ ]*\)160226091231/d' results/nr/nrmain_cosmos_7.dat
 
+to convert space or tab separated file to csv
+
 
 rename is also useful. to rename files ending in .txt and containing abc to the same file with abc replaced by def
 
+with the n it is just a test, it doesn't do anything
+rename -vn 's/abc/def/' *.txt
+
 rename -v 's/abc/def/' *.txt
-
-
 
 a quick bash script to apply binaryToAscii to a bunch of files:
 
@@ -28,3 +31,5 @@ done
 removing repeated lines using sort:
 
 sort -u results/nr/nrmain_cosmos_7.dat -o results/nr/nrmain_cosmos_7.dat
+
+
