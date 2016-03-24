@@ -14,9 +14,10 @@ file=inFile; \
 
 # stationary point of 3d potential
 pi=3.1415926535897932
-g=1
-B=1
-stationaryPoint(g,B)=sqrt(1/16.0/pi/g/B)
+g=1.0
+B=1.0
+maximum(g,B)=sqrt(g/4.0/pi/B) # 1.771395468764214?
+minimum=0.189673005548958 # for a=0.05
 
 unset log
 unset label
@@ -30,9 +31,11 @@ set ylabel "t"
 set xrange [-1:1]
 #set yrange [-1:1]
 
-if (exists("arrow")) \
-set arrow from (-stationaryPoint(g,B)/2.0),0 to (stationaryPoint(g,B)/2.0),0 nohead
+if (exists("max")) \
+set arrow from (-maximum(g,B)/2.0),0 to (maximum(g,B)/2.0),0 nohead
 
+if (exists("min")) \
+set arrow from (-minimum/2.0),1 to (minimum/2.0),1 nohead
 
 plot file using 3:4 with lines
 
