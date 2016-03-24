@@ -23,14 +23,14 @@ variables :
 .PHONY: all
 all: binaryToAscii circle common floop glmain loop loop2 nrmain schwingerRate
 
-.PHONY: nr
-nr: binaryToAscii circle common nrmain
+.PHONY: common
+common: $(COMMONOBJS)
 
 .PHONY: monte
 monte: binaryToAscii circle common floop glmain loop loop2 schwingerRate
 
-.PHONY: common
-common: $(COMMONOBJS)
+.PHONY: nr
+nr: binaryToAscii circle common nrmain
 
 #------------------------------------------------------------------------------------------------------------------------
 # targets, dependencies and rules for executables
