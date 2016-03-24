@@ -21,7 +21,7 @@ set ytic auto
 set title "4d loop"
 set xlabel "z"
 set ylabel "t"
-#set xrange [-1:1]
+set xrange [-1:1]
 #set yrange [-1:1]
 
 plot file using 3:4 with lines
