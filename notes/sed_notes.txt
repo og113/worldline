@@ -32,4 +32,8 @@ removing repeated lines using sort:
 
 sort -u results/nr/nrmain_cosmos_7.dat -o results/nr/nrmain_cosmos_7.dat
 
+used grep to count lines in results files which did not have G=1 and B=1
 
+grep -vc '^\([[:space:]]*\)\([0-9\.]\+\)\([[:space:]]\+\)\([0-9\.]\+\)\([[:space:]]\+\)\([0-9\.]\+\)\([[:space:]]\+\)1\([[:space:]]\+\)1\([[:space:]]\+\)' nrmain_cosmos.dat nrmain_cosmos_{2..7}.dat
+
+grep -vc '^\([[:space:]]*\)\([0-9\.]\+\)\([[:space:]]\+\)\([0-9\.]\+\)\([[:space:]]\+\)\([0-9\.]\+\)\([[:space:]]\+\)\([0-9\.]\+\)\([[:space:]]\+\)1\([[:space:]]\+\)1\([[:space:]]\+\)' nrmain_cosmos_8.dat

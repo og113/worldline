@@ -44,7 +44,7 @@ set xrange[0:2]
 B=1
 g=1
 K=11
-pot=4
+pot=6
 
 set title sprintf("Original regularisation with Gaussian repulsion, K=%g, {/Symbol m}=a",K)
 
