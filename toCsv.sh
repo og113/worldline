@@ -8,5 +8,6 @@ else
 	outfile=$(echo "$1" | sed 's/\.\([a-z]*\)$/.csv/')
 	echo "file in : " $1
 	echo "file out: " $outfile
-	sed -ne 's/\([0-9\.]\+\)\([[:space:]]\+\)/\1,/gp' $1>$outfile
+	sed -ne 's/^\([[:space:]]*\)\([0-9\.]\+\)/\2/gp' $1>$outfile
+	sed -ni 's/\([0-9\.]\+\)\([[:space:]]\+\)/\1,/gp' $outfile
 fi

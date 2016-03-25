@@ -21,7 +21,7 @@ else
 			do g=$(echo "$f"|sed -n 's/^.*_G_\([0-9\.]*\)_.*$/\1/p');
 			B=$(echo "$f"|sed -n 's/^.*_B_\([0-9\.]*\)_.*$/\1/p');
 			kappa=$(python -c "print $g**3*$B");
-			fo=$(echo "$f"|sed -n "s/^\(.*\)_G_\([0-9\.]*\)_B_\([0-9\.]*\)_\(.*\)$/\1_Kappa_$kappa\_\4/p");
+			fo=$(echo "$f"|sed -n "s/^\(.*\)_G_\([0-9\.]*\)_B_\([0-9\.]\+\)_\(.*\)$/\1_Kappa_$kappa\_\4/p");
 			echo $f "renamed as" $fo
 			mv $f $fo;
 		done
