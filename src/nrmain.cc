@@ -177,16 +177,16 @@ for (uint pl=0; pl<Npl; pl++) {
 	uint N = pow(2,p.K);
 	uint zm = dim;
 	uint NT = N*dim+zm;
-	number M = p.P2, R = abs(1.0/p.G/p.B);
+	number E = p.P2, R = abs(1.0/p.G/p.B);
 	Point<dim> P;
 	P[0] = p.P1;
 	P[1] = p.P2;
 	if (dim>2) {
 		P[2] = p.P3;
-		M = p.P3;
+		E = p.P3;
 		if (dim>3) {
 			P[3] = p.P4;
-			M = p.P4;
+			E = p.P4;
 		}
 	}
 
@@ -236,7 +236,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	// x file
 	if (pl==0 || !step) {
 		if (lemon)
-			loadFile = "data/lemon/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_R_"+nts(R)+"_M_"+nts(M)+"_rank_0.dat";
+			loadFile = "data/lemon/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_R_"+nts(R)+"_E_"+nts(E)+"_rank_0.dat";
 		else {
 			loadFile = filenameLoopNR<dim>(p);
 			if (weak)
@@ -251,10 +251,10 @@ for (uint pl=0; pl<Npl; pl++) {
 					if (!loadFile.exists())
 						loadFile = filenameLoopNR<dim>(pold);
 				if (!loadFile.exists() && old)
-					loadFile = "data/nr/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_G_"+nts(p.G)+"_B_"+nts(p.B)+"_M_"+nts(p.P4)\
+					loadFile = "data/nr/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_G_"+nts(p.G)+"_B_"+nts(p.B)+"_E_"+nts(p.P4)\
 		+"_a_"+nts(p.Epsi)+".dat";
 				if (!loadFile.exists())
-					loadFile = "data/lemon/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_R_"+nts(R)+"_M_"+nts(M)+"_rank_0.dat";
+					loadFile = "data/lemon/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_R_"+nts(R)+"_E_"+nts(E)+"_rank_0.dat";
 				if (!loadFile.exists())
 					loadFile = "data/circle/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_R_"+nts(R)+"_rank_0.dat";
 			}
@@ -316,9 +316,9 @@ for (uint pl=0; pl<Npl; pl++) {
 	5 - assigning mdx and ddx
 ----------------------------------------------------------------------------------------------------------------------------*/
 		
-		// some simple scalars
+		// scalar coefficients
 		uint j, k, mu, nu;
-		number gb = p.G*p.B;
+		number mgb = -1.0; // not -p.G*p.B as scaled loops
 		number sqrt4s0 = 2.0*sqrt(S0(xLoop));
 		number g, dm, cusp_scale;
 		number dim_reg_scale = 0.0, d_dim_reg = 0.0;
@@ -327,25 +327,25 @@ for (uint pl=0; pl<Npl; pl++) {
 		number cc_scale = 1.0;
 		number kg_scale = 1.0;
 		if (poto==PotentialOptions::original) {
-			g = p.G*p.G/8.0/PI/PI;
+			g = pow(p.G,3)*p.B/8.0/PI/PI;
 			dm = -g*PI/p.Epsi;
 			cusp_scale = -g*log(p.Mu/p.Epsi);
 			repulsion_scale = -g*sqrt(PI)/p.Epsi/p.Epsi;
 		}
 		else if (poto==PotentialOptions::link) {
-			g = p.G*p.G/8.0/PI/PI;
+			g = pow(p.G,3)*p.B/8.0/PI/PI;
 			dm = -g*PI/p.Epsi;
 			cusp_scale = -g*log(p.Mu/p.Epsi);
 			repulsion_scale = -g*sqrt(PI)/p.Epsi/p.Epsi;
 		}
 		else if (poto==PotentialOptions::exponential) {
-			g = p.G*p.G/8.0/PI/PI;
+			g = pow(p.G,3)*p.B/8.0/PI/PI;
 			dm = -g*sqrt(PI)/p.Epsi;
 			cusp_scale = -g*log(p.Mu/p.Epsi);
 			repulsion_scale = -g/p.Epsi/p.Epsi;
 		}
 		else if (poto==PotentialOptions::dimreg) {
-			g = pow(p.Lambda,-p.Epsi)*p.G*p.G*pow(PI,-2.0+p.Epsi/2.0)*gsl_sf_gamma(2.0-p.Epsi/2.0)/4.0/(2.0-p.Epsi);
+			g = pow(p.G,3)*p.B*(pow(p.Lambda,-p.Epsi)*pow(PI,-2.0+p.Epsi/2.0)*gsl_sf_gamma(2.0-p.Epsi/2.0)/4.0/(2.0-p.Epsi));
 			dm = 0.0;
 			cusp_scale = -g/p.Epsi;
 			repulsion_scale = 0.0;
@@ -359,7 +359,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		
 			//S0(j, xLoop, s0norm, s0norm);
 			L		(j, xLoop, 1.0, len);
-			I0		(j, xLoop, -gb, i0);
+			I0		(j, xLoop, mgb, i0);
 			if (poto==PotentialOptions::dimreg)
 				DistPow	(j, xLoop, p.Epsi, dim_reg_scale, d_dim_reg);
 			
@@ -388,7 +388,7 @@ for (uint pl=0; pl<Npl; pl++) {
 				mdsqrtS0_nr(j,mu,xLoop,sqrt4s0,1.0,mds);
 				
 				// external field
-				mdI_nr(j,mu,xLoop,-gb,mds);
+				mdI_nr(j,mu,xLoop,mgb,mds);
 				
 				if (!weak && !gaussian) {
 					// self-energy regularisation
@@ -435,7 +435,7 @@ for (uint pl=0; pl<Npl; pl++) {
 						ddsqrtS0_nr(j,mu,k,nu,xLoop,sqrt4s0,1.0,dds);
 						
 						// external field
-						ddI_nr(j,mu,k,nu,xLoop,-gb,dds);
+						ddI_nr(j,mu,k,nu,xLoop,mgb,dds);
 						
 						if (!weak) {
 							// dynamical field	
@@ -578,8 +578,8 @@ for (uint pl=0; pl<Npl; pl++) {
 			
 			// checking if angle gamma agrees with weak coupling result
 			number gamma_ratio = 0.0;
-			if (abs(M)>MIN_NUMBER && abs(M)<2.0) {
-				number gamma_free = 2.0*asin(M/2.0);
+			if (abs(E)>MIN_NUMBER && abs(E)<2.0) {
+				number gamma_free = 2.0*asin(E/2.0);
 				gamma_ratio = gamma/gamma_free;
 			}
 			checkGamma.add(gamma_ratio-1.0);
@@ -591,7 +591,7 @@ for (uint pl=0; pl<Npl; pl++) {
 ----------------------------------------------------------------------------------------------------------------------------*/	
 		
 		if (po!=PrintOptions::none) {
-			Filename early = "data/temp/"+timenumber+"xEarly1_K_"+nts(p.K)+"_G_"+nts(p.G)+"_B_"+nts(p.B)+"_M_"+nts(M)\
+			Filename early = "data/temp/"+timenumber+"xEarly1_K_"+nts(p.K)+"_G_"+nts(p.G)+"_B_"+nts(p.B)+"_E_"+nts(E)\
 						+"_a_"+nts(p.Epsi)+"_mu_"+nts(p.Mu)+"_run_"+nts(runsCount)+".dat";
 			if (po==PrintOptions::x || po==PrintOptions::all) {
 				printAsLoop(early,dim,x,N*dim);
@@ -661,7 +661,7 @@ for (uint pl=0; pl<Npl; pl++) {
 ----------------------------------------------------------------------------------------------------------------------------*/	
 
 		if (po!=PrintOptions::none) {
-			Filename early = "data/temp/"+timenumber+"deltaEarly2_K_"+nts(p.K)+"_G_"+nts(p.G)+"_B_"+nts(p.B)+"_M_"+nts(M)\
+			Filename early = "data/temp/"+timenumber+"deltaEarly2_K_"+nts(p.K)+"_G_"+nts(p.G)+"_B_"+nts(p.B)+"_E_"+nts(E)\
 							+"_a_"+nts(p.Epsi)+"_mu_"+nts(p.Mu)+"_run_"+nts(runsCount)+".dat";
 			if (po==PrintOptions::delta || po==PrintOptions::all) {
 				printAsLoop(early,dim,delta,N*dim);
@@ -745,14 +745,14 @@ for (uint pl=0; pl<Npl; pl++) {
 		}
 		cout << negEigs << " negative eigenvalues found, less than " << -eigenTol << endl;
 		string eigenFile = "data/nr/eigenvalues/dim_"+nts(dim)+"/K_"+nts(p.K)+"/eigenvalues_G_"+nts(p.G)+"_B_"\
-							+nts(p.B)+"_M_"+nts(M)+"_a_"+nts(p.Epsi)+"_mu_"+nts(p.Mu)+".dat";
+							+nts(p.B)+"_E_"+nts(E)+"_a_"+nts(p.Epsi)+"_mu_"+nts(p.Mu)+".dat";
 		saveVectorBinary(eigenFile,eigensolver.eigenvalues());
 		printf("%12s%50s\n","eigenvalues:",((string)eigenFile).c_str());
 	}
 	
 	// curvature, if required
 	if (curvature) {
-		Filename file = "data/temp/xCurvature_K_"+nts(p.K)+"_G_"+nts(p.G)+"_B_"+nts(p.B)+"_M_"+nts(M)\
+		Filename file = "data/temp/xCurvature_K_"+nts(p.K)+"_G_"+nts(p.G)+"_B_"+nts(p.B)+"_E_"+nts(E)\
 						+"_a_"+nts(p.Epsi)+"_mu_"+nts(p.Mu)+".dat";
 		printAsLoop(file,dim,x,N*dim);
 		saveVectorAsciiAppend(file,sc_vec);
@@ -767,29 +767,48 @@ for (uint pl=0; pl<Npl; pl++) {
 	// results to compare to
 	number s_cf = PI/p.G/p.B;
 	if (!weak) s_cf -= p.G*p.G/4.0;
-	else if (abs(M)>MIN_NUMBER && abs(M)<2.0) s_cf -= (2.0/p.G/p.B)*( asin(M/2.0) + (M/2.0)*sqrt(1.0-pow(M/2.0,2)) );
+	else if (abs(E)>MIN_NUMBER && abs(E)<2.0) s_cf -= (2.0/p.G/p.B)*( asin(E/2.0) + (E/2.0)*sqrt(1.0-pow(E/2.0,2)) );
 		
 	// printing results to terminal
 	printf("\n");
 	printf("%8s%8s%8s%8s%8s%8s%8s%8s%12s%14s%14s%14s%14s\n","runs","time","K","G","B","Ng","a","mu","E","len",\
 		"i0","vr","s");
 	printf("%8i%8.3g%8i%8.4g%8.4g%8i%8.4g%8.4g%12.5g%14.5g%14.5g%14.5g%14.5g\n",\
-		runsCount,realtime,p.K,p.G,p.B,p.Ng,p.Epsi,p.Mu,M,len,i0,vr,s);
+		runsCount,realtime,p.K,p.G,p.B,p.Ng,p.Epsi,p.Mu,E,len,i0,vr,s);
 	printf("\n");
 	
 	
 	if (checkDelta.good() && checkSol.good() && checkSolMax.good()) {
 	
 		// printing results to file	
-		string resFile = "results/nr/nrmain_cosmos_8.dat";
-		FILE* ros;
-		ros = fopen(resFile.c_str(),"a");
-		fprintf(ros,"%24s%24i%24i%24i%24g%24g%24i%24g%24g%24g%24g%24g%24g%24g%24g%24g%24g%24g%24g%24g%24g\n",\
-					timenumber.c_str(),pl,(int)poto+(int)gaussian*NumberPotentialOptions,p.K,p.G,p.B,p.Ng,p.Epsi,p.Mu,p.Lambda,M,s,gamma,\
-					checkSol.back(),checkDX.back(),checkICMax.back(),checkICAvg.back(),checkKgAMax.back(),\
-					checkKgAAvg.back(),checkCCMax.back(),angle_neigh);
-		fclose(ros);
-		printf("%12s%50s\n","results:",resFile.c_str());
+		string resFile = "results/nr/nr.csv";
+		#define numRes 22
+		vector<string> results(numRes);
+		string results_array[numRes] = {timenumber,\
+									nts(pl),\
+									nts((int)poto+(int)gaussian*NumberPotentialOptions),\
+									nts(p.K),\
+									nts(pow(p.G,3)*p.B,16),\
+									nts(p.Ng),\
+									nts(p.Epsi,16),\
+									nts(p.Mu,16),\
+									nts(p.Lambda,16),\
+									nts(E,16),\
+									nts(s,16),\
+									nts(gamma,16),\
+									nts(checkSol.back(),16),\
+									nts(checkDX.back(),16),\
+									nts(checkICMax.back(),16),\
+									nts(checkICAvg.back(),16),\
+									nts(checkKgAMax.back(),16),\
+									nts(checkKgAAvg.back(),16),\
+									nts(checkKgDxMax.back(),16),\
+									nts(checkKgDxAvg.back(),16),\
+									nts(checkCCMax.back(),16),\
+									nts(checkStraight.back(),16)};									
+		results.assign(results_array,results_array+numRes);							
+		saveVectorCsvAppend(resFile,results);
+		printf("%12s%24s\n","results:",resFile.c_str());
 		
 		// printing loop to file
 		Filename loopRes = filenameLoopNR<dim>(p);
@@ -804,7 +823,7 @@ for (uint pl=0; pl<Npl; pl++) {
 
 	// printing extras to ascii files
 	if (po!=PrintOptions::none) {
-		Filename file = "data/temp/"+timenumber+"x_K_"+nts(p.K)+"_G_"+nts(p.G)+"_B_"+nts(p.B)+"_M_"+nts(M)\
+		Filename file = "data/temp/"+timenumber+"x_K_"+nts(p.K)+"_G_"+nts(p.G)+"_B_"+nts(p.B)+"_E_"+nts(E)\
 							+"_a_"+nts(p.Epsi)+"_mu_"+nts(p.Mu)+"_run_"+nts(runsCount)+".dat";
 		if (po==PrintOptions::x || po==PrintOptions::all) {
 			saveVectorAscii(file,x);

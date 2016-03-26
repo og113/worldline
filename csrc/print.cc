@@ -47,7 +47,7 @@ void saveVectorAscii(const string& f,  const T& v) {
 	}
 }
 
-// save - saveVectorAsciiAppend
+// save - saveVectorAsciiAppend, appends as column
 template <class T>
 void saveVectorAsciiAppend(const string& f,  const T& v) {
 	uint lengthOs = v.size();
@@ -81,6 +81,28 @@ void saveVectorAsciiAppend(const string& f,  const T& v) {
 		is.close();
 		os.close();
 		copyFile(tempFile,f);
+	}
+}
+
+// save - saveVectorCsvAppend, appends as row
+template <class T>
+void saveVectorCsvAppend(const string& f,  const T& v) {
+	ofstream os;
+	os.open(f.c_str(),ios::app);
+	if (os.good()) {
+		os << setprecision(16);
+		for (uint j=0; j<v.size(); j++) {
+			os << v[j];
+			if (j<(v.size()-1))
+				os << ",";
+		}
+		os << endl;
+		os.close();
+	}
+	else {
+		cerr << "saveVectorCsvAppend error: cannot write to " << f << endl;
+		os.close();
+		return;
 	}
 }
 
@@ -248,10 +270,13 @@ template void saveVectorBinary< vector<number> >(const string& f, const vector<n
 template void saveVectorBinaryAppend< vector<number> >(const string& f, const vector<number>& v);
 template void saveVectorAscii< vector<number> >(const string& f, const vector<number>& v);
 template void saveVectorAsciiAppend< vector<number> >(const string& f, const vector<number>& v);
+template void saveVectorCsvAppend< vector<number> >(const string& f, const vector<number>& v);
+template void saveVectorCsvAppend< vector<string> >(const string& f, const vector<string>& v);
 template void saveVectorBinary< Eigen::VectorXd >(const string& f, const Eigen::VectorXd& v);
 template void saveVectorBinaryAppend< Eigen::VectorXd >(const string& f, const Eigen::VectorXd& v);
 template void saveVectorAscii< Eigen::VectorXd >(const string& f, const Eigen::VectorXd& v);
 template void saveVectorAsciiAppend< Eigen::VectorXd >(const string& f, const Eigen::VectorXd& v);
+template void saveVectorCsvAppend< Eigen::VectorXd >(const string& f, const Eigen::VectorXd& v);
 
 // load
 template void loadVectorBinary< vector<number> >(const string& f, vector<number>& v);

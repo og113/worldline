@@ -32,6 +32,10 @@ void saveVectorAscii(const string& f,  const T& v);
 template <class T>
 void saveVectorAsciiAppend(const string& f,  const T& v);
 
+// save - saveVectorCsvAppend
+template <class T>
+void saveVectorCsvAppend(const string& f,  const T& v);
+
 // save - saveVectorBinary
 template <class T>
 void saveVectorBinary(const string& f,  const T& v);

@@ -7,6 +7,7 @@ definitions of some very simple functions and classes
 #include <string>
 #include <sstream>
 #include <iostream>
+#include <iomanip>
 #include <fstream>
 #include <cmath>
 #include <vector>
@@ -54,6 +55,14 @@ template <class T>
 string nts ( const T& Number ) {
 	stringstream ss;
 	ss << Number;
+	return ss.str();
+}
+
+//shorthand version;
+template <class T>
+string nts ( const T& Number, const uint& prec) {
+	stringstream ss;
+	ss << fixed << setprecision(prec) << Number;
 	return ss.str();
 }
 
@@ -349,6 +358,7 @@ template string nts<uint>(const uint&);
 template string nts<lint>(const lint&);
 template string nts<long long unsigned>(const long long unsigned&);
 template string nts<double>(const double&);
+template string nts<double>(const double&, const uint&);
 template string nts<comp>(const comp&);
 
 template int stringToNumber<int>(const string&);

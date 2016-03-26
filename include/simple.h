@@ -61,6 +61,9 @@ template <class T>
 string nts ( const T& Number );
 
 template <class T>
+string nts ( const T& Number, const uint& prec);
+
+template <class T>
 T stringToNumber ( const string& Text );
 
 template <class T>

@@ -91,11 +91,12 @@ for (uint pl=0; pl<Npl; pl++) {
 	Loop<dim> loop(p.K,Seed);
 	Metropolis<dim> met(loop,p,Seed);
 	Point<dim> p0, point;
-	number R = 1.0, R0 = 1.0, M = abs(p.P4);
-	if (abs(p.G)>MIN_NUMBER && abs(p.B)>MIN_NUMBER) {
+	number R = 1.0, R0 = 1.0, E = abs(p.P4);
+	// scaling loops by g*B, so R = 1.0 always
+	/*if (abs(p.G)>MIN_NUMBER && abs(p.B)>MIN_NUMBER) {
 		R =  1.0/p.G/p.B;
 		R0 = R;
-	}
+	}*/
 	if (abs(p.Epsi)>MIN_NUMBER && extend)
 		R += p.Epsi;
 	
@@ -105,7 +106,7 @@ for (uint pl=0; pl<Npl; pl++) {
 															+"_rank_"+nts(j)+".dat";
 		else
 			file = "data/lemon/loops/dim_"+nts<uint>(dim)+"/K_"+nts(p.K)+"/loop_R_"+nts(R0)\
-										+"_M_"+nts(M)+"_rank_"+nts<uint>(j)+".dat";
+										+"_E_"+nts(E)+"_rank_"+nts<uint>(j)+".dat";
 		if (j==0)
 			cout << "printing to " << file << ", with runs from 0..." << p.Nl << endl;
 			
