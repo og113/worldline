@@ -102,6 +102,18 @@ void FGamma (const uint& j,const Loop<Dim>& l,  const number& f, number& result)
 	result += f*(cot_gamma*atan(1.0/cot_gamma)-1.0);	
 }
 
+// MaxXn
+template <uint Dim>
+void MaxXn (const uint& j, const uint& k, const Loop<Dim>& l, const uint& n, const number& f, number& result) {
+	if (n>=Dim) {
+		cerr << "MaxXn error: " << n << ">" << Dim << endl;
+	}
+	if (k<j) {
+		number temp = abs((l[j])[n]-(l[k])[n]);
+		result = (temp*f>result? temp*f: result);
+	}
+}
+
 // Vor
 template <uint Dim>
 void Vor (const uint& j, const uint& k, const Loop<Dim>& l, const number& a, const number& f, number& result) {
@@ -942,6 +954,7 @@ template void Sm<4>(const uint& j, const Loop<4>& l, const number& f, number& re
 template void Angle<4>(const uint& j, const Loop<4>& l, const number& f, number& result);
 template void FGamma<4>(const uint& j, const Loop<4>& l, const number& f, number& result);
 template void Gaussian<4>(const uint& j, const uint& k, const Loop<4>& l, const number& a, const number& f, number& result);
+template void MaxXn<4>(const uint& j, const uint& k, const Loop<4>& l, const uint& n, const number& f, number& result);
 template void InlineCurvatureMax<4>(const uint& j, const Loop<4>& l, const number& f, number& result);
 template void InlineCurvatureMax<4>(const uint& j, const Loop<4>& l, const uint& ex1, const uint& ex2, const number& f, number& result);
 template void InlineCurvatureAvg<4>(const uint& j, const Loop<4>& l, const number& f, number& result);

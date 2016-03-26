@@ -219,7 +219,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	Check checkGamma("gamma",0.1);
 	
 	// defining scalar quantities
-	number len, i0, s, sm, v, vr, fgamma, gamma, angle_neigh, ic_max, ic_avg, cc_max, kg_max, kg_avg;
+	number len, i0, s, sm, v, vr, fgamma, gamma, angle_neigh, z, t, ic_max, ic_avg, cc_max, kg_max, kg_avg;
 	
 	// defining vector and matrix quantities
 	vec x(N*dim);
@@ -302,7 +302,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		// initializing to zero
 		mds = Eigen::VectorXd::Zero(NT);
 		dds = Eigen::MatrixXd::Zero(NT,NT);
-		len = 0.0, i0 = 0.0, v = 0.0, fgamma = 0.0, gamma = 0.0, angle_neigh = 0.0;//, s0 = 0.0;
+		len = 0.0, i0 = 0.0, v = 0.0, fgamma = 0.0, gamma = 0.0, angle_neigh = 0.0, z = 0.0, t = 0.0;//, s0 = 0.0;
 		ic_max = 0.0, ic_avg = 0.0, cc_max = 0.0, kg_max = 0.0, kg_avg = 0.0;
 		if (curvature) {
 			sc_vec = Eigen::VectorXd::Zero(N);
@@ -412,6 +412,9 @@ for (uint pl=0; pl<Npl; pl++) {
 							
 						if (gaussian)
 							Gaussian(j, k, xLoop, p.Epsi, repulsion_scale, repulsion);
+							
+						MaxXn(j, k, xLoop, 2, 1.0, z);
+						MaxXn(j, k, xLoop, 3, 1.0, t);
 					}
 					
 					// dynamical field
@@ -782,7 +785,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	
 		// printing results to file	
 		string resFile = "results/nr/nr.csv";
-		#define numRes 22
+		#define numRes 25
 		vector<string> results(numRes);
 		string results_array[numRes] = {timenumber,\
 									nts(pl),\
@@ -796,13 +799,16 @@ for (uint pl=0; pl<Npl; pl++) {
 									nts(E,16),\
 									nts(s,16),\
 									nts(gamma,16),\
+									nts(len,16),\
+									nts(i0,16),\
+									nts(vr,16),\
+									nts(z,16),\
+									nts(t,16),\
 									nts(checkSol.back(),16),\
 									nts(checkDX.back(),16),\
 									nts(checkICMax.back(),16),\
 									nts(checkICAvg.back(),16),\
 									nts(checkKgAMax.back(),16),\
-									nts(checkKgAAvg.back(),16),\
-									nts(checkKgDxMax.back(),16),\
 									nts(checkKgDxAvg.back(),16),\
 									nts(checkCCMax.back(),16),\
 									nts(checkStraight.back(),16)};									
