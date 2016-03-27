@@ -251,7 +251,7 @@ for (uint pl=0; pl<Npl; pl++) {
 					if (!loadFile.exists())
 						loadFile = filenameLoopNR<dim>(pold);
 				if (!loadFile.exists() && old)
-					loadFile = "data/nr/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_G_"+nts(p.G)+"_B_"+nts(p.B)+"_E_"+nts(p.P4)\
+					loadFile = "data/nr/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_kappa_"+nts(pow(p.G,3)*p.B)+"_E_"+nts(p.P4)\
 		+"_a_"+nts(p.Epsi)+".dat";
 				if (!loadFile.exists())
 					loadFile = "data/lemon/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_R_"+nts(R)+"_E_"+nts(E)+"_rank_0.dat";
@@ -594,7 +594,7 @@ for (uint pl=0; pl<Npl; pl++) {
 ----------------------------------------------------------------------------------------------------------------------------*/	
 		
 		if (po!=PrintOptions::none) {
-			Filename early = "data/temp/"+timenumber+"xEarly1_K_"+nts(p.K)+"_G_"+nts(p.G)+"_B_"+nts(p.B)+"_E_"+nts(E)\
+			Filename early = "data/temp/"+timenumber+"xEarly1_K_"+nts(p.K)+"_kappa_"+nts(pow(p.G,3)*p.B)+"_E_"+nts(E)\
 						+"_a_"+nts(p.Epsi)+"_mu_"+nts(p.Mu)+"_run_"+nts(runsCount)+".dat";
 			if (po==PrintOptions::x || po==PrintOptions::all) {
 				printAsLoop(early,dim,x,N*dim);
@@ -664,7 +664,7 @@ for (uint pl=0; pl<Npl; pl++) {
 ----------------------------------------------------------------------------------------------------------------------------*/	
 
 		if (po!=PrintOptions::none) {
-			Filename early = "data/temp/"+timenumber+"deltaEarly2_K_"+nts(p.K)+"_G_"+nts(p.G)+"_B_"+nts(p.B)+"_E_"+nts(E)\
+			Filename early = "data/temp/"+timenumber+"deltaEarly2_K_"+nts(p.K)+"_kappa_"+nts(pow(p.G,3)*p.B)+"_E_"+nts(E)\
 							+"_a_"+nts(p.Epsi)+"_mu_"+nts(p.Mu)+"_run_"+nts(runsCount)+".dat";
 			if (po==PrintOptions::delta || po==PrintOptions::all) {
 				printAsLoop(early,dim,delta,N*dim);
@@ -747,15 +747,14 @@ for (uint pl=0; pl<Npl; pl++) {
 			//cout << (eigensolver.eigenvalues())[j] << endl;
 		}
 		cout << negEigs << " negative eigenvalues found, less than " << -eigenTol << endl;
-		string eigenFile = "data/nr/eigenvalues/dim_"+nts(dim)+"/K_"+nts(p.K)+"/eigenvalues_G_"+nts(p.G)+"_B_"\
-							+nts(p.B)+"_E_"+nts(E)+"_a_"+nts(p.Epsi)+"_mu_"+nts(p.Mu)+".dat";
+		string eigenFile = "data/nr/eigenvalues/dim_"+nts(dim)+"/K_"+nts(p.K)+"/eigenvalues_kappa_"+nts(pow(p.G,3)*p.B)+"_E_"+nts(E)+"_a_"+nts(p.Epsi)+"_mu_"+nts(p.Mu)+".dat";
 		saveVectorBinary(eigenFile,eigensolver.eigenvalues());
 		printf("%12s%50s\n","eigenvalues:",((string)eigenFile).c_str());
 	}
 	
 	// curvature, if required
 	if (curvature) {
-		Filename file = "data/temp/xCurvature_K_"+nts(p.K)+"_G_"+nts(p.G)+"_B_"+nts(p.B)+"_E_"+nts(E)\
+		Filename file = "data/temp/xCurvature_K_"+nts(p.K)+"_kappa_"+nts(pow(p.G,3)*p.B)+"_E_"+nts(E)\
 						+"_a_"+nts(p.Epsi)+"_mu_"+nts(p.Mu)+".dat";
 		printAsLoop(file,dim,x,N*dim);
 		saveVectorAsciiAppend(file,sc_vec);
@@ -829,7 +828,7 @@ for (uint pl=0; pl<Npl; pl++) {
 
 	// printing extras to ascii files
 	if (po!=PrintOptions::none) {
-		Filename file = "data/temp/"+timenumber+"x_K_"+nts(p.K)+"_G_"+nts(p.G)+"_B_"+nts(p.B)+"_E_"+nts(E)\
+		Filename file = "data/temp/"+timenumber+"x_K_"+nts(p.K)+"_kappa_"+nts(pow(p.G,3)*p.B)+"_E_"+nts(E)\
 							+"_a_"+nts(p.Epsi)+"_mu_"+nts(p.Mu)+"_run_"+nts(runsCount)+".dat";
 		if (po==PrintOptions::x || po==PrintOptions::all) {
 			saveVectorAscii(file,x);
