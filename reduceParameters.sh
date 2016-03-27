@@ -1,51 +1,84 @@
 #!/bin/bash
 # program to simplify results for semiclassical calculation by reducing the number of parameters by one
 
-iflag=false # i for input file
-oflag=false # o for output file
+i1='results/nr/nrmain_cosmos.dat'
+i2='results/nr/nrmain_cosmos_2.dat'
+i3='results/nr/nrmain_cosmos_3.dat'
+i4='results/nr/nrmain_cosmos_4.dat'
+i5='results/nr/nrmain_cosmos_5.dat'
+i6='results/nr/nrmain_cosmos_6.dat'
+i7='results/nr/nrmain_cosmos_7.dat'
+i7l='results/nr/nrmain_laptop_7.dat'
+i8='results/nr/nrmain_cosmos_8.dat'
 
-options=':i:o:'
+o1='db/nr/nr1.csv'
+o2='db/nr/nr2.csv'
+o3='db/nr/nr3.csv'
+o4='db/nr/nr4.csv'
+o5='db/nr/nr5.csv'
+o6='db/nr/nr6.csv'
+o7='db/nr/nr7.csv'
+o7l='db/nr/nr7l.csv'
+o8='db/nr/nr8.csv'
 
-while getopts $options option
-do
-	case $option in
-		i  ) i=$OPTARG; iflag=true;;
-		o  ) o=$OPTARG; oflag=true;;
-		\? ) echo "Unknown option argument -$OPTARG" >&2; exit 1;;
-		:  )
-	esac
-done
+bash toCsv.sh $i1
+bash toCsv.sh $i2
+bash toCsv.sh $i3
+bash toCsv.sh $i4
+bash toCsv.sh $i5
+bash toCsv.sh $i6
+bash toCsv.sh $i7
+bash toCsv.sh $i7l
+bash toCsv.sh $i8
 
-if !($iflag) || !($oflag);
-then
-    echo "must include options -i -o" >&2
-    exit 1
-fi
+i1=$(echo "$i1" | sed 's/\.\([a-z]*\)$/.csv/');
+i2=$(echo "$i2" | sed 's/\.\([a-z]*\)$/.csv/');
+i3=$(echo "$i3" | sed 's/\.\([a-z]*\)$/.csv/');
+i4=$(echo "$i4" | sed 's/\.\([a-z]*\)$/.csv/');
+i5=$(echo "$i5" | sed 's/\.\([a-z]*\)$/.csv/');
+i6=$(echo "$i6" | sed 's/\.\([a-z]*\)$/.csv/');
+i7=$(echo "$i7" | sed 's/\.\([a-z]*\)$/.csv/');
+i7l=$(echo "$i7l" | sed 's/\.\([a-z]*\)$/.csv/');
+i8=$(echo "$i8" | sed 's/\.\([a-z]*\)$/.csv/');
 
 sp='\([[:space:]]\+\)' # a space
 spn='\([[:space:]]*\)' # a space, or nor
 nm='\([0-9.]\+\)' # a number
 
-# for nrmain_cosmos_8.csv
-#awk -F "," '{print $1","$2","$3","$4","$5**3*$6","$7","$8","$9","$10","$11","$12","$13",,,,,,"$14","$15","$16","$17","$18","$19","$20","$21}' $i  > $o
+echo "reduced results:"
 
-# for nrmain_laptop_7.csv and nrmain_cosmos_7.dat
-#awk -F "," '{print $1","$2",0,"$3","$4**3*$5","$6","$7","$8",,"$9","$10","$11",,,,,,"$12","$13","$14","$15","$16","$17","$18","$19}' $i  > $o
+# for nrmain_cosmos_8.csv
+awk -F "," '{print $1","$2","$3","$4","$5**3*$6","$7","$8","$9","$10","$11","$5*$6*$12","$13",,,,,,"$14","$15","$16","$17","$18","$19","$20","$21}' $i8  > $o8
+echo $o8
+
+# for nrmain_laptop_7.csv
+awk -F "," '{print $1","$2",0,"$3","$4**3*$5","$6","$7","$8",,"$9","$4*$5*$10","$11",,,,,,"$12","$13","$14","$15","$16","$17","$18","$19}' $i7l  > $o7l
+echo $o7l
+
+# same for nrmain_cosmos_7.dat
+awk -F "," '{print $1","$2",0,"$3","$4**3*$5","$6","$7","$8",,"$9","$4*$5*$10","$11",,,,,,"$12","$13","$14","$15","$16","$17","$18","$19}' $i7  > $o7
+echo $o7
 
 # for nrmain_cosmos_6.dat
-#awk -F "," '{print $1","$2",0,"$3","$4**3*$5","$6","$7","$8",,"$9","$10","$11",,,,,,"$12","$13","$14","$15","$16","$17","$18","}' $i  > $o
+awk -F "," '{print $1","$2",0,"$3","$4**3*$5","$6","$7","$8",,"$9","$4*$5*$10","$11",,,,,,"$12","$13","$14","$15","$16","$17","$18","}' $i6  > $o6
+echo $o6
 
 # for nrmain_cosmos_5.dat
-#awk -F "," '{print $1","$2",0,"$3","$4**3*$5","$6","$7","$8",,"$9","$10","$11",,,,,,"$12","$13","$14","$15","$16","$17",,"}' $i  > $o
+awk -F "," '{print $1","$2",0,"$3","$4**3*$5","$6","$7","$8",,"$9","$4*$5*$10","$11",,,,,,"$12","$13","$14","$15","$16","$17",,"}' $i5  > $o5
+echo $o5
 
 # for nrmain_cosmos_4.dat
-#awk -F "," '{print $1","$2",0,"$3","$4**3*$5",,"$6","$7",,"$8","$9","$10",,,,,,"$11","$12","$13","$14","$15","$16",,"}' $i  > $o
+awk -F "," '{print $1","$2",0,"$3","$4**3*$5",,"$6","$7",,"$8","$4*$5*$9","$10",,,,,,"$11","$12","$13","$14","$15","$16",,"}' $i4  > $o4
+echo $o4
 
 # for nrmain_cosmos_3.dat
-#awk -F "," '{print $1","$2",0,"$3","$4**3*$5",,"$6",1.0,,"$7","$8",,,,,,,"$9","$10",,,"$11","$12",,"}' $i  > $o
+awk -F "," '{print $1","$2",0,"$3","$4**3*$5",,"$6",1.0,,"$7","$4*$5*$8",,,,,,,"$9","$10",,,"$11","$12",,"}' $i3  > $o3
+echo $o3
 
 # for nrmain_cosmos_2.dat
-awk -F "," '{print $1","$2",0,"$3","$4**3*$5",,"$6",1.0,,"$7","$8",,,,,,,"$9","$10",,,"$11",,,"}' $i  > $o
+awk -F "," '{print $1","$2",0,"$3","$4**3*$5",,"$6",1.0,,"$7","$4*$5*$8",,,,,,,"$9","$10",,,"$11",,,"}' $i2  > $o2
+echo $o2
 
 # for nrmain_cosmos.dat
-#awk -F "," '{print $1","$2",0,"$3","$4**3*$5",0,"$6",1,,"$7","$10",,"$8","$9",,,,"$11",,,,,,,"}' $i  > $o
+awk -F "," '{print $1","$2",0,"$3","$4**3*$5",0,"$6",1,,"$7","$10",,"$8","$9",,,,"$11",,,,,,,"}' $i1  > $o1
+echo $o1
