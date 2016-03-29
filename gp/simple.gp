@@ -63,4 +63,6 @@ else {
 	plot for [file in inFiles] file using 1:2 with lines title file noenhanced;
 }
 
-pause -1
+if (!exists("outFile")) {
+	pause -1
+}
