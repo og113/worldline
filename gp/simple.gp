@@ -4,18 +4,22 @@
 set print "-"
 
 # file to print from
-if (exists("inFile")) \
-xLabel=system('echo "'.inFile.'" | sed -ne ''s/.*\/\([a-z]\+\)_\([a-z]\+\)\([0-9._ ]\+\).*/\2/p'' '); \
-yLabel=system('echo "'.inFile.'" | sed -ne ''s/.*\/\([a-z]\+\)_\([a-z]\+\)\([0-9._ ]\+\).*/\1/p'' '); \
-set title inFile noenhanced; \
-else \
-if (exists("inFiles")) \
-xLabel=system('echo "'.inFiles.'" | sed -ne ''s/.*\/\([a-z]\+\)_\([a-z]\+\)\([0-9._ ]\+\).*/\2/p'' '); \
-yLabel=system('echo "'.inFiles.'" | sed -ne ''s/.*\/\([a-z]\+\)_\([a-z]\+\)\([0-9._ ]\+\).*/\1/p'' '); \
-set title inFiles noenhanced; \
-else \
-print "must supply inFile or inFiles"; \
-exit;
+if (exists("inFile")) {
+	xLabel=system('echo "'.inFile.'" | sed -ne ''s/.*\/\([a-zA-Z]\+\)_\([a-zA-Z]\+\)\([0-9._ ]\+\).*/\2/p'' ');
+	yLabel=system('echo "'.inFile.'" | sed -ne ''s/.*\/\([a-zA-Z]\+\)_\([a-zA-Z]\+\)\([0-9._ ]\+\).*/\1/p'' ');
+	set title inFile noenhanced;
+}
+else {
+	if (exists("inFiles")) {
+		xLabel=system('echo "'.inFiles.'" | sed -ne ''s/.*\/\([a-zA-Z]\+\)_\([a-zA-Z]\+\)\([0-9._ ]\+\).*/\2/p'' ');
+		yLabel=system('echo "'.inFiles.'" | sed -ne ''s/.*\/\([a-zA-Z]\+\)_\([a-zA-Z]\+\)\([0-9._ ]\+\).*/\1/p'' ');
+		set title inFiles noenhanced;
+	}
+	else {
+		print "must supply inFile or inFiles";
+		exit;
+	}
+}
 
 # if outFile exists, saving to file
 if (exists("outFile")) {
@@ -34,7 +38,7 @@ if (exists("outFile")) {
 }
 
 # setting logscale if required
-if (exists("logy")) \
+if ((exists("logy")) || (yLabel eq "S")) \
 set logscale y; \
 set format y "10^{%L}"; \
 else \
