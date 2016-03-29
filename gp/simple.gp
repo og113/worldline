@@ -14,13 +14,24 @@ xLabel=system('echo "'.inFiles.'" | sed -ne ''s/.*\/\([a-z]\+\)_\([a-z]\+\)\([0-
 yLabel=system('echo "'.inFiles.'" | sed -ne ''s/.*\/\([a-z]\+\)_\([a-z]\+\)\([0-9._ ]\+\).*/\1/p'' '); \
 set title inFiles noenhanced; \
 else \
-print "must supply inFile or inFiles";
+print "must supply inFile or inFiles"; \
+exit;
 
 # if outFile exists, saving to file
-if (exists("outFile")) \
-if (outFile ne 'gui') \
-set term png size 1600,800; \
-set output outFile; \
+if (exists("outFile")) {
+	if (outFile ne 'gui') {
+		set output outFile;
+		suffix=system('echo "'.outFile.'" | sed -ne ''s/\(.*\)\.\(.*\)/\2/p'' ');
+		if (suffix eq "png") {
+			set term png size 1600,800;
+		}
+		else {
+			if(suffix eq "svg") {
+				set term svg size 1600,800;
+			}
+		}
+	}
+}
 
 # setting logscale if required
 if (exists("logy")) \
@@ -42,10 +53,14 @@ set ytic auto
 set xlabel xLabel
 set ylabel yLabel
 
-if (exists("inFile")) \
-plot inFile using 1:2 with lines ls 1 title inFile noenhanced; \
-else \
-if (exists("inFiles")) \
-plot for [file in inFiles] file using 1:2 with lines ls 1 title file noenhanced; \
+colours="blue red green orange cyan pink yellow black"
+
+if (exists("inFile")) {
+	plot inFile using 1:2 with lines ls 1 title inFile noenhanced;
+}
+else {
+	set for [i=1:words(colours)] lt 1 lc rgb word(colours, i);
+	plot for [file in inFiles] file using 1:2 with lines title file noenhanced;
+}
 
 pause -1

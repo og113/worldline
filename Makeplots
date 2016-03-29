@@ -9,7 +9,7 @@ include configPlots.mk
 
 DATA 			= $(wildcard $(DDIR)/*.dat)
 PNGS	 		= $(patsubst  $(DDIR)/%.dat,$(PDIR)/%.png,$(DATA))
-SVGS			= $(patsubst  $(DDIR)/%.dat,$(PDIR)/%.png,$(DATA))
+SVGS			= $(patsubst  $(DDIR)/%.dat,$(PDIR)/%.svg,$(DATA))
 
 .PHONY : variables
 variables :
@@ -33,10 +33,10 @@ svgs: $(SVGs)
 # generic rules
 
 $(PDIR)/%.png: $(DDIR)/%.dat $(PLOTTER)
-	$(EXE) $<
+	$(EXE) -o $@ $<
 	
 $(PDIR)/%.svg: $(DDIR)/%.dat $(PLOTTER)
-	$(EXE) $<
+	$(EXE) -o $@ $<
 
 #------------------------------------------------------------------------------------------------------------------------
 # clean

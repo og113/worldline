@@ -5,13 +5,24 @@ set print "-"
 
 # need to supply file/files to print
 if (!exists("inFile") && !exists("inFiles")) \
-print "must supply inFile or inFiles";
+print "must supply inFile or inFiles"; \
+exit;
 
-#if you want to save directly to a file, use the following two lines of code
-if (exists("outFile")) \
-if (outFile ne 'gui') \
-set term fig size 1600,800; \
-set output outFile; \
+# if outFile exists, saving to file
+if (exists("outFile")) {
+	if (outFile ne 'gui') {
+		set output outFile;
+		suffix=system('echo "'.outFile.'" | sed -ne ''s/\(.*\)\.\(.*\)/\2/p'' ');
+		if (suffix eq "png") {
+			set term png size 1600,800;
+		}
+		else {
+			if(suffix eq "svg") {
+				set term svg size 1600,800;
+			}
+		}
+	}
+}
 
 # stationary point of 3d potential
 pi=3.1415926535897932
@@ -31,17 +42,21 @@ set ylabel "t"
 set xrange [-1:1]
 #set yrange [-1:1]
 
+colours="blue red green orange cyan pink yellow black"
+
 if (exists("max")) \
-set arrow from (-maximum(g,B)/2.0),0 to (maximum(g,B)/2.0),0 nohead
+set arrow from (-maximum(g,B)/2.0),0 to (maximum(g,B)/2.0),0 nohead;
 
 if (exists("min")) \
-set arrow from (-minimum/2.0),1 to (minimum/2.0),1 nohead
+set arrow from (-minimum/2.0),1 to (minimum/2.0),1 nohead;
 
-if (exists("inFile")) \
-plot inFile using 3:4 with lines ls 1 title inFile noenhanced; \
-else \
-if (exists("inFiles")) \
-plot for [file in inFiles] file using 3:4 with lines ls 1 title file noenhanced; \
+if (exists("inFile")) {
+	plot inFile using 3:4 with lines ls 1 title inFile noenhanced;
+}
+else {
+	set for [i=1:words(colours)] lt 1 lc rgb word(colours, i)
+	plot for [file in inFiles] file using 3:4 with lines title file noenhanced;
+}
 
 pause -1
 
