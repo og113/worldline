@@ -1,0 +1,48 @@
+# makefile for compiling programs to do worldline calculations
+#------------------------------------------------------------------------------------------------------------------------
+# config file
+
+include configPlots.mk
+
+#------------------------------------------------------------------------------------------------------------------------
+# local variables
+
+DATA 			= $(wildcard $(DDIR)/*.dat)
+PNGS	 		= $(patsubst  $(DDIR)/%.dat,$(PDIR)/%.png,$(DATA))
+SVGS			= $(patsubst  $(DDIR)/%.dat,$(PDIR)/%.png,$(DATA))
+
+.PHONY : variables
+variables :
+	@echo DATA: $(DATA)
+	@echo PNGS: $(PNGS)
+	@echo SVGS: $(SVGS)
+
+#------------------------------------------------------------------------------------------------------------------------
+# some useful PHONYs
+
+.PHONY: all
+all: pngs svgs
+
+.PHONY: pngs
+pngs: $(PNGS)
+
+.PHONY: svgs
+svgs: $(SVGs)
+	
+#------------------------------------------------------------------------------------------------------------------------
+# generic rules
+
+$(PDIR)/%.png: $(DDIR)/%.dat $(PLOTTER)
+	$(EXE) $<
+	
+$(PDIR)/%.svg: $(DDIR)/%.dat $(PLOTTER)
+	$(EXE) $<
+
+#------------------------------------------------------------------------------------------------------------------------
+# clean
+	
+.PHONY: clean
+clean:
+	rm -f $(PDIR)/*.png
+	rm -f $(PDIR)/*.svg
+
