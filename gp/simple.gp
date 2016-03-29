@@ -7,14 +7,14 @@ set print "-"
 if (exists("inFile")) \
 xLabel=system('echo "'.inFile.'" | sed -ne ''s/.*\/\([a-z]\+\)_\([a-z]\+\)\([0-9._ ]\+\).*/\2/p'' '); \
 yLabel=system('echo "'.inFile.'" | sed -ne ''s/.*\/\([a-z]\+\)_\([a-z]\+\)\([0-9._ ]\+\).*/\1/p'' '); \
-set title inFile; \
+set title inFile noenhanced; \
 else \
 if (exists("inFiles")) \
 xLabel=system('echo "'.inFiles.'" | sed -ne ''s/.*\/\([a-z]\+\)_\([a-z]\+\)\([0-9._ ]\+\).*/\2/p'' '); \
 yLabel=system('echo "'.inFiles.'" | sed -ne ''s/.*\/\([a-z]\+\)_\([a-z]\+\)\([0-9._ ]\+\).*/\1/p'' '); \
-set title inFiles; \
+set title inFiles noenhanced; \
 else \
-print "must supply inFile";
+print "must supply inFile or inFiles";
 
 # if outFile exists, saving to file
 if (exists("outFile")) \
@@ -43,9 +43,9 @@ set xlabel xLabel
 set ylabel yLabel
 
 if (exists("inFile")) \
-plot inFile using 1:2 with lines ls 1; \
+plot inFile using 1:2 with lines ls 1 title inFile noenhanced; \
 else \
 if (exists("inFiles")) \
-plot for [file in inFiles] file using 1:2 with lines title file ls 1; \
+plot for [file in inFiles] file using 1:2 with lines ls 1 title file noenhanced; \
 
 pause -1
