@@ -3,6 +3,7 @@
 # config file
 
 include config.mk
+include Makefile.deps
 
 #------------------------------------------------------------------------------------------------------------------------
 # local variables
@@ -10,18 +11,26 @@ include config.mk
 HEADERS 		= $(wildcard $(HDIR)/*.h)
 COMMONSRC		= $(wildcard $(CSDIR)/*.cc)
 COMMONOBJS 		= $(patsubst $(CSDIR)/%.cc,$(CODIR)/%.o,$(COMMONSRC))
+SRC				= $(wildcard $(SDIR)/*.cc)
+EXE				= $(patsubst $(SDIR)/%.cc,%,$(SRC))
+MPISRC			= $(wildcard $(MPISDIR)/*.cc)
+MPIEXE			= $(patsubst $(MPISDIR)/%.cc,%,$(MPISRC))
 
 .PHONY : variables
 variables :
 	@echo HEADERS: $(HEADERS)
 	@echo COMMONSRC: $(COMMONSRC)
 	@echo COMMONOBJS: $(COMMONOBJS)
+	@echo SRC: $(SRC)
+	@echo EXE: $(EXE)
+	@echo MPISRC: $(MPISRC)
+	@echo MPIEXE: $(MPIEXE)
 
 #------------------------------------------------------------------------------------------------------------------------
 # some useful PHONYs
 
 .PHONY: all
-all: binaryToAscii circle common floop glmain loop loop2 nrmain schwingerRate
+all: $(EXE) $(MPIEXE) common
 
 .PHONY: common
 common: $(COMMONOBJS)
@@ -110,11 +119,10 @@ clean:
 	rm -f temp/*
 
 #------------------------------------------------------------------------------------------------------------------------
-# makedepend
+# makedepend, NOT WORKING
 
 .PHONY: depend	
-depend: $(SRC)
-	makedepend $(INCLUDES) $^
+depend: $(COMMONSRC) $(SRC)
+	makedepend -- $(CFLAGS) -- $^ -f- > Makefile.deps
 
 # DO NOT DELETE THIS LINE -- make depend needs it
-

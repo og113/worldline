@@ -863,7 +863,7 @@ void printAsLoop(const string& f, const uint& Dim, const vec& v, const uint len)
 // filenameLoop
 template<uint Dim>
 Filename filenameLoopNR(const Parameters& p) {
-	Filename f = "data/nr/loops/dim_"+nts(Dim)+"/K_"+nts(p.K)+"/loop_kappa_"+nts(pow(p.G,3)*nts(p.B))+"_E_"+nts(p.P4)\
+	Filename f = "data/nr/loops/dim_"+nts(Dim)+"/K_"+nts(p.K)+"/loop_kappa_"+nts(pow(p.G,3)*p.B)+"_E_"+nts(p.P4)\
 		+"_a_"+nts(p.Epsi)+"_mu_"+nts(p.Mu)+".dat";
 	if (p.Ng>0)
 		(f.Extras).push_back(StringPair("Ng",nts(p.Ng)));

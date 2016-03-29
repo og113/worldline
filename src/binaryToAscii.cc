@@ -43,8 +43,9 @@ if (argc % 2 && argc>1) {
 }
 
 if (loop && K==0) {
-	cout << "input K of loop: ";
-	cin >> K;
+	vector<number> v;
+	loadVectorBinary< vector<number> >(binaryFile,v);
+	K=log2(v.size()/dim-1); // the -1 assumes a translation invariance lagrange multiplier
 }
 
 if (binaryFile.empty() || asciiFile.empty()) {
@@ -62,14 +63,13 @@ if (!binaryFile.exists()) {
 	2. loading and printing
 ----------------------------------------------------------------------------------------------------------------------------*/
 
-vector<number> v;
-
 if (loop) {
 	Loop<dim> l(K,0);
 	l.load(binaryFile);
 	l.saveAscii(asciiFile);
 }
 else {
+	vector<number> v;
 	loadVectorBinary< vector<number> >(binaryFile,v);
 	if (v.size()>pow(2,K) && K!=0)
 		v.resize(pow(2,K));

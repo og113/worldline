@@ -2,19 +2,19 @@
 # program to plot using gp/simple.gp
 
 gpFile='gp/simple.gp'
-many=false
+single=false
 
 if [ -z "$1" ]
 then
 	echo "must supply input file";
 elif [ -z "$2" ]
 then
-	many=true;
+	single=true;
 fi
 
-if $many
+if $single
 then
-	gnuplot -e "inFile='$1'"$gpFile;
+	gnuplot -e "inFile='$*'" $gpFile;
 else
 	gnuplot -e "inFiles='$*'" $gpFile;
 fi
