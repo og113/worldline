@@ -9,8 +9,10 @@ else
 	test=$(ls $1/*_M_*.dat | wc -l)
 	if (("$test" > "0")); then
 		echo "step 1, renaming M -> E"
-		for f in $1/*_M_*.dat; 
-			do rename -v 's/_M_/_E_/' $f;
+		for f in $1/*_M_*.dat;
+			do fo=$(echo "$f"|sed "s/_M_/_E_/")
+			echo $f "renamed as" $fo
+			mv $f $fo;
 		done
 	else
 		echo "no files to rename M -> E"
