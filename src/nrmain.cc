@@ -59,6 +59,7 @@ bool eigen = false;
 bool curvature = false;
 bool old = true;
 bool gaussian = false;
+bool mu_a = false;
 bool alltests = false; // doing alltests
 string printOpts = "";
 string potOpts = "";
@@ -77,6 +78,7 @@ if (argc % 2 && argc>1) {
 		else if (id.compare("curvature")==0) curvature = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("old")==0) old = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("gaussian")==0 || id.compare("repulsion")==0) gaussian = (stn<uint>(argv[2*j+2])!=0);
+		else if (id.compare("mu_a")==0) mu_a = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("inputs")==0) inputsFile = (string)argv[2*j+2];
 		else if (id.compare("print")==0) printOpts = (string)argv[2*j+2];
 		else if (id.compare("pot")==0 || id.compare("potential")==0) potOpts = (string)argv[2*j+2];
@@ -165,6 +167,10 @@ for (uint pl=0; pl<Npl; pl++) {
 	if (pl>0) {
 		p = pr.position(pl);
 		pold = pr.neigh(pl);
+		if (mu_a) {
+			p.Mu = p.Epsi;
+			pold.Mu = pold.Epsi;
+		}
 		stepFile = filenameLoopNR<dim>(pold);
 		if (weak)
 			(stepFile.Extras).push_back(StringPair("weak","1"));
