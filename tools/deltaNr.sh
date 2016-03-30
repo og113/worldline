@@ -1,14 +1,17 @@
 #!/bin/bash
 # program to update db/nr/delta.csv with only new results
 
-i='results/nr/nr.csv'
-m='db/nr/nr.csv'
-o='db/nr/delta.csv'
+raw='results/nr/nr.csv'
+rawf='temp/nrf.csv'
+db='db/nr/nr.csv'
+delta='db/nr/delta.csv'
 
-comm -23 <(sort $i) <(sort $m) > $o
+cat $raw > $rawf
 
-i=${i##*/}
+raw=${raw##*/}
 
-sed -i "s/$/,$i/" $o
+sed -i "s/$/,$raw/" $rawf
+
+comm -23 <(sort $rawf) <(sort $db) > $delta
 
 # to append db/nr/delta.csv to the end of db/nr/nr.csv, type "cat db/nr/delta.csv >> db/nr/nr.csv"
