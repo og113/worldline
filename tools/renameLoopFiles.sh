@@ -6,7 +6,8 @@ if [ -z "$1" ]
   then
     echo "must supply input folder"
 else
-	if ls $1/*_M_*.dat 1> /dev/null 2>&1; then
+	test=$(ls $1/*_M_*.dat | wc -l)
+	if (("$test" > "0")); then
 		echo "step 1, renaming M -> E"
 		for f in $1/*_M_*.dat; 
 			do rename -v 's/_M_/_E_/' $f;
@@ -15,7 +16,8 @@ else
 		echo "no files to rename M -> E"
 	fi
 
-	if ls $1/*_G_*_B_*.dat 1> /dev/null 2>&1; then
+	test=$(ls $1/*_G_*_B_*.dat | wc -l)
+	if (("$test" > "0")); then
 		echo "step 2, combining G and B -> kappa=G**3*B"
 		for f in $1/*_G_*_B_*.dat;
 			do g=$(echo "$f"|sed -n 's/^.*_G_\([0-9\.]*\)_.*$/\1/p');
