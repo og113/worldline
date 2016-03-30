@@ -1,8 +1,11 @@
 # makefile for compiling programs to do worldline calculations
 #------------------------------------------------------------------------------------------------------------------------
-# config file
+# configuration
 
-include configPlots.mk
+DDIR			= db/nr/plots
+PDIR			= pics/nr/db
+PLOTTER			= tools/plotSimple.sh
+EXE				= bash $(PLOTTER)
 
 #------------------------------------------------------------------------------------------------------------------------
 # local variables
