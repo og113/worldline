@@ -5,8 +5,16 @@ i='results/nr/nr.csv'
 m='db/nr/nr.csv'
 o='db/nr/delta.csv'
 
+ls db/nr
+
 comm -23 <(sort $i) <(sort $m) > $o
+
+ls db/nr
 
 i=${i##*/}
 
-sed -ie "s/$/,$i/" $o
+ls db/nr
+
+sed -i "s/$/,$i/" $o
+
+ls db/nr
