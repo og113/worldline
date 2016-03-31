@@ -1,38 +1,63 @@
 # makefile for compiling programs to do worldline calculations
 #------------------------------------------------------------------------------------------------------------------------
-# config file
+# configuration
 
-include configPlots.mk
+DDIR			= db/nr/plots
+PDIR			= pics/nr/db
+PLOTTER			= tools/plotSimple.sh
+EXE				= bash $(PLOTTER)
 
 #------------------------------------------------------------------------------------------------------------------------
 # local variables
 
+# files in $(DDIR), not in subfolders
 CSVS 			= $(wildcard $(DDIR)/*.csv)
 DATA 			= $(patsubst  $(DDIR)/%.csv,$(DDIR)/%.dat,$(CSVS))
 PNGS	 		= $(patsubst  $(DDIR)/%.csv,$(PDIR)/%.png,$(CSVS))
 SVGS			= $(patsubst  $(DDIR)/%.csv,$(PDIR)/%.svg,$(CSVS))
 
+# subfolders
+FS				= $(filter-out $(DDIR)/,$(sort $(dir $(wildcard db/nr/plots/*/))))
+FCSVS			= $(foreach var,$(FS),$(wildcard $(var)*.csv))
+FDATA			= $(patsubst  $(DDIR)/%.csv,$(DDIR)/%.dat,$(FCSVS))
+FPNGS	 		= $(patsubst  $(DDIR)/%/,$(PDIR)/%.png,$(FS))
+FSVGS			= $(patsubst  $(DDIR)/%/,$(PDIR)/%.svg,$(FS))
+
 .PHONY : variables
 variables :
-	@echo CSVS: $(CSVS)
-	@echo DATA: $(DATA)
-	@echo PNGS: $(PNGS)
-	@echo SVGS: $(SVGS)
+	@echo CSVS : $(CSVS)
+	@echo DATA : $(DATA)
+	@echo PNGS : $(PNGS)
+	@echo SVGS : $(SVGS)
+	@echo FS   : $(FS)
+	@echo FCSVS: $(FCSVS)
+	@echo FDATA: $(FDATA)
+	@echo FPNGS: $(FPNGS)
+	@echo FSVGS: $(FSVGS)
 
 #------------------------------------------------------------------------------------------------------------------------
 # some useful PHONYs
 
 .PHONY: all
-all: pngs svgs data
+all: data fdata pngs svgs fpngs fsvgs
 
 .PHONY: pngs
-pngs: $(PNGS) $(DATA)
+pngs: $(DATA) $(PNGS)
 
 .PHONY: svgs
-svgs: $(SVGS) $(DATA)
+svgs: $(DATA) $(SVGS)
 
 .PHONY: data
 data: $(DATA)
+
+.PHONY: fpngs
+fpngs: $(FDATA) $(FPNGS)
+
+.PHONY: fsvgs
+fsvgs: $(FDATA) $(FSVGS) 
+
+.PHONY: fdata
+fdata: $(FDATA)
 	
 #------------------------------------------------------------------------------------------------------------------------
 # generic rules
@@ -46,6 +71,16 @@ $(PDIR)/%.png: $(DDIR)/%.dat $(PLOTTER)
 	
 $(PDIR)/%.svg: $(DDIR)/%.dat $(PLOTTER)
 	$(EXE) -o $@ $<
+	
+$(DDIR)/*/%.dat: $(DDIR)/*/%.csv
+	sed -n 's/"\([0-9.]*\)"/\1/pg' $< >$@
+	sed -i 's/,/ /g' $@
+	
+$(PDIR)/%.png: $(DDIR)/%/*.dat $(PLOTTER)
+	$(EXE) -o $@ $$(dirname "$$(echo $< | head -n1 | awk '{print $$1;}')" )
+
+$(PDIR)/%.svg: $(DDIR)/%/*.dat $(PLOTTER)
+	$(EXE) -o $@ $$(dirname "$$(echo $< | head -n1 | awk '{print $$1;}')" )
 
 #------------------------------------------------------------------------------------------------------------------------
 # clean
@@ -53,6 +88,7 @@ $(PDIR)/%.svg: $(DDIR)/%.dat $(PLOTTER)
 .PHONY: clean
 clean:
 	rm -f $(DDIR)/*.dat
+	rm -f $(DDIR)/*/*.dat
 	rm -f $(PDIR)/*.png
 	rm -f $(PDIR)/*.svg
 

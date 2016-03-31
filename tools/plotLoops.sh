@@ -5,7 +5,7 @@ gpFile='gp/projection.gp'
 single=false
 oflag=false
 
-# checking of outFile required and getting filename if so
+# checking if outFile required and getting filename if so
 options=':o:'
 OPTIND=1
 while getopts $options option
@@ -18,22 +18,39 @@ do
 done
 shift $((OPTIND-1))
 
-# checking if multiple files are being plotted
+# checking that input files were specified
 if [ -z "$1" ]
-then
+	then
 	echo "must supply input file";
-elif [ -z "$2" ]
+fi
+
+lTemp=""
+for f in "$@";
+do 
+	if [ -e "$f" ] && [ -f "$f" ];
+	then
+		lTemp+="$f ";
+	elif [ -e "$f" ] && [ -d "$f" ]; # only looks one directory deep, and fails if there are subdirectories
+	then
+		lTemp+=$(ls $f/*.dat | tr '\n' ' ')
+	fi
+done
+l=${lTemp::-1}
+
+# checking if multiple files are being plotted
+lwords=$(echo $l | wc -w)
+if [ "$lwords" -gt 1 ]
 then
-	single=true;
+	single=false;
 fi
 
 # converting binary to ascii files
 mTemp=""
-for f in "$@";
-	do fileID=${f##*/};
+for f in $l;
+do fileID=${f##*/};
 	tf="data/temp/$fileID";
 	./binaryToAscii -b $f -a $tf -loop 1
-	mTemp+="$tf ";
+	mTemp+="$tf ";	
 done
 m=${mTemp::-1}
 

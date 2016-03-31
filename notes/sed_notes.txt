@@ -35,3 +35,5 @@ grep -vc '^\([[:space:]]*\)\([0-9\.]\+\)\([[:space:]]\+\)\([0-9\.]\+\)\([[:space
 
 counting occurances of ',' on first line of file
 head -n 1 results/nr/nrmain_cosmos_8.csv | grep -o "," | wc -l
+
+to append contents of db/nr/delta.csv to the end of db/nr/nr.csv, type "cat db/nr/delta.csv >> db/nr/nr.csv"

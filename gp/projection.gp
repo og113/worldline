@@ -24,6 +24,11 @@ if (exists("outFile")) {
 	}
 }
 
+# setting title
+if (exists("Title")) {
+	set title Title noenhanced;
+}
+
 # stationary point of 3d potential
 pi=3.1415926535897932
 g=1.0
