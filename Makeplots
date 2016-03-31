@@ -18,7 +18,7 @@ SVGS			= $(patsubst  $(DDIR)/%.csv,$(PDIR)/%.svg,$(CSVS))
 
 # subfolders
 FS				= $(filter-out $(DDIR)/,$(sort $(dir $(wildcard db/nr/plots/*/))))
-FCSVS			= $(wildcard $(patsubst $(DDIR)/%/,$(DDIR)/%/,$(FS))*.csv)
+FCSVS			= $(foreach var,$(FS),$(wildcard $(var)*.csv))
 FDATA			= $(patsubst  $(DDIR)/%.csv,$(DDIR)/%.dat,$(FCSVS))
 FPNGS	 		= $(patsubst  $(DDIR)/%/,$(PDIR)/%.png,$(FS))
 FSVGS			= $(patsubst  $(DDIR)/%/,$(PDIR)/%.svg,$(FS))
@@ -74,13 +74,13 @@ $(PDIR)/%.svg: $(DDIR)/%.dat $(PLOTTER)
 	
 $(DDIR)/*/%.dat: $(DDIR)/*/%.csv
 	sed -n 's/"\([0-9.]*\)"/\1/pg' $< >$@
-	sed -i 's/,/ /g' $@	
+	sed -i 's/,/ /g' $@
 	
 $(PDIR)/%.png: $(DDIR)/%/*.dat $(PLOTTER)
-	$(EXE) -o $@ $$(dirname $<)
+	$(EXE) -o $@ $$(dirname "$$(echo $< | head -n1 | awk '{print $$1;}')" )
 
 $(PDIR)/%.svg: $(DDIR)/%/*.dat $(PLOTTER)
-	$(EXE) -o $@ $$(dirname $<)
+	$(EXE) -o $@ $$(dirname "$$(echo $< | head -n1 | awk '{print $$1;}')" )
 
 #------------------------------------------------------------------------------------------------------------------------
 # clean
@@ -88,6 +88,7 @@ $(PDIR)/%.svg: $(DDIR)/%/*.dat $(PLOTTER)
 .PHONY: clean
 clean:
 	rm -f $(DDIR)/*.dat
+	rm -f $(DDIR)/*/*.dat
 	rm -f $(PDIR)/*.png
 	rm -f $(PDIR)/*.svg
 

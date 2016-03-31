@@ -33,7 +33,6 @@ do
 	elif [ -e "$f" ] && [ -d "$f" ]; # only looks one directory deep, and fails if there are subdirectories
 	then
 		lTemp+=$(ls $f/*.dat | tr '\n' ' ')
-		lTemp+=" "
 	fi
 done
 l=${lTemp::-1}

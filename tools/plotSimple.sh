@@ -37,7 +37,6 @@ do
 		tflag=true
 		t=$f
 		mTemp+=$(ls $f/*.dat | tr '\n' ' ')
-		mTemp+=" "
 	fi
 done
 m=${mTemp::-1}
