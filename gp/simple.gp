@@ -37,6 +37,11 @@ if (exists("outFile")) {
 	}
 }
 
+# setting title
+if (exists("Title")) {
+	set title Title noenhanced;
+}
+
 # setting logscale if required
 if ((exists("logy")) || (yLabel eq "S")) \
 set logscale y; \

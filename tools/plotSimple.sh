@@ -4,14 +4,16 @@
 gpFile='gp/simple.gp'
 single=true
 oflag=false
+tflag=false
 
 # checking if outFile required and getting filename if so
-options=':o:'
+options=':o:t:'
 OPTIND=1
 while getopts $options option
 do
 	case $option in
 		o  ) o=$OPTARG; oflag=true;;
+		o  ) t=$OPTARG; tflag=true;;
 		\? ) echo "Unknown option argument -$OPTARG" >&2; exit 1;;
 		:  )
 	esac
@@ -32,6 +34,8 @@ do
 		mTemp+="$f ";
 	elif [ -e "$f" ] && [ -d "$f" ]; # only looks one directory deep, and fails if there are subdirectories
 	then
+		tflag=true
+		t=$f
 		mTemp+=$(ls $f/*.dat | tr '\n' ' ')
 		mTemp+=" "
 	fi
@@ -48,17 +52,29 @@ fi
 # plotting
 if $single
 then
+	gargs="inFile='$m'"
 	if $oflag
 	then
-		gnuplot -e "inFile='$m'; outFile='$o'" $gpFile;
-	else
-		gnuplot -e "inFile='$m'" $gpFile;
+		gargs+="; outFile='$o'"
 	fi
+	if $tflag
+	then
+		gargs+="; Title='$t'"
+	fi
+	
+	gnuplot -e "$gargs" $gpFile;
+
 else
+	gargs="inFiles='$m'"
 	if $oflag
 	then
-		gnuplot -e "inFiles='$m'; outFile='$o'" $gpFile;
-	else
-		gnuplot -e "inFiles='$m'" $gpFile;
+		gargs+="; outFile='$o'"
 	fi
+	if $tflag
+	then
+		gargs+="; Title='$t'"
+	fi
+	
+	gnuplot -e "$gargs" $gpFile;
+	
 fi
