@@ -1,0 +1,7 @@
+ Sum(
+ 
+ - 2.0*E_imj*DX(l,i,pi,mu) \
+ + 2.0*E_ij*DX(l,i,pi,mu) \
+ - (4.0*E_ij*DX(l,j,i,mu)*T_ij)/pow(a,2)
+ 
+ ,i)

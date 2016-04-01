@@ -1,0 +1,76 @@
+ Sum(
+<<<<<<< HEAD
+ 
+=======
+>>>>>>> 29ede6061ef96b278fe9a879263512dd63b902ed
+ mj==k
+ 4.0*pow(B_imj,-2.0 + a/2.0)*DX(l,i,pi,mu)*DX(l,mj,i,nu) \
+ - 2.0*a*pow(B_imj,-2.0 + a/2.0)*DX(l,i,pi,mu)*DX(l,mj,i,nu) \
+ 
+ j==k
+ - 4.0*pow(B_ij,-2.0 + a/2.0)*DX(l,i,pi,nu)*DX(l,j,i,mu) \
+ + 2.0*a*pow(B_ij,-2.0 + a/2.0)*DX(l,i,pi,nu)*DX(l,j,i,mu) \
+ - 4.0*pow(B_ij,-2.0 + a/2.0)*DX(l,i,pi,mu)*DX(l,j,i,nu) \
+ + 2.0*a*pow(B_ij,-2.0 + a/2.0)*DX(l,i,pi,mu)*DX(l,j,i,nu) \
+<<<<<<< HEAD
+ + 16.0*pow(B_ij,-3.0 + a/2.0)*DX(l,j,i,mu)*DX(l,j,i,nu)*T_ij \
+ - 12.0*a*pow(B_ij,-3.0 + a/2.0)*DX(l,j,i,mu)*DX(l,j,i,nu)*T_ij \
+ + 2.0*pow(a,2)*pow(B_ij,-3.0 + a/2.0)*DX(l,j,i,mu)*DX(l,j,i,nu)*T_ij \
+=======
+ + 16.0*pow(B_ij,-3 + a/2.0)*DX(l,j,i,mu)*DX(l,j,i,nu)*T_ij \
+ - 12.0*a*pow(B_ij,-3 + a/2.0)*DX(l,j,i,mu)*DX(l,j,i,nu)*T_ij \
+ + 2.0*pow(a,2)*pow(B_ij,-3 + a/2.0)*DX(l,j,i,mu)*DX(l,j,i,nu)*T_ij \
+>>>>>>> 29ede6061ef96b278fe9a879263512dd63b902ed
+ 
+ pj==k
+ + 4.0*pow(B_ij,-2.0 + a/2.0)*DX(l,i,pi,nu)*DX(l,j,i,mu) \
+ - 2.0*a*pow(B_ij,-2.0 + a/2.0)*DX(l,i,pi,nu)*DX(l,j,i,mu) \
+ 
+ mu==nu, j==k
+ - 4.0*pow(B_ij,-2.0 + a/2.0)*T_ij \
+ + 2.0*a*pow(B_ij,-2.0 + a/2.0)*T_ij
+<<<<<<< HEAD
+ 
+ ,i) 
+ 
+ + 4.0*pow(B_jmk,-2.0 + a/2.0)*DX(l,j,pj,nu)*DX(l,j,mk,mu) \
+ - 2.0*a*pow(B_jmk,-2.0 + a/2.0)*DX(l,j,pj,nu)*DX(l,j,mk,mu) \
+ 
+ - 4.0*pow(B_mjk,-2.0 + a/2.0)*DX(l,mj,k,nu)*DX(l,k,pk,mu) \
+ + 2.0*a*pow(B_mjk,-2.0 + a/2.0)*DX(l,mj,k,nu)*DX(l,k,pk,mu) \
+
+ - 4.0*pow(B_jk,-2.0 + a/2.0)*DX(l,j,pj,nu)*DX(l,j,k,mu) \
+ + 2.0*a*pow(B_jk,-2.0 + a/2.0)*DX(l,j,pj,nu)*DX(l,j,k,mu) \ 
+ + 4.0*pow(B_jk,-2.0 + a/2.0)*DX(l,j,k,nu)*DX(l,k,pk,mu) \
+ - 2.0*a*pow(B_jk,-2.0 + a/2.0)*DX(l,j,k,nu)*DX(l,k,pk,mu) \
+ - 16.0*pow(B_jk,-3.0 + a/2.0)*DX(l,j,k,mu)*DX(l,j,k,nu)*T_jk \
+ + 12.0*a*pow(B_jk,-3.0 + a/2.0)*DX(l,j,k,mu)*DX(l,j,k,nu)*T_jk \
+ - 2.0*pow(a,2)*pow(B_jk,-3.0 + a/2.0)*DX(l,j,k,mu)*DX(l,j,k,nu)*T_jk \
+=======
+ ,i) \
+ 
+ 
+ + 4.0*pow(B_jmk,-2.0 + a/2.0)*DX(l,j,pj,nu)*DX(l,j,mk,mu) \
+ - 2.0*a*pow(B_jmk,-2.0 + a/2.0)*DX(l,j,pj,nu)*DX(l,j,mk,mu) \
+ - 4.0*pow(B_jk,-2.0 + a/2.0)*DX(l,j,pj,nu)*DX(l,j,k,mu) \
+ + 2.0*a*pow(B_jk,-2.0 + a/2.0)*DX(l,j,pj,nu)*DX(l,j,k,mu) \
+ - 4.0*pow(B_mjk,-2.0 + a/2.0)*DX(l,mj,k,nu)*DX(l,k,pk,mu) \
+ + 2.0*a*pow(B_mjk,-2.0 + a/2.0)*DX(l,mj,k,nu)*DX(l,k,pk,mu) \
+ + 4.0*pow(B_jk,-2.0 + a/2.0)*DX(l,j,k,nu)*DX(l,k,pk,mu) \
+ - 2.0*a*pow(B_jk,-2.0 + a/2.0)*DX(l,j,k,nu)*DX(l,k,pk,mu) \
+ - 16.0*pow(B_jk,-3 + a/2.0)*DX(l,j,k,mu)*DX(l,j,k,nu)*T_jk \
+ + 12.0*a*pow(B_jk,-3 + a/2.0)*DX(l,j,k,mu)*DX(l,j,k,nu)*T_jk \
+ - 2.0*pow(a,2)*pow(B_jk,-3 + a/2.0)*DX(l,j,k,mu)*DX(l,j,k,nu)*T_jk \
+>>>>>>> 29ede6061ef96b278fe9a879263512dd63b902ed
+ 
+ mu==nu
+ + 2.0*pow(B_mjmk,-1.0 + a/2.0) \
+ - 2.0*pow(B_mjk,-1.0 + a/2.0) \
+ - 2.0*pow(B_jmk,-1.0 + a/2.0) \
+ + 2.0*pow(B_jk,-1.0 + a/2.0) \
+ + 4.0*pow(B_jk,-2.0 + a/2.0)*T_jk \
+<<<<<<< HEAD
+ - 2.0*a*pow(B_jk,-2.0 + a/2.0)*T_jk
+=======
+ - 2.0*a*pow(B_jk,-2.0 + a/2.0)*T_jk 
+>>>>>>> 29ede6061ef96b278fe9a879263512dd63b902ed
