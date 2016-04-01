@@ -93,7 +93,7 @@ dV_gsl.params = &params;
 -------------------------------------------------------------------------------------------------------------------------*/
 
 // objects to hold data
-vector<double> max_vec(0), min_vec(0), Vmax_vec(0), Vmin_vec(0);
+vector<double> a_vec(0), max_vec(0), min_vec(0), Vmax_vec(0), Vmin_vec(0);
 double Vmin_l = 0.0, Vmin_r = 0.0, test = 1.0;
 
 if (verbose) {
@@ -120,7 +120,10 @@ while((test>tol || run<minRuns) && run<Npl) {
 	max_r = max_guess + params.a;
 	min_guess = params.a;
 	min_l = 0.0;
-	min_r = max_l;	
+	min_r = max_l;
+	
+	// setting a_vec
+	a_vec.push_back(params.a);	
 	
 	// finding extrema
 	max_vec.push_back(brentRootFinder(&dV_gsl,max_guess,max_l,max_r));
@@ -171,7 +174,8 @@ if (verbose)
 -------------------------------------------------------------------------------------------------------------------------*/
 
 string fo = "data/nr/3dpot/extrema_Kappa_"+nts(params.kappa)+".dat";
-saveVectorAscii(fo,max_vec);
+saveVectorAscii(fo,a_vec);
+saveVectorAsciiAppend(fo,max_vec);
 saveVectorAsciiAppend(fo,min_vec);
 saveVectorAsciiAppend(fo,Vmax_vec);
 saveVectorAsciiAppend(fo,Vmin_vec);
