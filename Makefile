@@ -38,10 +38,14 @@ common: $(COMMONOBJS)
 monte: binaryToAscii circle common floop glmain loop loop2 schwingerRate
 
 .PHONY: nr
-nr: binaryToAscii circle common nrmain
+nr: 3dPotentialExtrema binaryToAscii circle common nrmain
 
 #------------------------------------------------------------------------------------------------------------------------
 # targets, dependencies and rules for executables
+
+3dPotentialExtrema: $(ODIR)/3dPotentialExtrema.o $(COMMONOBJS) 
+	$(CC) -o $@ $^ $(CFLAGS) $(INCLUDES) $(LIBS)
+	@echo Simple compiler named 3dPotentialExtrema has been compiled
 
 binaryToAscii: $(ODIR)/binaryToAscii.o $(COMMONOBJS) 
 	$(CC) -o $@ $^ $(CFLAGS) $(INCLUDES) $(LIBS)
