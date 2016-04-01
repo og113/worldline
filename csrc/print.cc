@@ -34,9 +34,9 @@ void saveVectorAscii(const string& f,  const T& v) {
 	ofstream os;
 	os.open(f.c_str());
 	if (os.good()) {
-		os << setprecision(16);
+		os << left << setprecision(16);
 		for (uint j=0; j<v.size(); j++) {
-			os << v[j] << endl;
+			os << setw(25) << v[j] << endl;
 		}
 		os.close();
 	}
@@ -76,7 +76,7 @@ void saveVectorAsciiAppend(const string& f,  const T& v) {
 		string lineIn;
 		for (uint j=0; j<lengthOs; j++){
 			getline(is,lineIn);
-			os << lineIn << setw(24) << v[j] << endl;
+			os << lineIn << setw(25) << v[j] << endl;
 		}
 		is.close();
 		os.close();

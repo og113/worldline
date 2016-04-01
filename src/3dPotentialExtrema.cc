@@ -10,6 +10,7 @@
 #include "simple.h"
 #include "gsl_extras.h"
 #include "3dpotential.h"
+#include "print.h"
 
 /*-------------------------------------------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------------------------------------------
@@ -169,7 +170,12 @@ if (verbose)
 	3 - printing results	
 -------------------------------------------------------------------------------------------------------------------------*/
 
-//Filename fo = "data/nr/3dpot/extrema_Kappa_"+nts(params.kappa)+"_a_"+nts(params.a)+".dat";
+string fo = "data/nr/3dpot/extrema_Kappa_"+nts(params.kappa)+".dat";
+saveVectorAscii(fo,max_vec);
+saveVectorAsciiAppend(fo,min_vec);
+saveVectorAsciiAppend(fo,Vmax_vec);
+saveVectorAsciiAppend(fo,Vmin_vec);
+
 
 return 0;
 }
