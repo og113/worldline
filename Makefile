@@ -38,7 +38,7 @@ common: $(COMMONOBJS)
 monte: binaryToAscii circle common floop glmain loop loop2 schwingerRate
 
 .PHONY: nr
-nr: binaryToAscii circle common nrmain
+nr: 3dPotentialExtrema binaryToAscii circle common nrmain
 
 #------------------------------------------------------------------------------------------------------------------------
 # targets, dependencies and rules for executables
