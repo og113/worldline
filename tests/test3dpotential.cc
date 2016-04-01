@@ -35,7 +35,7 @@ cout << left << setprecision(16);
 cout << setw(25) << "y" << setw(25) << "V(y)" << setw(25) << "dV(y)" << setw(25) << "ddV(y)" << endl;
 for (uint j=0; j<10; j++) {
 	cout << setw(25) << y << setw(25) << V(y,&params) << setw(25) << dV(y,&params) << setw(25) << ddV(y,&params) << endl;
-	y+=0.01*(double)(j+1.0);
+	y=0.01*(double)(j+1.0);
 }
 
 return 0;

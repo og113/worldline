@@ -32,30 +32,27 @@ void params_for_V::setFromParameters(const Parameters& p) {
 	N.B. defined to work with gsl
 -------------------------------------------------------------------------------------------------------------------------*/
 
-double V (double y, void * parameters) {
+double V (double r, void * parameters) {
 	struct params_for_V* params = (struct params_for_V *)parameters;
-	double y2 = y*y;
 	double a = params->a;
-	double a2 = pow(a,2);
 	double kappa = params->kappa;
-	return 2.0 - y - (kappa/4.0/PI)*( 1.0/sqrt(y2 + a2) - exp(-y2/a2)/a );
+	return 2.0 - r - ((-(1.0/(a*exp(pow(r,2)/pow(a,2)))) + 1.0/sqrt(pow(a,2) + pow(r,2)))*kappa)/(4.0*PI);
 }
 
-double dV (double y, void * parameters) {
+double dV (double r, void * parameters) {
 	struct params_for_V* params = (struct params_for_V *)parameters;
-	double y2 = y*y;
 	double a = params->a;
-	double a2 = pow(a,2);
 	double kappa = params->kappa;
-	return -1.0 - (kappa/4.0/PI)*( -y/pow(y2 + a2,1.5) + 2.0*y*exp(-y2/a2)/pow(a,3) );
+	return  - 1.0 - (((2.0*r)/(pow(a,3)*exp(pow(r,2)/pow(a,2))) - r/pow(pow(a,2) + pow(r,2),1.5))*kappa)/(4.0*PI);
 }
 
-double ddV (double y, void * parameters) {
+double ddV (double r, void * parameters) {
 	struct params_for_V* params = (struct params_for_V *)parameters;
-	double y2 = y*y;
 	double a = params->a;
-	double a2 = pow(a,2);
 	double kappa = params->kappa;
-	return -(kappa/4.0/PI)*( (2.0*y2 - a2)/pow(y2 + a2,2.5) + (2.0/pow(a,3) - 4.0*y2/pow(a,5))*exp(-y2/a2) );
+	return  - ((2.0/(pow(a,3)*exp(pow(r,2)/pow(a,2))) \
+			 - (4.0*pow(r,2))/(pow(a,5)*exp(pow(r,2)/pow(a,2))) \
+			 + (-pow(a,2) + 2.0*pow(r,2))/pow(pow(a,2) \
+			 + pow(r,2),2.5))*kappa)/(4.0*PI);
 }
 
