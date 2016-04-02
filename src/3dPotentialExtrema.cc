@@ -5,6 +5,8 @@
 
 #include <cmath>
 #include <iostream>
+#include <fstream>
+#include <iomanip>
 #include <string>
 #include <vector>
 #include "simple.h"
@@ -18,10 +20,8 @@ CONTENTS
 	1 - loading inputs and argv
 	2 - setting up
 	3 - parameter loop, finding minima and maxima
-	4 - printing results
 -------------------------------------------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------------------------------------------*/
-
 
 using namespace std;
 
@@ -35,6 +35,7 @@ bool verbose = true;
 bool bifurcate = true;
 double frac = 0.5;
 string inputsFile = "inputs4";
+string fo = "";
 
 // getting argv
 if (argc % 2 && argc>1) {
@@ -45,6 +46,7 @@ if (argc % 2 && argc>1) {
 		else if (id.compare("bifurcate")==0) bifurcate = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("frac")==0) frac = stn<double>(argv[2*j+2]);
 		else if (id.compare("inputs")==0) inputsFile = (string)argv[2*j+2];
+		else if (id.compare("out")==0 || id.compare("fo")==0) fo = (string)argv[2*j+2];
 		else {
 			cerr << "argv id " << id << " not understood" << endl;
 			return 1;
@@ -80,6 +82,10 @@ if (verbose) {
 	cout << "aiming for a tolerance of " << tol << endl;
 }
 
+// checking fo
+if (fo.empty())
+	fo = "data/nr/3dpot/extrema_bifurcate_"+nts((uint)bifurcate)+"_Kappa_"+nts(params.kappa)+".dat";
+
 // initial guesses and ranges
 double max_guess = sqrt(params.kappa/4.0/PI);
 double max_l = max_guess - params.a;
@@ -94,12 +100,24 @@ dV_gsl.function = &dV;
 dV_gsl.params = &params;
 
 /*-------------------------------------------------------------------------------------------------------------------------
-	2 - finding minima and maxima
+	3 - finding minima and maxima
 -------------------------------------------------------------------------------------------------------------------------*/
 
 // objects to hold data
 vector<double> a_vec(0), max_vec(0), min_vec(0), Vmax_vec(0), Vmin_vec(0);
 double Vmin_l = 0.0, Vmin_r = 0.0, test = 1.0;
+
+// results file
+ofstream os;
+os.open(fo.c_str());
+if (os.good()) {
+	os << left << setprecision(16);
+}
+else {
+	cerr << "3dPotentialExtrema error: cannot write to " << fo << endl;
+	os.close();
+	return 1;
+}
 
 if (verbose) {
 	printf("\n");
@@ -107,7 +125,6 @@ if (verbose) {
 }
 
 uint run = 0;
-
 while((test>tol || run<minRuns) && run<Npl) {
 	
 	// stepping parameters
@@ -135,7 +152,8 @@ while((test>tol || run<minRuns) && run<Npl) {
 			p = pr.position(run);
 			params.setFromParameters(p);
 		}
-		max_l = ((max_guess - 3.0*pow(params.a,2))>min_guess? (max_guess - 3.0*pow(params.a,2)): 0.5*((1.0-frac)*max_guess+frac*min_guess) );
+		max_l = ((max_guess - 3.0*pow(params.a,2))>min_guess? (max_guess - 3.0*pow(params.a,2)):\
+						 0.5*((1.0-frac)*max_guess+frac*min_guess) );
 		max_r = max_guess + 3.0*pow(params.a,2);
 		min_l = 0.0;
 		min_r = max_l;
@@ -184,6 +202,9 @@ while((test>tol || run<minRuns) && run<Npl) {
 		min_guess = min_vec[run];
 	}
 	
+	os << setw(25) << params.a << setw(25) << max_vec[run] << setw(25) << min_vec[run] << setw(25) << Vmax_vec[run];
+	os << setw(25) << Vmin_vec[run] << endl;
+	
 	if (verbose)
 		printf("%6i%6.2g%24.16g%24.16g%24.16g%24.16g%24.16g\n",run,params.kappa,params.a,\
 			max_vec[run],min_vec[run],Vmax_vec[run],Vmin_vec[run]);
@@ -191,20 +212,13 @@ while((test>tol || run<minRuns) && run<Npl) {
 	run++;
 }
 
+if (os.good())
+	os.close();
+
 if (verbose)
 	printf("\n");
 
-/*-------------------------------------------------------------------------------------------------------------------------
-	3 - printing results	
--------------------------------------------------------------------------------------------------------------------------*/
-
-string fo = "data/nr/3dpot/extrema_bifurcate_"+nts((uint)bifurcate)+"_Kappa_"+nts(params.kappa)+"dat";
-saveVectorAscii(fo,a_vec);
-saveVectorAsciiAppend(fo,max_vec);
-saveVectorAsciiAppend(fo,min_vec);
-saveVectorAsciiAppend(fo,Vmax_vec);
-saveVectorAsciiAppend(fo,Vmin_vec);
-
+cout << "printed results: " << fo << endl;
 
 return 0;
 }

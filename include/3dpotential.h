@@ -43,4 +43,10 @@ double dV (double y, void * parameters);
 
 double ddV (double y, void * parameters);
 
+double mV (double y, void * parameters);
+
+double mdV (double y, void * parameters);
+
+double mddV (double y, void * parameters);
+
 #endif // __3DPOTENTIAL_H_INCLUDED__
