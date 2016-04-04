@@ -32,6 +32,8 @@ int main(int argc, char** argv) {
 
 // argv options
 bool verbose = true;
+bool bifurcate = true;
+double frac = 0.5;
 string inputsFile = "inputs4";
 
 // getting argv
@@ -40,6 +42,8 @@ if (argc % 2 && argc>1) {
 		string id = argv[2*j+1];
 		if (id[0]=='-') id = id.substr(1);
 		if (id.compare("verbose")==0) verbose = (stn<uint>(argv[2*j+2])!=0);
+		else if (id.compare("bifurcate")==0) bifurcate = (stn<uint>(argv[2*j+2])!=0);
+		else if (id.compare("frac")==0) frac = stn<double>(argv[2*j+2]);
 		else if (id.compare("inputs")==0) inputsFile = (string)argv[2*j+2];
 		else {
 			cerr << "argv id " << id << " not understood" << endl;
@@ -51,6 +55,7 @@ if (argc % 2 && argc>1) {
 // loading inputs
 ParametersRange pr;
 pr.load(inputsFile);
+Parameters p = pr.Min;
 
 if (verbose) {
 	cout << "3dPotentialExtrema:" << endl << endl;
@@ -93,7 +98,7 @@ dV_gsl.params = &params;
 -------------------------------------------------------------------------------------------------------------------------*/
 
 // objects to hold data
-vector<double> max_vec(0), min_vec(0), Vmax_vec(0), Vmin_vec(0);
+vector<double> a_vec(0), max_vec(0), min_vec(0), Vmax_vec(0), Vmin_vec(0);
 double Vmin_l = 0.0, Vmin_r = 0.0, test = 1.0;
 
 if (verbose) {
@@ -106,21 +111,38 @@ uint run = 0;
 while((test>tol || run<minRuns) && run<Npl) {
 	
 	// stepping parameters
-	if (run==0) {
-		params.a = a_min;
+	if (bifurcate) {
+		if (run==0) {
+			params.a = a_min;
+		}
+		else if (run==1) {
+			params.a = a_max;
+		}
+		else if (run>1) {
+			params.a = 0.5*(a_min + a_max);
+		}
+		max_l = max_guess - params.a;
+		max_r = max_guess + params.a;
+		min_guess = params.a;
+		min_l = 0.0;
+		min_r = max_l;
 	}
-	else if (run==1) {
-		params.a = a_max;
-	}
-	else if (run>1) {
-		params.a = 0.5*(a_min + a_max);
+	else {
+		if (run==0) {
+			params.a = a_min;
+		}
+		else {
+			p = pr.position(run);
+			params.setFromParameters(p);
+		}
+		max_l = ((max_guess - 3.0*pow(params.a,2))>min_guess? (max_guess - 3.0*pow(params.a,2)): 0.5*((1.0-frac)*max_guess+frac*min_guess) );
+		max_r = max_guess + 3.0*pow(params.a,2);
+		min_l = 0.0;
+		min_r = max_l;
 	}
 	
-	max_l = max_guess - params.a;
-	max_r = max_guess + params.a;
-	min_guess = params.a;
-	min_l = 0.0;
-	min_r = max_l;	
+	// setting a_vec
+	a_vec.push_back(params.a);	
 	
 	// finding extrema
 	max_vec.push_back(brentRootFinder(&dV_gsl,max_guess,max_l,max_r));
@@ -131,29 +153,35 @@ while((test>tol || run<minRuns) && run<Npl) {
 	Vmin_vec.push_back(V(min_vec[run],&params));
 	
 	// test
-	test = abs(Vmin_vec[run]);
+	test = (bifurcate? abs(Vmin_vec[run]): 1.0);
 	
-	if (run==0) {
-		Vmin_l = Vmin_vec[0];
-	}
-	else if (run==1) {
-		Vmin_r = Vmin_vec[1];
-		// checking to see if change of sign over range of 'a'
-		if (Vmin_l*Vmin_r>0.0) {
-			cerr << "error: Vmin_l*Vmin_r>0.0)" << endl;
-			cerr << "change range of 'a' to search" << endl;
-			break;
-			return 1;
+	if (bifurcate) {
+		if (run==0) {
+			Vmin_l = Vmin_vec[0];
+		}
+		else if (run==1) {
+			Vmin_r = Vmin_vec[1];
+			// checking to see if change of sign over range of 'a'
+			if (Vmin_l*Vmin_r>0.0) {
+				cerr << "error: Vmin_l*Vmin_r>0.0)" << endl;
+				cerr << "change range of 'a' to search" << endl;
+				break;
+				return 1;
+			}
+		}
+		else if (run>1) {
+			// doing bifurcation
+			if (Vmin_vec[run]*Vmin_l<0.0) {
+				a_max = params.a;
+			}
+			else {
+				a_min = params.a;
+			}
 		}
 	}
-	else if (run>1) {
-		// doing bifurcation
-		if (Vmin_vec[run]*Vmin_l<0.0) {
-			a_max = params.a;
-		}
-		else {
-			a_min = params.a;
-		}
+	else {
+		max_guess = max_vec[run];
+		min_guess = min_vec[run];
 	}
 	
 	if (verbose)
@@ -170,8 +198,9 @@ if (verbose)
 	3 - printing results	
 -------------------------------------------------------------------------------------------------------------------------*/
 
-string fo = "data/nr/3dpot/extrema_Kappa_"+nts(params.kappa)+".dat";
-saveVectorAscii(fo,max_vec);
+string fo = "data/nr/3dpot/extrema_bifurcate_"+nts((uint)bifurcate)+"_Kappa_"+nts(params.kappa)+"dat";
+saveVectorAscii(fo,a_vec);
+saveVectorAsciiAppend(fo,max_vec);
 saveVectorAsciiAppend(fo,min_vec);
 saveVectorAsciiAppend(fo,Vmax_vec);
 saveVectorAsciiAppend(fo,Vmin_vec);
