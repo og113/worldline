@@ -1,0 +1,43 @@
+runs:
+	loop.sub: Moab.16424
+		./loop2 -circle 1 -inputs jobinputs/inputs2
+		metropolis runs starting with the circle
+		FAILED, TRYING AGAIN
+		Moab.16496
+		FAILED, TRYING AGAIN
+		Moab.16500
+
+	loop2.sub: Moab.16430
+		./loop2 -inputs jobinputs/inputs3
+		metropolis runs to calculate V1r as a function of K
+		FAILED, TRYING AGAIN
+		Moab.16493
+		FAILED, TRYING AGAIN
+		Moab.16497
+		FAILED, LOTS OF THINGS INFINITE
+
+	loop3.sub: Moab.16431
+		./loop2 -inputs jobinputs/inputs4
+		metropolis runs to calculate V1r as a function of epsilon, 0 to 0.0001
+			ONLY MANAGED FIRST RUN
+			loop_x32.o181608
+
+	loop4.sub: Moab.16432
+		./loop2 -inputs jobinputs/inputs5
+		metropolis runs to calculate V1r as a function of epsilon, 0.0001 to 0.001
+			ONLY MANAGED FIRST RUN
+			loop_x32.o181611
+
+	loop5.sub: Moab.16433
+		./loop2 -inputs jobinputs/inputs6
+		metropolis runs to calculate V1r as a function of epsilon, 0.001 to 0.01
+			ONLY MANAGED FIRST RUN
+			loop_x32.o181613
+
+	loop6.sub: Moab.16440
+		./loop -inputs jobinputs/inputs7 -data s0
+		gaussian runs to calculate W as a function of T, for pole expansion
+		FAILED, TRYING AGAIN
+		Moab.16492
+			SUCCESS
+			loop_x32.o1025634

@@ -1,0 +1,9 @@
+runs:
+	loop.sub: Moab.16666
+	./loop -inputs jobinputs/inputs -data v
+	to find P(V1) with Epsi=0
+	
+
+	loop1.sub: Moab.16667
+	./loop -inputs jobinputs/inputs1 -data v
+	to find P(V1) with Epsi=0.001

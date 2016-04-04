@@ -1,0 +1,27 @@
+runs:
+	loop3.sub: Moab.16502
+	./loop2 -inputs jobinputs/inputs4
+	metropolis s0+v, loop over epsi 0..0.001, in 3 steps
+		FAILED, LOTS OF THINGS INFINITE
+
+	loop4.sub: Moab.16503
+	./loop -inputs jobinputs/inputs5
+	gaussian s0+v, calculating V1r, loop over epsi 0..0.01, in 100 steps
+		SUCCESS, BUT FORGOT TO PRINT EPSI IN DATA
+		loop_x32_V1r_epsi.o181632
+		V1r went from 0.025 to 0.02 as Epsi went from 0 to 0.01
+
+	loop5.sub: Moab.16504
+	./loop -inputs jobinputs/inputs6
+	gaussian s0+v, calculating V1r, loop over K 4..12, in 5 steps
+		SUCCESS
+		loop_x32_V1r_K.o181633
+	
+	loop5.sub: Moab.16505
+	./loop -inputs jobinputs/inputs6
+	gaussian s0+v, calculating V1r, loop over K 4..14, in 6 steps
+		SUCCESS
+		loop_x32_V1r_K.o181634
+
+
+	FOUND ERROR IN METROPOLIS RUNS, WAS UPDATING WITH DV1, NOT DV1R
