@@ -33,8 +33,9 @@ if (exists("Title")) {
 pi=3.1415926535897932
 g=1.0
 B=1.0
-maximum(g,B)=sqrt(g/4.0/pi/B) # 1.771395468764214?
-minimum=0.189673005548958 # for a=0.05
+#maximum(g,B)=sqrt(g/4.0/pi/B) # 1.771395468764214?
+maximum=0.27531203739145
+minimum=0.08483873868186215
 
 set key below
 set autoscale
@@ -50,10 +51,13 @@ set xrange [-1:1]
 colours="blue red green orange cyan pink yellow black"
 
 if (exists("max")) \
-set arrow from (-maximum(g,B)/2.0),0 to (maximum(g,B)/2.0),0 nohead;
+set arrow from (-maximum/2.0),0 to (maximum/2.0),0 nohead; \
+set label 1 at  0,0.1 'r_{max}(a=0.05)' center front;
 
 if (exists("min")) \
-set arrow from (-minimum/2.0),1 to (minimum/2.0),1 nohead;
+set arrow from (-minimum/2.0),1 to (minimum/2.0),1 nohead; \
+set arrow from 0.1,1.4 to 0,1; \
+set label 2 at  0.1,1.4 'r_{min}(a=0.05)' left  front;
 
 if (exists("inFile")) {
 	plot inFile using 3:4 with lines ls 1 title inFile noenhanced;
