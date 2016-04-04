@@ -4,14 +4,16 @@
 gpFile='gp/projection.gp'
 single=false
 oflag=false
+mflag=false
 
 # checking if outFile required and getting filename if so
-options=':o:'
+options=':o:m'
 OPTIND=1
 while getopts $options option
 do
 	case $option in
 		o  ) o=$OPTARG; oflag=true;;
+		m  ) mflag=true;;
 		\? ) echo "Unknown option argument -$OPTARG" >&2; exit 1;;
 		:  )
 	esac
@@ -57,17 +59,29 @@ m=${mTemp::-1}
 # plotting
 if $single
 then
+	gargs="inFile='$m'"
 	if $oflag
 	then
-		gnuplot -e "inFile='$m'; outFile='$o'" $gpFile;
-	else
-		gnuplot -e "inFile='$m'" $gpFile;
+		gargs+="; outFile='$o'"
 	fi
+	if $mflag
+	then
+		gargs+="; min='1'; max='1'"
+	fi
+	
+	gnuplot -e "$gargs" $gpFile;
+
 else
+	gargs="inFiles='$m'"
 	if $oflag
 	then
-		gnuplot -e "inFiles='$m'; outFile='$o'" $gpFile;
-	else
-		gnuplot -e "inFiles='$m'" $gpFile;
+		gargs+="; outFile='$o'"
 	fi
+	if $mflag
+	then
+		gargs+="; min='1'; max='1'"
+	fi
+	
+	gnuplot -e "$gargs" $gpFile;
+	
 fi

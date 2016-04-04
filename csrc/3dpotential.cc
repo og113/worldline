@@ -56,3 +56,15 @@ double ddV (double r, void * parameters) {
 			 + pow(r,2),2.5))*kappa)/(4.0*PI);
 }
 
+double mV (double y, void * parameters) {
+	return -V(y, parameters);
+}
+
+double mdV (double y, void * parameters) {
+	return -dV(y, parameters);
+}
+
+double mddV (double y, void * parameters) {
+	return -ddV(y, parameters);
+}
+

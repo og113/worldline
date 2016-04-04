@@ -123,7 +123,7 @@ double brentMinimum (gsl_function * xF, const double & minimumGuess, const doubl
 	gsl_min_fminimizer_free (s);
 	
 	return m;
-	}
+}
 
 //function to give the three roots of FDF given lower and upper limits on them and a number of loops to try
 vector <double> rootsFn (gsl_function_fdf * xFDF, const double & lowLimit, const double & highLimit,\
