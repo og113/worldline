@@ -202,8 +202,8 @@ while((test>tol || run<minRuns) && run<Npl) {
 		min_guess = min_vec[run];
 	}
 	
-	os << setw(25) << params.a << setw(25) << max_vec[run] << setw(25) << min_vec[run] << setw(25) << Vmax_vec[run];
-	os << setw(25) << Vmin_vec[run] << endl;
+	os << setw(25) << params.kappa << setw(25) << params.a << setw(25) << max_vec[run] << setw(25) << min_vec[run];
+	os << setw(25) << Vmax_vec[run] << setw(25) << Vmin_vec[run] << endl;
 	
 	if (verbose)
 		printf("%6i%6.2g%24.16g%24.16g%24.16g%24.16g%24.16g\n",run,params.kappa,params.a,\

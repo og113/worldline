@@ -16,3 +16,4 @@ echo "file in : " $1
 echo "file out: " $outfile
 sed -ne 's/^\([[:space:]]*\)\([0-9\.]\+\)/\2/gp' $1>$outfile
 sed -ni 's/\([0-9\.]\+\)\([[:space:]]\+\)/\1,/gp' $outfile
+sed -ni 's/\,$//gp' $outfile
