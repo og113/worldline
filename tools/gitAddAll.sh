@@ -31,4 +31,5 @@ git add gp/*.gp
 git add mout/*.txt
 
 # adding database outputs
-#git add db/nr/plots/
+git add db/nr/plots/*.csv
+git add db/nr/plots/*/*.csv
