@@ -4,16 +4,18 @@
 gpFile='gp/simple.gp'
 single=true
 oflag=false
+lflag=false
 tflag=false
 
 # checking if outFile required and getting filename if so
-options=':o:t:'
+options=':o:t:l'
 OPTIND=1
 while getopts $options option
 do
 	case $option in
 		o  ) o=$OPTARG; oflag=true;;
-		o  ) t=$OPTARG; tflag=true;;
+		l  ) lflag=true;;
+		t  ) t=$OPTARG; tflag=true;;
 		\? ) echo "Unknown option argument -$OPTARG" >&2; exit 1;;
 		:  )
 	esac
@@ -52,28 +54,21 @@ fi
 if $single
 then
 	gargs="inFile='$m'"
-	if $oflag
-	then
-		gargs+="; outFile='$o'"
-	fi
-	if $tflag
-	then
-		gargs+="; Title='$t'"
-	fi
-	
-	gnuplot -e "$gargs" $gpFile;
-
 else
 	gargs="inFiles='$m'"
-	if $oflag
-	then
-		gargs+="; outFile='$o'"
-	fi
-	if $tflag
-	then
-		gargs+="; Title='$t'"
-	fi
-	
-	gnuplot -e "$gargs" $gpFile;
-	
 fi
+if $oflag
+then
+	gargs+="; outFile='$o'"
+fi
+if $tflag
+then
+	gargs+="; Title='$t'"
+fi
+if $lflag
+then
+	gargs+="; log='1'"
+fi
+
+gnuplot -e "$gargs" $gpFile;
+
