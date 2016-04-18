@@ -43,6 +43,10 @@ struct PotentialOptions {
 	enum Option { original, link, exponential, dimreg};
 };
 
+struct KineticOptions {
+	enum Option { saddle, s0, len};
+};
+
 uint NumberPotentialOptions = 4;
 
 int main(int argc, char** argv) {
@@ -63,6 +67,7 @@ bool mu_a = false;
 bool alltests = false; // doing alltests
 string printOpts = "";
 string potOpts = "";
+string kinOpts = "";
 string inputsFile = "inputs4";
 
 // getting argv
@@ -82,6 +87,7 @@ if (argc % 2 && argc>1) {
 		else if (id.compare("inputs")==0) inputsFile = (string)argv[2*j+2];
 		else if (id.compare("print")==0) printOpts = (string)argv[2*j+2];
 		else if (id.compare("pot")==0 || id.compare("potential")==0) potOpts = (string)argv[2*j+2];
+		else if (id.compare("kin")==0 || id.compare("kinetic")==0) kinOpts = (string)argv[2*j+2];
 		else if (id.compare("alltests")==0) alltests = (stn<uint>(argv[2*j+2])!=0);
 		else {
 			cerr << "argv id " << id << " not understood" << endl;
@@ -133,6 +139,21 @@ if (!potOpts.empty()) {
 if (poto!=PotentialOptions::original || gaussian)
 	potExtras.second = nts((int)poto+(int)gaussian*NumberPotentialOptions);
 	
+KineticOptions::Option kino = KineticOptions::saddle;
+StringPair kinExtras("kin",nts((int)kino));
+if (!kinOpts.empty()) {
+	if (kinOpts.compare("saddle")==0)
+		kino = KineticOptions::saddle;
+	else if (kinOpts.compare("s0")==0)
+		kino = KineticOptions::s0;
+	else if (kinOpts.compare("len")==0 || potOpts.compare("length")==0)
+		kino = KineticOptions::len;
+	else {
+		cerr << "potential options not understood: " << kinOpts << endl;
+		return 1;
+	}
+}
+	
 //dimension
 #define dim 4
 
@@ -176,6 +197,8 @@ for (uint pl=0; pl<Npl; pl++) {
 			(stepFile.Extras).push_back(StringPair("weak","1"));
 		if (poto!=PotentialOptions::original || gaussian)
 			(stepFile.Extras).push_back(potExtras);
+		if (kino!=KineticOptions::saddle)
+			(stepFile.Extras).push_back(kinExtras);
 	}
 		
 	
@@ -251,6 +274,12 @@ for (uint pl=0; pl<Npl; pl++) {
 				(loadFile.Extras).push_back(StringPair("weak","1"));
 			if (poto!=PotentialOptions::original || gaussian)
 				(loadFile.Extras).push_back(potExtras);
+			if (kino!=KineticOptions::saddle)
+				(stepFile.Extras).push_back(kinExtras);
+			if (!loadFile.exists() && (poto!=PotentialOptions::original || gaussian)) {
+				loadFile = filenameLoopNR<dim>(p);
+				(loadFile.Extras).push_back(potExtras);
+			}
 			if (!loadFile.exists())
 				loadFile = filenameLoopNR<dim>(p);
 			if (!loadFile.exists()) {
@@ -327,13 +356,16 @@ for (uint pl=0; pl<Npl; pl++) {
 		// scalar coefficients
 		uint j, k, mu, nu;
 		number mgb = -1.0; // not -p.G*p.B as scaled loops
-		number sqrt4s0 = 2.0*sqrt(S0(xLoop));
+		number kinetic = 0.0;
 		number g, dm, cusp_scale;
 		number dim_reg_scale = 0.0, d_dim_reg = 0.0;
 		number repulsion_scale, repulsion = 0.0;
 		number ic_scale = 1.0;
 		number cc_scale = 1.0;
 		number kg_scale = 1.0;
+		number s0 = S0(xLoop);
+		number sqrt4s0 = 2.0*sqrt(s0);
+		number s0_scale = (abs(p.T)>MIN_NUMBER? 1.0/p.T: 1.0);
 		if (poto==PotentialOptions::original) {
 			g = pow(p.G,3)*p.B/8.0/PI/PI;
 			dm = -g*PI/p.Epsi;
@@ -393,7 +425,12 @@ for (uint pl=0; pl<Npl; pl++) {
 			for (mu=0; mu<dim; mu++) {
 			
 				// free particle
-				mdsqrtS0_nr(j,mu,xLoop,sqrt4s0,1.0,mds);
+				if (kino==KineticOptions::saddle)
+					mdsqrtS0_nr(j,mu,xLoop,sqrt4s0,1.0,mds);
+				else if (kino==KineticOptions::s0)
+					mdS0_nr(j,mu,xLoop,s0_scale,mds);
+				else if (kino==KineticOptions::len)
+					mdL_nr(j,mu,xLoop,1.0,mds);
 				
 				// external field
 				mdI_nr(j,mu,xLoop,mgb,mds);
@@ -443,7 +480,12 @@ for (uint pl=0; pl<Npl; pl++) {
 					for (nu=0; nu<dim; nu++) {
 					
 						// free particle
-						ddsqrtS0_nr(j,mu,k,nu,xLoop,sqrt4s0,1.0,dds);
+						if (kino==KineticOptions::saddle)
+							ddsqrtS0_nr(j,mu,k,nu,xLoop,sqrt4s0,1.0,dds);
+						else if (kino==KineticOptions::s0)
+							ddS0_nr(j,mu,k,nu,xLoop,s0_scale,dds);
+						else if (kino==KineticOptions::len)
+							ddL_nr(j,mu,k,nu,xLoop,1.0,dds);
 						
 						// external field
 						ddI_nr(j,mu,k,nu,xLoop,mgb,dds);
@@ -530,7 +572,13 @@ for (uint pl=0; pl<Npl; pl++) {
 
 			vr += (!(P^=P0)? cusp_scale*fgamma : 0.0);
 		}
-		s = sqrt4s0 + i0;
+		if (kino==KineticOptions::saddle)
+			kinetic = sqrt4s0;
+		else if (kino==KineticOptions::s0)
+			kinetic = s0_scale*s0;
+		else if (kino==KineticOptions::len)
+			kinetic = len;
+		s = kinetic + i0;
 		if (!weak) s += vr;
 		if (!(P^=P0))
 			s -= Dot(xLoop[N/2-1]-xLoop[0],P);
@@ -660,7 +708,12 @@ for (uint pl=0; pl<Npl; pl++) {
 			cerr << "dds.minCoeff():   " << dds.minCoeff()  << endl;
 			cerr << "dds.maxCoeff():   " << dds.maxCoeff()  << endl;
 			cerr << "dds.trace():      " << dds.trace()     << endl;
-			cerr << "dds.norm():       " << dds.norm() << endl;
+			cerr << "dds.norm():       " << dds.norm()      << endl;
+			cerr << endl << "action info:" << endl;
+			cerr << "s:                " << s               << endl;
+			cerr << "kinetic:          " << kinetic         << endl;
+			cerr << "i0:               " << i0              << endl;
+			cerr << "vr:               " << vr      << endl;
 			return 1;
 		}
 
@@ -722,6 +775,11 @@ for (uint pl=0; pl<Npl; pl++) {
 			cerr << "dds.maxCoeff():   " << dds.maxCoeff()  << endl;
 			cerr << "dds.trace():      " << dds.trace()     << endl;
 			cerr << "dds.norm():       " << dds.norm() << endl;
+			cerr << endl << "action info:" << endl;
+			cerr << "s:                " << s               << endl;
+			cerr << "kinetic:          " << kinetic         << endl;
+			cerr << "i0:               " << i0              << endl;
+			cerr << "vr:               " << vr      << endl;
 			break;
 		}
 	
@@ -791,12 +849,13 @@ for (uint pl=0; pl<Npl; pl++) {
 	if (checkDelta.good() && checkSol.good() && checkSolMax.good()) {
 	
 		// printing results to file	
-		string resFile = "results/nr/nr.csv";
-		#define numRes 25
+		string resFile = "results/nr/nr2.csv";
+		#define numRes 26
 		vector<string> results(numRes);
 		string results_array[numRes] = {timenumber,\
 									nts(pl),\
 									nts((int)poto+(int)gaussian*NumberPotentialOptions),\
+									nts((int)kino),\
 									nts(p.K),\
 									nts(pow(p.G,3)*p.B,16),\
 									nts(p.Ng),\
@@ -829,6 +888,8 @@ for (uint pl=0; pl<Npl; pl++) {
 			(loopRes.Extras).push_back(StringPair("weak","1"));
 		if (poto!=PotentialOptions::original || gaussian)
 			(loopRes.Extras).push_back(potExtras);
+		if (kino!=KineticOptions::saddle)
+			(loopRes.Extras).push_back(kinExtras);
 		saveVectorBinary(loopRes,x);
 		printf("%12s%50s\n","x:",((string)loopRes).c_str());
 		

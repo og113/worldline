@@ -59,7 +59,7 @@ void Sm (const uint& j, const Loop<Dim>& l, const number& f, number& result) {
 template <uint Dim>
 void S0 (const uint& j, const Loop<Dim>& l, const number& f, number& result) {
 	uint pj = (j==(l.size()-1)? 0: j+1);
-	result += f*DistanceSquared(l[pj],l[j])/4.0;
+	result += f*DistanceSquared(l[pj],l[j])*(number)l.size()/4.0;
 }
 
 // I0
