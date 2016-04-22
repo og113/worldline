@@ -269,7 +269,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		if (lemon) {
 			loadFile = "data/lemon/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_R_"+nts(R)+"_E_"+nts(E)+"_rank_0.dat";
 			if (!loadFile.exists())
-					loadFile = "data/circle/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_R_"+nts(R)+"_rank_0.dat";
+				loadFile = "data/circle/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_R_"+nts(R)+"_rank_0.dat";
 		}
 		else {
 			loadFile = filenameLoopNR<dim>(p);
@@ -683,47 +683,49 @@ for (uint pl=0; pl<Npl; pl++) {
 /*----------------------------------------------------------------------------------------------------------------------------
 	8 - solve for delta
 ----------------------------------------------------------------------------------------------------------------------------*/	
-				
+		
 		// initializing delta
 		vec delta(NT);
+		if (!pass) {
+				
+			// solving for delta = DDS^{-1}*mdS
+			delta = dds.partialPivLu().solve(mds);	
 		
-		// solving for delta = DDS^{-1}*mdS
-		delta = dds.partialPivLu().solve(mds);	
-		
-		//independent check on whether calculation worked		
-		number invError = (dds*delta - mds).norm();
-		checkInv.add(invError);
-		checkInv.checkMessage();
-		if (!checkInv.good()) {
-			number x_end = 0.0;
-			for (j=0; j<dim; j++)
-				x_end += pow(x[N*dim+j],2);
-			x_end = sqrt(x_end);
-			cerr << endl << "x.norm()         " << x.norm() << endl;
-			cerr << "x_end.norm()     " << x_end << endl;
-			cerr << "mds.norm()       " << mds.norm() << endl;
-			cerr << "mds.maxCoeff()   " << mds.maxCoeff() << endl;
-			cerr << "mds.minCoeff()   " << mds.minCoeff() << endl;
-			cerr << "delta.norm()     " << delta.norm() << endl;
-			cerr << endl << "dds info:" << endl;
-			cerr << "dds.determinant():" << dds.determinant() << endl;
-			cerr << "dds.sum():        " << dds.sum()       << endl;
-			cerr << "dds.prod():       " << dds.prod()      << endl;
-			cerr << "dds.mean():       " << dds.mean()      << endl;
-			cerr << "dds.minCoeff():   " << dds.minCoeff()  << endl;
-			cerr << "dds.maxCoeff():   " << dds.maxCoeff()  << endl;
-			cerr << "dds.trace():      " << dds.trace()     << endl;
-			cerr << "dds.norm():       " << dds.norm()      << endl;
-			cerr << endl << "action info:" << endl;
-			cerr << "s:                " << s               << endl;
-			cerr << "kinetic:          " << kinetic         << endl;
-			cerr << "i0:               " << i0              << endl;
-			cerr << "vr:               " << vr      << endl;
-			return 1;
-		}
+			//independent check on whether calculation worked		
+			number invError = (dds*delta - mds).norm();
+			checkInv.add(invError);
+			checkInv.checkMessage();
+			if (!checkInv.good()) {
+				number x_end = 0.0;
+				for (j=0; j<dim; j++)
+					x_end += pow(x[N*dim+j],2);
+				x_end = sqrt(x_end);
+				cerr << endl << "x.norm()         " << x.norm() << endl;
+				cerr << "x_end.norm()     " << x_end << endl;
+				cerr << "mds.norm()       " << mds.norm() << endl;
+				cerr << "mds.maxCoeff()   " << mds.maxCoeff() << endl;
+				cerr << "mds.minCoeff()   " << mds.minCoeff() << endl;
+				cerr << "delta.norm()     " << delta.norm() << endl;
+				cerr << endl << "dds info:" << endl;
+				cerr << "dds.determinant():" << dds.determinant() << endl;
+				cerr << "dds.sum():        " << dds.sum()       << endl;
+				cerr << "dds.prod():       " << dds.prod()      << endl;
+				cerr << "dds.mean():       " << dds.mean()      << endl;
+				cerr << "dds.minCoeff():   " << dds.minCoeff()  << endl;
+				cerr << "dds.maxCoeff():   " << dds.maxCoeff()  << endl;
+				cerr << "dds.trace():      " << dds.trace()     << endl;
+				cerr << "dds.norm():       " << dds.norm()      << endl;
+				cerr << endl << "action info:" << endl;
+				cerr << "s:                " << s               << endl;
+				cerr << "kinetic:          " << kinetic         << endl;
+				cerr << "i0:               " << i0              << endl;
+				cerr << "vr:               " << vr      << endl;
+				return 1;
+			}
 
-		//assigning values to x
-		x += delta;
+			//assigning values to x
+			x += delta;
+		}
 	
 /*----------------------------------------------------------------------------------------------------------------------------
 	9 - printing early 2
@@ -760,7 +762,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		
 		// checking delta
 		checkDelta.checkMessage();
-		if (!checkDelta.good()) {
+		if (!checkDelta.good() && !pass) {
 			number x_end = 0.0;
 			for (j=0; j<dim; j++)
 				x_end += pow(x[N*dim+j],2);
