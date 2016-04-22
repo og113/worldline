@@ -60,6 +60,7 @@ bool curvature = false;
 bool old = true;
 bool gaussian = false;
 bool mu_a = false;
+bool pass = false;
 bool alltests = false; // doing alltests
 string printOpts = "";
 string potOpts = "";
@@ -79,6 +80,7 @@ if (argc % 2 && argc>1) {
 		else if (id.compare("old")==0) old = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("gaussian")==0 || id.compare("repulsion")==0) gaussian = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("mu_a")==0) mu_a = (stn<uint>(argv[2*j+2])!=0);
+		else if (id.compare("pass")==0) pass = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("inputs")==0) inputsFile = (string)argv[2*j+2];
 		else if (id.compare("print")==0) printOpts = (string)argv[2*j+2];
 		else if (id.compare("pot")==0 || id.compare("potential")==0) potOpts = (string)argv[2*j+2];
@@ -240,7 +242,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	Loop<dim> xLoop(p.K,0);
 	
 	// x file
-	if (pl==0 || !step) {
+	if (pl==0 || !step || pass) {
 		if (lemon)
 			loadFile = "data/lemon/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_R_"+nts(R)+"_E_"+nts(E)+"_rank_0.dat";
 			if (!loadFile.exists())
@@ -304,8 +306,10 @@ for (uint pl=0; pl<Npl; pl++) {
 	4 - beginning newton-raphson loop
 ----------------------------------------------------------------------------------------------------------------------------*/
 
-	while ((!checkSol.good() || !checkSolMax.good() || runsCount<minRuns) && runsCount<maxRuns)  {
+	bool passThrough = false;
+	while ((!checkSol.good() || !checkSolMax.good() || runsCount<minRuns) && runsCount<maxRuns && !passThrough)  {
 		runsCount++;
+		passThrough = pass;
 		
 		// initializing to zero
 		mds = Eigen::VectorXd::Zero(NT);
