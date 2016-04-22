@@ -855,13 +855,13 @@ for (uint pl=0; pl<Npl; pl++) {
 	if ((checkDelta.good() && checkSol.good() && checkSolMax.good()) || pass) {
 		// printing results to file	
 		
-		string resFile = (pass? "results/nr/nr_pass.csv":"results/nr/nr2.csv");
-		#define numRes 26
+		string resFile = (pass? "results/nr/nr_pass.csv":"results/nr/nr.csv");
+		#define numRes 25
 		vector<string> results(numRes);
 		string results_array[numRes] = {timenumber,\
 									nts(pl),\
 									nts((int)poto+(int)gaussian*NumberPotentialOptions),\
-									nts((int)kino),\
+/*									nts((int)kino),\*/
 									nts(p.K),\
 									nts(pow(p.G,3)*p.B,16),\
 									nts(p.Ng),\
