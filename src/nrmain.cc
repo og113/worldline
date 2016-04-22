@@ -266,10 +266,11 @@ for (uint pl=0; pl<Npl; pl++) {
 	
 	// x file
 	if (pl==0 || !step || pass) {
-		if (lemon)
+		if (lemon) {
 			loadFile = "data/lemon/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_R_"+nts(R)+"_E_"+nts(E)+"_rank_0.dat";
 			if (!loadFile.exists())
 					loadFile = "data/circle/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_R_"+nts(R)+"_rank_0.dat";
+		}
 		else {
 			loadFile = filenameLoopNR<dim>(p);
 			if (weak)
