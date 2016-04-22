@@ -849,11 +849,10 @@ for (uint pl=0; pl<Npl; pl++) {
 		runsCount,realtime,p.K,p.G,p.B,p.Ng,p.Epsi,p.Mu,E,len,i0,vr,s);
 	printf("\n");
 	
-	
-	if (checkDelta.good() && checkSol.good() && checkSolMax.good()) {
-	
+	if ((checkDelta.good() && checkSol.good() && checkSolMax.good()) || pass) {
 		// printing results to file	
-		string resFile = "results/nr/nr2.csv";
+		
+		string resFile = (pass? "results/nr/nr_pass.csv":"results/nr/nr2.csv");
 		#define numRes 26
 		vector<string> results(numRes);
 		string results_array[numRes] = {timenumber,\
@@ -885,7 +884,9 @@ for (uint pl=0; pl<Npl; pl++) {
 		results.assign(results_array,results_array+numRes);							
 		saveVectorCsvAppend(resFile,results);
 		printf("%12s%24s\n","results:",resFile.c_str());
-		
+	}	
+	
+	if (checkDelta.good() && checkSol.good() && checkSolMax.good()) {		
 		// printing loop to file
 		Filename loopRes = filenameLoopNR<dim>(p);
 		if (weak)
@@ -896,8 +897,7 @@ for (uint pl=0; pl<Npl; pl++) {
 			(loopRes.Extras).push_back(kinExtras);
 		saveVectorBinary(loopRes,x);
 		printf("%12s%50s\n","x:",((string)loopRes).c_str());
-		
-	}	
+	}
 
 	// printing extras to ascii files
 	if (po!=PrintOptions::none) {

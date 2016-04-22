@@ -37,3 +37,9 @@ counting occurances of ',' on first line of file
 head -n 1 results/nr/nrmain_cosmos_8.csv | grep -o "," | wc -l
 
 to append contents of db/nr/delta.csv to the end of db/nr/nr.csv, type "cat db/nr/delta.csv >> db/nr/nr.csv"
+
+to change the 0 in "inputs0" to the correct number in each of the files "subs/nrmain1.sub", etc
+for i in {1..9}; do sed -i "s/inputs0/inputs$i/g" "subs/nrmain$i.sub"; done;
+
+to send of subs
+for i in {0..9}; do msub "subs/nrmain$i.sub"; done;
