@@ -34,6 +34,7 @@ int main(int argc, char** argv) {
 bool verbose = true;
 bool bifurcate = true;
 double frac = 0.5;
+uint pot = 4;
 string inputsFile = "inputs4";
 string fo = "";
 
@@ -45,6 +46,7 @@ if (argc % 2 && argc>1) {
 		if (id.compare("verbose")==0) verbose = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("bifurcate")==0) bifurcate = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("frac")==0) frac = stn<double>(argv[2*j+2]);
+		else if (id.compare("pot")==0) pot = stn<uint>(argv[2*j+2]);
 		else if (id.compare("inputs")==0) inputsFile = (string)argv[2*j+2];
 		else if (id.compare("out")==0 || id.compare("fo")==0) fo = (string)argv[2*j+2];
 		else {
@@ -84,7 +86,7 @@ if (verbose) {
 
 // checking fo
 if (fo.empty())
-	fo = "data/nr/3dpot/extrema_bifurcate_"+nts((uint)bifurcate)+"_Kappa_"+nts(params.kappa)+".dat";
+	fo = "data/nr/3dpot/extrema_bifurcate_"+nts((uint)bifurcate)+"_pot_"+nts(pot)+"_Kappa_"+nts(params.kappa)+".dat";
 
 // initial guesses and ranges
 double max_guess = sqrt(params.kappa/4.0/PI);
@@ -95,9 +97,23 @@ double min_l = 0.0;
 double min_r = max_l;
 
 // asigning functions
+gsl_function V_gsl;
+V_gsl.params = &params;
 gsl_function dV_gsl;
-dV_gsl.function = &dV;
 dV_gsl.params = &params;
+
+if (pot==4) {
+	V_gsl.function = &V4;
+	dV_gsl.function = &dV4;
+}
+else if (pot==0) {
+	V_gsl.function = &V0;
+	dV_gsl.function = &dV0;
+}
+else {
+	cerr << "3dPotentialExtrema Error: pot=" << pot << endl;
+	return 1;
+}
 
 /*-------------------------------------------------------------------------------------------------------------------------
 	3 - finding minima and maxima
@@ -121,7 +137,7 @@ else {
 
 if (verbose) {
 	printf("\n");
-	printf("%6s%6s%24s%24s%24s%24s%24s\n","run","kappa","a","max","min","Vmax","Vmin");
+	printf("%6s%6s%6s%22s%22s%22s%22s%22s\n","run","pot","kappa","a","max","min","Vmax","Vmin");
 }
 
 uint run = 0;
@@ -167,8 +183,8 @@ while((test>tol || run<minRuns) && run<Npl) {
 	min_vec.push_back(brentRootFinder(&dV_gsl,min_guess,min_l,min_r));
 
 	// finding value of V at min and max
-	Vmax_vec.push_back(V(max_vec[run],&params));
-	Vmin_vec.push_back(V(min_vec[run],&params));
+	Vmax_vec.push_back(V_gsl.function(max_vec[run],&params));
+	Vmin_vec.push_back(V_gsl.function(min_vec[run],&params));
 	
 	// test
 	test = (bifurcate? abs(Vmin_vec[run]): 1.0);
@@ -202,11 +218,12 @@ while((test>tol || run<minRuns) && run<Npl) {
 		min_guess = min_vec[run];
 	}
 	
-	os << setw(25) << params.kappa << setw(25) << params.a << setw(25) << max_vec[run] << setw(25) << min_vec[run];
+	os << setw(25) << pot << setw(25) << params.kappa << setw(25) << params.a;
+	os << setw(25) << max_vec[run] << setw(25) << min_vec[run];
 	os << setw(25) << Vmax_vec[run] << setw(25) << Vmin_vec[run] << endl;
 	
 	if (verbose)
-		printf("%6i%6.2g%24.16g%24.16g%24.16g%24.16g%24.16g\n",run,params.kappa,params.a,\
+		printf("%6i%6i%6.2g%22.16g%22.16g%22.16g%22.16g%22.16g\n",run,pot,params.kappa,params.a,\
 			max_vec[run],min_vec[run],Vmax_vec[run],Vmin_vec[run]);
 		
 	run++;
