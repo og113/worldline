@@ -19,6 +19,6 @@ op='db/nr/delta_pass.csv'
 
 comm -23 <(sort $ip) <(sort $mp) > $op
 
-ip=${i##*/}
+ip=${ip##*/}
 
 sed -i "s/$/,$ip/" $op
