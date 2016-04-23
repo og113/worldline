@@ -12,3 +12,13 @@ i=${i##*/}
 sed -i "s/$/,$i/" $o
 
 # to append db/nr/delta.csv to the end of db/nr/nr.csv, type "cat db/nr/delta.csv >> db/nr/nr.csv"
+
+ip='results/nr/nr_pass.csv'
+mp='db/nr/nr_pass.csv'
+op='db/nr/delta_pass.csv'
+
+comm -23 <(sort $ip) <(sort $mp) > $op
+
+ip=${i##*/}
+
+sed -i "s/$/,$ip/" $op

@@ -63,7 +63,7 @@ fdata: $(FDATA)
 # generic rules
 
 $(DDIR)/%.dat: $(DDIR)/%.csv
-	sed -n 's/"\([0-9.]*\)"/\1/pg' $< >$@
+	sed -n 's/"\([0-9.-]*\)"/\1/pg' $< >$@
 	sed -i 's/,/ /g' $@
 
 $(PDIR)/%.png: $(DDIR)/%.dat $(PLOTTER)
@@ -73,7 +73,7 @@ $(PDIR)/%.svg: $(DDIR)/%.dat $(PLOTTER)
 	$(EXE) -o $@ $<
 	
 $(DDIR)/*/%.dat: $(DDIR)/*/%.csv
-	sed -n 's/"\([0-9.]*\)"/\1/pg' $< >$@
+	sed -n 's/"\([0-9.-]*\)"/\1/pg' $< >$@
 	sed -i 's/,/ /g' $@
 	
 $(PDIR)/%.png: $(DDIR)/%/*.dat $(PLOTTER)
