@@ -1,0 +1,464 @@
+using inputs file nrinputs/inputs7
+timenumber: 160422141922
+looping over 51 steps
+loading loops from:
+data/lemon/loops/dim_4/K_11/loop_R_1_E_0_rank_0.dat
+  pl run        len         i0          s        sol       solM      delta         Sm  dx*kg_max     ic_max     cc_max       dx/a
+   0   1      6.283     -3.142      2.896   0.002003     0.0011          0  4.706e-06   0.003068  1.412e-05          0     0.1023
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       1    89.8      11       1       1       0    0.03     0.1           0        6.2832       -3.1416      -0.24578        2.8958
+
+    results:  results/nr/nr_pass.csv
+loading loops from:
+data/lemon/loops/dim_4/K_11/loop_R_1_E_0.04_rank_0.dat
+  pl run        len         i0          s        sol       solM      delta         Sm  dx*kg_max     ic_max     cc_max       dx/a
+   1   1      6.203     -3.062      2.816   0.008254     0.2893          0  5.037e-06    0.04302  0.0009257   0.001056      0.101
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       1    89.8      11       1       1       0    0.03     0.1        0.04        6.2032       -3.0616      -0.24581        2.8158
+
+    results:  results/nr/nr_pass.csv
+loading loops from:
+data/lemon/loops/dim_4/K_11/loop_R_1_E_0.08_rank_0.dat
+  pl run        len         i0          s        sol       solM      delta         Sm  dx*kg_max     ic_max     cc_max       dx/a
+   2   1      6.123     -2.982      2.736    0.01603     0.5667          0   6.15e-06    0.08292   0.003443   0.003691    0.09966
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       1    89.7      11       1       1       0    0.03     0.1        0.08        6.1231       -2.9816      -0.24601        2.7356
+
+    results:  results/nr/nr_pass.csv
+loading loops from:
+data/lemon/loops/dim_4/K_11/loop_R_1_E_0.12_rank_0.dat
+  pl run        len         i0          s        sol       solM      delta         Sm  dx*kg_max     ic_max     cc_max       dx/a
+   3   1      6.043     -2.902      2.655    0.02433     0.8522          0  8.045e-06     0.1227   0.007558    0.00792    0.09836
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       1    89.7      11       1       1       0    0.03     0.1        0.12         6.043       -2.9017      -0.24639        2.6554
+
+    results:  results/nr/nr_pass.csv
+loading loops from:
+data/lemon/loops/dim_4/K_11/loop_R_1_E_0.16_rank_0.dat
+  pl run        len         i0          s        sol       solM      delta         Sm  dx*kg_max     ic_max     cc_max       dx/a
+   4   1      5.963     -2.822      2.575    0.03311      1.147          0  1.072e-05     0.1624    0.01327    0.01374    0.09705
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       1    89.6      11       1       1       0    0.03     0.1        0.16        5.9628       -2.8219      -0.24693         2.575
+
+    results:  results/nr/nr_pass.csv
+loading loops from:
+data/lemon/loops/dim_4/K_11/loop_R_1_E_0.2_rank_0.dat
+  pl run        len         i0          s        sol       solM      delta         Sm  dx*kg_max     ic_max     cc_max       dx/a
+   5   1      5.883     -2.742      2.495    0.04241      1.451          0  1.418e-05     0.2018    0.02058    0.02116    0.09574
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       1    89.6      11       1       1       0    0.03     0.1         0.2        5.8825       -2.7423      -0.24764        2.4947
+
+    results:  results/nr/nr_pass.csv
+loading loops from:
+data/lemon/loops/dim_4/K_11/loop_R_1_E_0.24_rank_0.dat
+  pl run        len         i0          s        sol       solM      delta         Sm  dx*kg_max     ic_max     cc_max       dx/a
+   6   1      5.802     -2.663      2.414    0.05226      1.767    0.02384  1.842e-05      0.241    0.02948    0.03016    0.09443
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       1    89.5      11       1       1       0    0.03     0.1        0.24         5.802       -2.6627      -0.24853        2.4143
+
+    results:  results/nr/nr_pass.csv
+loading loops from:
+data/lemon/loops/dim_4/K_11/loop_R_1_E_0.28_rank_0.dat
+  pl run        len         i0          s        sol       solM      delta         Sm  dx*kg_max     ic_max     cc_max       dx/a
+   7   1      5.721     -2.583      2.334    0.06272      2.094          0  2.344e-05     0.2799    0.03998    0.04076    0.09312
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       1    89.5      11       1       1       0    0.03     0.1        0.28        5.7213       -2.5834       -0.2496        2.3339
+
+    results:  results/nr/nr_pass.csv
+loading loops from:
+data/lemon/loops/dim_4/K_11/loop_R_1_E_0.32_rank_0.dat
+  pl run        len         i0          s        sol       solM      delta         Sm  dx*kg_max     ic_max     cc_max       dx/a
+   8   1       5.64     -2.504      2.254    0.07383      2.435          0  2.924e-05     0.3185    0.05207    0.05295     0.0918
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       1    89.4      11       1       1       0    0.03     0.1        0.32        5.6404       -2.5043      -0.25084        2.2536
+
+    results:  results/nr/nr_pass.csv
+loading loops from:
+data/lemon/loops/dim_4/K_11/loop_R_1_E_0.36_rank_0.dat
+  pl run        len         i0          s        sol       solM      delta         Sm  dx*kg_max     ic_max     cc_max       dx/a
+   9   1      5.559     -2.425      2.173    0.08565       2.79          0  3.583e-05     0.3567    0.06576    0.06673    0.09048
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       1    89.3      11       1       1       0    0.03     0.1        0.36        5.5592       -2.4255      -0.25226        2.1734
+
+    results:  results/nr/nr_pass.csv
+loading loops from:
+data/lemon/loops/dim_4/K_11/loop_R_1_E_0.4_rank_0.dat
+  pl run        len         i0          s        sol       solM      delta         Sm  dx*kg_max     ic_max     cc_max       dx/a
+  10   1      5.478     -2.347      2.093    0.09826      3.161          0  4.319e-05     0.3944    0.08105    0.08211    0.08916
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       1    89.3      11       1       1       0    0.03     0.1         0.4        5.4778        -2.347      -0.25386        2.0933
+
+    results:  results/nr/nr_pass.csv
+loading loops from:
+data/lemon/loops/dim_4/K_11/loop_R_1_E_0.44_rank_0.dat
+  pl run        len         i0          s        sol       solM      delta         Sm  dx*kg_max     ic_max     cc_max       dx/a
+  11   1      5.396     -2.269      2.013     0.1117      3.548          0  5.134e-05     0.4316    0.09793    0.09907    0.08782
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       1    89.2      11       1       1       0    0.03     0.1        0.44        5.3959       -2.2687      -0.25565        2.0134
+
+    results:  results/nr/nr_pass.csv
+loading loops from:
+data/lemon/loops/dim_4/K_11/loop_R_1_E_0.48_rank_0.dat
+  pl run        len         i0          s        sol       solM      delta         Sm  dx*kg_max     ic_max     cc_max       dx/a
+  12   1      5.314     -2.191      1.934     0.1261      3.955          0  6.026e-05     0.4683     0.1164     0.1176    0.08649
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       1    89.1      11       1       1       0    0.03     0.1        0.48        5.3137       -2.1909      -0.25763        1.9336
+
+    results:  results/nr/nr_pass.csv
+loading loops from:
+data/lemon/loops/dim_4/K_11/loop_R_1_E_0.52_rank_0.dat
+  pl run        len         i0          s        sol       solM      delta         Sm  dx*kg_max     ic_max     cc_max       dx/a
+  13   1      5.231     -2.113      1.854     0.1416      4.383          0  6.997e-05     0.5043     0.1365     0.1378    0.08514
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       1      89      11       1       1       0    0.03     0.1        0.52        5.2311       -2.1134       -0.2598         1.854
+
+    results:  results/nr/nr_pass.csv
+loading loops from:
+data/lemon/loops/dim_4/K_11/loop_R_1_E_0.56_rank_0.dat
+  pl run        len         i0          s        sol       solM      delta         Sm  dx*kg_max     ic_max     cc_max       dx/a
+  14   1      5.148     -2.036      1.775     0.1581      4.833          0  8.046e-05     0.5397     0.1582     0.1595    0.08379
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       1      89      11       1       1       0    0.03     0.1        0.56         5.148       -2.0364      -0.26217        1.7746
+
+    results:  results/nr/nr_pass.csv
+loading loops from:
+data/lemon/loops/dim_4/K_11/loop_R_1_E_0.6_rank_0.dat
+  pl run        len         i0          s        sol       solM      delta         Sm  dx*kg_max     ic_max     cc_max       dx/a
+  15   1      5.064      -1.96      1.696      0.176      5.309          0  9.173e-05     0.5744     0.1814     0.1828    0.08243
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       1    88.9      11       1       1       0    0.03     0.1         0.6        5.0644       -1.9598      -0.26475        1.6955
+
+    results:  results/nr/nr_pass.csv
+loading loops from:
+data/lemon/loops/dim_4/K_11/loop_R_1_E_0.64_rank_0.dat
+  pl run        len         i0          s        sol       solM      delta         Sm  dx*kg_max     ic_max     cc_max       dx/a
+  16   1       4.98     -1.884      1.617     0.1952      5.813          0  0.0001038     0.6083     0.2063     0.2078    0.08106
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       1    88.8      11       1       1       0    0.03     0.1        0.64        4.9803       -1.8838      -0.26754        1.6168
+
+    results:  results/nr/nr_pass.csv
+loading loops from:
+data/lemon/loops/dim_4/K_11/loop_R_1_E_0.68_rank_0.dat
+  pl run        len         i0          s        sol       solM      delta         Sm  dx*kg_max     ic_max     cc_max       dx/a
+  17   1      4.896     -1.808      1.538      0.216      6.347          0  0.0001166     0.6413     0.2327     0.2343    0.07968
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       1    88.7      11       1       1       0    0.03     0.1        0.68        4.8955       -1.8083      -0.27054        1.5383
+
+    results:  results/nr/nr_pass.csv
+loading loops from:
+data/lemon/loops/dim_4/K_11/loop_R_1_E_0.72_rank_0.dat
+  pl run        len         i0          s        sol       solM      delta         Sm  dx*kg_max     ic_max     cc_max       dx/a
+  18   1       4.81     -1.733       1.46     0.2386      6.916  5.849e-05  0.0001302     0.6735     0.2608     0.2624    0.07829
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       1    88.7      11       1       1       0    0.03     0.1        0.72        4.8101       -1.7333      -0.27376        1.4602
+
+    results:  results/nr/nr_pass.csv
+loading loops from:
+data/lemon/loops/dim_4/K_11/loop_R_1_E_0.76_rank_0.dat
+  pl run        len         i0          s        sol       solM      delta         Sm  dx*kg_max     ic_max     cc_max       dx/a
+  19   1      4.724     -1.659      1.382     0.2631      7.522          0  0.0001446     0.7046     0.2904      0.292    0.07689
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       1    88.5      11       1       1       0    0.03     0.1        0.76         4.724        -1.659      -0.27722        1.3825
+
+    results:  results/nr/nr_pass.csv
+loading loops from:
+data/lemon/loops/dim_4/K_11/loop_R_1_E_0.8_rank_0.dat
+  pl run        len         i0          s        sol       solM      delta         Sm  dx*kg_max     ic_max     cc_max       dx/a
+  20   1      4.637     -1.585      1.305     0.2898      8.171          0  0.0001598     0.7347     0.3217     0.3233    0.07547
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       1    88.4      11       1       1       0    0.03     0.1         0.8        4.6371       -1.5853      -0.28092        1.3052
+
+    results:  results/nr/nr_pass.csv
+loading loops from:
+data/lemon/loops/dim_4/K_11/loop_R_1_E_0.84_rank_0.dat
+  pl run        len         i0          s        sol       solM      delta         Sm  dx*kg_max     ic_max     cc_max       dx/a
+  21   1      4.549     -1.512      1.228      0.319      8.867          0  0.0001757     0.7638     0.3545     0.3562    0.07405
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       1    88.3      11       1       1       0    0.03     0.1        0.84        4.5494       -1.5124      -0.28487        1.2283
+
+    results:  results/nr/nr_pass.csv
+loading loops from:
+data/lemon/loops/dim_4/K_11/loop_R_1_E_0.88_rank_0.dat
+  pl run        len         i0          s        sol       solM      delta         Sm  dx*kg_max     ic_max     cc_max       dx/a
+  22   1      4.461      -1.44      1.152      0.351      9.617          0  0.0001925     0.7916     0.3889     0.3906     0.0726
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       1    88.2      11       1       1       0    0.03     0.1        0.88        4.4608       -1.4402      -0.28908        1.1519
+
+    results:  results/nr/nr_pass.csv
+loading loops from:
+data/lemon/loops/dim_4/K_11/loop_R_1_E_0.92_rank_0.dat
+  pl run        len         i0          s        sol       solM      delta         Sm  dx*kg_max     ic_max     cc_max       dx/a
+  23   1      4.371     -1.369      1.076     0.3862      10.43     0.0291    0.00021     0.8181     0.4249     0.4267    0.07115
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       1    88.2      11       1       1       0    0.03     0.1        0.92        4.3712       -1.3687      -0.29357        1.0761
+
+    results:  results/nr/nr_pass.csv
+loading loops from:
+data/lemon/loops/dim_4/K_11/loop_R_1_E_0.96_rank_0.dat
+  pl run        len         i0          s        sol       solM      delta         Sm  dx*kg_max     ic_max     cc_max       dx/a
+  24   1      4.281     -1.298      1.001     0.4251       11.3    0.02977  0.0002283     0.8433     0.4626     0.4643    0.06967
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       1      88      11       1       1       0    0.03     0.1        0.96        4.2806       -1.2981      -0.29834        1.0007
+
+    results:  results/nr/nr_pass.csv
+loading loops from:
+data/lemon/loops/dim_4/K_11/loop_R_1_E_1_rank_0.dat
+  pl run        len         i0          s        sol       solM      delta         Sm  dx*kg_max     ic_max     cc_max       dx/a
+  25   1      4.189     -1.228      0.926     0.4681      12.26          0  0.0002473      0.867     0.5018     0.5035    0.06818
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       1      88      11       1       1       0    0.03     0.1           1        4.1888       -1.2284      -0.30342       0.92598
+
+    results:  results/nr/nr_pass.csv
+loading loops from:
+data/lemon/loops/dim_4/K_11/loop_R_1_E_1.04_rank_0.dat
+  pl run        len         i0          s        sol       solM      delta         Sm  dx*kg_max     ic_max     cc_max       dx/a
+  26   1      4.096      -1.16     0.8518     0.5161       13.3          0  0.0002672     0.8892     0.5426     0.5444    0.06666
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       1      88      11       1       1       0    0.03     0.1        1.04        4.0958       -1.1596      -0.30881       0.85183
+
+    results:  results/nr/nr_pass.csv
+loading loops from:
+data/lemon/loops/dim_4/K_11/loop_R_1_E_1.08_rank_0.dat
+  pl run        len         i0          s        sol       solM      delta         Sm  dx*kg_max     ic_max     cc_max       dx/a
+  27   1      4.001     -1.092     0.7783     0.5696      14.45          0  0.0002878     0.9098      0.585     0.5868    0.06513
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       1      88      11       1       1       0    0.03     0.1        1.08        4.0014       -1.0917      -0.31454       0.77832
+
+    results:  results/nr/nr_pass.csv
+loading loops from:
+data/lemon/loops/dim_4/K_11/loop_R_1_E_1.12_rank_0.dat
+  pl run        len         i0          s        sol       solM      delta         Sm  dx*kg_max     ic_max     cc_max       dx/a
+  28   1      3.906     -1.025     0.7055     0.6299      15.71          0  0.0003092     0.9286      0.629     0.6307    0.06357
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       1    87.8      11       1       1       0    0.03     0.1        1.12        3.9056       -1.0249      -0.32063       0.70548
+
+    results:  results/nr/nr_pass.csv
+loading loops from:
+data/lemon/loops/dim_4/K_11/loop_R_1_E_1.16_rank_0.dat
+  pl run        len         i0          s        sol       solM      delta         Sm  dx*kg_max     ic_max     cc_max       dx/a
+  29   1      3.808    -0.9592     0.6333      0.698       17.1          0  0.0003314     0.9456     0.6746     0.6763    0.06198
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       1    87.3      11       1       1       0    0.03     0.1        1.16        3.8083      -0.95918       -0.3271       0.63333
+
+    results:  results/nr/nr_pass.csv
+loading loops from:
+data/lemon/loops/dim_4/K_11/loop_R_1_E_1.2_rank_0.dat
+  pl run        len         i0          s        sol       solM      delta         Sm  dx*kg_max     ic_max     cc_max       dx/a
+  30   1      3.709    -0.8946     0.5619     0.7753      18.66          0  0.0003544     0.9605     0.7217     0.7235    0.06037
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       1    86.4      11       1       1       0    0.03     0.1         1.2        3.7092      -0.89459      -0.33398       0.56192
+
+    results:  results/nr/nr_pass.csv
+loading loops from:
+data/lemon/loops/dim_4/K_11/loop_R_1_E_1.24_rank_0.dat
+  pl run        len         i0          s        sol       solM      delta         Sm  dx*kg_max     ic_max     cc_max       dx/a
+  31   1      3.608    -0.8312     0.4913     0.8639       20.4          0  0.0003781     0.9733     0.7705     0.7722    0.05873
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       1    85.3      11       1       1       0    0.03     0.1        1.24        3.6082       -0.8312       -0.3413       0.49126
+
+    results:  results/nr/nr_pass.csv
+loading loops from:
+data/lemon/loops/dim_4/K_11/loop_R_1_E_1.28_rank_0.dat
+  pl run        len         i0          s        sol       solM      delta         Sm  dx*kg_max     ic_max     cc_max       dx/a
+  32   1      3.505    -0.7691     0.4214      0.966      22.37          0  0.0004027     0.9838     0.8209     0.8226    0.05705
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       1    84.5      11       1       1       0    0.03     0.1        1.28        3.5052      -0.76908      -0.34908        0.4214
+
+    results:  results/nr/nr_pass.csv
+loading loops from:
+data/lemon/loops/dim_4/K_11/loop_R_1_E_1.32_rank_0.dat
+  pl run        len         i0          s        sol       solM      delta         Sm  dx*kg_max     ic_max     cc_max       dx/a
+  33   1        3.4    -0.7083     0.3524      1.085      24.61          0   0.000428     0.9919     0.8728     0.8745    0.05534
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       1    83.8      11       1       1       0    0.03     0.1        1.32        3.3999      -0.70828      -0.35737       0.35236
+
+    results:  results/nr/nr_pass.csv
+loading loops from:
+data/lemon/loops/dim_4/K_11/loop_R_1_E_1.36_rank_0.dat
+  pl run        len         i0          s        sol       solM      delta         Sm  dx*kg_max     ic_max     cc_max       dx/a
+  34   1      3.292    -0.6489     0.2842      1.224      27.17          0  0.0004541     0.9973     0.9264      0.928    0.05358
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       1    83.2      11       1       1       0    0.03     0.1        1.36        3.2921       -0.6489      -0.36621       0.28418
+
+    results:  results/nr/nr_pass.csv
+loading loops from:
+data/lemon/loops/dim_4/K_11/loop_R_1_E_1.4_rank_0.dat
+  pl run        len         i0          s        sol       solM      delta         Sm  dx*kg_max     ic_max     cc_max       dx/a
+  35   1      3.182     -0.591     0.2169      1.389      30.13          0  0.0004809     0.9998     0.9816     0.9831    0.05178
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       1    82.6      11       1       1       0    0.03     0.1         1.4        3.1816        -0.591      -0.37565       0.21687
+
+    results:  results/nr/nr_pass.csv
+loading loops from:
+data/lemon/loops/dim_4/K_11/loop_R_1_E_1.44_rank_0.dat
+  pl run        len         i0          s        sol       solM      delta         Sm  dx*kg_max     ic_max     cc_max       dx/a
+  36   1      3.068    -0.5347     0.1505      1.587      33.59          0  0.0005086     0.9993      1.038       1.04    0.04993
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       1    82.1      11       1       1       0    0.03     0.1        1.44         3.068      -0.53466      -0.38571       0.15051
+
+    results:  results/nr/nr_pass.csv
+loading loops from:
+data/lemon/loops/dim_4/K_11/loop_R_1_E_1.48_rank_0.dat
+  pl run        len         i0          s        sol       solM      delta         Sm  dx*kg_max     ic_max     cc_max       dx/a
+  37   1      2.951      -0.48    0.08511      1.828      37.68          0   0.000537     0.9953      1.097      1.098    0.04803
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       1    81.6      11       1       1       0    0.03     0.1        1.48        2.9509      -0.47999      -0.39646      0.085108
+
+    results:  results/nr/nr_pass.csv
+loading loops from:
+data/lemon/loops/dim_4/K_11/loop_R_1_E_1.52_rank_0.dat
+  pl run        len         i0          s        sol       solM      delta         Sm  dx*kg_max     ic_max     cc_max       dx/a
+  38   1       2.83    -0.4271    0.02068      2.126      42.59          0  0.0005662     0.9877      1.157      1.158    0.04606
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       1      81      11       1       1       0    0.03     0.1        1.52        2.8299      -0.42708        -0.408      0.020679
+
+    results:  results/nr/nr_pass.csv
+loading loops from:
+data/lemon/loops/dim_4/K_11/loop_R_1_E_1.56_rank_0.dat
+  pl run        len         i0          s        sol       solM      delta         Sm  dx*kg_max     ic_max     cc_max       dx/a
+  39   1      2.705     -0.376   -0.04274      2.502      48.57          0  0.0005962     0.9759      1.218      1.219    0.04402
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       1    80.5      11       1       1       0    0.03     0.1        1.56        2.7045      -0.37604      -0.42039     -0.042741
+
+    results:  results/nr/nr_pass.csv
+loading loops from:
+data/lemon/loops/dim_4/K_11/loop_R_1_E_1.6_rank_0.dat
+  pl run        len         i0          s        sol       solM      delta         Sm  dx*kg_max     ic_max     cc_max       dx/a
+  40   1      2.574     -0.327    -0.1051      2.985         56          0   0.000627     0.9596      1.281      1.282    0.04189
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       1    79.9      11       1       1       0    0.03     0.1         1.6         2.574        -0.327      -0.43372      -0.10511
+
+    results:  results/nr/nr_pass.csv
+loading loops from:
+data/lemon/loops/dim_4/K_11/loop_R_1_E_1.64_rank_0.dat
+  pl run        len         i0          s        sol       solM      delta         Sm  dx*kg_max     ic_max     cc_max       dx/a
+  41   1      2.438    -0.2801    -0.1664      3.623      65.43          0  0.0006585     0.9383      1.346      1.347    0.03967
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       1    79.2      11       1       1       0    0.03     0.1        1.64        2.4375      -0.28009      -0.44806      -0.16637
+
+    results:  results/nr/nr_pass.csv
+loading loops from:
+data/lemon/loops/dim_4/K_11/loop_R_1_E_1.68_rank_0.dat
+  pl run        len         i0          s        sol       solM      delta         Sm  dx*kg_max     ic_max     cc_max       dx/a
+  42   1      2.294    -0.2355    -0.2264      4.496      77.74          0  0.0006909     0.9111      1.412      1.413    0.03734
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       1    78.5      11       1       1       0    0.03     0.1        1.68        2.2941      -0.23548      -0.46348      -0.22642
+
+    results:  results/nr/nr_pass.csv
+loading loops from:
+data/lemon/loops/dim_4/K_11/loop_R_1_E_1.72_rank_0.dat
+  pl run        len         i0          s        sol       solM      delta         Sm  dx*kg_max     ic_max     cc_max       dx/a
+  43   1      2.142    -0.1933    -0.2851      5.739      94.41          0   0.000724     0.8772       1.48      1.481    0.03487
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       1    77.8      11       1       1       0    0.03     0.1        1.72        2.1421      -0.19335      -0.47998      -0.28509
+
+    results:  results/nr/nr_pass.csv
+loading loops from:
+data/lemon/loops/dim_4/K_11/loop_R_1_E_1.76_rank_0.dat
+  pl run        len         i0          s        sol       solM      delta         Sm  dx*kg_max     ic_max     cc_max       dx/a
+  44   1       1.98    -0.1539     -0.342      7.607        118          0  0.0007579     0.8354       1.55       1.55    0.03222
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       1      77      11       1       1       0    0.03     0.1        1.76        1.9797      -0.15391      -0.49742      -0.34201
+
+    results:  results/nr/nr_pass.csv
+loading loops from:
+data/lemon/loops/dim_4/K_11/loop_R_1_E_1.8_rank_0.dat
+  pl run        len         i0          s        sol       solM      delta         Sm  dx*kg_max     ic_max     cc_max       dx/a
+  45   1      1.804    -0.1175    -0.3963      10.62      158.6          0  0.0007925     0.7841      1.621      1.621    0.02936
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       1    76.3      11       1       1       0    0.03     0.1         1.8        1.8041      -0.11745      -0.51522      -0.39634
+
+    results:  results/nr/nr_pass.csv
+loading loops from:
+data/lemon/loops/dim_4/K_11/loop_R_1_E_1.84_rank_0.dat
+  pl run        len         i0          s        sol       solM      delta         Sm  dx*kg_max     ic_max     cc_max       dx/a
+  46   1      1.611    -0.0843     -0.446      16.03      248.7          0   0.000828     0.7206      1.693      1.694    0.02622
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       1      76      11       1       1       0    0.03     0.1        1.84        1.6109     -0.084302       -0.5316      -0.44596
+
+    results:  results/nr/nr_pass.csv
+loading loops from:
+data/lemon/loops/dim_4/K_11/loop_R_1_E_1.88_rank_0.dat
+  pl run        len         i0          s        sol       solM      delta         Sm  dx*kg_max     ic_max     cc_max       dx/a
+  47   1      1.393   -0.05492    -0.4845      27.36        442    0.07349  0.0008642     0.6409      1.768      1.768    0.02267
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       1      76      11       1       1       0    0.03     0.1        1.88        1.3927     -0.054924      -0.54067      -0.48454
+
+    results:  results/nr/nr_pass.csv
+loading loops from:
+data/lemon/loops/dim_4/K_11/loop_R_1_E_1.92_rank_0.dat
+  pl run        len         i0          s        sol       solM      delta         Sm  dx*kg_max     ic_max     cc_max       dx/a
+  48   1      1.135   -0.02999    -0.4863      58.75      989.9    0.05235  0.0009012     0.5371      1.843      1.844    0.01848
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       1    75.9      11       1       1       0    0.03     0.1        1.92        1.1352     -0.029988      -0.51734      -0.48633
+
+    results:  results/nr/nr_pass.csv
+loading loops from:
+data/lemon/loops/dim_4/K_11/loop_R_1_E_1.96_rank_0.dat
+  pl run        len         i0          s        sol       solM      delta         Sm  dx*kg_max     ic_max     cc_max       dx/a
+  49   1     0.8013   -0.01063    -0.2902      222.4       3919          0   0.000939     0.3897      1.921      1.921    0.01304
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       1      76      11       1       1       0    0.03     0.1        1.96       0.80134     -0.010635      -0.30157      -0.29018
+
+    results:  results/nr/nr_pass.csv
+loading loops from:
+data/lemon/loops/dim_4/K_11/loop_R_1_E_2_rank_0.dat
+  pl run        len         i0          s        sol       solM      delta         Sm  dx*kg_max     ic_max     cc_max       dx/a
+  50   1          0          0       -nan        nan          0          0        nan          0          0          0          0
+
+    runs    time       K       G       B      Ng       a      mu           E           len            i0            vr             s
+       1    61.7      11       1       1       0    0.03     0.1           2             0             0          -nan          -nan
+
+    results:  results/nr/nr_pass.csv
+4325.01user 5.82system 1:12:10elapsed 100%CPU (0avgtext+0avgdata 528108maxresident)k
+0inputs+960outputs (0major+20555minor)pagefaults 0swaps
