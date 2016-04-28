@@ -374,25 +374,25 @@ for (uint pl=0; pl<Npl; pl++) {
 		if (poto==PotentialOptions::original) {
 			g = pow(p.G,3)*p.B/8.0/PI/PI;
 			dm = -g*PI/p.Epsi;
-			cusp_scale = -g*log(p.Mu/p.Epsi);
+			cusp_scale = -g*2.0*log(p.Mu/p.Epsi);
 			repulsion_scale = -g*sqrt(PI)/p.Epsi/p.Epsi;
 		}
 		else if (poto==PotentialOptions::link) {
 			g = pow(p.G,3)*p.B/8.0/PI/PI;
 			dm = -g*PI/p.Epsi;
-			cusp_scale = -g*log(p.Mu/p.Epsi);
+			cusp_scale = -g*2.0*log(p.Mu/p.Epsi);
 			repulsion_scale = -g*sqrt(PI)/p.Epsi/p.Epsi;
 		}
 		else if (poto==PotentialOptions::exponential) {
 			g = pow(p.G,3)*p.B/8.0/PI/PI;
 			dm = -g*sqrt(PI)/p.Epsi;
-			cusp_scale = -g*log(p.Mu/p.Epsi);
+			cusp_scale = -g*2.0*log(p.Mu/p.Epsi);
 			repulsion_scale = -g/p.Epsi/p.Epsi;
 		}
 		else if (poto==PotentialOptions::dimreg) {
 			g = pow(p.G,3)*p.B*(pow(p.Lambda,-p.Epsi)*pow(PI,-2.0+p.Epsi/2.0)*gsl_sf_gamma(2.0-p.Epsi/2.0)/4.0/(2.0-p.Epsi));
 			dm = 0.0;
-			cusp_scale = -g/p.Epsi;
+			cusp_scale = -g*2.0/p.Epsi; //not sure about the factor of 2.0 here
 			repulsion_scale = 0.0;
 			dim_reg_scale = -g*2.0*gsl_sf_zeta(2.0-p.Epsi);
 		}
