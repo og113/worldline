@@ -16,12 +16,69 @@
 /*----------------------------------------------------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------------------------------------------------
 	contents:
+		0 - some static functions
 		1 - nr loop functions
 		2 - loopToVector, vectorToLoop
 		3 - filename functions
 		4 - explicit instatiation
 ----------------------------------------------------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------------------------------------------------*/
+
+/*----------------------------------------------------------------------------------------------------------------------------
+	0 - some static functions
+----------------------------------------------------------------------------------------------------------------------------*/
+
+// FThermal
+number FThermal(const number& r, const number& t, const number& beta, const number& a) {
+	return  sinh((2.0*PI*r)/beta)/(4.0*PI*r*beta*((-2.0*pow(a,2)*pow(PI,2))/pow(beta,2) + cos((2.0*PI*t)/beta) - cosh((2.0*PI*r)/beta)));
+}
+
+// DFThermalDr
+number DFThermalDr(const number& r, const number& t, const number& beta, const number& a) {
+	return cosh((2.0*PI*r)/beta)/(2.0*r*pow(beta,2)*\
+	((-2.0*pow(a,2)*pow(PI,2))/pow(beta,2) + cos((2.0*PI*t)/beta) - cosh((2.0*PI*r)/beta))) \
+ - sinh((2.0*PI*r)/beta)/(4.0*PI*pow(r,2)*beta*((-2.0*pow(a,2)*pow(PI,2))/pow(beta,2) + cos((2.0*PI*t)/beta) \
+ - cosh((2.0*PI*r)/beta))) + pow(sinh((2.0*PI*r)/beta),2)/\
+ (2.0*r*pow(beta,2)*pow((-2.0*pow(a,2)*pow(PI,2))/pow(beta,2) + cos((2.0*PI*t)/beta) - cosh((2.0*PI*r)/beta),2));
+}
+
+// DFThermalDt
+number DFThermalDt(const number& r, const number& t, const number& beta, const number& a) {
+	return (sin((2.0*PI*t)/beta)*sinh((2.0*PI*r)/beta))/\
+ (2.0*r*pow(beta,2)*pow((-2.0*pow(a,2)*pow(PI,2))/pow(beta,2) + cos((2.0*PI*t)/beta) - cosh((2.0*PI*r)/beta),2));
+}
+
+// DDFThermalDrDr
+number DDFThermalDrDr(const number& r, const number& t, const number& beta, const number& a) {
+	return - (cosh((2.0*PI*r)/beta)/(pow(r,2)*pow(beta,2)*((-2.0*pow(a,2)*pow(PI,2))/pow(beta,2) + cos((2.0*PI*t)/beta) \
+ - cosh((2.0*PI*r)/beta)))) + (PI*sinh((2.0*PI*r)/beta))/\
+ (r*pow(beta,3)*((-2.0*pow(a,2)*pow(PI,2))/pow(beta,2) + cos((2.0*PI*t)/beta) - cosh((2.0*PI*r)/beta))) \
+ + sinh((2.0*PI*r)/beta)/(2.0*PI*pow(r,3)*beta*((-2.0*pow(a,2)*pow(PI,2))/pow(beta,2) + cos((2.0*PI*t)/beta) \
+ - cosh((2.0*PI*r)/beta))) + (3.0*PI*cosh((2.0*PI*r)/beta)*sinh((2.0*PI*r)/beta))/\
+ (r*pow(beta,3)*pow((-2.0*pow(a,2)*pow(PI,2))/pow(beta,2) + cos((2.0*PI*t)/beta) - cosh((2.0*PI*r)/beta),2)) \
+ - pow(sinh((2.0*PI*r)/beta),2)/\
+ (pow(r,2)*pow(beta,2)*pow((-2.0*pow(a,2)*pow(PI,2))/pow(beta,2) + cos((2.0*PI*t)/beta) - cosh((2.0*PI*r)/beta),2)) \
+ + (2.0*PI*pow(sinh((2.0*PI*r)/beta),3))/\
+ (r*pow(beta,3)*pow((-2.0*pow(a,2)*pow(PI,2))/pow(beta,2) + cos((2.0*PI*t)/beta) - cosh((2.0*PI*r)/beta),3));
+}
+
+// DDFThermalDtDr
+number DDFThermalDtDr(const number& r, const number& t, const number& beta, const number& a) {
+	return (PI*cosh((2.0*PI*r)/beta)*sin((2.0*PI*t)/beta))/\
+ (r*pow(beta,3)*pow((-2.0*pow(a,2)*pow(PI,2))/pow(beta,2) + cos((2.0*PI*t)/beta) - cosh((2.0*PI*r)/beta),2)) \
+ - (sin((2.0*PI*t)/beta)*sinh((2.0*PI*r)/beta))/\
+ (2.0*pow(r,2)*pow(beta,2)*pow((-2.0*pow(a,2)*pow(PI,2))/pow(beta,2) + cos((2.0*PI*t)/beta) - cosh((2.0*PI*r)/beta),2)) \
+ + (2.0*PI*sin((2.0*PI*t)/beta)*pow(sinh((2.0*PI*r)/beta),2))/\
+ (r*pow(beta,3)*pow((-2.0*pow(a,2)*pow(PI,2))/pow(beta,2) + cos((2.0*PI*t)/beta) - cosh((2.0*PI*r)/beta),3));
+}
+
+// DDFThermalDtDt
+number DDFThermalDtDt(const number& r, const number& t, const number& beta, const number& a) {
+	return (PI*cos((2.0*PI*t)/beta)*sinh((2.0*PI*r)/beta))/\
+ (r*pow(beta,3)*pow((-2.0*pow(a,2)*pow(PI,2))/pow(beta,2) + cos((2.0*PI*t)/beta) - cosh((2.0*PI*r)/beta),2)) \
+ + (2.0*PI*pow(sin((2.0*PI*t)/beta),2)*sinh((2.0*PI*r)/beta))/\
+ (r*pow(beta,3)*pow((-2.0*pow(a,2)*pow(PI,2))/pow(beta,2) + cos((2.0*PI*t)/beta) - cosh((2.0*PI*r)/beta),3));
+}
 
 /*----------------------------------------------------------------------------------------------------------------------------
 	1 - nr loop functions
@@ -124,6 +181,7 @@ void Vor (const uint& j, const uint& k, const Loop<Dim>& l, const number& a, con
 	
 		result += f*(1.0+(number)(k<j))*Dot(l[pj],l[j],l[pk],l[k])*pow(DistanceSquared(l[j],l[k])+a*a,(2.0-Dim)/2.0);	
 	}
+	
 }
 
 // Vlr
@@ -161,6 +219,12 @@ void Vdr (const uint& j, const uint& k, const Loop<Dim>& l, const number& a, con
 	
 		result += f*2.0*Dot(l[pj],l[j],l[pk],l[k])*pow(DistanceSquared(l[j],l[k]),(2.0-Dim+a)/2.0);	
 	}
+}
+
+// Vthr
+template <uint Dim>
+void Vthr (const uint& j, const uint& k, const Loop<Dim>& l, const number& beta, const number& a, const number& f, number& result) {
+	cerr << "Vthr error: not defined in dimension " << Dim << endl;
 }
 
 // Gaussian
@@ -624,6 +688,31 @@ void ddVdr_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, cons
 	cerr << "mddVdr_nr Error: no script written for dim = " << Dim << endl;
 }
 
+// mdVthr_nr
+template<uint Dim>
+void mdVthr_nr(const uint& j, const uint& mu, const Loop<Dim>& l,\
+		 const number& theta, const number& a, const number& f, vec& v) {
+
+	for (uint i=0; i<l.size(); i++)
+		mdVthr_nr( j, mu, i, l, a, f, v);
+	
+}
+
+// mdVthr_nr
+template<uint Dim>
+void mdVdr_nr(const uint& j, const uint& mu, const uint& i, const Loop<Dim>& l,\
+		 const number& theta, const number& a, const number& f, vec& v) {
+	cerr << "mdVthr_nr Error: no script written for dim = " << Dim << endl;
+}
+
+// ddVthr_nr
+template<uint Dim>
+void ddVthr_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l,\
+						 const number& theta, const number& a, const number& f, mat& m) {
+	cerr << "mddVthr_nr Error: no script written for dim = " << Dim << endl;
+}
+
+
 
 // mdGaussian_nr
 template<uint Dim>
@@ -1041,6 +1130,20 @@ template <> void Vdr<4>(const uint& j, const uint& k, const Loop<4>& l, const nu
 	}
 }
 
+// Vthr
+template <> void Vthr<4>(const uint& j, const uint& k, const Loop<4>& l, const number& beta, const number& a, const number& f, number& result) {
+
+	if (k<=j) {
+		uint pj = (j==(l.size()-1)? 0: j+1);
+		uint pk = (k==(l.size()-1)? 0: k+1);
+		
+		number r = SpatialDistance(l[j],l[k]);
+		number t = (l[k])[3]-(l[j])[3];
+	
+		result += f*(1.0+(number)(k<j))*Dot(l[pj],l[j],l[pk],l[k])*FThermal(r,t,beta,a);	
+	}
+}
+
 // mdVor_nr
 template <> void mdVor_nr<4>(const uint& j, const uint& mu, const uint& i, const Loop<4>& l, const number& a, const number& f, vec& v) {
 	number res = 0.0;
@@ -1148,6 +1251,39 @@ template <> void mdVdr_nr<4>(const uint& j, const uint& mu, const uint& i, const
 	v[j*4+mu] += -f*res;
 }
 
+// mdVthr_nr
+template <> void mdVthr_nr<4>(const uint& j, const uint& mu, const uint& i, const Loop<4>& l, \
+			const number& beta, const number& a, const number& f, vec& v) {
+	number res = 0.0;
+	uint pj = (j==(l.size()-1)? 0: j+1);
+	uint mj = (j==0? (l.size()-1): j-1);
+	uint pi = (i==(l.size()-1)? 0: i+1);
+		
+	if (i!=j) {
+		number r_ij = SpatialDistance(l[i],l[j]);
+		number t_ij = (l[j])[4]-(l[i])[4]; // checked order
+		number FThermal_ij = FThermal(r_ij,t_ij,beta,a);
+		number DFThermalDr_ij = DFThermalDr(r_ij,t_ij,beta,a);
+		number DFThermalDt_ij = DFThermalDt(r_ij,t_ij,beta,a);
+		number T_ij = Dot(l[pi],l[i],l[pj],l[j]);
+		res += 2.0*DX(l,i,pi,mu)/B_ij - 4.0*DX(l,j,i,mu)*T_ij/pow(B_ij,2);
+	}
+	
+	if (i!=mj) {
+		number B_imj = a*a + DistanceSquared(l[i],l[mj]);
+		res += -2.0*DX(l,i,pi,mu)/B_imj;
+	}
+	
+	//coincident terms
+	if (i==j)
+		res += 2.0*(l[j])[mu]/a/a;
+	if (i==mj)
+		res += -(l[mj])[mu]/a/a;
+	if (i==pj)
+		res += -(l[pj])[mu]/a/a;
+		
+	v[j*4+mu] += -f*res;
+}
 
 // mdGaussian_nr
 template <> void mdGaussian_nr<4>(const uint& j, const uint& mu, const uint& i, const Loop<4>& l, const number& a, const number& f, vec& v) {

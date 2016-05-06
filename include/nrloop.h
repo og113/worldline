@@ -87,6 +87,10 @@ void Ver (const uint& j, const uint& k, const Loop<Dim>& l, const number& a, con
 template <uint Dim>
 void Vdr (const uint& j, const uint& k, const Loop<Dim>& l, const number& a, const number& f, number& result);
 
+// Vthr
+template <uint Dim>
+void Vthr (const uint& j, const uint& k, const Loop<Dim>& l, const number& beta, const number& a, const number& f, number& result);
+
 // Gaussian
 template <uint Dim>
 void Gaussian (const uint& j, const uint& k, const Loop<Dim>& l, const number& a, const number& f, number& result);
@@ -204,6 +208,10 @@ void mdVer_nr(const uint& j, const uint& mu, const Loop<Dim>& l, const number& a
 template<uint Dim>
 void mdVdr_nr(const uint& j, const uint& mu, const Loop<Dim>& l, const number& a, const number& f, vec& v);
 
+// mdVthr_nr
+template<uint Dim>
+void mdVthr_nr(const uint& j, const uint& mu, const Loop<Dim>& l, const number& beta, const number& a, const number& f, vec& v);
+
 // mdVor_nr
 template<uint Dim>
 void mdVor_nr(const uint& j, const uint& mu, const uint& i, const Loop<Dim>& l, const number& a, const number& f, vec& v);
@@ -219,6 +227,11 @@ void mdVer_nr(const uint& j, const uint& mu, const uint& i, const Loop<Dim>& l, 
 // mdVdr_nr
 template<uint Dim>
 void mdVdr_nr(const uint& j, const uint& mu, const uint& i, const Loop<Dim>& l, const number& a, const number& f, vec& v);
+
+// mdVthr_nr
+template<uint Dim>
+void mdVthr_nr(const uint& j, const uint& mu, const uint& i, const Loop<Dim>& l,\
+					 	const number& beta, const number& a, const number& f, vec& v);
 
 // mdGaussian_nr
 template<uint Dim>
@@ -244,6 +257,11 @@ template<uint Dim>
 void ddVdr_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l,\
 						 const number& a, const number& f, mat& m);
 						 
+// ddVthr_nr
+template<uint Dim>
+void ddVthr_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l,\
+						 const number& beta, const number& a, const number& f, mat& m);
+
 // ddGaussian_nr
 template<uint Dim>
 void ddGaussian_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l,\

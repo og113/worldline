@@ -224,10 +224,26 @@ number DistanceSquared(const Point<Dim>& p1, const Point<Dim>& p2) {
 }
 
 
-//distance
+// distance
 template <uint Dim>
 number Distance(const Point<Dim>& p1, const Point<Dim>& p2) {
 	return sqrt(DistanceSquared(p1,p2));
+}
+
+// spatial distance squared
+template <uint Dim>
+number SpatialDistanceSquared(const Point<Dim>& p1, const Point<Dim>& p2) {
+	number d = pow(p1[0]-p2[0],2);
+	for (uint j=1; j<(Dim-1); j++) {
+		d += pow(p1[j]-p2[j],2);
+	}
+	return d;
+}
+
+// spatial distance
+template <uint Dim>
+number SpatialDistance(const Point<Dim>& p1, const Point<Dim>& p2) {
+	return sqrt(SpatialDistanceSquared(p1,p2));
 }
 
 // NormSquared
@@ -1122,6 +1138,8 @@ template bool operator^= <4>(const Point<4>& lhs, const Point<4>& rhs);
 template number Norm<4>(const Point<4>&);
 template number Distance<4>(const Point<4>&, const Point<4>&);
 template number DistanceSquared<4>(const Point<4>&, const Point<4>&);
+template number SpatialDistance<4>(const Point<4>&, const Point<4>&);
+template number SpatialDistanceSquared<4>(const Point<4>&, const Point<4>&);
 template number Dot<4>(const Point<4>&, const Point<4>&);
 template number Dot<4>(const Point<4>&, const Point<4>&, const Point<4>&, const Point<4>&);
 template number Angle<4>(const Point<4>&, const Point<4>&, const Point<4>&);
@@ -1315,6 +1333,8 @@ template bool operator== <2>(const Point<2>& lhs, const Point<2>& rhs);
 template bool operator^= <2>(const Point<2>& lhs, const Point<2>& rhs);
 template number Distance<2>(const Point<2>&, const Point<2>&);
 template number DistanceSquared<2>(const Point<2>&, const Point<2>&);
+template number SpatialDistance<2>(const Point<2>&, const Point<2>&);
+template number SpatialDistanceSquared<2>(const Point<2>&, const Point<2>&);
 template number Norm<2>(const Point<2>&);
 template number Dot<2>(const Point<2>&, const Point<2>&);
 template number Dot<2>(const Point<2>&, const Point<2>&, const Point<2>&, const Point<2>&);

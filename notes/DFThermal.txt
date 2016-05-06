@@ -1,0 +1,15 @@
+ Sum(
+ 
+ -2.0*FThermal_imj*DX(l,i,pj,mu) + 2.0*FThermal_ij*DX(l,i,pj,mu) \
+ 
+ mu==1
+ + (2.0*DFThermalDr_ij*DX(l,j,i,1)*T_ij*delta(1,mu))/d_ij \
+ 
+ mu==2
+ + (2.0*DFThermalDr_ij*DX(l,j,i,2)*T_ij*delta(2,mu))/d_ij \
+ 
+ mu==3
+ + (2.0*DFThermalDr_ij*DX(l,j,i,3)*T_ij*delta(3,mu))/d_ij \
+ + 2.0*DFThermalDt_ij*T_ij*delta(4,mu)
+ 
+ ,i)

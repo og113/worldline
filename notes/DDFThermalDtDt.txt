@@ -1,0 +1,4 @@
+ (PI*cos((2.0*PI*t)/beta)*sinh((2.0*PI*r)/beta))/\
+ (r*pow(beta,3)*pow((-2.0*pow(a,2)*pow(PI,2))/pow(beta,2) + cos((2.0*PI*t)/beta) - cosh((2.0*PI*r)/beta),2)) \
+ + (2.0*PI*pow(sin((2.0*PI*t)/beta),2)*sinh((2.0*PI*r)/beta))/\
+ (r*pow(beta,3)*pow((-2.0*pow(a,2)*pow(PI,2))/pow(beta,2) + cos((2.0*PI*t)/beta) - cosh((2.0*PI*r)/beta),3))

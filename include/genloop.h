@@ -127,6 +127,14 @@ number DistanceSquared(const Point<Dim>&, const Point<Dim>&);
 template <uint Dim>
 number Distance(const Point<Dim>&, const Point<Dim>&);
 
+// Spatial Distance squared
+template <uint Dim>
+number SpatialDistanceSquared(const Point<Dim>&, const Point<Dim>&);
+
+// SpatialDistance
+template <uint Dim>
+number SpatialDistance(const Point<Dim>&, const Point<Dim>&);
+
 // NormSquared
 template <uint Dim>
 number NormSquared(const Point<Dim>&);
