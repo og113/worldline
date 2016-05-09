@@ -40,7 +40,7 @@ struct PrintOptions {
 };
 
 struct PotentialOptions {
-	enum Option { original, link, exponential, dimreg};
+	enum Option { original, link, exponential, dimreg, thermal};
 };
 
 struct KineticOptions {
@@ -133,6 +133,8 @@ if (!potOpts.empty()) {
 		poto = PotentialOptions::exponential;
 	else if (potOpts.compare("dimreg")==0)
 		poto = PotentialOptions::dimreg;
+	else if (potOpts.compare("thermal")==0)
+		poto = PotentialOptions::thermal;
 	else {
 		cerr << "potential options not understood: " << potOpts << endl;
 		return 1;
@@ -362,7 +364,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		uint j, k, mu, nu;
 		number mgb = -1.0; // not -p.G*p.B as scaled loops
 		number kinetic = 0.0;
-		number g, dm, cusp_scale;
+		number g, dm, cusp_scale, beta;
 		number dim_reg_scale = 0.0, d_dim_reg = 0.0;
 		number repulsion_scale, repulsion = 0.0;
 		number ic_scale = 1.0;
@@ -395,6 +397,13 @@ for (uint pl=0; pl<Npl; pl++) {
 			cusp_scale = -g*2.0/p.Epsi; //not sure about the factor of 2.0 here
 			repulsion_scale = 0.0;
 			dim_reg_scale = -g*2.0*gsl_sf_zeta(2.0-p.Epsi);
+		}
+		else if (poto==PotentialOptions::thermal) {
+			g = pow(p.G,3)*p.B/2.0;
+			dm = -g*PI/p.Epsi;
+			cusp_scale = -g*2.0*log(p.Mu/p.Epsi);
+			repulsion_scale = -g*sqrt(PI)/p.Epsi/p.Epsi;
+			beta = (abs(p.T)>MIN_NUMBER? 1.0/p.T: 1.0/MIN_NUMBER);
 		}
 		
 		Point<dim> P0;
@@ -459,6 +468,8 @@ for (uint pl=0; pl<Npl; pl++) {
 							Ver(j, k, xLoop, p.Epsi, g, v);
 						else if (poto==PotentialOptions::dimreg)
 							Vdr(j, k, xLoop, p.Epsi, g, v);
+						else if (poto==PotentialOptions::thermal)
+							Vthr(j, k, xLoop, beta, p.Epsi, g, v);
 							
 						if (gaussian)
 							Gaussian(j, k, xLoop, p.Epsi, repulsion_scale, repulsion);
@@ -477,6 +488,8 @@ for (uint pl=0; pl<Npl; pl++) {
 							mdVer_nr(j, mu, k, xLoop, p.Epsi, g, mds);
 						else if (poto==PotentialOptions::dimreg)
 							mdVdr_nr(j, mu, k, xLoop, p.Epsi, g, mds);
+						else if (poto==PotentialOptions::thermal)
+							mdVthr_nr(j, mu, k, xLoop, beta, p.Epsi, g, mds);
 							
 						if (gaussian)
 							mdGaussian_nr(j, mu, k, xLoop, p.Epsi, repulsion_scale, mds);
@@ -504,7 +517,9 @@ for (uint pl=0; pl<Npl; pl++) {
 							else if (poto==PotentialOptions::exponential)
 								ddVer_nr(j, mu, k, nu, xLoop, p.Epsi, g, dds);
 							else if (poto==PotentialOptions::dimreg)
-								ddVdr_nr(j, mu, k, nu, xLoop, p.Epsi, g, dds);				
+								ddVdr_nr(j, mu, k, nu, xLoop, p.Epsi, g, dds);	
+							else if (poto==PotentialOptions::thermal)
+								ddVthr_nr(j, mu, k, nu, xLoop, beta, p.Epsi, g, dds);				
 								
 							// self-energy regularisation
 							if (gaussian)
