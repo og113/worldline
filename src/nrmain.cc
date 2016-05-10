@@ -399,11 +399,11 @@ for (uint pl=0; pl<Npl; pl++) {
 			dim_reg_scale = -g*2.0*gsl_sf_zeta(2.0-p.Epsi);
 		}
 		else if (poto==PotentialOptions::thermal) {
-			g = pow(p.G,3)*p.B/2.0;
+			g = -pow(p.G,3)*p.B/2.0;
 			dm = -g*PI/p.Epsi;
 			cusp_scale = -g*2.0*log(p.Mu/p.Epsi);
 			repulsion_scale = -g*sqrt(PI)/p.Epsi/p.Epsi;
-			beta = (abs(p.T)>MIN_NUMBER? 1.0/p.T: 1.0/MIN_NUMBER);
+			beta = (p.T>sqrt(MIN_NUMBER)? 1.0/p.T: 1.0/sqrt(MIN_NUMBER));
 		}
 		
 		Point<dim> P0;
@@ -870,8 +870,8 @@ for (uint pl=0; pl<Npl; pl++) {
 	if ((checkDelta.good() && checkSol.good() && checkSolMax.good()) || pass) {
 		// printing results to file	
 		
-		string resFile = (pass? "results/nr/nr_pass.csv":"results/nr/nr.csv");
-		#define numRes 25
+		string resFile = (pass? "results/nr/nr_pass2.csv":"results/nr/nr2.csv");
+		#define numRes 26
 		vector<string> results(numRes);
 		string results_array[numRes] = {timenumber,\
 									nts(pl),\
@@ -884,6 +884,7 @@ for (uint pl=0; pl<Npl; pl++) {
 									nts(p.Mu,16),\
 									nts(p.Lambda,16),\
 									nts(E,16),\
+									nts(p.T,16),\
 									nts(s,16),\
 									nts(gamma,16),\
 									nts(len,16),\
