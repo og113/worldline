@@ -1147,7 +1147,7 @@ template <> void Vthr<4>(const uint& j, const uint& k, const Loop<4>& l, const n
 		number r = SpatialDistance(l[j],l[k]);
 		number t = (l[k])[3]-(l[j])[3];
 	
-		result += f*(1.0+(number)(k<j))*Dot(l[pj],l[j],l[pk],l[k])*FThermal(r,t,beta,a);	
+		result += f*(-1.0/pow(2.0*PI,2))*(1.0+(number)(k<j))*Dot(l[pj],l[j],l[pk],l[k])*FThermal(r,t,beta,a);	
 	}
 }
 
@@ -1297,7 +1297,7 @@ template <> void mdVthr_nr<4>(const uint& j, const uint& mu, const uint& i, cons
 	if (i==pj)
 		res += (-1.0/pow(2.0*PI,2))*(-(l[pj])[mu]/a/a);
 		
-	v[j*4+mu] += -f*res;
+	v[j*4+mu] += -f*(-1.0/pow(2.0*PI,2))*res;
 }
 
 // mdGaussian_nr
@@ -1907,7 +1907,7 @@ template <> void ddVthr_nr<4>(const uint& j, const uint& mu, const uint& k, cons
 	if (k==pj && mu==nu)
 		res += (-1.0/pow(2.0*PI,2))*(-1.0/a/a);
 	
-	m(4*j+mu,4*k+nu) += f*res;
+	m(4*j+mu,4*k+nu) += f*(-1.0/pow(2.0*PI,2))*res;
 	
 }
 

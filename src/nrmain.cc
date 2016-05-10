@@ -201,6 +201,8 @@ for (uint pl=0; pl<Npl; pl++) {
 			(stepFile.Extras).push_back(StringPair("weak","1"));
 		if (poto!=PotentialOptions::original || gaussian)
 			(stepFile.Extras).push_back(potExtras);
+		if (poto==PotentialOptions::thermal)
+			(stepFile.Extras).push_back(StringPair("T",nts(p.T)));
 		if (kino!=KineticOptions::saddle)
 			(stepFile.Extras).push_back(kinExtras);
 	}
@@ -279,6 +281,8 @@ for (uint pl=0; pl<Npl; pl++) {
 				(loadFile.Extras).push_back(StringPair("weak","1"));
 			if (poto!=PotentialOptions::original || gaussian)
 				(loadFile.Extras).push_back(potExtras);
+			if (poto==PotentialOptions::thermal)
+				(loadFile.Extras).push_back(StringPair("T",nts(p.T)));
 			if (kino!=KineticOptions::saddle)
 				(stepFile.Extras).push_back(kinExtras);
 			if (!loadFile.exists() && (poto!=PotentialOptions::original || gaussian)) {
@@ -399,7 +403,7 @@ for (uint pl=0; pl<Npl; pl++) {
 			dim_reg_scale = -g*2.0*gsl_sf_zeta(2.0-p.Epsi);
 		}
 		else if (poto==PotentialOptions::thermal) {
-			g = -pow(p.G,3)*p.B/2.0;
+			g = pow(p.G,3)*p.B/8.0/PI/PI;
 			dm = -g*PI/p.Epsi;
 			cusp_scale = -g*2.0*log(p.Mu/p.Epsi);
 			repulsion_scale = -g*sqrt(PI)/p.Epsi/p.Epsi;
@@ -912,6 +916,8 @@ for (uint pl=0; pl<Npl; pl++) {
 			(loopRes.Extras).push_back(StringPair("weak","1"));
 		if (poto!=PotentialOptions::original || gaussian)
 			(loopRes.Extras).push_back(potExtras);
+		if (poto==PotentialOptions::thermal)
+			(loopRes.Extras).push_back(StringPair("T",nts(p.T)));
 		if (kino!=KineticOptions::saddle)
 			(loopRes.Extras).push_back(kinExtras);
 		saveVectorBinary(loopRes,x);
