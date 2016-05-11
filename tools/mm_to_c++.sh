@@ -48,6 +48,7 @@ else
 	sed -i 's/^\([+-]\)\(\s*\)/\1 /g' $1
 	sed -i 's/^\(\s*\)/ /g' $1
 	sed -i 's/\/$/\/\\/g' $1
+	sed -i 's/\*$/\*\\/g' $1
 	# specific changes, for worldline n-r calculations
 	if $wflag
 	then echo "making specific changes, for worldline n-r calculations"
