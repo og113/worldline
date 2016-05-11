@@ -78,12 +78,13 @@ else
 		sed -i 's/Dot(\([a-z]\),1 + \([a-z]\),\([a-z]\),-1 + \([a-z]\))/T_\1m\3/g' $1
 		sed -i 's/Dot(\([a-z]\),-1 + \([a-z]\),\([a-z]\),-1 + \([a-z]\))/T_m\1m\3/g' $1
 		sed -i 's/Symbolic//g' $1
+		sed -i 's/Finite//g' $1
 		sed -i 's/Dd/Dr/g' $1
-		sed -i 's/\([,()]\)j/\1yyy/g' $1
-		sed -i 's/\([,()]\)j/yyy\1/g' $1
-		sed -i 's/\([,()]\)k/\1zzz/g' $1
+		sed -i 's/\([,()mp]\+\)j/\1yyy/g' $1 #just made changes here, need to redo!!!
+		sed -i 's/j\([,()]\)/yyy\1/g' $1
+		sed -i 's/\([,()mp]\+\)k/\1zzz/g' $1
 		sed -i 's/k\([,()]\)/zzz\1/g' $1
-		sed -i 's/\([,()]\)l/\1k/g' $1
+		sed -i 's/\([,()mp\+]\)l/\1k/g' $1
 		sed -i 's/l\([,()]\)/k\1/g' $1
 		sed -i 's/yyy/i/g' $1
 		sed -i 's/zzz/j/g' $1

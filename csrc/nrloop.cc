@@ -1154,7 +1154,6 @@ template <> void Vdr<4>(const uint& j, const uint& k, const Loop<4>& l, const nu
 // Vthr
 template <> void Vthr<4>(const uint& j, const uint& k, const Loop<4>& l, const number& beta, const number& a, const number& f, number& result) {
 
-	// extra factor of (-1.0/pow(2.0*PI,2)) due to the fact that we are treating the green's function here
 	if (k<=j) {
 		uint pj = (j==(l.size()-1)? 0: j+1);
 		uint pk = (k==(l.size()-1)? 0: k+1);
@@ -1162,7 +1161,7 @@ template <> void Vthr<4>(const uint& j, const uint& k, const Loop<4>& l, const n
 		number r = SpatialDistance(l[j],l[k]);
 		number t = (l[k])[3]-(l[j])[3];
 	
-		result += f*(-1.0/pow(2.0*PI,2))*(1.0+(number)(k<j))*Dot(l[pj],l[j],l[pk],l[k])*FThermal(r,t,beta,a);	
+		result += f*(-pow(2.0*PI,2))*(1.0+(number)(k<j))*Dot(l[pj],l[j],l[pk],l[k])*FThermal(r,t,beta,a);	
 	}
 }
 
@@ -1289,18 +1288,18 @@ template <> void mdVthr_nr<4>(const uint& j, const uint& mu, const uint& i, cons
 		number DFThermalDt_ij = DFThermalDt(r_ij,t_ij,beta,a);
 		number T_ij = Dot(l[pi],l[i],l[pj],l[j]);
 		
-		res += 2.0*FThermal_ij*DX(l,i,pj,mu);
+		res += 2.0*FThermal_ij*DX(l,i,pi,mu);
 		if (mu<3)
-			res += + (2.0*DFThermalDrOnr_ij*DX(l,j,i,mu)*T_ij);
+			res += 2.0*DFThermalDrOnr_ij*DX(l,j,i,mu)*T_ij;
 		else
-			res += + 2.0*DFThermalDt_ij*T_ij;
+			res += 2.0*DFThermalDt_ij*T_ij;
 	}
 	
 	if (i!=mj) {
 		number r_imj = SpatialDistance(l[i],l[mj]);
 		number t_imj = (l[mj])[3]-(l[i])[3]; // checked order
 		number FThermal_imj = FThermal(r_imj,t_imj,beta,a);
-		res += -2.0*FThermal_imj*DX(l,i,pj,mu);
+		res +=  -2.0*FThermal_imj*DX(l,i,pi,mu); //
 	}
 	
 	//coincident terms
@@ -1312,7 +1311,7 @@ template <> void mdVthr_nr<4>(const uint& j, const uint& mu, const uint& i, cons
 	if (i==pj)
 		res += (-1.0/pow(2.0*PI,2))*(-(l[pj])[mu]/a/a);
 		
-	v[j*4+mu] += -f*(-1.0/pow(2.0*PI,2))*res;
+	v[j*4+mu] += -f*(-pow(2.0*PI,2))*res;
 }
 
 // mdGaussian_nr
@@ -1776,9 +1775,9 @@ template <> void ddVthr_nr<4>(const uint& j, const uint& mu, const uint& k, cons
 			res += 2.0*FThermal(r_mjmk,t_mjmk,beta,a)\
 					+ 2.0*FThermal(r_jk,t_jk,beta,a);
 		if (k!=mj)
-			res +=  - 2.0*FThermal(r_mjk,t_mjk,beta,a); //
+			res +=  - 2.0*FThermal(r_mjk,t_mjk,beta,a);
 		if (k!=pj)
-			res += - 2.0*FThermal(r_jmk,t_jmk,beta,a); //
+			res += - 2.0*FThermal(r_jmk,t_jmk,beta,a);
 	}
 
 	// terms where mu not nexcessarily equal to nu, without sums
@@ -1791,23 +1790,25 @@ template <> void ddVthr_nr<4>(const uint& j, const uint& mu, const uint& k, cons
 			if (mu==3) {
 				res += - 2.0*DFThermalDt_jk*DX(l,j,pj,nu);
 				if (nu<3)
-					res += (2.0*DDFThermalDrDtOnr_jk*DX(l,j,k,nu)*T_jk); //
+					res += (2.0*DDFThermalDrDtOnr_jk*DX(l,j,k,nu)*T_jk); 
 				else
 					res += -2.0*DDFThermalDtDt_jk*T_jk;
 			}
 			else {
-				res += (2.0*DFThermalDrOnr_jk*DX(l,j,pj,nu)*DX(l,j,k,mu)); //
-				if (nu<3 && r_jk>MIN_NUMBER) //as -DFThermalDrOnr+DDFThermalDrDr->0 as r->0
+				res += (2.0*DFThermalDrOnr_jk*DX(l,j,pj,nu)*DX(l,j,k,mu));
+				if (nu==3)
+					res += + 2.0*DDFThermalDrDtOnr_jk*DX(l,j,k,mu)*T_jk;
+				else if (r_jk>MIN_NUMBER) //as -DFThermalDrOnr+DDFThermalDrDr->0 as r->0
 					res += (2.0*DFThermalDrOnr_jk*DX(l,j,k,mu)*DX(l,j,k,nu)*T_jk)/pow(r_jk,2) \
-							- (2.0*DDFThermalDrDr_jk*DX(l,j,k,mu)*DX(l,j,k,nu)*T_jk)/pow(r_jk,2); ////
+							- (2.0*DDFThermalDrDr_jk*DX(l,j,k,mu)*DX(l,j,k,nu)*T_jk)/pow(r_jk,2);
 				if (nu==mu)
-					res += - (2.0*DFThermalDrOnr_jk*T_jk); //
+					res += - (2.0*DFThermalDrOnr_jk*T_jk);
 			}
 			
 			if (nu==3) {
 				res += 2.0*DFThermalDt_jk*DX(l,k,pk,mu);
-				if (mu<3)
-					res += (2.0*DDFThermalDrDtOnr_jk*DX(l,j,k,mu)*T_jk); //
+				//if (mu<3)
+					//res += (2.0*DDFThermalDrDtOnr_jk*DX(l,j,k,mu)*T_jk); //
 			}
 			else {
 				res += - (2.0*DFThermalDrOnr_jk*DX(l,j,k,nu)*DX(l,k,pk,mu)); //
@@ -1824,7 +1825,7 @@ template <> void ddVthr_nr<4>(const uint& j, const uint& mu, const uint& k, cons
 			if (mu==3)
 				res += 2.0*DFThermalDt(r_jmk,t_jmk,beta,a)*DX(l,j,pj,nu);
 			else
-				res +=- (2.0*DFThermalDrOnr(r_jmk,t_jmk,beta,a)*DX(l,j,pj,nu)*DX(l,j,mk,mu)); //
+				res += -(2.0*DFThermalDrOnr(r_jmk,t_jmk,beta,a)*DX(l,j,pj,nu)*DX(l,j,mk,mu)); //
 		}
 	
 	// terms with sums
@@ -1847,7 +1848,7 @@ template <> void ddVthr_nr<4>(const uint& j, const uint& mu, const uint& k, cons
 			r_ij = SpatialDistance(l[j],l[i]);
 			r_imj = SpatialDistance(l[i],l[mj]);	
 			t_ij = (l[j])[3]-(l[i])[3];
-			t_imj = (l[mj])[3]-(l[i])[3];			
+			t_imj = (l[mj])[3]-(l[i])[3];
 			
 			if (k==j && i!=j) {
 				DFThermalDrOnr_ij = DFThermalDrOnr(r_ij,t_ij,beta,a);
@@ -1856,14 +1857,14 @@ template <> void ddVthr_nr<4>(const uint& j, const uint& mu, const uint& k, cons
 				DDFThermalDrDtOnr_ij = DDFThermalDtDrOnr(r_ij,t_ij,beta,a);
 				DDFThermalDtDt_ij = DDFThermalDtDt(r_ij,t_ij,beta,a);
 				if (mu==3) {
-					res += 2.0*DFThermalDt_ij*DX(l,i,pj,nu);
+					res += 2.0*DFThermalDt_ij*DX(l,i,pi,nu);
 					if (nu==3) 
 						res += 2.0*DDFThermalDtDt_ij*T_ij;
 					else
 						res += (2.0*DDFThermalDrDtOnr_ij*DX(l,j,i,nu)*T_ij); //
 				}
 				else {
-					res += - (2.0*DFThermalDrOnr_ij*DX(l,i,pj,nu)*DX(l,i,k,mu)); //
+					res += 2.0*DFThermalDrOnr_ij*DX(l,i,pi,nu)*DX(l,j,i,mu); // sign
 					if (nu<3 && r_ij>MIN_NUMBER) { // as -DFThermalDrOnr+DDFThermalDrDr->0 as r->0
 						res += - (2.0*DFThermalDrOnr_ij*DX(l,j,i,mu)*DX(l,j,i,nu)*T_ij)/pow(r_ij,2) \
 							+ (2.0*DDFThermalDrDr_ij*DX(l,j,i,mu)*DX(l,j,i,nu)*T_ij)/pow(r_ij,2); ////
@@ -1880,21 +1881,21 @@ template <> void ddVthr_nr<4>(const uint& j, const uint& mu, const uint& k, cons
 					res += (2.0*DFThermalDrOnr_ij*DX(l,i,pj,mu)*DX(l,j,i,nu)); //
 				}
 			}
-			if (k==mj && i!=mj) {
+			if (j==pk && i!=mj) {
 				DFThermalDrOnr_imj = DFThermalDrOnr(r_imj,t_imj,beta,a);
 				DFThermalDt_imj = DFThermalDt(r_imj,t_imj,beta,a);
 				if (nu==3)
-					res += - 2.0*DFThermalDt_imj*DX(l,i,pj,mu);
+					res += - 2.0*DFThermalDt_imj*DX(l,i,pi,mu);
 				else
-					res += - (2.0*DFThermalDrOnr_imj*DX(l,i,pj,mu)*DX(l,mj,i,nu)); //
-			}				
+					res += 2.0*DFThermalDrOnr_imj*DX(l,i,pi,mu)*DX(l,i,k,nu); //
+			}
 			if (j==mk && i!=j) {
 				DFThermalDt_ij = DFThermalDt(r_ij,t_ij,beta,a);
 				DFThermalDrOnr_ij = DFThermalDrOnr(r_ij,t_ij,beta,a);
 				if (mu==3)
-					res += - 2.0*DFThermalDt_ij*DX(l,i,pj,nu);
+					res += - 2.0*DFThermalDt_ij*DX(l,i,pi,nu);
 				else
-					res += + (2.0*DFThermalDrOnr_ij*DX(l,i,pj,nu)*DX(l,i,mk,mu)); //
+					res += - 2.0*DFThermalDrOnr_ij*DX(l,i,pi,nu)*DX(l,j,i,mu); //
 			}	
 		}		
 	}
@@ -1908,7 +1909,7 @@ template <> void ddVthr_nr<4>(const uint& j, const uint& mu, const uint& k, cons
 	if (k==pj && mu==nu)
 		res += (-1.0/pow(2.0*PI,2))*(-1.0/a/a);
 	
-	m(4*j+mu,4*k+nu) += f*(-1.0/pow(2.0*PI,2))*res;
+	m(4*j+mu,4*k+nu) += f*(-pow(2.0*PI,2))*res;
 }
 
 // ddGaussian_nr
