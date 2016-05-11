@@ -912,7 +912,7 @@ void loopToVector(const Loop<Dim>& l, vec& v) {
 // vectorToLoop
 template<uint Dim>
 void vectorToLoop(const vec& v, Loop<Dim>& l) {
-	if (v.size()!=Dim*l.size() && v.size()!=Dim*(l.size()+1)) {
+	if (v.size()<Dim*l.size()) {
 		cerr << "vectorToLoop error: v.size() = " << v.size() << ", loop needs vector of size = " << Dim*l.size() << endl;
 	}
 	uint j,k;

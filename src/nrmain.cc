@@ -210,7 +210,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	
 	// defining some derived parameters	
 	uint N = pow(2,p.K);
-	uint zm = dim;
+	uint zm = (poto == PotentialOptions::thermal? dim-1: dim);
 	uint NT = N*dim+zm;
 	number E = p.P2, R = abs(1.0/p.G/p.B);
 	Point<dim> P;
@@ -236,6 +236,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	// defining checks
 	Check checkSol("solution",1.0e-7);
 	Check checkSolMax("solution max",1.0e-6);
+	Check checkSolZM("solution zero modes",1.0e-3);
 	Check checkDelta("delta",1.0);
 	Check checkSm("smoothness",1.0);
 	Check checkDX("dx<<a",2.0e-1);
@@ -327,11 +328,13 @@ for (uint pl=0; pl<Npl; pl++) {
 		interpolate(interpOld,interpNew);
 		loopToVector(interpNew,x);
 	}
-	if (x.size()!=NT) {
+	if (x.size()<NT) {
 		x.conservativeResize(NT);
 		for (uint mu=0; mu<zm; mu++)
 			x[N*dim+mu] = 1.0e-3;
 	}
+	else if (x.size()>NT)
+		x.conservativeResize(NT);
 	
 	//defining some quantities used to stop n-r loop
 	uint runsCount = 0;
@@ -540,7 +543,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		
 		// lagrange multiplier terms
 		for (j=0; j<N; j++) {
-			for (mu=0; mu<dim; mu++) {
+			for (mu=0; mu<zm; mu++) {
 			
 				mds(N*dim+mu) -= x[j*dim+mu];
 				mds(j*dim+mu) -= x[N*dim+mu];
@@ -705,6 +708,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		
 		// initializing delta
 		vec delta(NT);
+		number normx = x.norm();
 		if (!pass) {
 				
 			// solving for delta = DDS^{-1}*mdS
@@ -716,29 +720,31 @@ for (uint pl=0; pl<Npl; pl++) {
 			checkInv.checkMessage();
 			if (!checkInv.good()) {
 				number x_end = 0.0;
-				for (j=0; j<dim; j++)
+				for (j=0; j<zm; j++)
 					x_end += pow(x[N*dim+j],2);
 				x_end = sqrt(x_end);
-				cerr << endl << "x.norm()         " << x.norm() << endl;
-				cerr << "x_end.norm()     " << x_end << endl;
-				cerr << "mds.norm()       " << mds.norm() << endl;
-				cerr << "mds.maxCoeff()   " << mds.maxCoeff() << endl;
-				cerr << "mds.minCoeff()   " << mds.minCoeff() << endl;
-				cerr << "delta.norm()     " << delta.norm() << endl;
-				cerr << endl << "dds info:" << endl;
-				cerr << "dds.determinant():" << dds.determinant() << endl;
-				cerr << "dds.sum():        " << dds.sum()       << endl;
-				cerr << "dds.prod():       " << dds.prod()      << endl;
-				cerr << "dds.mean():       " << dds.mean()      << endl;
-				cerr << "dds.minCoeff():   " << dds.minCoeff()  << endl;
-				cerr << "dds.maxCoeff():   " << dds.maxCoeff()  << endl;
-				cerr << "dds.trace():      " << dds.trace()     << endl;
-				cerr << "dds.norm():       " << dds.norm()      << endl;
+				cerr << endl << "x.norm():              " << x.norm() << endl;
+				cerr << "x_end.norm():          " << x_end << endl;
+				cerr << "mds.norm():            " << mds.norm() << endl;
+				cerr << "mds.maxCoeff():        " << mds.maxCoeff() << endl;
+				cerr << "mds.minCoeff():        " << mds.minCoeff() << endl;
+				cerr << "(mds.tail(zm)).mean(): " << (mds.tail(zm)).mean() << endl;
+				cerr << "(mds.head(N)).mean():  " << (mds.head(N)).mean() << endl;
+				cerr << "delta.norm():          " << delta.norm() << endl;
+				cerr << endl << "dds info:      " << endl;
+				cerr << "dds.determinant():      " << dds.determinant() << endl;
+				cerr << "dds.sum():              " << dds.sum()       << endl;
+				cerr << "dds.prod():             " << dds.prod()      << endl;
+				cerr << "dds.mean():             " << dds.mean()      << endl;
+				cerr << "dds.minCoeff():         " << dds.minCoeff()  << endl;
+				cerr << "dds.maxCoeff():         " << dds.maxCoeff()  << endl;
+				cerr << "dds.trace():            " << dds.trace()     << endl;
+				cerr << "dds.norm():             " << dds.norm()      << endl;
 				cerr << endl << "action info:" << endl;
-				cerr << "s:                " << s               << endl;
-				cerr << "kinetic:          " << kinetic         << endl;
-				cerr << "i0:               " << i0              << endl;
-				cerr << "vr:               " << vr      << endl;
+				cerr << "s:                      " << s               << endl;
+				cerr << "kinetic:                " << kinetic         << endl;
+				cerr << "i0:                     " << i0              << endl;
+				cerr << "vr:                     " << vr      << endl;
 				return 1;
 			}
 
@@ -764,11 +770,12 @@ for (uint pl=0; pl<Npl; pl++) {
 ----------------------------------------------------------------------------------------------------------------------------*/	
 	
 		// calculating norms etc
-		number normx = x.norm();
 		number normmds = mds.norm();
 		number normdelta = delta.norm();
 		number maxmds = mds.maxCoeff();
 		number minmds = mds.minCoeff();
+		number avgzm = (mds.tail(zm)).mean();
+		number avgnzm = (mds.head(N)).mean();
 		if (-minmds>maxmds) maxmds = -minmds;
 		number maxx = x.maxCoeff();
 		number minx = x.minCoeff();
@@ -777,45 +784,49 @@ for (uint pl=0; pl<Npl; pl++) {
 		// adding to checks
 		checkSol.add(normmds/normx);
 		checkSolMax.add(maxmds/maxx);
+		checkSolZM.add(avgzm/avgnzm);
 		checkDelta.add(normdelta/normx);
 		
 		// checking delta
 		checkDelta.checkMessage();
 		if (!checkDelta.good() && !pass) {
 			number x_end = 0.0;
-			for (j=0; j<dim; j++)
+			for (j=0; j<zm; j++)
 				x_end += pow(x[N*dim+j],2);
 			x_end = sqrt(x_end);
-			cerr << endl << "x.norm()         " << x.norm() << endl;
-			cerr << "x_end.norm()     " << x_end << endl;
-			cerr << "mds.norm()       " << mds.norm() << endl;
-			cerr << "mds.maxCoeff()   " << mds.maxCoeff() << endl;
-			cerr << "mds.minCoeff()   " << mds.minCoeff() << endl;
-			cerr << "delta.norm()     " << delta.norm() << endl;
-			cerr << endl << "dds info:" << endl;
-			cerr << "dds.determinant():" << dds.determinant() << endl;
-			cerr << "dds.sum():        " << dds.sum()       << endl;
-			cerr << "dds.prod():       " << dds.prod()      << endl;
-			cerr << "dds.mean():       " << dds.mean()      << endl;
-			cerr << "dds.minCoeff():   " << dds.minCoeff()  << endl;
-			cerr << "dds.maxCoeff():   " << dds.maxCoeff()  << endl;
-			cerr << "dds.trace():      " << dds.trace()     << endl;
-			cerr << "dds.norm():       " << dds.norm() << endl;
+			cerr << endl << "x.norm():              " << x.norm() << endl;
+			cerr << "x_end.norm():          " << x_end << endl;
+			cerr << "mds.norm():            " << mds.norm() << endl;
+			cerr << "mds.maxCoeff():        " << mds.maxCoeff() << endl;
+			cerr << "mds.minCoeff():        " << mds.minCoeff() << endl;
+			cerr << "(mds.tail(zm)).mean(): " << (mds.tail(zm)).mean() << endl;
+			cerr << "(mds.head(N)).mean():  " << (mds.head(N)).mean() << endl;
+			cerr << "delta.norm():          " << delta.norm() << endl;
+			cerr << endl << "dds info:      " << endl;
+			cerr << "dds.determinant():      " << dds.determinant() << endl;
+			cerr << "dds.sum():              " << dds.sum()       << endl;
+			cerr << "dds.prod():             " << dds.prod()      << endl;
+			cerr << "dds.mean():             " << dds.mean()      << endl;
+			cerr << "dds.minCoeff():         " << dds.minCoeff()  << endl;
+			cerr << "dds.maxCoeff():         " << dds.maxCoeff()  << endl;
+			cerr << "dds.trace():            " << dds.trace()     << endl;
+			cerr << "dds.norm():             " << dds.norm()      << endl;
 			cerr << endl << "action info:" << endl;
-			cerr << "s:                " << s               << endl;
-			cerr << "kinetic:          " << kinetic         << endl;
-			cerr << "i0:               " << i0              << endl;
-			cerr << "vr:               " << vr      << endl;
+			cerr << "s:                      " << s               << endl;
+			cerr << "kinetic:                " << kinetic         << endl;
+			cerr << "i0:                     " << i0              << endl;
+			cerr << "vr:                     " << vr      << endl;
 			break;
 		}
 	
 		//printing tests to see convergence
 		if (verbose) {
 			if (runsCount==1) {
-				printf("%4s%4s%11s%11s%11s%11s%11s%11s%11s%11s%11s%11s%11s\n","pl","run","len","i0","s","sol","solM","delta","Sm","dx*kg_max","ic_max","cc_max","dx/a");
+				printf("%4s%4s%11s%11s%11s%11s%11s%11s%11s%11s%11s%11s%11s%11s\n","pl","run","len","i0","s","sol","solM","solZM","delta","Sm","dx*kg_max","ic_max","cc_max","dx/a");
 			}
-			printf("%4i%4i%11.4g%11.4g%11.4g%11.4g%11.4g%11.4g%11.4g%11.4g%11.4g%11.4g%11.4g\n",pl,runsCount,len,i0,s,checkSol.back(),\
-				checkSolMax.back(),checkDelta.back(),checkSm.back(),checkKgDxMax.back(),checkICMax.back(),checkCCMax.back(),checkDX.back());
+			printf("%4i%4i%11.4g%11.4g%11.4g%11.4g%11.4g%11.4g%11.4g%11.4g%11.4g%11.4g%11.4g%11.4g\n",pl,runsCount,len,i0,s,checkSol.back(),\
+				checkSolMax.back(),checkSolZM.back(),checkDelta.back(),checkSm.back(),checkKgDxMax.back(),\
+				checkICMax.back(),checkCCMax.back(),checkDX.back());
 		}
 	
 	}
