@@ -107,9 +107,9 @@ else
 		sed -i 's/VMeasure(\([a-z]\),-1 + \([a-z]\))/T_\1m\2/g' $1
 		sed -i 's/VMeasure(-1 + \([a-z]\),\([a-z]\))/T_m\1\2/g' $1
 		sed -i 's/VMeasure(-1 + \([a-z]\),-1 + \([a-z]\))/T_m\1m\2/g' $1
-		sed -i 's/d(\([a-z]*\),\([a-z]*\))/d_\1\2/g' $1
-		sed -i 's/d(\([a-z]\),-1 + \([a-z]\))/d_\1m\2/g' $1
-		sed -i 's/d(-1 + \([a-z]\),\([a-z]\))/d_m\1\2/g' $1
-		sed -i 's/d(-1 + \([a-z]\),-1 + \([a-z]\))/d_m\1m\2/g' $1
+		sed -i 's/d(\([a-z]*\),\([a-z]*\))/r_\1\2/g' $1
+		sed -i 's/d(\([a-z]\),-1 + \([a-z]\))/r_\1m\2/g' $1
+		sed -i 's/d(-1 + \([a-z]\),\([a-z]\))/r_m\1\2/g' $1
+		sed -i 's/d(-1 + \([a-z]\),-1 + \([a-z]\))/r_m\1m\2/g' $1
 	fi
 fi

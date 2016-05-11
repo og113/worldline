@@ -28,56 +28,62 @@
 	0 - some static functions
 ----------------------------------------------------------------------------------------------------------------------------*/
 
+// sinch
+static number sinch(const number& x) {
+	return (abs(x)<MIN_NUMBER? 1.0: sinh(x)/x);
+}
+
+// coshsinhc
+static number coshsinhc(const number& x) {
+	return (abs(x)<MIN_NUMBER? 0.0: cosh(x)/x - sinh(x)/pow(x,2));
+}
+
+// coshsinhcc
+static number coshsinhcc(const number& x) {
+	return (abs(x)<MIN_NUMBER? 1.0/3.0: cosh(x)/pow(x,2) - sinh(x)/pow(x,3));
+}
+
 // FThermal
 number FThermal(const number& r, const number& t, const number& beta, const number& a) {
-	return  sinh((2.0*PI*r)/beta)/(4.0*PI*r*beta*((-2.0*pow(a,2)*pow(PI,2))/pow(beta,2) + cos((2.0*PI*t)/beta) - cosh((2.0*PI*r)/beta)));
+	return sinch((2.0*r*PI)/beta)/(2.0*pow(beta,2)*((-2.0*pow(a,2)*pow(PI,2))/pow(beta,2) + cos((2.0*PI*t)/beta) - cosh((2.0*r*PI)/beta)));
 }
 
 // DFThermalDr
 number DFThermalDr(const number& r, const number& t, const number& beta, const number& a) {
-	return cosh((2.0*PI*r)/beta)/(2.0*r*pow(beta,2)*\
-	((-2.0*pow(a,2)*pow(PI,2))/pow(beta,2) + cos((2.0*PI*t)/beta) - cosh((2.0*PI*r)/beta))) \
- - sinh((2.0*PI*r)/beta)/(4.0*PI*pow(r,2)*beta*((-2.0*pow(a,2)*pow(PI,2))/pow(beta,2) + cos((2.0*PI*t)/beta) \
- - cosh((2.0*PI*r)/beta))) + pow(sinh((2.0*PI*r)/beta),2)/\
- (2.0*r*pow(beta,2)*pow((-2.0*pow(a,2)*pow(PI,2))/pow(beta,2) + cos((2.0*PI*t)/beta) - cosh((2.0*PI*r)/beta),2));
+	return (PI*coshsinhc((2.0*PI*r)/beta))/\
+ (pow(beta,3)*((-2.0*pow(a,2)*pow(PI,2))/pow(beta,2) + cos((2.0*PI*t)/beta) - cosh((2.0*PI*r)/beta))) \
+ + (2.0*pow(PI,2)*r*pow(sinch((2.0*PI*r)/beta),2))/\
+ (pow(beta,4)*pow((-2.0*pow(a,2)*pow(PI,2))/pow(beta,2) + cos((2.0*PI*t)/beta) - cosh((2.0*PI*r)/beta),2));
 }
 
 // DFThermalDt
 number DFThermalDt(const number& r, const number& t, const number& beta, const number& a) {
-	return (sin((2.0*PI*t)/beta)*sinh((2.0*PI*r)/beta))/\
- (2.0*r*pow(beta,2)*pow((-2.0*pow(a,2)*pow(PI,2))/pow(beta,2) + cos((2.0*PI*t)/beta) - cosh((2.0*PI*r)/beta),2));
+	return (PI*sin((2.0*PI*t)/beta)*sinch((2.0*PI*r)/beta))/\
+ (pow(beta,3)*pow((-2.0*pow(a,2)*pow(PI,2))/pow(beta,2) + cos((2.0*PI*t)/beta) - cosh((2.0*PI*r)/beta),2));
 }
 
 // DDFThermalDrDr
 number DDFThermalDrDr(const number& r, const number& t, const number& beta, const number& a) {
-	return - (cosh((2.0*PI*r)/beta)/(pow(r,2)*pow(beta,2)*((-2.0*pow(a,2)*pow(PI,2))/pow(beta,2) + cos((2.0*PI*t)/beta) \
- - cosh((2.0*PI*r)/beta)))) + (PI*sinh((2.0*PI*r)/beta))/\
- (r*pow(beta,3)*((-2.0*pow(a,2)*pow(PI,2))/pow(beta,2) + cos((2.0*PI*t)/beta) - cosh((2.0*PI*r)/beta))) \
- + sinh((2.0*PI*r)/beta)/(2.0*PI*pow(r,3)*beta*((-2.0*pow(a,2)*pow(PI,2))/pow(beta,2) + cos((2.0*PI*t)/beta) \
- - cosh((2.0*PI*r)/beta))) + (3.0*PI*cosh((2.0*PI*r)/beta)*sinh((2.0*PI*r)/beta))/\
- (r*pow(beta,3)*pow((-2.0*pow(a,2)*pow(PI,2))/pow(beta,2) + cos((2.0*PI*t)/beta) - cosh((2.0*PI*r)/beta),2)) \
- - pow(sinh((2.0*PI*r)/beta),2)/\
- (pow(r,2)*pow(beta,2)*pow((-2.0*pow(a,2)*pow(PI,2))/pow(beta,2) + cos((2.0*PI*t)/beta) - cosh((2.0*PI*r)/beta),2)) \
- + (2.0*PI*pow(sinh((2.0*PI*r)/beta),3))/\
- (r*pow(beta,3)*pow((-2.0*pow(a,2)*pow(PI,2))/pow(beta,2) + cos((2.0*PI*t)/beta) - cosh((2.0*PI*r)/beta),3));
+	return  (2.0*pow(PI,2)*(-((2.0*pow(a,2)*pow(PI,2) - pow(beta,2)*cos((2.0*PI*t)/beta) + pow(beta,2)*cosh((2.0*PI*r)/beta))*
+ (3.0*cosh((2.0*PI*r)/beta) - 2.0*sinch((2.0*PI*r)/beta))*sinch((2.0*PI*r)/beta)) \
+ + 8.0*pow(PI,2)*pow(r,2)*pow(sinch((2.0*PI*r)/beta),3) \
+ + (pow(2.0*pow(a,2)*pow(PI,2) - pow(beta,2)*cos((2.0*PI*t)/beta) + pow(beta,2)*cosh((2.0*PI*r)/beta),2)*
+ (-2.0*coshsinhcc((2.0*PI*r)/beta) + sinch((2.0*PI*r)/beta)))/pow(beta,2)))/\
+ pow(-2.0*pow(a,2)*pow(PI,2) + pow(beta,2)*cos((2.0*PI*t)/beta) - pow(beta,2)*cosh((2.0*PI*r)/beta),3);
 }
 
 // DDFThermalDtDr
 number DDFThermalDtDr(const number& r, const number& t, const number& beta, const number& a) {
-	return (PI*cosh((2.0*PI*r)/beta)*sin((2.0*PI*t)/beta))/\
- (r*pow(beta,3)*pow((-2.0*pow(a,2)*pow(PI,2))/pow(beta,2) + cos((2.0*PI*t)/beta) - cosh((2.0*PI*r)/beta),2)) \
- - (sin((2.0*PI*t)/beta)*sinh((2.0*PI*r)/beta))/\
- (2.0*pow(r,2)*pow(beta,2)*pow((-2.0*pow(a,2)*pow(PI,2))/pow(beta,2) + cos((2.0*PI*t)/beta) - cosh((2.0*PI*r)/beta),2)) \
- + (2.0*PI*sin((2.0*PI*t)/beta)*pow(sinh((2.0*PI*r)/beta),2))/\
- (r*pow(beta,3)*pow((-2.0*pow(a,2)*pow(PI,2))/pow(beta,2) + cos((2.0*PI*t)/beta) - cosh((2.0*PI*r)/beta),3));
+	return  (2.0*pow(PI,2)*sin((2.0*PI*t)/beta)*((2.0*pow(a,2)*pow(PI,2) - pow(beta,2)*cos((2.0*PI*t)/beta) + pow(beta,2)*cosh((2.0*PI*r)/beta))*
+ coshsinhc((2.0*PI*r)/beta) - 4.0*PI*r*beta*pow(sinch((2.0*PI*r)/beta),2)))/\
+ pow(2.0*pow(a,2)*pow(PI,2) - pow(beta,2)*cos((2.0*PI*t)/beta) + pow(beta,2)*cosh((2.0*PI*r)/beta),3);
 }
 
 // DDFThermalDtDt
 number DDFThermalDtDt(const number& r, const number& t, const number& beta, const number& a) {
-	return (PI*cos((2.0*PI*t)/beta)*sinh((2.0*PI*r)/beta))/\
- (r*pow(beta,3)*pow((-2.0*pow(a,2)*pow(PI,2))/pow(beta,2) + cos((2.0*PI*t)/beta) - cosh((2.0*PI*r)/beta),2)) \
- + (2.0*PI*pow(sin((2.0*PI*t)/beta),2)*sinh((2.0*PI*r)/beta))/\
- (r*pow(beta,3)*pow((-2.0*pow(a,2)*pow(PI,2))/pow(beta,2) + cos((2.0*PI*t)/beta) - cosh((2.0*PI*r)/beta),3));
+	return  (pow(PI,2)*(-3.0*pow(beta,2) + pow(beta,2)*cos((4.0*PI*t)/beta) \
+ + 2.0*cos((2.0*PI*t)/beta)*(2.0*pow(a,2)*pow(PI,2) + pow(beta,2)*cosh((2.0*PI*r)/beta)))*sinch((2.0*PI*r)/beta))/\
+ pow(2.0*pow(a,2)*pow(PI,2) - pow(beta,2)*cos((2.0*PI*t)/beta) + pow(beta,2)*cosh((2.0*PI*r)/beta),3);
 }
 
 /*----------------------------------------------------------------------------------------------------------------------------
@@ -1133,6 +1139,7 @@ template <> void Vdr<4>(const uint& j, const uint& k, const Loop<4>& l, const nu
 // Vthr
 template <> void Vthr<4>(const uint& j, const uint& k, const Loop<4>& l, const number& beta, const number& a, const number& f, number& result) {
 
+	// extra factor of (-1.0/pow(2.0*PI,2)) due to the fact that we are treating the green's function here
 	if (k<=j) {
 		uint pj = (j==(l.size()-1)? 0: j+1);
 		uint pk = (k==(l.size()-1)? 0: k+1);
@@ -1140,7 +1147,7 @@ template <> void Vthr<4>(const uint& j, const uint& k, const Loop<4>& l, const n
 		number r = SpatialDistance(l[j],l[k]);
 		number t = (l[k])[3]-(l[j])[3];
 	
-		result += f*(1.0+(number)(k<j))*Dot(l[pj],l[j],l[pk],l[k])*FThermal(r,t,beta,a);	
+		result += f*(-1.0/pow(2.0*PI,2))*(1.0+(number)(k<j))*Dot(l[pj],l[j],l[pk],l[k])*FThermal(r,t,beta,a);	
 	}
 }
 
@@ -1261,28 +1268,36 @@ template <> void mdVthr_nr<4>(const uint& j, const uint& mu, const uint& i, cons
 		
 	if (i!=j) {
 		number r_ij = SpatialDistance(l[i],l[j]);
-		number t_ij = (l[j])[4]-(l[i])[4]; // checked order
+		number t_ij = (l[j])[3]-(l[i])[3]; // checked order
 		number FThermal_ij = FThermal(r_ij,t_ij,beta,a);
 		number DFThermalDr_ij = DFThermalDr(r_ij,t_ij,beta,a);
 		number DFThermalDt_ij = DFThermalDt(r_ij,t_ij,beta,a);
 		number T_ij = Dot(l[pi],l[i],l[pj],l[j]);
-		res += 2.0*DX(l,i,pi,mu)/B_ij - 4.0*DX(l,j,i,mu)*T_ij/pow(B_ij,2);
+		
+		res += 2.0*FThermal_ij*DX(l,i,pj,mu);
+		if (mu<3)
+			res += + (2.0*DFThermalDr_ij*DX(l,j,i,mu)*T_ij)/r_ij;
+		else
+			res += + 2.0*DFThermalDt_ij*T_ij;
 	}
 	
 	if (i!=mj) {
-		number B_imj = a*a + DistanceSquared(l[i],l[mj]);
-		res += -2.0*DX(l,i,pi,mu)/B_imj;
+		number r_imj = SpatialDistance(l[i],l[mj]);
+		number t_imj = (l[mj])[3]-(l[i])[3]; // checked order
+		number FThermal_imj = FThermal(r_imj,t_imj,beta,a);
+		res += -2.0*FThermal_imj*DX(l,i,pj,mu);
 	}
 	
 	//coincident terms
+	// extra factor of (-1.0/pow(2.0*PI,2)) due to the fact that we are treating the green's function here
 	if (i==j)
-		res += 2.0*(l[j])[mu]/a/a;
+		res += (-1.0/pow(2.0*PI,2))*2.0*(l[j])[mu]/a/a; 
 	if (i==mj)
-		res += -(l[mj])[mu]/a/a;
+		res += (-1.0/pow(2.0*PI,2))*(-(l[mj])[mu]/a/a);
 	if (i==pj)
-		res += -(l[pj])[mu]/a/a;
+		res += (-1.0/pow(2.0*PI,2))*(-(l[pj])[mu]/a/a);
 		
-	v[j*4+mu] += -f*res;
+	v[j*4+mu] += -f*(-1.0/pow(2.0*PI,2))*res;
 }
 
 // mdGaussian_nr
@@ -1715,6 +1730,184 @@ template <> void ddVdr_nr<4>(const uint& j, const uint& mu, const uint& k, const
 	}
 	
 	m(4*j+mu,4*k+nu) += f*res;
+	
+}
+
+// ddVthr_nr
+template <> void ddVthr_nr<4>(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<4>& l,\
+						 const number& beta, const number& a, const number& f, mat& m) {
+	number res = 0.0;
+
+	////
+	//// NB don't want to work out superfluous FThermals etc, when j, k, mu, nu don't require it
+	////
+	
+	uint mj = (j==0? (l.size()-1): j-1);
+	uint pj = (j==(l.size()-1)? 0: j+1);		
+	uint mk = (k==0? (l.size()-1): k-1);
+	uint pk = (k==(l.size()-1)? 0: k+1);
+	
+	number r_jk = SpatialDistance(l[j],l[k]);
+	number r_mjk = SpatialDistance(l[mj],l[k]);
+	number r_jmk = SpatialDistance(l[j],l[mk]);
+	number r_mjmk = SpatialDistance(l[mj],l[mk]);
+	
+	number t_jk = (l[k])[3]-(l[j])[3];
+	number t_mjk = (l[k])[3]-(l[mj])[3];
+	number t_jmk = (l[mk])[3]-(l[j])[3];
+	number t_mjmk = (l[mk])[3]-(l[mj])[3];
+		
+	number T_jk = Dot(l[pj],l[j],l[pk],l[k]);
+
+	number FThermal_jk = FThermal(r_jk,t_jk,beta,a);
+	number FThermal_mjk = FThermal(r_mjk,t_mjk,beta,a);
+	number FThermal_jmk = FThermal(r_jmk,t_jmk,beta,a);
+	number FThermal_mjmk = FThermal(r_mjmk,t_mjmk,beta,a);
+	
+	number DFThermalDr_jk = DFThermalDr(r_jk,t_jk,beta,a);
+	number DFThermalDr_mjk = DFThermalDr(r_mjk,t_mjk,beta,a);
+	number DFThermalDr_jmk = DFThermalDr(r_jmk,t_jmk,beta,a);
+	
+	number DFThermalDt_jk = DFThermalDt(r_jk,t_jk,beta,a);
+	number DFThermalDt_mjk = DFThermalDt(r_mjk,t_mjk,beta,a);
+	number DFThermalDt_jmk = DFThermalDt(r_jmk,t_jmk,beta,a);
+	
+	number DDFThermalDrDr_jk = DDFThermalDrDr(r_jk,t_jk,beta,a);
+	number DDFThermalDrDt_jk = DDFThermalDtDr(r_jk,t_jk,beta,a);
+	number DDFThermalDtDt_jk = DDFThermalDtDt(r_jk,t_jk,beta,a);
+	
+	// terms where mu==nu, without sums
+	if (mu==nu) {
+		if (k!=j)
+			res += 2.0*FThermal_mjmk\
+					+ 2.0*FThermal_jk;
+		if (k!=mj)
+			res +=  - 2.0*FThermal_mjk; //
+		if (k!=pj)
+			res += - 2.0*FThermal_jmk; //
+	}
+
+	// terms where mu not nexcessarily equal to nu, without sums
+		if (k!=j) {
+			if (mu==3) {
+				res += - 2.0*DFThermalDt_jk*DX(l,j,pj,nu);
+				if (nu<3)
+					res += (2.0*DDFThermalDrDt_jk*DX(l,j,k,nu)*T_jk)/r_jk;
+				else
+					res += -2.0*DDFThermalDtDt_jk*T_jk;
+			}
+			else {
+				res += (2.0*DFThermalDr_jk*DX(l,j,pj,nu)*DX(l,j,k,mu))/r_jk;
+				if (nu<3)
+					res += (2.0*DFThermalDr_jk*DX(l,j,k,mu)*DX(l,j,k,nu)*T_jk)/pow(r_jk,3) \
+							- (2.0*DDFThermalDrDr_jk*DX(l,j,k,mu)*DX(l,j,k,nu)*T_jk)/pow(r_jk,2);
+				if (nu==mu)
+					res += - (2.0*DFThermalDr_jk*T_jk)/r_jk;	 
+			}
+			
+			if (nu==3) {
+				res += 2.0*DFThermalDt_jk*DX(l,k,pk,mu);
+				if (mu<3)
+					res += (2.0*DDFThermalDrDt_jk*DX(l,j,k,mu)*T_jk)/r_jk;
+			}
+			else {
+				res += - (2.0*DFThermalDr_jk*DX(l,j,k,nu)*DX(l,k,pk,mu))/r_jk;
+			}
+			
+		}
+		if (k!=mj) {
+			if (nu==3)
+				res += - 2.0*DFThermalDt_mjk*DX(l,k,pk,mu);
+			else
+				res += (2.0*DFThermalDr_mjk*DX(l,mj,k,nu)*DX(l,k,pk,mu))/r_mjk;
+		}
+		if (k!=pj) {
+			if (mu==3)
+				res += 2.0*DFThermalDt_jmk*DX(l,j,pj,nu);
+			else
+				res +=- (2.0*DFThermalDr_jmk*DX(l,j,pj,nu)*DX(l,j,mk,mu))/r_jmk;
+		}
+	
+	// terms with sums
+	if (k==j || k==mj || k==pj) {
+	
+		uint pi;
+		number T_ij;
+		number r_ij, r_imj;
+		number t_ij, t_imj;
+		number DFThermalDr_ij, DFThermalDr_imj;	
+		number DFThermalDt_ij, DFThermalDt_imj;	
+		number DDFThermalDrDr_ij;	
+		number DDFThermalDrDt_ij;
+		number DDFThermalDtDt_ij;
+		
+		for (uint i=0; i<l.size(); i++) {
+		
+			pi = (i==(l.size()-1)? 0: i+1);
+			T_ij = Dot(l[pi],l[i],l[pj],l[j]);			
+			r_ij = SpatialDistance(l[j],l[i]);
+			r_imj = SpatialDistance(l[i],l[mj]);	
+			t_ij = (l[j])[3]-(l[i])[3];
+			t_imj = (l[mj])[3]-(l[i])[3];			
+			DFThermalDr_ij = DFThermalDr(r_ij,t_ij,beta,a);
+			DFThermalDr_imj = DFThermalDr(r_imj,t_imj,beta,a);
+			DFThermalDt_ij = DFThermalDt(r_ij,t_ij,beta,a);
+			DFThermalDt_imj = DFThermalDt(r_imj,t_imj,beta,a);
+			DDFThermalDrDr_ij = DDFThermalDrDr(r_ij,t_ij,beta,a);
+			DDFThermalDrDt_ij = DDFThermalDtDr(r_ij,t_ij,beta,a);
+			DDFThermalDtDt_ij = DDFThermalDtDt(r_ij,t_ij,beta,a);
+			
+			if (k==j && i!=j) {
+				if (mu==3) {
+					res += 2.0*DFThermalDt_ij*DX(l,i,pj,nu);
+					if (nu==3) 
+						res += 2.0*DDFThermalDtDt_ij*T_ij;
+					else
+						res += (2.0*DDFThermalDrDt_ij*DX(l,j,i,nu)*T_ij)/r_ij;
+				}
+				else {
+					res += - (2.0*DFThermalDr_ij*DX(l,i,pj,nu)*DX(l,i,k,mu))/r_ij;
+					if (nu<3) {
+						res += - (2.0*DFThermalDr_ij*DX(l,j,i,mu)*DX(l,j,i,nu)*T_ij)/pow(r_ij,3) \
+							+ (2.0*DDFThermalDrDr_ij*DX(l,j,i,mu)*DX(l,j,i,nu)*T_ij)/pow(r_ij,2);
+						if (nu==mu)
+							res += (2.0*DFThermalDr_ij*T_ij)/r_ij;
+						}
+					else
+						res += + (2.0*DDFThermalDrDt_ij*DX(l,j,i,mu)*T_ij)/r_ij;
+				}
+				if (nu==3) {
+					res += 2.0*DFThermalDt_ij*DX(l,i,pj,mu);
+				}
+				else {
+					res += (2.0*DFThermalDr_ij*DX(l,i,pj,mu)*DX(l,j,i,nu))/r_ij;
+				}
+			}
+			if (k==mj && i!=mj) {
+				if (nu==3)
+					res += - 2.0*DFThermalDt_imj*DX(l,i,pj,mu);
+				else
+					res += - (2.0*DFThermalDr_imj*DX(l,i,pj,mu)*DX(l,mj,i,nu))/r_imj;
+			}				
+			if (k==pj && i!=j) {
+				if (mu==3)
+					res += - 2.0*DFThermalDt_ij*DX(l,i,pj,nu);
+				else
+					res += + (2.0*DFThermalDr_ij*DX(l,i,pj,nu)*DX(l,i,mk,mu))/r_ij;
+			}	
+		}		
+	}
+	
+	//coincident terms
+	// extra factor of (-1.0/pow(2.0*PI,2)) due to the fact that we are treating the green's function here
+	if (k==j && mu==nu)
+		res += (-1.0/pow(2.0*PI,2))*2.0/a/a;
+	if (k==mj && mu==nu)
+		res += (-1.0/pow(2.0*PI,2))*(-1.0/a/a);
+	if (k==pj && mu==nu)
+		res += (-1.0/pow(2.0*PI,2))*(-1.0/a/a);
+	
+	m(4*j+mu,4*k+nu) += f*(-1.0/pow(2.0*PI,2))*res;
 	
 }
 

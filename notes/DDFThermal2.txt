@@ -1,0 +1,118 @@
+ Sum(
+ 
+ mj==k
+ (-2.0*DFThermalDr_imj*DX(l,i,pj,mu)*DX(l,mj,i,1)*delta(1,nu))/r_imj \
+ - (2.0*DFThermalDr_imj*DX(l,i,pj,mu)*DX(l,mj,i,2)*delta(2,nu))/r_imj \
+ - (2.0*DFThermalDr_imj*DX(l,i,pj,mu)*DX(l,mj,i,3)*delta(3,nu))/r_imj \
+ - 2.0*DFThermalDt_imj*DX(l,i,pj,mu)*delta(4,nu) \
+ 
+ j==mk
+ + (2.0*DFThermalDr_imk*DX(l,i,pj,nu)*DX(l,i,mk,1)*delta(1,mu))/r_imk \
+ + (2.0*DFThermalDr_imk*DX(l,i,pj,nu)*DX(l,i,mk,2)*delta(2,mu))/r_imk \
+ + (2.0*DFThermalDr_imk*DX(l,i,pj,nu)*DX(l,i,mk,3)*delta(3,mu))/r_imk \
+ - 2.0*DFThermalDt_imk*DX(l,i,pj,nu)*delta(4,mu) \
+ 
+ j==k, mu==1
+ - (2.0*DFThermalDr_ik*DX(l,i,pj,nu)*DX(l,i,k,1)*delta(1,mu))/r_ik \
+ + (2.0*DDFThermalDrDr_ij*pow(DX(l,j,i,1),2)*T_ij*delta(1,mu)*delta(1,nu))/pow(r_ij,2) \
+ - (2.0*DFThermalDr_ij*pow(DX(l,j,i,1),2)*T_ij*delta(1,mu)*delta(1,nu))/pow(r_ij,3) \
+ + (2.0*DFThermalDr_ik*T_ik*delta(1,mu)*delta(1,nu))/r_ik \
+  + (2.0*DDFThermalDrDr_ij*DX(l,j,i,1)*DX(l,j,i,2)*T_ij*delta(1,mu)*delta(2,nu))/pow(r_ij,2) \
+ - (2.0*DFThermalDr_ij*DX(l,j,i,1)*DX(l,j,i,2)*T_ij*delta(1,mu)*delta(2,nu))/pow(r_ij,3) \
+  + (2.0*DDFThermalDrDr_ij*DX(l,j,i,1)*DX(l,j,i,3)*T_ij*delta(1,mu)*delta(3,nu))/pow(r_ij,2) \
+ - (2.0*DFThermalDr_ij*DX(l,j,i,1)*DX(l,j,i,3)*T_ij*delta(1,mu)*delta(3,nu))/pow(r_ij,3) \
+  + (2.0*DDFThermalDrDt_ij*DX(l,j,i,1)*T_ij*delta(1,mu)*delta(4,nu))/r_ij \
+ 
+ j==k, mu==2
+ - (2.0*DFThermalDr_ik*DX(l,i,pj,nu)*DX(l,i,k,2)*delta(2,mu))/r_ik \
+ + (2.0*DDFThermalDrDr_ij*DX(l,j,i,1)*DX(l,j,i,2)*T_ij*delta(1,nu)*delta(2,mu))/pow(r_ij,2) \
+ - (2.0*DFThermalDr_ij*DX(l,j,i,1)*DX(l,j,i,2)*T_ij*delta(1,nu)*delta(2,mu))/pow(r_ij,3) \
+ + (2.0*DDFThermalDrDr_ij*pow(DX(l,j,i,2),2)*T_ij*delta(2,mu)*delta(2,nu))/pow(r_ij,2) \
+ - (2.0*DFThermalDr_ij*pow(DX(l,j,i,2),2)*T_ij*delta(2,mu)*delta(2,nu))/pow(r_ij,3) \
+ + (2.0*DFThermalDr_ik*T_ik*delta(2,mu)*delta(2,nu))/r_ik \
+ + (2.0*DDFThermalDrDr_ij*DX(l,j,i,2)*DX(l,j,i,3)*T_ij*delta(2,mu)*delta(3,nu))/pow(r_ij,2) \
+ - (2.0*DFThermalDr_ij*DX(l,j,i,2)*DX(l,j,i,3)*T_ij*delta(2,mu)*delta(3,nu))/pow(r_ij,3) \
+ + (2.0*DDFThermalDrDt_ij*DX(l,j,i,2)*T_ij*delta(2,mu)*delta(4,nu))/r_ij 
+ 
+ 
+ j==k, mu==3
+ - (2.0*DFThermalDr_ik*DX(l,i,pj,nu)*DX(l,i,k,3)*delta(3,mu))/r_ik \
+ + (2.0*DDFThermalDrDr_ij*DX(l,j,i,1)*DX(l,j,i,3)*T_ij*delta(1,nu)*delta(3,mu))/pow(r_ij,2) \
+ - (2.0*DFThermalDr_ij*DX(l,j,i,1)*DX(l,j,i,3)*T_ij*delta(1,nu)*delta(3,mu))/pow(r_ij,3) \
+ + (2.0*DDFThermalDrDr_ij*DX(l,j,i,2)*DX(l,j,i,3)*T_ij*delta(2,nu)*delta(3,mu))/pow(r_ij,2) \
+ - (2.0*DFThermalDr_ij*DX(l,j,i,2)*DX(l,j,i,3)*T_ij*delta(2,nu)*delta(3,mu))/pow(r_ij,3) \
+ + (2.0*DDFThermalDrDr_ij*pow(DX(l,j,i,3),2)*T_ij*delta(3,mu)*delta(3,nu))/pow(r_ij,2) \
+ - (2.0*DFThermalDr_ij*pow(DX(l,j,i,3),2)*T_ij*delta(3,mu)*delta(3,nu))/pow(r_ij,3) \
+ + (2.0*DFThermalDr_ik*T_ik*delta(3,mu)*delta(3,nu))/r_ik \
+ + (2.0*DDFThermalDrDt_ij*DX(l,j,i,3)*T_ij*delta(3,mu)*delta(4,nu))/r_ij \
+ 
+ j==k, mu==4
+ + 2.0*DFThermalDt_ik*DX(l,i,pj,nu)*delta(4,mu) \
+ + (2.0*DDFThermalDrDt_ij*DX(l,j,i,1)*T_ij*delta(1,nu)*delta(4,mu))/r_ij \
+ + (2.0*DDFThermalDrDt_ij*DX(l,j,i,2)*T_ij*delta(2,nu)*delta(4,mu))/r_ij \
+ + (2.0*DDFThermalDrDt_ij*DX(l,j,i,3)*T_ij*delta(3,nu)*delta(4,mu))/r_ij \
+ + 2.0*DDFThermalDtDt_ij*T_ij*delta(4,mu)*delta(4,nu)
+ 
+  j==k, mu whatever it likes
+ + (2.0*DFThermalDr_ij*DX(l,i,pj,mu)*DX(l,j,i,1)*delta(1,nu))/r_ij \
+ + (2.0*DFThermalDr_ij*DX(l,i,pj,mu)*DX(l,j,i,2)*delta(2,nu))/r_ij \
+ + (2.0*DFThermalDr_ij*DX(l,i,pj,mu)*DX(l,j,i,3)*delta(3,nu))/r_ij \
+ + 2.0*DFThermalDt_ij*DX(l,i,pj,mu)*delta(4,nu)
+ 
+ 
+ ,i) \
+ 
+ 
+ - (2.0*DFThermalDr_jmk*DX(l,j,pj,nu)*DX(l,j,mk,1)*delta(1,mu))/r_jmk \
+ + (2.0*DFThermalDr_jk*DX(l,j,pj,nu)*DX(l,j,k,1)*delta(1,mu))/r_jk \
+ + (2.0*DFThermalDr_mjk*DX(l,mj,k,1)*DX(l,k,pk,mu)*delta(1,nu))/r_mjk \
+ - (2.0*DFThermalDr_jk*DX(l,j,k,1)*DX(l,k,pk,mu)*delta(1,nu))/r_jk \
+ - (2.0*DFThermalDr_jk*T_jk*delta(1,mu)*delta(1,nu))/r_jk \
+ - (2.0*DDFThermalDrDr_jk*pow(DX(l,j,k,1),2)*T_jk*delta(1,mu)*delta(1,nu))/pow(r_jk,2) \
+ + (2.0*DFThermalDr_jk*pow(DX(l,j,k,1),2)*T_jk*delta(1,mu)*delta(1,nu))/pow(r_jk,3) \
+ - (2.0*DFThermalDr_jmk*DX(l,j,pj,nu)*DX(l,j,mk,2)*delta(2,mu))/r_jmk \
+ + (2.0*DFThermalDr_jk*DX(l,j,pj,nu)*DX(l,j,k,2)*delta(2,mu))/r_jk \
+ - (2.0*DDFThermalDrDr_jk*DX(l,j,k,1)*DX(l,j,k,2)*T_jk*delta(1,nu)*delta(2,mu))/pow(r_jk,2) \
+ + (2.0*DFThermalDr_jk*DX(l,j,k,1)*DX(l,j,k,2)*T_jk*delta(1,nu)*delta(2,mu))/pow(r_jk,3) \
+ + (2.0*DFThermalDr_mjk*DX(l,mj,k,2)*DX(l,k,pk,mu)*delta(2,nu))/r_mjk \
+ - (2.0*DFThermalDr_jk*DX(l,j,k,2)*DX(l,k,pk,mu)*delta(2,nu))/r_jk \
+ - (2.0*DDFThermalDrDr_jk*DX(l,j,k,1)*DX(l,j,k,2)*T_jk*delta(1,mu)*delta(2,nu))/pow(r_jk,2) \
+ + (2.0*DFThermalDr_jk*DX(l,j,k,1)*DX(l,j,k,2)*T_jk*delta(1,mu)*delta(2,nu))/pow(r_jk,3) \
+ - (2.0*DFThermalDr_jk*T_jk*delta(2,mu)*delta(2,nu))/r_jk \
+ - (2.0*DDFThermalDrDr_jk*pow(DX(l,j,k,2),2)*T_jk*delta(2,mu)*delta(2,nu))/pow(r_jk,2) \
+ + (2.0*DFThermalDr_jk*pow(DX(l,j,k,2),2)*T_jk*delta(2,mu)*delta(2,nu))/pow(r_jk,3) \
+ - (2.0*DFThermalDr_jmk*DX(l,j,pj,nu)*DX(l,j,mk,3)*delta(3,mu))/r_jmk \
+ + (2.0*DFThermalDr_jk*DX(l,j,pj,nu)*DX(l,j,k,3)*delta(3,mu))/r_jk \
+ - (2.0*DDFThermalDrDr_jk*DX(l,j,k,1)*DX(l,j,k,3)*T_jk*delta(1,nu)*delta(3,mu))/pow(r_jk,2) \
+ + (2.0*DFThermalDr_jk*DX(l,j,k,1)*DX(l,j,k,3)*T_jk*delta(1,nu)*delta(3,mu))/pow(r_jk,3) \
+ - (2.0*DDFThermalDrDr_jk*DX(l,j,k,2)*DX(l,j,k,3)*T_jk*delta(2,nu)*delta(3,mu))/pow(r_jk,2) \
+ + (2.0*DFThermalDr_jk*DX(l,j,k,2)*DX(l,j,k,3)*T_jk*delta(2,nu)*delta(3,mu))/pow(r_jk,3) \
+ + (2.0*DFThermalDr_mjk*DX(l,mj,k,3)*DX(l,k,pk,mu)*delta(3,nu))/r_mjk \
+ - (2.0*DFThermalDr_jk*DX(l,j,k,3)*DX(l,k,pk,mu)*delta(3,nu))/r_jk \
+ - (2.0*DDFThermalDrDr_jk*DX(l,j,k,1)*DX(l,j,k,3)*T_jk*delta(1,mu)*delta(3,nu))/pow(r_jk,2) \
+ + (2.0*DFThermalDr_jk*DX(l,j,k,1)*DX(l,j,k,3)*T_jk*delta(1,mu)*delta(3,nu))/pow(r_jk,3) \
+ - (2.0*DDFThermalDrDr_jk*DX(l,j,k,2)*DX(l,j,k,3)*T_jk*delta(2,mu)*delta(3,nu))/pow(r_jk,2) \
+ + (2.0*DFThermalDr_jk*DX(l,j,k,2)*DX(l,j,k,3)*T_jk*delta(2,mu)*delta(3,nu))/pow(r_jk,3) \
+ - (2.0*DFThermalDr_jk*T_jk*delta(3,mu)*delta(3,nu))/r_jk \
+ - (2.0*DDFThermalDrDr_jk*pow(DX(l,j,k,3),2)*T_jk*delta(3,mu)*delta(3,nu))/pow(r_jk,2) \
+ + (2.0*DFThermalDr_jk*pow(DX(l,j,k,3),2)*T_jk*delta(3,mu)*delta(3,nu))/pow(r_jk,3) \
+ 
+ + 2.0*DFThermalDt_jmk*DX(l,j,pj,nu)*delta(4,mu) \
+ - 2.0*DFThermalDt_jk*DX(l,j,pj,nu)*delta(4,mu) \
+ + (2.0*DDFThermalDrDt_jk*DX(l,j,k,1)*T_jk*delta(1,nu)*delta(4,mu))/r_jk \
+ + (2.0*DDFThermalDrDt_jk*DX(l,j,k,2)*T_jk*delta(2,nu)*delta(4,mu))/r_jk \
+ + (2.0*DDFThermalDrDt_jk*DX(l,j,k,3)*T_jk*delta(3,nu)*delta(4,mu))/r_jk \
+ 
+ - 2.0*DFThermalDt_mjk*DX(l,k,pk,mu)*delta(4,nu) \
+ + 2.0*DFThermalDt_jk*DX(l,k,pk,mu)*delta(4,nu) \
+ + (2.0*DDFThermalDrDt_jk*DX(l,j,k,1)*T_jk*delta(1,mu)*delta(4,nu))/r_jk \
+ + (2.0*DDFThermalDrDt_jk*DX(l,j,k,2)*T_jk*delta(2,mu)*delta(4,nu))/r_jk \
+ + (2.0*DDFThermalDrDt_jk*DX(l,j,k,3)*T_jk*delta(3,mu)*delta(4,nu))/r_jk \
+ 
+ - 2.0*DDFThermalDtDt_jk*T_jk*delta(4,mu)*delta(4,nu) \
+ 
+ mu==nu
+ + 2.0*FThermal_mjmk \
+ - 2.0*FThermal_mjk \
+ - 2.0*FThermal_jmk \
+ + 2.0*FThermal_jk
