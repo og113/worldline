@@ -202,7 +202,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		if (poto!=PotentialOptions::original || gaussian)
 			(stepFile.Extras).push_back(potExtras);
 		if (poto==PotentialOptions::thermal)
-			(stepFile.Extras).push_back(StringPair("T",nts(p.T)));
+			(stepFile.Extras).push_back(StringPair("T",nts(pold.T)));
 		if (kino!=KineticOptions::saddle)
 			(stepFile.Extras).push_back(kinExtras);
 	}
