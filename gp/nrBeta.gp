@@ -22,7 +22,7 @@ set xtic auto
 set autoscale
 set logscale y
 set format y "10^{%L}"
-set xlabel "T"
+set xlabel "T=1/{/Symbol b}"
 set ylabel "S"
 
 Napprox=100
