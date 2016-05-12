@@ -1788,7 +1788,7 @@ template <> void ddVthr_nr<4>(const uint& j, const uint& mu, const uint& k, cons
 			number DDFThermalDrDtOnr_jk = DDFThermalDtDrOnr(r_jk,t_jk,beta,a);
 			number DDFThermalDtDt_jk = DDFThermalDtDt(r_jk,t_jk,beta,a);
 			if (mu==3) {
-				res += - 2.0*DFThermalDt_jk*DX(l,j,pj,nu);
+				res += -2.0*DFThermalDt_jk*DX(l,j,pj,nu);
 				if (nu<3)
 					res += (2.0*DDFThermalDrDtOnr_jk*DX(l,j,k,nu)*T_jk); 
 				else
