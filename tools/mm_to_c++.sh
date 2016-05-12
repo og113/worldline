@@ -37,8 +37,10 @@ else
 	sed -i 's/Sin(/sin(/g' $1
 	sed -i 's/Cosh(/cosh(/g' $1
 	sed -i 's/Sinh(/sinh(/g' $1
-	sed -i 's/\\\[Rho\]/mu/g' $1
-	sed -i 's/\\\[Sigma\]/nu/g' $1
+	sed -i 's/\\\[Mu\]/mu/g' $1
+	sed -i 's/\\\[Nu\]/nu/g' $1
+	sed -i 's/\\\[Rho\]/rho/g' $1
+	sed -i 's/\\\[Sigma\]/sigma/g' $1
 	sed -i 's/\\\[Delta\]/delta/g' $1
 	sed -i 's/\\\[Epsilon\]/a/g' $1
 	sed -i 's/\\\[Kappa\]/kappa/g' $1
@@ -80,16 +82,16 @@ else
 		sed -i 's/Symbolic//g' $1
 		sed -i 's/Finite//g' $1
 		sed -i 's/Dd/Dr/g' $1
-		sed -i 's/\([,()mp]\+\)j/\1yyy/g' $1 #just made changes here, need to redo!!!
-		sed -i 's/j\([,()]\)/yyy\1/g' $1
-		sed -i 's/\([,()mp]\+\)k/\1zzz/g' $1
-		sed -i 's/k\([,()]\)/zzz\1/g' $1
-		sed -i 's/\([,()mp\+]\)l/\1k/g' $1
-		sed -i 's/l\([,()]\)/k\1/g' $1
-		sed -i 's/yyy/i/g' $1
-		sed -i 's/zzz/j/g' $1
 		sed -i 's/-1 + \([b-v]\)/m\1/g' $1
 		sed -i 's/1 + \([b-v]\)/p\1/g' $1
+		#sed -i 's/\([,()mp]\+\)j/\1yyy/g' $1 #just made changes here, need to redo!!!
+		#sed -i 's/j\([,()]\)/yyy\1/g' $1
+		#sed -i 's/\([,()mp]\+\)k/\1zzz/g' $1
+		#sed -i 's/k\([,()]\)/zzz\1/g' $1
+		#sed -i 's/\([,()mp]\+\)l/\1k/g' $1
+		#sed -i 's/l\([,()]\)/k\1/g' $1
+		#sed -i 's/yyy/i/g' $1
+		#sed -i 's/zzz/j/g' $1
 		sed -i 's/DX(/DX(l,/g' $1
 		sed -i 's/Thermak/Thermal/g' $1
 		sed -i 's/FThermal(\([a-z]*\),\([a-z]*\))/FThermal_\1\2/g' $1
