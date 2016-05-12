@@ -3,8 +3,8 @@
 
 gpFile='gp/projection.gp'
 single=false
-oflag=false
-mflag=false
+oflag=false # is there an outfile?
+mflag=false # do we want to print min or max?
 
 # checking if outFile required and getting filename if so
 options=':o:m'
