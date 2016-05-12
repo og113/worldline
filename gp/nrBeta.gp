@@ -13,7 +13,6 @@ file2="results/nr/nr2.dat"
 pi=3.1415926535897932
 AM(g,B)=pi/g/B - g**2/4.0
 wc(g,B,E)=pi/g/B-(2.0/g/B)*( asin(E/2.0) + (E/2.0)*sqrt(1.0-(E/2.0)**2) )
-ptemp(g,B,T)=AM(g,B)-g**2*((pi**4/90.0)*T**4+4.0*(pi**6/945.0)*T**6)
 ptemp(T,N)=real(system(sprintf("./perturbativeFiniteTemp %f %f", T, N)))+0
 
 unset log
