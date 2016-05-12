@@ -920,10 +920,10 @@ for (uint pl=0; pl<Npl; pl++) {
 		
 	// printing results to terminal
 	printf("\n");
-	printf("%8s%8s%8s%8s%8s%8s%8s%8s%12s%14s%14s%14s%14s\n","runs","time","K","G","B","Ng","a","mu","E","len",\
-		"i0","vr","s");
-	printf("%8i%8.3g%8i%8.4g%8.4g%8i%8.4g%8.4g%12.5g%14.5g%14.5g%14.5g%14.5g\n",\
-		runsCount,realtime,p.K,p.G,p.B,p.Ng,p.Epsi,p.Mu,E,len,i0,vr,s);
+	printf("%8s%8s%8s%8s%8s%8s%8s%8s%12s%12s%14s%14s%14s\n","runs","time","K","G","B","Ng","a","mu","E","T","len",\
+		"vr","s");
+	printf("%8i%8.3g%8i%8.4g%8.4g%8i%8.4g%8.4g%12.5g%12.5g%14.5g%14.5g%14.5g\n",\
+		runsCount,realtime,p.K,p.G,p.B,p.Ng,p.Epsi,p.Mu,E,p.T,len,vr,s);
 	printf("\n");
 	
 	if ((checkDelta.good() && checkSol.good() && checkSolMax.good()) || pass) {
