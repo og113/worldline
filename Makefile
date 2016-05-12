@@ -38,7 +38,7 @@ common: $(COMMONOBJS)
 monte: binaryToAscii circle common floop glmain loop loop2 schwingerRate
 
 .PHONY: nr
-nr: 3dPotentialExtrema binaryToAscii circle common nrmain
+nr: 3dPotentialExtrema binaryToAscii circle common nrmain perturbativeFiniteTemp
 
 #------------------------------------------------------------------------------------------------------------------------
 # targets, dependencies and rules for executables
@@ -78,6 +78,10 @@ loop2: $(MPIODIR)/loop2.o $(COMMONOBJS)
 nrmain: $(ODIR)/nrmain.o $(COMMONOBJS) 
 	$(CC) -o $@ $^ $(CFLAGS) $(INCLUDES) $(LIBS)
 	@echo Simple compiler named nrmain has been compiled
+	
+perturbativeFiniteTemp: $(ODIR)/perturbativeFiniteTemp.o $(COMMONOBJS) 
+	$(CC) -o $@ $^ $(CFLAGS) $(INCLUDES) $(LIBS)
+	@echo Simple compiler named perturbativeFiniteTemp has been compiled
 	
 schwingerRate: $(ODIR)/schwingerRate.o $(COMMONOBJS) 
 	$(CC) -o $@ $^ $(CFLAGS) $(INCLUDES) $(LIBS)

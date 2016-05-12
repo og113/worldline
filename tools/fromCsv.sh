@@ -14,5 +14,6 @@ fi
 
 echo "file in : " $1
 echo "file out: " $outfile
-sed -ne 's/"\([0-9\.-]*\)"/\1/gp' $1 >$outfile
+#sed -ne 's/"\([0-9\.-]*\)"/\1/gp' $1 >$outfile
+cp $1 $outfile
 sed -i 's/,/ /g' $outfile
