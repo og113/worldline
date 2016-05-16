@@ -11,31 +11,37 @@ file2="results/nr/nr2.dat"
 
 # approximate analytic results
 pi=3.1415926535897932
-AM(g,B)=pi/g/B - g**2/4.0
-wc(g,B,E)=pi/g/B-(2.0/g/B)*( asin(E/2.0) + (E/2.0)*sqrt(1.0-(E/2.0)**2) )
+AMscaled(kappa)= pi - kappa/4.0
+wcscaled(E)= pi-2.0*( asin(E/2.0) + (E/2.0)*sqrt(1.0-(E/2.0)**2) )
 ptemp(T,N)=real(system(sprintf("./perturbativeFiniteTemp %f %f", T, N)))+0
+phightemp(eta,kappa)= 2.0*(1.0-sqrt(kappa/4.0/pi))/eta
+pweak(eta)= eta<0.5? pi: pi-2.0*( acos(1.0/2.0/eta) + (1.0/2.0/eta)*sqrt(1.0-(1.0/2.0/eta)**2) )
 
 unset log
 unset label
 set key below
 set xtic auto
 set autoscale
-set logscale y
-set format y "10^{%L}"
+#set logscale y
+#set format y "10^{%L}"
 set xlabel "T=1/{/Symbol b}"
 set ylabel "S"
 
 Napprox=100
 K=10
 pot=8
+kappa=1.0
 
 # before mu was a choice, mu=1
 ST2l='file2 u 11:($3==pot? ($4==K? ($7=='
 ST2m='? ($8=='
 ST2r='? $12: 1/0): 1/0): 1/0): 1/0)'
 
-set xrange [0:1.0]
+set xrange [0:0.8]
+set yrange [1:4]
 plot @ST2l 0.1 @ST2m 0.1 @ST2r t "Finite temperature calculation" with points lc rgb "blue", \
-	ptemp(x,Napprox) title "Perturbative result" with lines lc rgb "red"
+	ptemp(x,Napprox) title "low temperature result" with lines lc rgb "red", \
+	pweak(x) title "weak coupling result" with lines lc rgb "green", \
+	phightemp(x,kappa) title "high temperature result" with lines lc rgb "orange"
 
 pause -1
