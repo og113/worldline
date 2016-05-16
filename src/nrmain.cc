@@ -210,7 +210,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	
 	// defining some derived parameters	
 	uint N = pow(2,p.K);
-	uint zm = (poto == PotentialOptions::thermal? dim-1: dim);
+	uint zm = (poto == PotentialOptions::thermal? dim: dim);
 	uint NT = N*dim+zm;
 	number E = p.P2, R = abs(1.0/p.G/p.B);
 	Point<dim> P;
