@@ -1573,7 +1573,8 @@ template <> void mdVthrDisjoint_nr<4>(const uint& j, const uint& mu, const uint&
 	// extra factor of (-1.0/pow(2.0*PI,2)) due to the fact that we are treating the green's function here
 	if (mu==3) {
 		if (i==j) { // bit of a fudge in terms of sum over i
-			res += (-1.0/pow(2.0*PI,2))*mod<number>(2.0*(l[j])[mu] - (l[mj])[mu] - (l[pj])[mu],-beta/2.0,beta/2.0)/a/a;
+			res += (-1.0/pow(2.0*PI,2))*(mod<number>((l[j])[mu] - (l[mj])[mu],-beta/2.0,beta/2.0)+\
+					mod<number>((l[j])[mu] - (l[pj])[mu],-beta/2.0,beta/2.0))/a/a;
 		}
 	}
 	else {
@@ -1642,19 +1643,12 @@ template <> void mdGaussianDisjoint_nr<4>(const uint& j, const uint& mu, const u
 		number E_imj = exp(-B_imj/a/a);
 		res += - 2.0*E_imj*DXDisjoint(l,i,pi,mu,beta);
 	}
-	
-	//coincident terms
-	if (i==j)
-		res += 2.0*(l[j])[mu];
-	if (i==mj)
-		res += -(l[mj])[mu];
-	if (i==pj)
-		res += -(l[pj])[mu];
 		
 	//coincident terms	
 	if (mu==3) {
 		if (i==j) { // bit of a fudge in terms of sum over i
-			res += mod<number>(2.0*(l[j])[mu] - (l[mj])[mu] - (l[pj])[mu],-beta/2.0,beta/2.0)/a/a;
+			res += (mod<number>((l[j])[mu] - (l[mj])[mu],-beta/2.0,beta/2.0)+\
+					mod<number>((l[j])[mu] - (l[pj])[mu],-beta/2.0,beta/2.0))/a/a;
 		}
 	}
 	else {

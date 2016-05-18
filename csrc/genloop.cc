@@ -627,13 +627,19 @@ number DX(const Loop<Dim>& loop, const uint& i, const uint& j, const uint& mu) {
 template <uint Dim>
 number DXDisjoint(const Loop<Dim>& loop, const uint& i, const uint& mu, const number& beta) {
 	uint ni = negNeighDisjoint(i,loop.size());
-	return mod<number>((loop[i])[mu]-(loop[ni])[mu],-beta/2.0,beta/2.0);
+	if (mu==(Dim-1))
+		return mod<number>((loop[i])[mu]-(loop[ni])[mu],-beta/2.0,beta/2.0);
+	else
+		return (loop[i])[mu]-(loop[ni])[mu];
 }
 
 // DXDisjoint
 template <uint Dim>
 number DXDisjoint(const Loop<Dim>& loop, const uint& i, const uint& j, const uint& mu, const number& beta) {
-	return mod<number>((loop[i])[mu]-(loop[j])[mu],-beta/2.0,beta/2.0);
+	if (mu==(Dim-1))
+		return mod<number>((loop[i])[mu]-(loop[j])[mu],-beta/2.0,beta/2.0);
+	else
+		return (loop[i])[mu]-(loop[j])[mu];
 }
 
 // L
