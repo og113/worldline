@@ -59,6 +59,12 @@ set arrow from (-minimum/2.0),1 to (minimum/2.0),1 nohead; \
 set arrow from 0.1,1.4 to 0,1; \
 set label 2 at  0.1,1.4 'r_{min}(a=0.05)' left  front;
 
+if (exists("beta")) \
+set arrow from 0,(-beta/2.0) to 0,(beta/2.0) nohead; \
+if (beta>1.0) \
+set xrange [-beta/2.0-0.5:beta/2.0+0.5]; \
+set yrange [-beta/2.0-0.5:beta/2.0+0.5];
+
 if (exists("inFile")) {
 	plot inFile using 3:4 with lines ls 1 title inFile noenhanced;
 }

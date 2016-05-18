@@ -23,6 +23,9 @@ file8="results/nr/nrmain_cosmos_8.dat"
 pi=3.1415926535897932
 p(g,B,E)=pi/g/B-(2.0/g/B)*( asin(E/2.0) + (E/2.0)*sqrt(1.0-(E/2.0)**2) )
 
+# perturbative low temp result
+
+
 # fitting data
 #f(x) = a+b*x
 #fit f(x) file using (log($4)):(log($9)) via a, b

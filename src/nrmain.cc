@@ -202,7 +202,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		if (poto!=PotentialOptions::original || gaussian)
 			(stepFile.Extras).push_back(potExtras);
 		if (poto==PotentialOptions::thermal)
-			(stepFile.Extras).push_back(StringPair("T",nts(p.T)));
+			(stepFile.Extras).push_back(StringPair("T",nts(pold.T)));
 		if (kino!=KineticOptions::saddle)
 			(stepFile.Extras).push_back(kinExtras);
 	}
@@ -210,7 +210,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	
 	// defining some derived parameters	
 	uint N = pow(2,p.K);
-	uint zm = (poto == PotentialOptions::thermal? dim-1: dim);
+	uint zm = (poto == PotentialOptions::thermal? dim: dim); // dim-1 or dim for thermal?
 	uint NT = N*dim+zm;
 	number E = p.P2, R = abs(1.0/p.G/p.B);
 	Point<dim> P;
@@ -238,6 +238,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	Check checkSolMax("solution max",1.0e-6);
 	Check checkSolZM("solution zero modes",1.0e-3);
 	Check checkDelta("delta",1.0);
+	Check checkDeltaMax("delta max",1.0);
 	Check checkSm("smoothness",1.0);
 	Check checkDX("dx<<a",2.0e-1);
 	Check checkStraight("angle_neigh<<1",2.0e-1);
@@ -249,6 +250,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	Check checkKgDxMax("dx*kg_max<<1",5.0e-1);
 	Check checkKgDxAvg("dx*kg_avg<<1",2.0e-1);
 	Check checkSym("symmetric",1.0e-16*NT*NT);
+	Check checkSymMax("symmetric max",1.0e-14);
 	Check checkInv("inverse",1.0e-16*NT*NT*NT);
 	Check checkNegEigenvalue("negative eigenvalue",0.1);
 	Check checkNegEigenvector("negative eigenvector",0.1);
@@ -639,8 +641,21 @@ for (uint pl=0; pl<Npl; pl++) {
 			dds_asym -= dds;
 			dds_asym *= 0.5;
 			number asym = dds_asym.norm();
+			uint asymmaxx, asymmaxy, asymminx, asymminy;
+			number asymmax = dds_asym.maxCoeff(&asymmaxx,&asymmaxy);
+			number asymmin = dds_asym.minCoeff(&asymminx,&asymminy);
+			if (-asymmin>asymmax) {
+				asymmax = -asymmin;
+				asymmaxx = asymminx;
+				asymmaxy = asymminy;
+			}
 			checkSym.add(asym);
+			checkSymMax.add(asymmax);
 			checkSym.checkMessage();
+			checkSymMax.checkMessage();
+			cout << "position of max symmetric: (" << asymmaxx << "," << asymmaxy << ")/" << NT;
+			cout << ", (j,k) = (" << (uint)(asymmaxx/dim) << "," << (uint)(asymmaxy/dim) << ")";
+			cout << ", (mu,nu) = (" << asymmaxx%dim << "," << asymmaxy%dim << ")" << endl;
 			
 			// checking value of negative eigenvalue, assuming x is an eigenvector
 			number analyticNegEigenvalue = -2.0*PI*p.G*p.B;
@@ -772,14 +787,27 @@ for (uint pl=0; pl<Npl; pl++) {
 		// calculating norms etc
 		number normmds = mds.norm();
 		number normdelta = delta.norm();
-		number maxmds = mds.maxCoeff();
-		number minmds = mds.minCoeff();
-		number avgzm = (mds.tail(zm)).mean();
-		number avgnzm = (mds.head(N)).mean();
-		if (-minmds>maxmds) maxmds = -minmds;
+		uint maxmdspos, minmdspos;
+		number maxmds = mds.maxCoeff(&maxmdspos);
+		number minmds = mds.minCoeff(&minmdspos);
+		if (-minmds>maxmds) {
+			maxmds = -minmds;
+			maxmdspos = minmdspos;
+		}
+		uint maxdeltapos, mindeltapos;
+		number maxdelta = delta.maxCoeff(&maxdeltapos);
+		number mindelta = delta.minCoeff(&mindeltapos);
+		if (-mindelta>maxdelta) {
+			maxdelta = -mindelta;
+			maxdeltapos = mindeltapos;
+		}
 		number maxx = x.maxCoeff();
 		number minx = x.minCoeff();
-		if (-minx>maxx) maxx = -minx;
+		if (-minx>maxx) {
+			maxx = -minx;
+		}
+		number avgzm = (mds.tail(zm)).mean();
+		number avgnzm = (mds.head(N)).mean();
 
 		// adding to checks
 		checkSol.add(normmds/normx);
@@ -822,11 +850,27 @@ for (uint pl=0; pl<Npl; pl++) {
 		//printing tests to see convergence
 		if (verbose) {
 			if (runsCount==1) {
-				printf("%4s%4s%11s%11s%11s%11s%11s%11s%11s%11s%11s%11s%11s%11s\n","pl","run","len","i0","s","sol","solM","solZM","delta","Sm","dx*kg_max","ic_max","cc_max","dx/a");
+				printf("%4s%4s%11s%11s%11s%11s%11s%11s%11s%11s%11s%11s%11s\n","pl","run","len","i0","s","sol","solM","delta","Sm","dx*kg_max","ic_max","cc_max","dx/a");
 			}
-			printf("%4i%4i%11.4g%11.4g%11.4g%11.4g%11.4g%11.4g%11.4g%11.4g%11.4g%11.4g%11.4g%11.4g\n",pl,runsCount,len,i0,s,checkSol.back(),\
-				checkSolMax.back(),checkSolZM.back(),checkDelta.back(),checkSm.back(),checkKgDxMax.back(),\
+			printf("%4i%4i%11.4g%11.4g%11.4g%11.4g%11.4g%11.4g%11.4g%11.4g%11.4g%11.4g%11.4g\n",pl,runsCount,len,i0,s,checkSol.back(),\
+				checkSolMax.back(),checkDelta.back(),checkSm.back(),checkKgDxMax.back(),\
 				checkICMax.back(),checkCCMax.back(),checkDX.back());
+		}
+		if (alltests) {
+			checkSolZM.checkMessage();
+			checkICAvg.checkMessage();
+			checkKgAMax.checkMessage();
+			checkKgAAvg.checkMessage();
+			checkKgDxAvg.checkMessage();
+			checkStraight.checkMessage();
+			cout << "avg mds:               " << mds.mean() << endl;
+			cout << "max mds:               " << maxmds << endl;
+			cout << "position of max mds:   " << maxmdspos << "/" << NT << ", j = " << (uint)(maxmdspos/dim);
+			cout << ", mu = " << maxmdspos%dim << endl;
+			cout << "avg delta:             " << delta.mean() << endl;
+			cout << "max delta:             " << maxdelta << endl;
+			cout << "position of max delta: " << maxdeltapos << "/" << NT << ", j = " << (uint)(maxdeltapos/dim);
+			cout << ", mu = " << maxdeltapos%dim << endl;
 		}
 	
 	}
@@ -876,10 +920,10 @@ for (uint pl=0; pl<Npl; pl++) {
 		
 	// printing results to terminal
 	printf("\n");
-	printf("%8s%8s%8s%8s%8s%8s%8s%8s%12s%14s%14s%14s%14s\n","runs","time","K","G","B","Ng","a","mu","E","len",\
-		"i0","vr","s");
-	printf("%8i%8.3g%8i%8.4g%8.4g%8i%8.4g%8.4g%12.5g%14.5g%14.5g%14.5g%14.5g\n",\
-		runsCount,realtime,p.K,p.G,p.B,p.Ng,p.Epsi,p.Mu,E,len,i0,vr,s);
+	printf("%8s%8s%8s%8s%8s%8s%8s%8s%12s%12s%14s%14s%14s\n","runs","time","K","G","B","Ng","a","mu","E","T","len",\
+		"vr","s");
+	printf("%8i%8.3g%8i%8.4g%8.4g%8i%8.4g%8.4g%12.5g%12.5g%14.5g%14.5g%14.5g\n",\
+		runsCount,realtime,p.K,p.G,p.B,p.Ng,p.Epsi,p.Mu,E,p.T,len,vr,s);
 	printf("\n");
 	
 	if ((checkDelta.good() && checkSol.good() && checkSolMax.good()) || pass) {

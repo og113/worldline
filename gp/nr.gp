@@ -21,6 +21,7 @@ file8="results/nr/nrmain_cosmos_8.dat"
 pi=3.1415926535897932
 AM(g,B)=pi/g/B - g**2/4.0
 wc(g,B,E)=pi/g/B-(2.0/g/B)*( asin(E/2.0) + (E/2.0)*sqrt(1.0-(E/2.0)**2) )
+ptemp(g,B,beta)=AM(g,B)-g**2*(pi**4/90.0)/beta**4
 
 unset log
 unset label
