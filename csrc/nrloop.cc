@@ -105,6 +105,26 @@ number DDFThermalDtDt(const number& r, const number& t, const number& beta, cons
 	1 - nr loop functions
 ----------------------------------------------------------------------------------------------------------------------------*/
 
+// posNeighDisjoint
+uint posNeighDisjoint(const uint& j, const uint& N) {
+	if (j==(N/2-1))
+		return 0;
+	else if (j==(N-1))
+		return N/2;
+	else
+		return j+1;
+}
+
+// negNeighDisjoint
+uint negNeighDisjoint(const uint& j, const uint& N) {
+	if (j==0)
+		return N/2-1;
+	else if (j==(N/2))
+		return N-1;
+	else
+		return j-1;
+}
+
 // L
 template <uint Dim>
 void L (const uint& j, const Loop<Dim>& l, const number& f, number& result) {
@@ -140,10 +160,24 @@ void S0 (const uint& j, const Loop<Dim>& l, const number& f, number& result) {
 	result += f*DistanceSquared(l[pj],l[j])*(number)l.size()/4.0;
 }
 
+
+// S0Disjoint
+template <uint Dim>
+void S0Disjoint (const uint& j, const Loop<Dim>& l, const number& beta, const number& f, number& result) {
+	uint pj = posNeighThermal(j,l.size());
+	result += f*ThermalDistanceSquared(l[pj],l[j],beta)*(number)l.size()/4.0;
+}
+
 // I0
 template <uint Dim>
 void I0 (const uint& j, const Loop<Dim>& l, const number& f, number& result) {
-	cerr << "mdI_nr error: not defined for dim = " << Dim << endl;
+	cerr << "I0 error: not defined for dim = " << Dim << endl;
+}
+
+// I0Disjoint
+template <uint Dim>
+void I0Disjoint (const uint& j, const Loop<Dim>& l, const number& beta, const number& f, number& result) {
+	cerr << "I0Disjoint error: not defined for dim = " << Dim << endl;
 }
 
 // Angle
@@ -246,6 +280,12 @@ void Vdr (const uint& j, const uint& k, const Loop<Dim>& l, const number& a, con
 template <uint Dim>
 void Vthr (const uint& j, const uint& k, const Loop<Dim>& l, const number& beta, const number& a, const number& f, number& result) {
 	cerr << "Vthr error: not defined in dimension " << Dim << endl;
+}
+
+// VthDisjointr
+template <uint Dim>
+void VthDisjointr (const uint& j, const uint& k, const Loop<Dim>& l, const number& beta, const number& a, const number& f, number& result) {
+	cerr << "VthDisjointr error: not defined in dimension " << Dim << endl;
 }
 
 // Gaussian
@@ -619,6 +659,23 @@ void ddsqrtS0_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, \
 	m(j*Dim+mu,k*Dim+nu) -= (f*pow((number)l.size(),2)/pow(sqrt4s0,3)) * (2.0*(l[j])[mu]-(l[pj])[mu]-(l[nj])[mu]) \
 												* (2.0*(l[k])[nu]-(l[pk])[nu]-(l[nk])[nu]);
 	
+}
+
+// mdS0Disjoint_nr
+template<uint Dim>
+void mdS0Disjoint_nr(const uint& j, const uint& mu, const Loop<Dim>& l, const number& beta, const number& f, vec& v) {
+	uint pj = posNeighDisjoint(j,l.size());
+	uint nj = negNeighDisjoint(j,l.size());
+	if (mu==(Dim-1))
+		v[j*Dim+mu] += -f*mod<number>(2.0*(l[j])[mu] - (l[nj])[mu] - (l[pj])[mu],0.0,beta)*(number)l.size()/2.0;
+	else
+		v[j*Dim+mu] += -f*(2.0*(l[j])[mu] - (l[nj])[mu] - (l[pj])[mu])*(number)l.size()/2.0;
+}
+
+// ddS0Disjoint_nr
+template<uint Dim>
+void ddS0Disjoint_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l, const number& beta, const number& f, mat& m) {
+	ddS0Disjoint_nr(j,mu,k,nu,l,beta,f,m);
 }
 
 // mdVor_nr
@@ -1162,6 +1219,20 @@ template <> void Vthr<4>(const uint& j, const uint& k, const Loop<4>& l, const n
 		number t = (l[k])[3]-(l[j])[3];
 	
 		result += f*(-pow(2.0*PI,2))*(1.0+(number)(k<j))*Dot(l[pj],l[j],l[pk],l[k])*FThermal(r,t,beta,a);	
+	}
+}
+
+// VthDisjointr
+template <>
+void VthDisjointr<4> (const uint& j, const uint& k, const Loop<4>& l, const number& beta, const number& a, const number& f, number& result) {
+	if (k<=j) {
+		uint pj = posNeighDisjoint(j,l.size());
+		uint pk = posNeighDisjoint(k,l.size());
+		
+		number r = SpatialDistance(l[j],l[k]);
+		number t = mod<number>((l[k])[3]-(l[j])[3],0.0,beta);
+	
+		result += f*(-pow(2.0*PI,2))*(1.0+(number)(k<j))*DotDisjoint(l[pj],l[j],l[pk],l[k],beta)*FThermal(r,t,beta,a);	
 	}
 }
 
@@ -2027,5 +2098,41 @@ template <> void ddI_nr<4>(const uint& j, const uint& mu, const uint& k, const u
 template <> void I0<4> (const uint& j, const Loop<4>& l, const number& f, number& result) {
 	uint pj = (j==(l.size()-1)? 0: j+1);
 	result += f*(l[j])[2]*((l[pj])[3]-(l[j])[3]);
-}					
+}
+
+// I0Disjoint<4>
+template <> void I0Disjoint<4> (const uint& j, const Loop<4>& l, const number& beta, const number& f, number& result) {
+	uint pj = posNeighDisjoint(j,l.size());
+	result += f*(l[j])[2]*mod<number>((l[pj])[3]-(l[j])[3],0.0,beta);
+}
+
+// mdIDisjoint_nr
+template <> void mdIDisjoint_nr<4>(const uint& j, const uint& mu, const Loop<4>& l, const number& beta, const number& f, vec& v) {
+	if (mu==3) {
+		uint nj = negNeighDisjoint(j,l.size());
+		v[j*4+mu] += -f*((l[nj])[2]-(l[j])[2]);
+	}
+	else if (mu==2) {
+		uint pj = posNeighDisjoint(j,l.size());
+		v[j*4+mu] += -f*mod<number>((l[pj])[3]-(l[j])[3],0.0,beta);
+	}
+}
+
+// ddIDisjoint_nr
+template <> void ddIDisjoint_nr<4>(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<4>& l, const number& beta, const number& f, mat& m) {
+	if (mu==3 && nu==2) {
+		uint nj = negNeighDisjoint(j,l.size());
+		if (k==nj)
+			m(j*4+mu,k*4+nu) += f;
+		else if (k==j)
+			m(j*4+mu,k*4+nu) -= f;
+	}
+	else if (mu==2 && nu==3) {
+		uint pj = posNeighDisjoint(j,l.size());
+		if (k==pj)
+			m(j*4+mu,k*4+nu) += f;
+		else if (k==j)
+			m(j*4+mu,k*4+nu) -= f;
+	}
+}
 		

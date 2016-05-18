@@ -135,6 +135,14 @@ number SpatialDistanceSquared(const Point<Dim>&, const Point<Dim>&);
 template <uint Dim>
 number SpatialDistance(const Point<Dim>&, const Point<Dim>&);
 
+// Thermal Distance squared
+template <uint Dim>
+number ThermalDistanceSquared(const Point<Dim>&, const Point<Dim>&, const number& beta);
+
+// Thermal Distance
+template <uint Dim>
+number ThermalDistance(const Point<Dim>&, const Point<Dim>&, const number& beta);
+
 // NormSquared
 template <uint Dim>
 number NormSquared(const Point<Dim>&);
@@ -150,6 +158,10 @@ number Dot(const Point<Dim>&, const Point<Dim>&);
 // Dot
 template <uint Dim>
 number Dot(const Point<Dim>&, const Point<Dim>&, const Point<Dim>&, const Point<Dim>&);
+
+// DotDisjoint
+template <uint Dim>
+number DotDisjoint(const Point<Dim>&, const Point<Dim>&, const Point<Dim>&, const Point<Dim>&, const number& beta);
 
 // Angle
 template <uint Dim>
