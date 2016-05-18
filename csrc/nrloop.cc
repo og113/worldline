@@ -576,30 +576,29 @@ void ddLDisjoint_nr(const uint& j, const uint& mu, const uint& k, const uint& nu
 	uint nj = negNeighDisjoint(j,l.size());
 	if (k==j) {
 		number normn = DistanceDisjoint(l[j],l[nj],beta), normp = DistanceDisjoint(l[pj],l[j],beta), temp = 0.0;
-		number dx_mu = (mu==3? mod<number>((l[j])[mu]-(l[nj])[mu],-beta/2.0,beta/2.0):(l[j])[mu]-(l[nj])[mu]);
-		number dx_nu = (nu==3? mod<number>((l[j])[nu]-(l[nj])[nu],-beta/2.0,beta/2.0):(l[j])[nu]-(l[nj])[nu]);
+		number dx_mu = (mu==(Dim-1)? mod<number>((l[j])[mu]-(l[nj])[mu],-beta/2.0,beta/2.0):(l[j])[mu]-(l[nj])[mu]);
+		number dx_nu = (nu==(Dim-1)? mod<number>((l[j])[nu]-(l[nj])[nu],-beta/2.0,beta/2.0):(l[j])[nu]-(l[nj])[nu]);
 		if (mu==nu)
 			temp += 1.0/normn + 1.0/normp;
-		if (mu==nu)
 		temp -= dx_mu*dx_nu/pow(normn,3);
-		dx_mu = (mu==3? mod<number>((l[j])[mu]-(l[pj])[mu],-beta/2.0,beta/2.0):(l[j])[mu]-(l[pj])[mu]);
-		dx_nu = (nu==3? mod<number>((l[j])[nu]-(l[pj])[nu],-beta/2.0,beta/2.0):(l[j])[nu]-(l[pj])[nu]);
+		dx_mu = (mu==(Dim-1)? mod<number>((l[j])[mu]-(l[pj])[mu],-beta/2.0,beta/2.0):(l[j])[mu]-(l[pj])[mu]);
+		dx_nu = (nu==(Dim-1)? mod<number>((l[j])[nu]-(l[pj])[nu],-beta/2.0,beta/2.0):(l[j])[nu]-(l[pj])[nu]);
 		temp -= dx_mu*dx_nu/pow(normp,3);
 		m(j*Dim+mu,k*Dim+nu) += f*temp;
 	}
 	else if (k==nj) {
 		number norm = DistanceDisjoint(l[j],l[nj],beta), temp = 0.0;
-		number dx_mu = (mu==3? mod<number>((l[j])[mu]-(l[nj])[mu],-beta/2.0,beta/2.0):(l[j])[mu]-(l[nj])[mu]);
-		number dx_nu = (nu==3? mod<number>((l[j])[nu]-(l[nj])[nu],-beta/2.0,beta/2.0):(l[j])[nu]-(l[nj])[nu]);
+		number dx_mu = (mu==(Dim-1)? mod<number>((l[j])[mu]-(l[nj])[mu],-beta/2.0,beta/2.0):(l[j])[mu]-(l[nj])[mu]);
+		number dx_nu = (nu==(Dim-1)? mod<number>((l[j])[nu]-(l[nj])[nu],-beta/2.0,beta/2.0):(l[j])[nu]-(l[nj])[nu]);
 		if (mu==nu)
 			temp -= 1.0/norm;
 		temp += dx_mu*dx_nu/pow(norm,3);
 		m(j*Dim+mu,k*Dim+nu) += f*temp;
 	}
 	else if (k==pj) {
-		number norm = Distance(l[pj],l[j]), temp = 0.0;
-		number dx_mu = (mu==3? mod<number>((l[j])[mu]-(l[pj])[mu],-beta/2.0,beta/2.0):(l[j])[mu]-(l[pj])[mu]);
-		number dx_nu = (nu==3? mod<number>((l[j])[nu]-(l[pj])[nu],-beta/2.0,beta/2.0):(l[j])[nu]-(l[pj])[nu]);
+		number norm = DistanceDisjoint(l[pj],l[j],beta), temp = 0.0;
+		number dx_mu = (mu==(Dim-1)? mod<number>((l[j])[mu]-(l[pj])[mu],-beta/2.0,beta/2.0):(l[j])[mu]-(l[pj])[mu]);
+		number dx_nu = (nu==(Dim-1)? mod<number>((l[j])[nu]-(l[pj])[nu],-beta/2.0,beta/2.0):(l[j])[nu]-(l[pj])[nu]);
 		if (mu==nu)
 			temp -= 1.0/norm;
 		temp += dx_mu*dx_nu/pow(norm,3);
@@ -738,10 +737,15 @@ template<uint Dim>
 void mdS0Disjoint_nr(const uint& j, const uint& mu, const Loop<Dim>& l, const number& beta, const number& f, vec& v) {
 	uint pj = posNeighDisjoint(j,l.size());
 	uint nj = negNeighDisjoint(j,l.size());
-	if (mu==(Dim-1))
-		v[j*Dim+mu] += -f*mod<number>(2.0*(l[j])[mu] - (l[nj])[mu] - (l[pj])[mu],-beta/2.0,beta/2.0)*(number)l.size()/2.0;
+	number ddlj;
+	
+	if (mu==(Dim-1))	
+		ddlj = mod<number>((l[j])[mu]-(l[pj])[mu],-beta/2.0,beta/2.0) + \
+					mod<number>((l[j])[mu]-(l[nj])[mu],-beta/2.0,beta/2.0);
 	else
-		v[j*Dim+mu] += -f*(2.0*(l[j])[mu] - (l[nj])[mu] - (l[pj])[mu])*(number)l.size()/2.0;
+		ddlj = 2.0*(l[j])[mu] - (l[nj])[mu] - (l[pj])[mu];		
+					
+	v[j*Dim+mu] += -f*ddlj*(number)l.size()/2.0;
 }
 
 // ddS0Disjoint_nr
@@ -779,9 +783,22 @@ void ddsqrtS0Disjoint_nr(const uint& j, const uint& mu, const uint& k, const uin
 	uint nj = negNeighDisjoint(j,l.size());
 	uint pk = posNeighDisjoint(k,l.size());
 	uint nk = negNeighDisjoint(k,l.size());
+	number ddlj, ddlk;
 	
-	m(j*Dim+mu,k*Dim+nu) -= (f*pow((number)l.size(),2)/pow(sqrt4s0,3)) * (2.0*(l[j])[mu]-(l[pj])[mu]-(l[nj])[mu]) \
-												* (2.0*(l[k])[nu]-(l[pk])[nu]-(l[nk])[nu]);						
+	if (mu==(Dim-1))
+		ddlj = mod<number>((l[j])[mu]-(l[pj])[mu],-beta/2.0,beta/2.0) + \
+					mod<number>((l[j])[mu]-(l[nj])[mu],-beta/2.0,beta/2.0);
+	else
+		ddlj = 2.0*(l[j])[mu]-(l[pj])[mu]-(l[nj])[mu];
+		
+	if (nu==(Dim-1))
+		ddlk = mod<number>((l[k])[nu]-(l[pk])[nu],-beta/2.0,beta/2.0) + \
+					mod<number>((l[k])[nu]-(l[nk])[nu],-beta/2.0,beta/2.0);
+	else
+		ddlk = 2.0*(l[k])[nu]-(l[pk])[nu]-(l[nk])[nu];
+	
+	m(j*Dim+mu,k*Dim+nu) -= (f*pow((number)l.size(),2)/pow(sqrt4s0,3)) * ddlj \
+												* ddlk;						
 }
 
 // mdVor_nr

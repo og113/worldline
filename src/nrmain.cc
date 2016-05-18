@@ -515,7 +515,7 @@ for (uint pl=0; pl<Npl; pl++) {
 					// self-energy regularisation
 					if (poto!=PotentialOptions::dimreg && poto!=PotentialOptions::thermalDisjoint)
 						mdL_nr(j,mu,xLoop,dm,mds);
-					else if (poto!=PotentialOptions::thermalDisjoint)
+					else if (poto==PotentialOptions::thermalDisjoint)
 						mdLDisjoint_nr(j,mu,xLoop,beta,dm,mds);
 					else
 						mdDistPow_nr(j, mu, xLoop, p.Epsi, dim_reg_scale, mds);
@@ -622,7 +622,7 @@ for (uint pl=0; pl<Npl; pl++) {
 							}
 							else {
 								if (gaussian)
-									ddGaussianDisjoint_nr(j, mu, k, nu, xLoop,beta , p.Epsi, repulsion_scale, dds);
+									ddGaussianDisjoint_nr(j, mu, k, nu, xLoop, beta , p.Epsi, repulsion_scale, dds);
 								else
 									ddLDisjoint_nr(j,mu,k,nu,xLoop,beta,dm,dds);
 							}
