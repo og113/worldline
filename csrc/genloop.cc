@@ -321,7 +321,7 @@ number Dot(const Point<Dim>& p1, const Point<Dim>& p2, const Point<Dim>& q1, con
 // DotDisjoint
 template <uint Dim>
 number DotDisjoint(const Point<Dim>& p1, const Point<Dim>& p2, const Point<Dim>& q1, const Point<Dim>& q2, const number& beta) {
-	number d = mod<number>(p1[Dim-1]-p2[Dim-1],-beta/2.0,beta/2.0)*mod<number>(q1[0]-q2[0],-beta/2.0,beta/2.0);
+	number d = mod<number>(p1[Dim-1]-p2[Dim-1],-beta/2.0,beta/2.0)*mod<number>(q1[Dim-1]-q2[Dim-1],-beta/2.0,beta/2.0);
 	for (uint j=0; j<(Dim-1); j++) {
 		d += (p1[j]-p2[j])*(q1[j]-q2[j]);
 	}

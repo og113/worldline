@@ -452,8 +452,15 @@ for (uint pl=0; pl<Npl; pl++) {
 		for (j=0; j<N; j++) {
 		
 			//S0(j, xLoop, s0norm, s0norm);
-			L		(j, xLoop, 1.0, len);
-			I0		(j, xLoop, mgb, i0);
+			if (poto!=PotentialOptions::thermalDisjoint) {
+				L		(j, xLoop, 1.0, len);
+				I0		(j, xLoop, mgb, i0);
+			}
+			else {
+				LDisjoint (j, xLoop, beta, 1.0, len);
+				I0Disjoint(j, xLoop, beta, mgb, i0);
+			}
+			
 			if (poto==PotentialOptions::dimreg)
 				DistPow	(j, xLoop, p.Epsi, dim_reg_scale, d_dim_reg);
 			

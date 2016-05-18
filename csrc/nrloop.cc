@@ -1183,6 +1183,7 @@ Filename filenameLoopNR(const Parameters& p) {
 
 // dim 2
 template void L<2>(const uint& j, const Loop<2>& l, const number& f, number& result);
+template void LDisjoint<2>(const uint& j, const Loop<2>& l, const number& beta, const number& f, number& result);
 template void S0<2>(const uint& j, const Loop<2>& l, const number& f, number& result);
 template void Sm<2>(const uint& j, const Loop<2>& l, const number& f, number& result);
 template void Angle<2>(const uint& j, const Loop<2>& l, const number& f, number& result);
@@ -1255,6 +1256,7 @@ template <> void I0<2> (const uint& j, const Loop<2>& l, const number& f, number
 
 // dim 4
 template void L<4>(const uint& j, const Loop<4>& l, const number& f, number& result);
+template void LDisjoint<4>(const uint& j, const Loop<4>& l, const number& beta, const number& f, number& result);
 template void DistPow<4>(const uint& j, const Loop<4>& l, const number& w, const number& f, number& result);
 template void S0<4>(const uint& j, const Loop<4>& l, const number& f, number& result);
 template void S0Disjoint<4>(const uint& j, const Loop<4>& l, const number& beta, const number& f, number& result);
