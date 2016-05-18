@@ -319,6 +319,10 @@ number KGMax (const Loop<Dim>& l, const uint& ex1, const uint& ex2);
 template <uint Dim>
 number S0 (const Loop<Dim>& l);
 
+// S0Disjoint
+template <uint Dim>
+number S0Disjoint (const Loop<Dim>& l, const number& beta);
+
 // DS0
 template <uint Dim>
 number DS0 (const Loop<Dim>& l, const Point<Dim>& p, const uint& loc);

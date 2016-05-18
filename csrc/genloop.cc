@@ -798,6 +798,16 @@ number S0 (const Loop<Dim>& l) {
 	return result*(number)l.size()/4.0;
 }
 
+// S0Disjoint
+template <uint Dim>
+number S0Disjoint (const Loop<Dim>& l, const number& beta) {
+	number result = 0;
+	for (uint j=0; j<l.size(); j++) {
+		result += DistanceSquaredDisjoint(l[posNeighDisjoint(j,l.size())],l[j],beta);
+	}
+	return result*(number)l.size()/4.0;
+}
+
 // DS0
 template <uint Dim>
 number DS0 (const Loop<Dim>& l, const Point<Dim>& p, const uint& loc) {
@@ -1223,6 +1233,7 @@ template number KG<4> (const Loop<4>& l);
 template number KGMax<4> (const Loop<4>& l);
 template number KGMax<4> (const Loop<4>& l, const uint& ex1, const uint& ex2);
 template number S0<4> (const Loop<4>& l);
+template number S0Disjoint<4> (const Loop<4>& l, const number&);
 template number DS0<4> (const Loop<4>& l, const Point<4>& p, const uint& loc);
 template number FGamma<4> (const Loop<4>& l);
 template number DFGamma<4> (const Loop<4>& l, const Point<4>& p, const uint& loc);
@@ -1416,6 +1427,7 @@ template class Loop<2>;
 template number L<2> (const Loop<2>& l);
 template number DL<2> (const Loop<2>& l, const Point<2>& p, const uint& loc);
 template number S0<2> (const Loop<2>& l);
+template number S0Disjoint<2> (const Loop<2>& l, const number&);
 template class Metropolis<2>;
 template void interpolate<2>(const Loop<2>& in, Loop<2>& out);
 

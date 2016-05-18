@@ -401,28 +401,35 @@ for (uint pl=0; pl<Npl; pl++) {
 		number ic_scale = 1.0;
 		number cc_scale = 1.0;
 		number kg_scale = 1.0;
-		number s0 = S0(xLoop);
-		number sqrt4s0 = 2.0*sqrt(s0);
+		number s0, sqrt4s0; 
 		number s0_scale = (abs(p.T)>MIN_NUMBER? 1.0/p.T: 1.0);
 		if (poto==PotentialOptions::original) {
+			s0 = S0(xLoop);
+			sqrt4s0 = 2.0*sqrt(s0);
 			g = pow(p.G,3)*p.B/8.0/PI/PI;
 			dm = -g*PI/p.Epsi;
 			cusp_scale = -g*2.0*log(p.Mu/p.Epsi);
 			repulsion_scale = -g*sqrt(PI)/p.Epsi/p.Epsi;
 		}
 		else if (poto==PotentialOptions::link) {
+			s0 = S0(xLoop);
+			sqrt4s0 = 2.0*sqrt(s0);
 			g = pow(p.G,3)*p.B/8.0/PI/PI;
 			dm = -g*PI/p.Epsi;
 			cusp_scale = -g*2.0*log(p.Mu/p.Epsi);
 			repulsion_scale = -g*sqrt(PI)/p.Epsi/p.Epsi;
 		}
 		else if (poto==PotentialOptions::exponential) {
+			s0 = S0(xLoop);
+			sqrt4s0 = 2.0*sqrt(s0);
 			g = pow(p.G,3)*p.B/8.0/PI/PI;
 			dm = -g*sqrt(PI)/p.Epsi;
 			cusp_scale = -g*2.0*log(p.Mu/p.Epsi);
 			repulsion_scale = -g/p.Epsi/p.Epsi;
 		}
 		else if (poto==PotentialOptions::dimreg) {
+			s0 = S0(xLoop);
+			sqrt4s0 = 2.0*sqrt(s0);
 			g = pow(p.G,3)*p.B*(pow(p.Lambda,-p.Epsi)*pow(PI,-2.0+p.Epsi/2.0)*gsl_sf_gamma(2.0-p.Epsi/2.0)/4.0/(2.0-p.Epsi));
 			dm = 0.0;
 			cusp_scale = -g*2.0/p.Epsi; //not sure about the factor of 2.0 here
@@ -435,6 +442,8 @@ for (uint pl=0; pl<Npl; pl++) {
 			cusp_scale = -g*2.0*log(p.Mu/p.Epsi);
 			repulsion_scale = -g*sqrt(PI)/p.Epsi/p.Epsi;
 			beta = (p.T>sqrt(MIN_NUMBER)? 1.0/p.T: 1.0/sqrt(MIN_NUMBER));
+			s0 = S0Disjoint(xLoop,beta);
+			sqrt4s0 = 2.0*sqrt(s0);
 		}
 		
 		Point<dim> P0;
