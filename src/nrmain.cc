@@ -742,7 +742,7 @@ for (uint pl=0; pl<Npl; pl++) {
 			checkSymMax.add(asymmax);
 			checkSym.checkMessage();
 			checkSymMax.checkMessage();
-			cout << "position of max symmetric: (" << asymmaxx << "," << asymmaxy << ")/" << NT;
+			cout << "position of max symmetric: (" << asymmaxx << "," << asymmaxy << ")/" << NT-1;
 			cout << ", (j,k) = (" << (uint)(asymmaxx/dim) << "," << (uint)(asymmaxy/dim) << ")";
 			cout << ", (mu,nu) = (" << asymmaxx%dim << "," << asymmaxy%dim << ")" << endl;
 			
@@ -954,11 +954,11 @@ for (uint pl=0; pl<Npl; pl++) {
 			checkStraight.checkMessage();
 			cout << "avg mds:               " << mds.mean() << endl;
 			cout << "max mds:               " << maxmds << endl;
-			cout << "position of max mds:   " << maxmdspos << "/" << NT << ", j = " << (uint)(maxmdspos/dim);
+			cout << "position of max mds:   " << maxmdspos << "/" << NT-1 << ", j = " << (uint)(maxmdspos/dim);
 			cout << ", mu = " << maxmdspos%dim << endl;
 			cout << "avg delta:             " << delta.mean() << endl;
 			cout << "max delta:             " << maxdelta << endl;
-			cout << "position of max delta: " << maxdeltapos << "/" << NT << ", j = " << (uint)(maxdeltapos/dim);
+			cout << "position of max delta: " << maxdeltapos << "/" << NT-1 << ", j = " << (uint)(maxdeltapos/dim);
 			cout << ", mu = " << maxdeltapos%dim << endl;
 		}
 	

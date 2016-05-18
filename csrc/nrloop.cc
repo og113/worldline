@@ -1572,9 +1572,9 @@ template <> void mdVthrDisjoint_nr<4>(const uint& j, const uint& mu, const uint&
 		number DFThermalDt_ij = DFThermalDt(r_ij,t_ij,beta,a);
 		number T_ij = DotDisjoint(l[pi],l[i],l[pj],l[j],beta);
 		
-		res += 2.0*FThermal_ij*DX(l,i,pi,mu);
+		res += 2.0*FThermal_ij*DXDisjoint(l,i,pi,mu,beta);
 		if (mu<3)
-			res += 2.0*DFThermalDrOnr_ij*DX(l,j,i,mu)*T_ij;
+			res += 2.0*DFThermalDrOnr_ij*DXDisjoint(l,j,i,mu,beta)*T_ij;
 		else
 			res += 2.0*DFThermalDt_ij*T_ij;
 	}
@@ -1583,7 +1583,7 @@ template <> void mdVthrDisjoint_nr<4>(const uint& j, const uint& mu, const uint&
 		number r_imj = SpatialDistance(l[i],l[mj]);
 		number t_imj = mod<number>((l[mj])[3]-(l[i])[3],-beta/2.0,beta/2.0); // checked order
 		number FThermal_imj = FThermal(r_imj,t_imj,beta,a);
-		res +=  -2.0*FThermal_imj*DX(l,i,pi,mu); //
+		res +=  -2.0*FThermal_imj*DXDisjoint(l,i,pi,mu,beta); //
 	}
 	
 	//coincident terms
