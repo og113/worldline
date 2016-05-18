@@ -56,7 +56,7 @@ int main(int argc, char** argv) {
 
 // argv options
 bool verbose = true;
-bool lemon = false;
+bool guess = false;
 bool step = true;
 bool weak = false;
 bool eigen = false;
@@ -77,7 +77,7 @@ if (argc % 2 && argc>1) {
 		string id = argv[2*j+1];
 		if (id[0]=='-') id = id.substr(1);
 		if (id.compare("verbose")==0) verbose = (stn<uint>(argv[2*j+2])!=0);
-		else if (id.compare("lemon")==0) lemon = (stn<uint>(argv[2*j+2])!=0);
+		else if (id.compare("guess")==0) guess = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("step")==0) step = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("weak")==0) weak = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("eigen")==0) eigen = (stn<uint>(argv[2*j+2])!=0);
@@ -275,10 +275,19 @@ for (uint pl=0; pl<Npl; pl++) {
 	
 	// x file
 	if (pl==0 || !step || pass) {
-		if (lemon) {
-			loadFile = "data/lemon/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_R_"+nts(R)+"_E_"+nts(E)+"_rank_0.dat";
-			if (!loadFile.exists())
-				loadFile = "data/circle/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_R_"+nts(R)+"_rank_0.dat";
+		if (guess) {
+			if (poto!=PotentialOptions::thermalDisjoint) {
+				loadFile = "data/lemon/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_R_"+nts(R)+"_E_"+nts(E)+"_rank_0.dat";
+				if (!loadFile.exists())
+					loadFile = "data/circle/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_R_"+nts(R)+"_rank_0.dat";
+			}
+			else {
+				loadFile = "data/cosDisjoint/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_Kappa_"+nts(pow(p.G,3)*p.B)\
+					+"_T_"+nts(p.T)+"_Lambda_"+nts(p.Lambda)+"_rank_0.dat";
+				if (!loadFile.exists())
+					loadFile = "data/straightDisjoint/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_Kappa_"+nts(pow(p.G,3)*p.B)\
+					+"_T_"+nts(p.T)+"_rank_0.dat";
+			}
 		}
 		else {
 			loadFile = filenameLoopNR<dim>(p);
@@ -304,17 +313,28 @@ for (uint pl=0; pl<Npl; pl++) {
 				if (!loadFile.exists() && old)
 					loadFile = "data/nr/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_kappa_"+nts(pow(p.G,3)*p.B)+"_E_"+nts(p.P4)\
 		+"_a_"+nts(p.Epsi)+".dat";
-				if (!loadFile.exists())
+		
+				if (!loadFile.exists()) {
+					if (poto!=PotentialOptions::thermalDisjoint) {
 					loadFile = "data/lemon/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_R_"+nts(R)+"_E_"+nts(E)+"_rank_0.dat";
-				if (!loadFile.exists())
-					loadFile = "data/circle/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_R_"+nts(R)+"_rank_0.dat";
+						if (!loadFile.exists())
+							loadFile = "data/circle/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_R_"+nts(R)+"_rank_0.dat";
+					}
+					else {
+						loadFile = "data/cosDisjoint/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_Kappa_"+nts(pow(p.G,3)*p.B)\
+							+"_T_"+nts(p.T)+"_Lambda_"+nts(p.Lambda)+"_rank_0.dat";
+						if (!loadFile.exists())
+							loadFile = "data/straightDisjoint/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_Kappa_"\
+							+nts(pow(p.G,3)*p.B)+"_T_"+nts(p.T)+"_rank_0.dat";
+					}
+				}
 			}
 		}
 			
 	}
 	else {
 		loadFile = stepFile;
-		lemon = false;
+		guess = false;
 	}
 	// check if file exists
 	if (!loadFile.exists()) {
