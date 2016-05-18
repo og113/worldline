@@ -213,6 +213,26 @@ bool operator^=(const Point<Dim>& lhs, const Point<Dim>& rhs) {
 		- Dot (product)
 ----------------------------------------------------------------------------------------------------------------------------*/
 
+// posNeighDisjoint
+uint posNeighDisjoint(const uint& j, const uint& N) {
+	if (j==(N/2-1))
+		return 0;
+	else if (j==(N-1))
+		return N/2;
+	else
+		return j+1;
+}
+
+// negNeighDisjoint
+uint negNeighDisjoint(const uint& j, const uint& N) {
+	if (j==0)
+		return N/2-1;
+	else if (j==(N/2))
+		return N-1;
+	else
+		return j-1;
+}
+
 //distance squared
 template <uint Dim>
 number DistanceSquared(const Point<Dim>& p1, const Point<Dim>& p2) {
@@ -246,9 +266,9 @@ number SpatialDistance(const Point<Dim>& p1, const Point<Dim>& p2) {
 	return sqrt(SpatialDistanceSquared(p1,p2));
 }
 
-// Thermal Distance squared
+// Disjoint Distance squared
 template <uint Dim>
-number ThermalDistanceSquared(const Point<Dim>& p1, const Point<Dim>& p2, const number& beta) {
+number DistanceSquaredDisjoint(const Point<Dim>& p1, const Point<Dim>& p2, const number& beta) {
 	number d = pow(mod<number>(p1[Dim-1]-p2[Dim-1],0.0,beta),2);
 	for (uint j=0; j<(Dim-1); j++) {
 		d += pow(p1[j]-p2[j],2);
@@ -256,10 +276,10 @@ number ThermalDistanceSquared(const Point<Dim>& p1, const Point<Dim>& p2, const 
 	return d;
 }
 
-// ThermalDistance
+// Disjoint Distance
 template <uint Dim>
-number ThermalDistance(const Point<Dim>& p1, const Point<Dim>& p2, const number& beta) {
-	return sqrt(ThermalDistanceSquared(p1,p2,beta));
+number DistanceDisjoint(const Point<Dim>& p1, const Point<Dim>& p2, const number& beta) {
+	return sqrt(DistanceSquaredDisjoint(p1,p2,beta));
 }
 
 // NormSquared
@@ -601,6 +621,19 @@ number DX(const Loop<Dim>& loop, const uint& i, const uint& mu) {
 template <uint Dim>
 number DX(const Loop<Dim>& loop, const uint& i, const uint& j, const uint& mu) {
 	return (loop[i])[mu]-(loop[j])[mu];
+}
+
+// DXDisjoint
+template <uint Dim>
+number DXDisjoint(const Loop<Dim>& loop, const uint& i, const uint& mu, const number& beta) {
+	uint ni = negNeighDisjoint(i,loop.size());
+	return mod<number>((loop[i])[mu]-(loop[ni])[mu],0.0,beta);
+}
+
+// DXDisjoint
+template <uint Dim>
+number DXDisjoint(const Loop<Dim>& loop, const uint& i, const uint& j, const uint& mu, const number& beta) {
+	return mod<number>((loop[i])[mu]-(loop[j])[mu],0.0,beta);
 }
 
 // L
@@ -1166,8 +1199,8 @@ template number Distance<4>(const Point<4>&, const Point<4>&);
 template number DistanceSquared<4>(const Point<4>&, const Point<4>&);
 template number SpatialDistance<4>(const Point<4>&, const Point<4>&);
 template number SpatialDistanceSquared<4>(const Point<4>&, const Point<4>&);
-template number ThermalDistance<4>(const Point<4>&, const Point<4>&, const number&);
-template number ThermalDistanceSquared<4>(const Point<4>&, const Point<4>&, const number&);
+template number DistanceDisjoint<4>(const Point<4>&, const Point<4>&, const number&);
+template number DistanceSquaredDisjoint<4>(const Point<4>&, const Point<4>&, const number&);
 template number Dot<4>(const Point<4>&, const Point<4>&);
 template number Dot<4>(const Point<4>&, const Point<4>&, const Point<4>&, const Point<4>&);
 template number DotDisjoint<4>(const Point<4>&, const Point<4>&, const Point<4>&, const Point<4>&, const number&);
@@ -1178,6 +1211,8 @@ template number Dot<4>(const Loop<4>&, const uint&, const uint&);
 template number MidpointDistanceSquared<4>(const Loop<4>&, const uint&, const uint&);
 template number DX<4>(const Loop<4>&, const uint&, const uint&);
 template number DX<4>(const Loop<4>&, const uint&, const uint&, const uint&);
+template number DXDisjoint<4>(const Loop<4>&, const uint&, const uint&, const number&);
+template number DXDisjoint<4>(const Loop<4>&, const uint&, const uint&, const uint&, const number&);
 template class Loop<4>;
 template number L<4> (const Loop<4>& l);
 template number DL<4> (const Loop<4>& l, const Point<4>& p, const uint& loc);
@@ -1364,8 +1399,8 @@ template number Distance<2>(const Point<2>&, const Point<2>&);
 template number DistanceSquared<2>(const Point<2>&, const Point<2>&);
 template number SpatialDistance<2>(const Point<2>&, const Point<2>&);
 template number SpatialDistanceSquared<2>(const Point<2>&, const Point<2>&);
-template number ThermalDistance<2>(const Point<2>&, const Point<2>&, const number&);
-template number ThermalDistanceSquared<2>(const Point<2>&, const Point<2>&, const number&);
+template number DistanceDisjoint<2>(const Point<2>&, const Point<2>&, const number&);
+template number DistanceSquaredDisjoint<2>(const Point<2>&, const Point<2>&, const number&);
 template number Norm<2>(const Point<2>&);
 template number Dot<2>(const Point<2>&, const Point<2>&);
 template number Dot<2>(const Point<2>&, const Point<2>&, const Point<2>&, const Point<2>&);

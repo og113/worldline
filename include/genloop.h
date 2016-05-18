@@ -119,6 +119,12 @@ private:
 	2 - functions acting on Points
 ----------------------------------------------------------------------------------------------------------------------------*/
 
+// posNeighDisjoint
+uint posNeighDisjoint(const uint& j, const uint& N);
+
+// negNeighDisjoint
+uint negNeighDisjoint(const uint& j, const uint& N);
+
 // Distance squared
 template <uint Dim>
 number DistanceSquared(const Point<Dim>&, const Point<Dim>&);
@@ -135,13 +141,13 @@ number SpatialDistanceSquared(const Point<Dim>&, const Point<Dim>&);
 template <uint Dim>
 number SpatialDistance(const Point<Dim>&, const Point<Dim>&);
 
-// Thermal Distance squared
+// Disjoint Distance squared
 template <uint Dim>
-number ThermalDistanceSquared(const Point<Dim>&, const Point<Dim>&, const number& beta);
+number DistanceSquaredDisjoint(const Point<Dim>&, const Point<Dim>&, const number& beta);
 
-// Thermal Distance
+// Disjoint Distance
 template <uint Dim>
-number ThermalDistance(const Point<Dim>&, const Point<Dim>&, const number& beta);
+number DistanceDisjoint(const Point<Dim>&, const Point<Dim>&, const number& beta);
 
 // NormSquared
 template <uint Dim>
@@ -268,6 +274,14 @@ number DX(const Loop<Dim>& loop, const uint& i, const uint& mu);
 // DX
 template <uint Dim>
 number DX(const Loop<Dim>& loop, const uint& i, const uint& j, const uint& mu);
+
+// DXDisjoint
+template <uint Dim>
+number DXDisjoint(const Loop<Dim>& loop, const uint& i, const uint& mu, const number& beta);
+
+// DXDisjoint
+template <uint Dim>
+number DXDisjoint(const Loop<Dim>& loop, const uint& i, const uint& j, const uint& mu, const number& beta);
 
 // L
 template <uint Dim>
