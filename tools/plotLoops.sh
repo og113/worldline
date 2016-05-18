@@ -5,15 +5,17 @@ gpFile='gp/projection.gp'
 single=false
 oflag=false # is there an outfile?
 mflag=false # do we want to print min or max?
+K=11
 
 # checking if outFile required and getting filename if so
-options=':o:m'
+options=':o:K:m'
 OPTIND=1
 while getopts $options option
 do
 	case $option in
 		o  ) o=$OPTARG; oflag=true;;
 		m  ) mflag=true;;
+		K  ) K=$OPTARG;;
 		\? ) echo "Unknown option argument -$OPTARG" >&2; exit 1;;
 		:  )
 	esac
@@ -51,7 +53,7 @@ mTemp=""
 for f in $l;
 do fileID=${f##*/};
 	tf="data/temp/$fileID";
-	./binaryToAscii -b $f -a $tf -loop 1
+	./binaryToAscii -b $f -a $tf -loop 1 -K $K
 	mTemp+="$tf ";	
 done
 m=${mTemp::-1}

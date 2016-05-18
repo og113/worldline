@@ -555,9 +555,9 @@ void mdLDisjoint_nr(const uint& j, const uint& mu, const Loop<Dim>& l, const num
 	
 	number norm = DistanceDisjoint(l[j],l[nj],beta), temp;
 	if (mu==3) {
-		temp = mod<number>((l[j])[mu]-(l[nj])[mu],0.0,beta)/norm;
+		temp = mod<number>((l[j])[mu]-(l[nj])[mu],-beta/2.0,beta/2.0)/norm;
 		norm = DistanceDisjoint(l[pj],l[j],beta);
-		temp += mod<number>((l[j])[mu]-(l[pj])[mu],0.0,beta)/norm;
+		temp += mod<number>((l[j])[mu]-(l[pj])[mu],-beta/2.0,beta/2.0)/norm;
 	}
 	else {
 		temp = ((l[j])[mu]-(l[nj])[mu])/norm;
@@ -576,21 +576,21 @@ void ddLDisjoint_nr(const uint& j, const uint& mu, const uint& k, const uint& nu
 	uint nj = negNeighDisjoint(j,l.size());
 	if (k==j) {
 		number normn = DistanceDisjoint(l[j],l[nj],beta), normp = DistanceDisjoint(l[pj],l[j],beta), temp = 0.0;
-		number dx_mu = (mu==3? mod<number>((l[j])[mu]-(l[nj])[mu],0.0,beta):(l[j])[mu]-(l[nj])[mu]);
-		number dx_nu = (nu==3? mod<number>((l[j])[nu]-(l[nj])[nu],0.0,beta):(l[j])[nu]-(l[nj])[nu]);
+		number dx_mu = (mu==3? mod<number>((l[j])[mu]-(l[nj])[mu],-beta/2.0,beta/2.0):(l[j])[mu]-(l[nj])[mu]);
+		number dx_nu = (nu==3? mod<number>((l[j])[nu]-(l[nj])[nu],-beta/2.0,beta/2.0):(l[j])[nu]-(l[nj])[nu]);
 		if (mu==nu)
 			temp += 1.0/normn + 1.0/normp;
 		if (mu==nu)
 		temp -= dx_mu*dx_nu/pow(normn,3);
-		dx_mu = (mu==3? mod<number>((l[j])[mu]-(l[pj])[mu],0.0,beta):(l[j])[mu]-(l[pj])[mu]);
-		dx_nu = (nu==3? mod<number>((l[j])[nu]-(l[pj])[nu],0.0,beta):(l[j])[nu]-(l[pj])[nu]);
+		dx_mu = (mu==3? mod<number>((l[j])[mu]-(l[pj])[mu],-beta/2.0,beta/2.0):(l[j])[mu]-(l[pj])[mu]);
+		dx_nu = (nu==3? mod<number>((l[j])[nu]-(l[pj])[nu],-beta/2.0,beta/2.0):(l[j])[nu]-(l[pj])[nu]);
 		temp -= dx_mu*dx_nu/pow(normp,3);
 		m(j*Dim+mu,k*Dim+nu) += f*temp;
 	}
 	else if (k==nj) {
 		number norm = DistanceDisjoint(l[j],l[nj],beta), temp = 0.0;
-		number dx_mu = (mu==3? mod<number>((l[j])[mu]-(l[nj])[mu],0.0,beta):(l[j])[mu]-(l[nj])[mu]);
-		number dx_nu = (nu==3? mod<number>((l[j])[nu]-(l[nj])[nu],0.0,beta):(l[j])[nu]-(l[nj])[nu]);
+		number dx_mu = (mu==3? mod<number>((l[j])[mu]-(l[nj])[mu],-beta/2.0,beta/2.0):(l[j])[mu]-(l[nj])[mu]);
+		number dx_nu = (nu==3? mod<number>((l[j])[nu]-(l[nj])[nu],-beta/2.0,beta/2.0):(l[j])[nu]-(l[nj])[nu]);
 		if (mu==nu)
 			temp -= 1.0/norm;
 		temp += dx_mu*dx_nu/pow(norm,3);
@@ -598,8 +598,8 @@ void ddLDisjoint_nr(const uint& j, const uint& mu, const uint& k, const uint& nu
 	}
 	else if (k==pj) {
 		number norm = Distance(l[pj],l[j]), temp = 0.0;
-		number dx_mu = (mu==3? mod<number>((l[j])[mu]-(l[pj])[mu],0.0,beta):(l[j])[mu]-(l[pj])[mu]);
-		number dx_nu = (nu==3? mod<number>((l[j])[nu]-(l[pj])[nu],0.0,beta):(l[j])[nu]-(l[pj])[nu]);
+		number dx_mu = (mu==3? mod<number>((l[j])[mu]-(l[pj])[mu],-beta/2.0,beta/2.0):(l[j])[mu]-(l[pj])[mu]);
+		number dx_nu = (nu==3? mod<number>((l[j])[nu]-(l[pj])[nu],-beta/2.0,beta/2.0):(l[j])[nu]-(l[pj])[nu]);
 		if (mu==nu)
 			temp -= 1.0/norm;
 		temp += dx_mu*dx_nu/pow(norm,3);
@@ -739,7 +739,7 @@ void mdS0Disjoint_nr(const uint& j, const uint& mu, const Loop<Dim>& l, const nu
 	uint pj = posNeighDisjoint(j,l.size());
 	uint nj = negNeighDisjoint(j,l.size());
 	if (mu==(Dim-1))
-		v[j*Dim+mu] += -f*mod<number>(2.0*(l[j])[mu] - (l[nj])[mu] - (l[pj])[mu],0.0,beta)*(number)l.size()/2.0;
+		v[j*Dim+mu] += -f*mod<number>(2.0*(l[j])[mu] - (l[nj])[mu] - (l[pj])[mu],-beta/2.0,beta/2.0)*(number)l.size()/2.0;
 	else
 		v[j*Dim+mu] += -f*(2.0*(l[j])[mu] - (l[nj])[mu] - (l[pj])[mu])*(number)l.size()/2.0;
 }
@@ -1382,7 +1382,7 @@ void VthrDisjoint<4> (const uint& j, const uint& k, const Loop<4>& l, const numb
 		uint pk = posNeighDisjoint(k,l.size());
 		
 		number r = SpatialDistance(l[j],l[k]);
-		number t = mod<number>((l[k])[3]-(l[j])[3],0.0,beta);
+		number t = mod<number>((l[k])[3]-(l[j])[3],-beta/2.0,beta/2.0);
 	
 		result += f*(-pow(2.0*PI,2))*(1.0+(number)(k<j))*DotDisjoint(l[pj],l[j],l[pk],l[k],beta)*FThermal(r,t,beta,a);	
 	}
@@ -1547,7 +1547,7 @@ template <> void mdVthrDisjoint_nr<4>(const uint& j, const uint& mu, const uint&
 		
 	if (i!=j) {
 		number r_ij = SpatialDistance(l[i],l[j]);
-		number t_ij = mod<number>((l[j])[3]-(l[i])[3],0.0,beta); // checked order
+		number t_ij = mod<number>((l[j])[3]-(l[i])[3],-beta/2.0,beta/2.0); // checked order
 		number FThermal_ij = FThermal(r_ij,t_ij,beta,a);
 		number DFThermalDrOnr_ij = DFThermalDrOnr(r_ij,t_ij,beta,a);
 		number DFThermalDt_ij = DFThermalDt(r_ij,t_ij,beta,a);
@@ -1562,7 +1562,7 @@ template <> void mdVthrDisjoint_nr<4>(const uint& j, const uint& mu, const uint&
 	
 	if (i!=mj) {
 		number r_imj = SpatialDistance(l[i],l[mj]);
-		number t_imj = mod<number>((l[mj])[3]-(l[i])[3],0.0,beta); // checked order
+		number t_imj = mod<number>((l[mj])[3]-(l[i])[3],-beta/2.0,beta/2.0); // checked order
 		number FThermal_imj = FThermal(r_imj,t_imj,beta,a);
 		res +=  -2.0*FThermal_imj*DX(l,i,pi,mu); //
 	}
@@ -1571,7 +1571,7 @@ template <> void mdVthrDisjoint_nr<4>(const uint& j, const uint& mu, const uint&
 	// extra factor of (-1.0/pow(2.0*PI,2)) due to the fact that we are treating the green's function here
 	if (mu==3) {
 		if (i==j) { // bit of a fudge in terms of sum over i
-			res += (-1.0/pow(2.0*PI,2))*mod<number>(2.0*(l[j])[mu] - (l[mj])[mu] - (l[pj])[mu],0.0,beta)/a/a;
+			res += (-1.0/pow(2.0*PI,2))*mod<number>(2.0*(l[j])[mu] - (l[mj])[mu] - (l[pj])[mu],-beta/2.0,beta/2.0)/a/a;
 		}
 	}
 	else {
@@ -1652,7 +1652,7 @@ template <> void mdGaussianDisjoint_nr<4>(const uint& j, const uint& mu, const u
 	//coincident terms	
 	if (mu==3) {
 		if (i==j) { // bit of a fudge in terms of sum over i
-			res += mod<number>(2.0*(l[j])[mu] - (l[mj])[mu] - (l[pj])[mu],0.0,beta)/a/a;
+			res += mod<number>(2.0*(l[j])[mu] - (l[mj])[mu] - (l[pj])[mu],-beta/2.0,beta/2.0)/a/a;
 		}
 	}
 	else {
@@ -2242,10 +2242,10 @@ template <> void ddVthrDisjoint_nr<4>(const uint& j, const uint& mu, const uint&
 	number r_jmk = SpatialDistance(l[j],l[mk]);
 	number r_mjmk = SpatialDistance(l[mj],l[mk]);
 	
-	number t_jk = mod<number>((l[k])[3]-(l[j])[3],0.0,beta);
-	number t_mjk = mod<number>((l[k])[3]-(l[mj])[3],0.0,beta);
-	number t_jmk = mod<number>((l[mk])[3]-(l[j])[3],0.0,beta);
-	number t_mjmk = mod<number>((l[mk])[3]-(l[mj])[3],0.0,beta);
+	number t_jk = mod<number>((l[k])[3]-(l[j])[3],-beta/2.0,beta/2.0);
+	number t_mjk = mod<number>((l[k])[3]-(l[mj])[3],-beta/2.0,beta/2.0);
+	number t_jmk = mod<number>((l[mk])[3]-(l[j])[3],-beta/2.0,beta/2.0);
+	number t_mjmk = mod<number>((l[mk])[3]-(l[mj])[3],-beta/2.0,beta/2.0);
 		
 	number T_jk = DotDisjoint(l[pj],l[j],l[pk],l[k],beta);
 	
@@ -2325,8 +2325,8 @@ template <> void ddVthrDisjoint_nr<4>(const uint& j, const uint& mu, const uint&
 			T_ij = DotDisjoint(l[pi],l[i],l[pj],l[j],beta);			
 			r_ij = SpatialDistance(l[j],l[i]);
 			r_imj = SpatialDistance(l[i],l[mj]);	
-			t_ij = mod<number>((l[j])[3]-(l[i])[3],0.0,beta);
-			t_imj = mod<number>((l[mj])[3]-(l[i])[3],0.0,beta);
+			t_ij = mod<number>((l[j])[3]-(l[i])[3],-beta/2.0,beta/2.0);
+			t_imj = mod<number>((l[mj])[3]-(l[i])[3],-beta/2.0,beta/2.0);
 
 			if (k==j && i!=j) {
 				DFThermalDrOnr_ij = DFThermalDrOnr(r_ij,t_ij,beta,a);
@@ -2598,7 +2598,7 @@ template <> void I0<4> (const uint& j, const Loop<4>& l, const number& f, number
 // I0Disjoint<4>
 template <> void I0Disjoint<4> (const uint& j, const Loop<4>& l, const number& beta, const number& f, number& result) {
 	uint pj = posNeighDisjoint(j,l.size());
-	result += f*(l[j])[2]*mod<number>((l[pj])[3]-(l[j])[3],0.0,beta);
+	result += f*(l[j])[2]*mod<number>((l[pj])[3]-(l[j])[3],-beta/2.0,beta/2.0);
 }
 
 // mdIDisjoint_nr
@@ -2609,7 +2609,7 @@ template <> void mdIDisjoint_nr<4>(const uint& j, const uint& mu, const Loop<4>&
 	}
 	else if (mu==2) {
 		uint pj = posNeighDisjoint(j,l.size());
-		v[j*4+mu] += -f*mod<number>((l[pj])[3]-(l[j])[3],0.0,beta);
+		v[j*4+mu] += -f*mod<number>((l[pj])[3]-(l[j])[3],-beta/2.0,beta/2.0);
 	}
 }
 

@@ -179,16 +179,15 @@ for (uint pl=0; pl<Npl; pl++) {
 					+"_T_"+nts(p.T)+"_rank_"+nts<uint>(j)+".dat";	
 			number r = sqrt(kappa/4.0/PI);
 			number dt = 2.0*beta/(number)N;
-			p0[3] += -beta/2.0;
 			for (uint k=0; k<N; k++) {
 				point = p0;
 				if (k<N/2) {
-					point[2] += r;
-					point[3] += dt*k;
+					point[2] += r/2.0;
+					point[3] += -beta/2.0 + dt*k;
 				}
 				else {
-					point[2] += -r;
-					point[3] += dt*(k-N/2);
+					point[2] += -r/2.0;
+					point[3] += beta/2.0 - dt*(k-N/2);
 				}
 				loop[k] = point;
 			}
@@ -203,12 +202,12 @@ for (uint pl=0; pl<Npl; pl++) {
 			for (uint k=0; k<N; k++) {
 				point = p0;
 				if (k<N/2) {
-					point[2] += r + p.Lambda*cos(w*k);
-					point[3] += dt*k;
+					point[2] += r/2.0 + p.Lambda*cos(w*k);
+					point[3] += -beta/2.0 + dt*k;
 				}
 				else {
-					point[2] += -r - p.Lambda*cos(w*k);
-					point[3] += dt*(k-N/2);
+					point[2] += -r/2.0 - p.Lambda*cos(w*k);
+					point[3] += beta/2.0 - dt*(k-N/2);
 				}
 				loop[k] = point;
 			}

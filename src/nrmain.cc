@@ -90,7 +90,7 @@ if (argc % 2 && argc>1) {
 		else if (id.compare("print")==0) printOpts = (string)argv[2*j+2];
 		else if (id.compare("pot")==0 || id.compare("potential")==0) potOpts = (string)argv[2*j+2];
 		else if (id.compare("kin")==0 || id.compare("kinetic")==0) kinOpts = (string)argv[2*j+2];
-		else if (id.compare("alltests")==0) alltests = (stn<uint>(argv[2*j+2])!=0);
+		else if (id.compare("alltests")==0 || id.compare("allTests")==0) alltests = (stn<uint>(argv[2*j+2])!=0);
 		else {
 			cerr << "argv id " << id << " not understood" << endl;
 			return 1;

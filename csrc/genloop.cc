@@ -269,7 +269,7 @@ number SpatialDistance(const Point<Dim>& p1, const Point<Dim>& p2) {
 // Disjoint Distance squared
 template <uint Dim>
 number DistanceSquaredDisjoint(const Point<Dim>& p1, const Point<Dim>& p2, const number& beta) {
-	number d = pow(mod<number>(p1[Dim-1]-p2[Dim-1],0.0,beta),2);
+	number d = pow(mod<number>(p1[Dim-1]-p2[Dim-1],-beta/2.0,beta/2.0),2);
 	for (uint j=0; j<(Dim-1); j++) {
 		d += pow(p1[j]-p2[j],2);
 	}
@@ -321,7 +321,7 @@ number Dot(const Point<Dim>& p1, const Point<Dim>& p2, const Point<Dim>& q1, con
 // DotDisjoint
 template <uint Dim>
 number DotDisjoint(const Point<Dim>& p1, const Point<Dim>& p2, const Point<Dim>& q1, const Point<Dim>& q2, const number& beta) {
-	number d = mod<number>(p1[Dim-1]-p2[Dim-1],0.0,beta)*mod<number>(q1[0]-q2[0],0.0,beta);
+	number d = mod<number>(p1[Dim-1]-p2[Dim-1],-beta/2.0,beta/2.0)*mod<number>(q1[0]-q2[0],-beta/2.0,beta/2.0);
 	for (uint j=0; j<(Dim-1); j++) {
 		d += (p1[j]-p2[j])*(q1[j]-q2[j]);
 	}
@@ -627,13 +627,13 @@ number DX(const Loop<Dim>& loop, const uint& i, const uint& j, const uint& mu) {
 template <uint Dim>
 number DXDisjoint(const Loop<Dim>& loop, const uint& i, const uint& mu, const number& beta) {
 	uint ni = negNeighDisjoint(i,loop.size());
-	return mod<number>((loop[i])[mu]-(loop[ni])[mu],0.0,beta);
+	return mod<number>((loop[i])[mu]-(loop[ni])[mu],-beta/2.0,beta/2.0);
 }
 
 // DXDisjoint
 template <uint Dim>
 number DXDisjoint(const Loop<Dim>& loop, const uint& i, const uint& j, const uint& mu, const number& beta) {
-	return mod<number>((loop[i])[mu]-(loop[j])[mu],0.0,beta);
+	return mod<number>((loop[i])[mu]-(loop[j])[mu],-beta/2.0,beta/2.0);
 }
 
 // L
