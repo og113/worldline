@@ -280,8 +280,8 @@ template <uint Dim>
 void Gaussian (const uint& j, const uint& k, const Loop<Dim>& l, const number& a, const number& f, number& result) {
 	
 	if (k<=j) {
-		uint pj = (j==(l.size()-1)? 0: j+1);
-		uint pk = (k==(l.size()-1)? 0: k+1);
+		uint pj = posNeigh(j,l.size());
+		uint pk = posNeigh(k,l.size());
 	
 		result += f*(1.0+(number)(k<j))*Dot(l[pj],l[j],l[pk],l[k])*exp(-DistanceSquared(l[j],l[k])/a/a);	
 	}
@@ -304,11 +304,9 @@ void GaussianDisjoint (const uint& j, const uint& k, const Loop<Dim>& l, const n
 // InlineCurvatureMax
 template <uint Dim>
 void InlineCurvatureMax (const uint& j, const Loop<Dim>& l, const number& f, number& result) {
-	uint pj = (j==(l.size()-1)? 0: j+1);
-	uint nj = (j==0? (l.size()-1):j-1);
-	Point<Dim> dd = l[pj] + l[nj] - 2.0*l[j];
-	Point<Dim> d = l[pj] - l[j];
-	number temp = f*abs(Dot(dd,d))/Dot(d,d);
+	uint pj = posNeigh(j,l.size());
+	uint nj = negNeigh(j,l.size());
+	number temp = f*abs( Dot(l[pj],l[j],l[pj],l[j]) + Dot(l[nj],l[j],l[pj],l[j]) )/DistanceSquared(l[pj],l[j]);
 	result = (temp>result? temp: result);
 }
 
@@ -316,8 +314,8 @@ void InlineCurvatureMax (const uint& j, const Loop<Dim>& l, const number& f, num
 template <uint Dim>
 void InlineCurvatureMax (const uint& j, const Loop<Dim>& l, const uint& ex1, const uint& ex2, const number& f, number& result) {
 	if (j!=ex1 && j!=ex2) {
-		uint pj = (j==(l.size()-1)? 0: j+1);
-		uint nj = (j==0? (l.size()-1):j-1);
+		uint pj = posNeigh(j,l.size());
+	uint nj = negNeigh(j,l.size());
 		Point<Dim> dd = l[pj] + l[nj] - 2.0*l[j];
 		Point<Dim> d = l[pj] - l[j];
 		number temp = f*abs(Dot(dd,d))/Dot(d,d);
@@ -328,8 +326,8 @@ void InlineCurvatureMax (const uint& j, const Loop<Dim>& l, const uint& ex1, con
 // InlineCurvatureAvg
 template <uint Dim>
 void InlineCurvatureAvg (const uint& j, const Loop<Dim>& l, const number& f, number& result) {
-	uint pj = (j==(l.size()-1)? 0: j+1);
-	uint nj = (j==0? (l.size()-1):j-1);
+	uint pj = posNeigh(j,l.size());
+	uint nj = negNeigh(j,l.size());
 	Point<Dim> dd = l[pj] + l[nj] - 2.0*l[j];
 	Point<Dim> d = l[pj] - l[j];
 	number temp = f*abs(Dot(dd,d))/Dot(d,d);
@@ -340,8 +338,8 @@ void InlineCurvatureAvg (const uint& j, const Loop<Dim>& l, const number& f, num
 template <uint Dim>
 void InlineCurvatureAvg (const uint& j, const Loop<Dim>& l, const uint& ex1, const uint& ex2, const number& f, number& result) {
 	if (j!=ex1 && j!=ex2) {
-		uint pj = (j==(l.size()-1)? 0: j+1);
-		uint nj = (j==0? (l.size()-1):j-1);
+		uint pj = posNeigh(j,l.size());
+		uint nj = negNeigh(j,l.size());
 		Point<Dim> dd = l[pj] + l[nj] - 2.0*l[j];
 		Point<Dim> d = l[pj] - l[j];
 		number temp = f*abs(Dot(dd,d))/Dot(d,d);
@@ -352,10 +350,10 @@ void InlineCurvatureAvg (const uint& j, const Loop<Dim>& l, const uint& ex1, con
 // CuspCurvatureMax
 template <uint Dim>
 void CuspCurvatureMax (const uint& j, const Loop<Dim>& l, const number& f, number& result) {
-	uint nj = (j==0? (l.size()-1): j-1);
-	uint nnj = (nj==0? (l.size()-1): nj-1);
-	uint pj = (j==(l.size()-1)? 0: j+1);
-	uint ppj = (pj==(l.size()-1)? 0: pj+1);
+	uint pj = posNeigh(j,l.size());
+	uint ppj = posNeigh(pj,l.size());
+	uint nj = negNeigh(j,l.size());
+	uint nnj = negNeigh(nj,l.size());
 	Point<Dim> dd = l[ppj] + l[j] - 2.0*l[pj];
 	Point<Dim> dp = l[pj] - l[j];
 	Point<Dim> dn = l[j] - l[nj];
@@ -369,17 +367,16 @@ void CuspCurvatureMax (const uint& j, const Loop<Dim>& l, const number& f, numbe
 // KGMax
 template <uint Dim>
 void KGMax (const uint& j, const Loop<Dim>& l, const number& f, number& result) {
-	uint pos1, pos2;
 	Point<Dim> pp;
 	number t_sqrd, t_dot_sqrd, t_t_dot, temp;
-	pos1 = (j==(l.size()-1)? 0 : j+1);
-	pos2 = (pos1==(l.size()-1)? 0 : pos1+1);
-	pp = l[pos1];
+	uint pj = posNeigh(j,l.size());
+	uint ppj = posNeigh(pj,l.size());
+	pp = l[pj];
 	pp *= 2.0;
-	pp -= l[pos2];
-	t_sqrd = DistanceSquared(l[pos1],l[j]);
+	pp -= l[ppj];
+	t_sqrd = DistanceSquared(l[pj],l[j]);
 	t_dot_sqrd = DistanceSquared(l[j],pp);
-	t_t_dot = Dot(l[j],pp,l[pos1],l[j]);
+	t_t_dot = Dot(l[j],pp,l[pj],l[j]);
 	temp = f*sqrt((t_dot_sqrd-t_t_dot*t_t_dot/t_sqrd)/t_sqrd)*l.size();
 	result =  (temp>result? temp: result);
 }
@@ -388,17 +385,16 @@ void KGMax (const uint& j, const Loop<Dim>& l, const number& f, number& result) 
 template <uint Dim>
 void KGMax (const uint& j, const Loop<Dim>& l, const uint& ex1, const uint& ex2, const number& f, number& result) {
 	if (j!=ex1 && j!=ex2) {
-		uint pos1, pos2;
 		Point<Dim> pp;
 		number t_sqrd, t_dot_sqrd, t_t_dot, temp;
-		pos1 = (j==(l.size()-1)? 0 : j+1);
-		pos2 = (pos1==(l.size()-1)? 0 : pos1+1);
-		pp = l[pos1];
+		uint pj = posNeigh(j,l.size());
+		uint ppj = posNeigh(pj,l.size());
+		pp = l[pj];
 		pp *= 2.0;
-		pp -= l[pos2];
-		t_sqrd = DistanceSquared(l[pos1],l[j]);
+		pp -= l[ppj];
+		t_sqrd = DistanceSquared(l[pj],l[j]);
 		t_dot_sqrd = DistanceSquared(l[j],pp);
-		t_t_dot = Dot(l[j],pp,l[pos1],l[j]);
+		t_t_dot = Dot(l[j],pp,l[pj],l[j]);
 		temp = f*sqrt((t_dot_sqrd-t_t_dot*t_t_dot/t_sqrd)/t_sqrd)*l.size();
 		result = (temp>result? temp: result);
 	}
@@ -407,17 +403,16 @@ void KGMax (const uint& j, const Loop<Dim>& l, const uint& ex1, const uint& ex2,
 // KGAvg
 template <uint Dim>
 void KGAvg (const uint& j, const Loop<Dim>& l, const number& f, number& result) {
-	uint pos1, pos2;
 	Point<Dim> pp;
 	number t_sqrd, t_dot_sqrd, t_t_dot, temp;
-	pos1 = (j==(l.size()-1)? 0 : j+1);
-	pos2 = (pos1==(l.size()-1)? 0 : pos1+1);
-	pp = l[pos1];
+	uint pj = posNeigh(j,l.size());
+	uint ppj = posNeigh(pj,l.size());
+	pp = l[pj];
 	pp *= 2.0;
-	pp -= l[pos2];
-	t_sqrd = DistanceSquared(l[pos1],l[j]);
+	pp -= l[ppj];
+	t_sqrd = DistanceSquared(l[pj],l[j]);
 	t_dot_sqrd = DistanceSquared(l[j],pp);
-	t_t_dot = Dot(l[j],pp,l[pos1],l[j]);
+	t_t_dot = Dot(l[j],pp,l[pj],l[j]);
 	temp = f*sqrt((t_dot_sqrd-t_t_dot*t_t_dot/t_sqrd)/t_sqrd);
 	result +=  temp;
 }
@@ -426,17 +421,16 @@ void KGAvg (const uint& j, const Loop<Dim>& l, const number& f, number& result) 
 template <uint Dim>
 void KGAvg (const uint& j, const Loop<Dim>& l, const uint& ex1, const uint& ex2, const number& f, number& result) {
 	if (j!=ex1 && j!=ex2) {
-		uint pos1, pos2;
 		Point<Dim> pp;
 		number t_sqrd, t_dot_sqrd, t_t_dot, temp;
-		pos1 = (j==(l.size()-1)? 0 : j+1);
-		pos2 = (pos1==(l.size()-1)? 0 : pos1+1);
-		pp = l[pos1];
+		uint pj = posNeigh(j,l.size());
+		uint ppj = posNeigh(pj,l.size());
+		pp = l[pj];
 		pp *= 2.0;
-		pp -= l[pos2];
-		t_sqrd = DistanceSquared(l[pos1],l[j]);
+		pp -= l[ppj];
+		t_sqrd = DistanceSquared(l[pj],l[j]);
 		t_dot_sqrd = DistanceSquared(l[j],pp);
-		t_t_dot = Dot(l[j],pp,l[pos1],l[j]);
+		t_t_dot = Dot(l[j],pp,l[pj],l[j]);
 		temp = f*sqrt((t_dot_sqrd-t_t_dot*t_t_dot/t_sqrd)/t_sqrd)*l.size()/((number)l.size()-2.0);
 		result += temp;
 	}
@@ -445,12 +439,12 @@ void KGAvg (const uint& j, const Loop<Dim>& l, const uint& ex1, const uint& ex2,
 // KGMaxPlane
 template <uint Dim>
 void KGMaxPlane (const uint& j, const Loop<Dim>& l, const number& f, number& result) {
-	uint pj = (j==(l.size()-1)? 0: j+1);
-	uint nj = (j==0? (l.size()-1):j-1);
-	number dx = (l[pj])[2]-(l[j])[2];
-	number ddx = (l[pj])[2]-2.0*(l[j])[2]+(l[nj])[2];
-	number dy = (l[pj])[3]-(l[j])[3];
-	number ddy = (l[pj])[3]-2.0*(l[j])[3]+(l[nj])[3];
+	uint pj = posNeigh(j,l.size());
+	uint nj = negNeigh(j,l.size());
+	number dx = DX(l,pj,j,dim-2);
+	number ddx = DX(l,pj,j,dim-2) + DX(l,nj,j,dim-2);
+	number dy = DX(l,pj,j,dim-1);
+	number ddy = DX(l,pj,j,dim-2) + DX(l,nj,j,dim-1);
 	number temp = f*abs(dx*ddy-dy*ddx)/pow(dx*dx+dy*dy,1.5);
 	result = (temp>result? temp: result);
 }
@@ -459,12 +453,12 @@ void KGMaxPlane (const uint& j, const Loop<Dim>& l, const number& f, number& res
 template <uint Dim>
 void KGMaxPlane (const uint& j, const Loop<Dim>& l, const uint& ex1, const uint& ex2, const number& f, number& result) {
 	if (j!=ex1 && j!=ex2) {
-		uint pj = (j==(l.size()-1)? 0: j+1);
-		uint nj = (j==0? (l.size()-1):j-1);
-		number dx = (l[pj])[2]-(l[j])[2];
-		number ddx = (l[pj])[2]-2.0*(l[j])[2]+(l[nj])[2];
-		number dy = (l[pj])[3]-(l[j])[3];
-		number ddy = (l[pj])[3]-2.0*(l[j])[3]+(l[nj])[3];
+		uint pj = posNeigh(j,l.size());
+		uint nj = negNeigh(j,l.size());
+		number dx = DX(l,pj,j,dim-2);
+		number ddx = DX(l,pj,j,dim-2) + DX(l,nj,j,dim-2);
+		number dy = DX(l,pj,j,dim-1);
+		number ddy = DX(l,pj,j,dim-2) + DX(l,nj,j,dim-1);
 		number temp = f*abs(dx*ddy-dy*ddx)/pow(dx*dx+dy*dy,1.5);
 		result = (temp>result? temp: result);
 	}
@@ -473,12 +467,12 @@ void KGMaxPlane (const uint& j, const Loop<Dim>& l, const uint& ex1, const uint&
 // KGAvgPlane
 template <uint Dim>
 void KGAvgPlane (const uint& j, const Loop<Dim>& l, const number& f, number& result) {
-	uint pj = (j==(l.size()-1)? 0: j+1);
-	uint nj = (j==0? (l.size()-1):j-1);
-	number dx = (l[pj])[2]-(l[j])[2];
-	number ddx = (l[pj])[2]-2.0*(l[j])[2]+(l[nj])[2];
-	number dy = (l[pj])[3]-(l[j])[3];
-	number ddy = (l[pj])[3]-2.0*(l[j])[3]+(l[nj])[3];
+	uint pj = posNeigh(j,l.size());
+		uint nj = negNeigh(j,l.size());
+		number dx = DX(l,pj,j,dim-2);
+		number ddx = DX(l,pj,j,dim-2) + DX(l,nj,j,dim-2);
+		number dy = DX(l,pj,j,dim-1);
+		number ddy = DX(l,pj,j,dim-2) + DX(l,nj,j,dim-1);
 	result += f*abs(dx*ddy-dy*ddx)/pow(dx*dx+dy*dy,1.5)/(number)l.size();
 }
 
@@ -486,12 +480,12 @@ void KGAvgPlane (const uint& j, const Loop<Dim>& l, const number& f, number& res
 template <uint Dim>
 void KGAvgPlane (const uint& j, const Loop<Dim>& l, const uint& ex1, const uint& ex2, const number& f, number& result) {
 	if (j!=ex1 && j!=ex2) {
-		uint pj = (j==(l.size()-1)? 0: j+1);
-		uint nj = (j==0? (l.size()-1):j-1);
-		number dx = (l[pj])[2]-(l[j])[2];
-		number ddx = (l[pj])[2]-2.0*(l[j])[2]+(l[nj])[2];
-		number dy = (l[pj])[3]-(l[j])[3];
-		number ddy = (l[pj])[3]-2.0*(l[j])[3]+(l[nj])[3];
+		uint pj = posNeigh(j,l.size());
+		uint nj = negNeigh(j,l.size());
+		number dx = DX(l,pj,j,dim-2);
+		number ddx = DX(l,pj,j,dim-2) + DX(l,nj,j,dim-2);
+		number dy = DX(l,pj,j,dim-1);
+		number ddy = DX(l,pj,j,dim-2) + DX(l,nj,j,dim-1);
 		result += f*abs(dx*ddy-dy*ddx)/pow(dx*dx+dy*dy,1.5)/((number)l.size()-2.0);
 	}
 }
