@@ -213,6 +213,16 @@ bool operator^=(const Point<Dim>& lhs, const Point<Dim>& rhs) {
 		- Dot (product)
 ----------------------------------------------------------------------------------------------------------------------------*/
 
+// posNeigh
+uint posNeigh(const uint& j, const uint& N) {
+	return (j==(N-1)? 0: j+1);
+}
+
+// negNeigh
+uint negNeigh(const uint& j, const uint& N) {
+	return (j==0? (N-1): j-1);
+}
+
 // posNeighDisjoint
 uint posNeighDisjoint(const uint& j, const uint& N) {
 	if (j==(N/2-1))

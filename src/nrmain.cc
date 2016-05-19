@@ -442,7 +442,10 @@ for (uint pl=0; pl<Npl; pl++) {
 			cusp_scale = -g*2.0*log(p.Mu/p.Epsi);
 			repulsion_scale = -g*sqrt(PI)/p.Epsi/p.Epsi;
 			beta = (p.T>sqrt(MIN_NUMBER)? 1.0/p.T: 1.0/sqrt(MIN_NUMBER));
-			s0 = S0Disjoint(xLoop,beta);
+			if (poto==PotentialOptions::thermalDisjoint)
+				s0 = S0Disjoint(xLoop,beta);
+			else
+				s0 = S0(xLoop);
 			sqrt4s0 = 2.0*sqrt(s0);
 		}
 		

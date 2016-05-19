@@ -119,6 +119,12 @@ private:
 	2 - functions acting on Points
 ----------------------------------------------------------------------------------------------------------------------------*/
 
+// posNeigh
+uint posNeigh(const uint& j, const uint& N);
+
+// negNeigh
+uint negNeigh(const uint& j, const uint& N);
+
 // posNeighDisjoint
 uint posNeighDisjoint(const uint& j, const uint& N);
 
