@@ -315,7 +315,7 @@ template <uint Dim>
 void InlineCurvatureMax (const uint& j, const Loop<Dim>& l, const uint& ex1, const uint& ex2, const number& f, number& result) {
 	if (j!=ex1 && j!=ex2) {
 		uint pj = posNeigh(j,l.size());
-	uint nj = negNeigh(j,l.size());
+		uint nj = negNeigh(j,l.size());
 		Point<Dim> dd = l[pj] + l[nj] - 2.0*l[j];
 		Point<Dim> d = l[pj] - l[j];
 		number temp = f*abs(Dot(dd,d))/Dot(d,d);
@@ -441,10 +441,10 @@ template <uint Dim>
 void KGMaxPlane (const uint& j, const Loop<Dim>& l, const number& f, number& result) {
 	uint pj = posNeigh(j,l.size());
 	uint nj = negNeigh(j,l.size());
-	number dx = DX(l,pj,j,dim-2);
-	number ddx = DX(l,pj,j,dim-2) + DX(l,nj,j,dim-2);
-	number dy = DX(l,pj,j,dim-1);
-	number ddy = DX(l,pj,j,dim-2) + DX(l,nj,j,dim-1);
+	number dx = DX(l,pj,j,Dim-2);
+	number ddx = DX(l,pj,j,Dim-2) + DX(l,nj,j,Dim-2);
+	number dy = DX(l,pj,j,Dim-1);
+	number ddy = DX(l,pj,j,Dim-2) + DX(l,nj,j,Dim-1);
 	number temp = f*abs(dx*ddy-dy*ddx)/pow(dx*dx+dy*dy,1.5);
 	result = (temp>result? temp: result);
 }
@@ -455,10 +455,10 @@ void KGMaxPlane (const uint& j, const Loop<Dim>& l, const uint& ex1, const uint&
 	if (j!=ex1 && j!=ex2) {
 		uint pj = posNeigh(j,l.size());
 		uint nj = negNeigh(j,l.size());
-		number dx = DX(l,pj,j,dim-2);
-		number ddx = DX(l,pj,j,dim-2) + DX(l,nj,j,dim-2);
-		number dy = DX(l,pj,j,dim-1);
-		number ddy = DX(l,pj,j,dim-2) + DX(l,nj,j,dim-1);
+		number dx = DX(l,pj,j,Dim-2);
+		number ddx = DX(l,pj,j,Dim-2) + DX(l,nj,j,Dim-2);
+		number dy = DX(l,pj,j,Dim-1);
+		number ddy = DX(l,pj,j,Dim-2) + DX(l,nj,j,Dim-1);
 		number temp = f*abs(dx*ddy-dy*ddx)/pow(dx*dx+dy*dy,1.5);
 		result = (temp>result? temp: result);
 	}
@@ -469,10 +469,10 @@ template <uint Dim>
 void KGAvgPlane (const uint& j, const Loop<Dim>& l, const number& f, number& result) {
 	uint pj = posNeigh(j,l.size());
 		uint nj = negNeigh(j,l.size());
-		number dx = DX(l,pj,j,dim-2);
-		number ddx = DX(l,pj,j,dim-2) + DX(l,nj,j,dim-2);
-		number dy = DX(l,pj,j,dim-1);
-		number ddy = DX(l,pj,j,dim-2) + DX(l,nj,j,dim-1);
+		number dx = DX(l,pj,j,Dim-2);
+		number ddx = DX(l,pj,j,Dim-2) + DX(l,nj,j,Dim-2);
+		number dy = DX(l,pj,j,Dim-1);
+		number ddy = DX(l,pj,j,Dim-2) + DX(l,nj,j,Dim-1);
 	result += f*abs(dx*ddy-dy*ddx)/pow(dx*dx+dy*dy,1.5)/(number)l.size();
 }
 
@@ -482,10 +482,10 @@ void KGAvgPlane (const uint& j, const Loop<Dim>& l, const uint& ex1, const uint&
 	if (j!=ex1 && j!=ex2) {
 		uint pj = posNeigh(j,l.size());
 		uint nj = negNeigh(j,l.size());
-		number dx = DX(l,pj,j,dim-2);
-		number ddx = DX(l,pj,j,dim-2) + DX(l,nj,j,dim-2);
-		number dy = DX(l,pj,j,dim-1);
-		number ddy = DX(l,pj,j,dim-2) + DX(l,nj,j,dim-1);
+		number dx = DX(l,pj,j,Dim-2);
+		number ddx = DX(l,pj,j,Dim-2) + DX(l,nj,j,Dim-2);
+		number dy = DX(l,pj,j,Dim-1);
+		number ddy = DX(l,pj,j,Dim-2) + DX(l,nj,j,Dim-1);
 		result += f*abs(dx*ddy-dy*ddx)/pow(dx*dx+dy*dy,1.5)/((number)l.size()-2.0);
 	}
 }
