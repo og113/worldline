@@ -57,6 +57,7 @@ int main(int argc, char** argv) {
 // argv options
 bool verbose = true;
 bool guess = false;
+bool straight = false;
 bool step = true;
 bool weak = false;
 bool eigen = false;
@@ -78,6 +79,7 @@ if (argc % 2 && argc>1) {
 		if (id[0]=='-') id = id.substr(1);
 		if (id.compare("verbose")==0) verbose = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("guess")==0) guess = (stn<uint>(argv[2*j+2])!=0);
+		else if (id.compare("straight")==0) straight = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("step")==0) step = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("weak")==0) weak = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("eigen")==0) eigen = (stn<uint>(argv[2*j+2])!=0);
@@ -284,7 +286,7 @@ for (uint pl=0; pl<Npl; pl++) {
 			else {
 				loadFile = "data/cosDisjoint/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_Kappa_"+nts(pow(p.G,3)*p.B)\
 					+"_T_"+nts(p.T)+"_Lambda_"+nts(p.Lambda)+"_rank_0.dat";
-				if (!loadFile.exists())
+				if (!loadFile.exists() || straight)
 					loadFile = "data/straightDisjoint/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_Kappa_"+nts(pow(p.G,3)*p.B)\
 					+"_T_"+nts(p.T)+"_rank_0.dat";
 			}
@@ -441,7 +443,7 @@ for (uint pl=0; pl<Npl; pl++) {
 			dm = -g*PI/p.Epsi;
 			cusp_scale = -g*2.0*log(p.Mu/p.Epsi);
 			repulsion_scale = -g*sqrt(PI)/p.Epsi/p.Epsi;
-			beta = (p.T>sqrt(MIN_NUMBER)? 1.0/p.T: 1.0/sqrt(MIN_NUMBER));
+			beta = (p.T>sqrt(MIN_NUMBER)? 1.0/p.T/p.G/p.B: 1.0/sqrt(MIN_NUMBER)); // this is 1/eta
 			if (poto==PotentialOptions::thermalDisjoint)
 				s0 = S0Disjoint(xLoop,beta);
 			else
@@ -1035,7 +1037,7 @@ for (uint pl=0; pl<Npl; pl++) {
 									nts(p.Mu,16),\
 									nts(p.Lambda,16),\
 									nts(E,16),\
-									nts(p.T,16),\
+									nts(p.T*p.G*p.B,16),\
 									nts(s,16),\
 									nts(gamma,16),\
 									nts(len,16),\
