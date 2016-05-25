@@ -39,6 +39,10 @@ typedef Eigen::MatrixXd mat;
 template <uint Dim>
 void L (const uint& j, const Loop<Dim>& l, const number& f, number& result);
 
+// LDisjoint
+template <uint Dim>
+void LDisjoint (const uint& j, const Loop<Dim>& l, const number& beta, const number& f, number& result);
+
 // DistPow
 template <uint Dim>
 void DistPow (const uint& j, const Loop<Dim>& l, const number& w, const number& f, number& result);
@@ -51,9 +55,17 @@ void Sm (const uint& j, const Loop<Dim>& l, const number& f, number& result);
 template <uint Dim>
 void S0 (const uint& j, const Loop<Dim>& l, const number& f, number& result);
 
+// S0Disjoint
+template <uint Dim>
+void S0Disjoint (const uint& j, const Loop<Dim>& l, const number& beta, const number& f, number& result);
+
 // I0
 template <uint Dim>
 void I0 (const uint& j, const Loop<Dim>& l, const number& f, number& result);
+
+// I0Disjoint
+template <uint Dim>
+void I0Disjoint (const uint& j, const Loop<Dim>& l, const number& beta, const number& f, number& result);
 
 // Angle
 template <uint Dim>
@@ -91,9 +103,17 @@ void Vdr (const uint& j, const uint& k, const Loop<Dim>& l, const number& a, con
 template <uint Dim>
 void Vthr (const uint& j, const uint& k, const Loop<Dim>& l, const number& beta, const number& a, const number& f, number& result);
 
+// VthrDisjoint
+template <uint Dim>
+void VthrDisjoint (const uint& j, const uint& k, const Loop<Dim>& l, const number& beta, const number& a, const number& f, number& result);
+
 // Gaussian
 template <uint Dim>
 void Gaussian (const uint& j, const uint& k, const Loop<Dim>& l, const number& a, const number& f, number& result);
+
+// GaussianDisjoint
+template <uint Dim>
+void GaussianDisjoint (const uint& j, const uint& k, const Loop<Dim>& l, const number& beta, const number& a,const number& f, number& result);
 
 // InlineCurvatureMax
 template <uint Dim>
@@ -159,6 +179,15 @@ void mdL_nr(const uint& j, const uint& mu, const Loop<Dim>& l, const number& f, 
 template<uint Dim>
 void ddL_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l, const number& f, mat& m);
 
+// mdLDisjoint_nr
+template<uint Dim>
+void mdLDisjoint_nr(const uint& j, const uint& mu, const Loop<Dim>& l, const number& beta, const number& f, vec& v);
+
+// ddLDisjoint_nr
+template<uint Dim>
+void ddLDisjoint_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l,\
+			const number& beta, const number& f, mat& m);
+
 // mdDistPow_nr
 template<uint Dim>
 void mdDistPow_nr(const uint& j, const uint& mu, const Loop<Dim>& l, const number& w, const number& f, vec& v);
@@ -174,6 +203,14 @@ void mdI_nr(const uint& j, const uint& mu, const Loop<Dim>& l, const number& f, 
 // ddI_nr
 template<uint Dim>
 void ddI_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l, const number& f, mat& m);
+
+// mdIDisjoint_nr
+template<uint Dim>
+void mdIDisjoint_nr(const uint& j, const uint& mu, const Loop<Dim>& l, const number& beta, const number& f, vec& v);
+
+// ddIDisjoint_nr
+template<uint Dim>
+void ddIDisjoint_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l, const number& beta, const number& f, mat& m);
 
 // mdS0_nr
 template<uint Dim>
@@ -191,6 +228,24 @@ void mdsqrtS0_nr(const uint& j, const uint& mu, const Loop<Dim>& l, const number
 template<uint Dim>
 void ddsqrtS0_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, \
 						const Loop<Dim>& l, const number& sqrt4s0, const number& f, mat& m);
+						
+// mdS0Disjoint_nr
+template<uint Dim>
+void mdS0Disjoint_nr(const uint& j, const uint& mu, const Loop<Dim>& l, const number& beta, const number& f, vec& v);
+
+// ddS0Disjoint_nr
+template<uint Dim>
+void ddS0Disjoint_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l, const number& f, mat& m);
+
+// mdsqrtS0Disjoint_nr
+template<uint Dim>
+void mdsqrtS0Disjoint_nr(const uint& j, const uint& mu, const Loop<Dim>& l, const number& sqrt4s0,\
+ const number& beta, const number& f, vec& v);
+
+// ddsqrtS0Disjoint_nr
+template<uint Dim>
+void ddsqrtS0Disjoint_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, \
+						const Loop<Dim>& l, const number& sqrt4s0, const number& beta, const number& f, mat& m);
 						
 // mdVor_nr
 template<uint Dim>
@@ -232,10 +287,20 @@ void mdVdr_nr(const uint& j, const uint& mu, const uint& i, const Loop<Dim>& l, 
 template<uint Dim>
 void mdVthr_nr(const uint& j, const uint& mu, const uint& i, const Loop<Dim>& l,\
 					 	const number& beta, const number& a, const number& f, vec& v);
+					 	
+// mdVthrDisjoint_nr
+template<uint Dim>
+void mdVthrDisjoint_nr(const uint& j, const uint& mu, const uint& i, const Loop<Dim>& l,\
+					 	const number& beta, const number& a, const number& f, vec& v);
 
 // mdGaussian_nr
 template<uint Dim>
 void mdGaussian_nr(const uint& j, const uint& mu, const uint& i, const Loop<Dim>& l, const number& a, const number& f, vec& v);
+
+// mdGaussianDisjoint_nr
+template<uint Dim>
+void mdGaussianDisjoint_nr(const uint& j, const uint& mu, const uint& i, const Loop<Dim>& l,\
+			const number& beta, const number& a, const number& f, vec& v);
 
 // ddVor_nr
 template<uint Dim>
@@ -261,11 +326,21 @@ void ddVdr_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, cons
 template<uint Dim>
 void ddVthr_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l,\
 						 const number& beta, const number& a, const number& f, mat& m);
+						 
+// ddVthrDisjoint_nr
+template<uint Dim>
+void ddVthrDisjoint_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l,\
+						 const number& beta, const number& a, const number& f, mat& m);
 
 // ddGaussian_nr
 template<uint Dim>
 void ddGaussian_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l,\
 						 const number& a, const number& f, mat& m);
+						 
+// ddGaussianDisjoint_nr
+template<uint Dim>
+void ddGaussianDisjoint_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l,\
+						 const number& beta, const number& a, const number& f, mat& m);
 						 
 // mdFGamma_nr
 template<uint Dim>

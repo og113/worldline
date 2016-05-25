@@ -14,14 +14,16 @@ file=inFile; \
 
 unset log
 unset label
-unset key
+set key below
 set autoscale
 set xtic auto
 set ytic auto
 set title "4d loop"
-set xlabel "z"
-set ylabel "t"
-plot file using 0:(sqrt($3**2+$4**2)) with points pt 1
+set xlabel "point"
+set ylabel "magnitude"
+plot file using 0:(sqrt($3**2+$4**2)) t "magnitude" with points pt 1 lc rgb "red", \
+	file using 0:3 t "z" with points pt 1 lc rgb "blue", \
+	file using 0:4 t "t" with points pt 1 lc rgb "green"
 
 pause -1
 

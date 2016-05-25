@@ -119,6 +119,18 @@ private:
 	2 - functions acting on Points
 ----------------------------------------------------------------------------------------------------------------------------*/
 
+// posNeigh
+uint posNeigh(const uint& j, const uint& N);
+
+// negNeigh
+uint negNeigh(const uint& j, const uint& N);
+
+// posNeighDisjoint
+uint posNeighDisjoint(const uint& j, const uint& N);
+
+// negNeighDisjoint
+uint negNeighDisjoint(const uint& j, const uint& N);
+
 // Distance squared
 template <uint Dim>
 number DistanceSquared(const Point<Dim>&, const Point<Dim>&);
@@ -135,6 +147,14 @@ number SpatialDistanceSquared(const Point<Dim>&, const Point<Dim>&);
 template <uint Dim>
 number SpatialDistance(const Point<Dim>&, const Point<Dim>&);
 
+// Disjoint Distance squared
+template <uint Dim>
+number DistanceSquaredDisjoint(const Point<Dim>&, const Point<Dim>&, const number& beta);
+
+// Disjoint Distance
+template <uint Dim>
+number DistanceDisjoint(const Point<Dim>&, const Point<Dim>&, const number& beta);
+
 // NormSquared
 template <uint Dim>
 number NormSquared(const Point<Dim>&);
@@ -150,6 +170,10 @@ number Dot(const Point<Dim>&, const Point<Dim>&);
 // Dot
 template <uint Dim>
 number Dot(const Point<Dim>&, const Point<Dim>&, const Point<Dim>&, const Point<Dim>&);
+
+// DotDisjoint
+template <uint Dim>
+number DotDisjoint(const Point<Dim>&, const Point<Dim>&, const Point<Dim>&, const Point<Dim>&, const number& beta);
 
 // Angle
 template <uint Dim>
@@ -257,6 +281,14 @@ number DX(const Loop<Dim>& loop, const uint& i, const uint& mu);
 template <uint Dim>
 number DX(const Loop<Dim>& loop, const uint& i, const uint& j, const uint& mu);
 
+// DXDisjoint
+template <uint Dim>
+number DXDisjoint(const Loop<Dim>& loop, const uint& i, const uint& mu, const number& beta);
+
+// DXDisjoint
+template <uint Dim>
+number DXDisjoint(const Loop<Dim>& loop, const uint& i, const uint& j, const uint& mu, const number& beta);
+
 // L
 template <uint Dim>
 number L (const Loop<Dim>& l);
@@ -292,6 +324,10 @@ number KGMax (const Loop<Dim>& l, const uint& ex1, const uint& ex2);
 // S0
 template <uint Dim>
 number S0 (const Loop<Dim>& l);
+
+// S0Disjoint
+template <uint Dim>
+number S0Disjoint (const Loop<Dim>& l, const number& beta);
 
 // DS0
 template <uint Dim>

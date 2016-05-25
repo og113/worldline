@@ -157,11 +157,9 @@ double randDouble(const double& min, const double& max);
 	9. mod
 -------------------------------------------------------------------------------------------------------------------------*/
 
-// mod double
-double mod(const double& x, const double& min, const double& max);
-
-// mod int
-int mod(const int& x, const int& min, const int& max);
+// mod template
+template <class T>
+T mod(const T& x, const T& min, const T& max);
 
 /*-------------------------------------------------------------------------------------------------------------------------
 	10. delta
