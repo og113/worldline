@@ -117,8 +117,8 @@ for (uint pl=0; pl<Npl; pl++) {
 		cerr << "highTemp error: kappa(" << kappa << ") is too large" << endl;
 		return 1;
 	}
-	number rL = (1.0-p.P4/2.0) - sqrt(pow((1.0-p.P4/2.0),2) - kappa/4.0/PI);
-	number rR = (1.0-p.P4/2.0) + sqrt(pow((1.0-p.P4/2.0),2) - kappa/4.0/PI);
+	number rL = (1.0-p.P4/2.0) - sqrt(pow((1.0-p.P4/2.0),2) - kappa/4.0/PI) + 1.0e-7;
+	number rR = (1.0-p.P4/2.0) + sqrt(pow((1.0-p.P4/2.0),2) - kappa/4.0/PI) - 1.0e-7;
 	if (verbose)
 		cout << "rL = " << rL << ", rR = " << rR << endl;
 	
@@ -146,7 +146,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	if (verbose)
 		cout << "E = " << E << ", beta = " << beta << ", error = " << error << endl;
 
-	file = "data/highTemp/loops/dim_"+nts<uint>(dim)+"/K_"+nts(p.K)+"/loop_kappa_"+nts(kappa)\
+	file = "data/highTemp/loops/dim_"+nts<uint>(dim)+"/K_"+nts(p.K)+"/highTemp_kappa_"+nts(kappa)\
 														+"_beta_"+nts(beta)+"_rank_"+nts(0)+".dat";
 	
 	for (uint k=0; k<N/4; k++) {
@@ -155,6 +155,8 @@ for (uint pl=0; pl<Npl; pl++) {
 			singularities[1] = r;
 			gsl_integration_qagp(&F, singularities, 2, tolAbs, tolRel, workspace_size, w, &t, &error);
 		}
+		else
+			t = 0.0;
 		
 		dpz[dim-2] = r/2.0;
 		dpt[dim-1] = -beta/2.0 + t;
