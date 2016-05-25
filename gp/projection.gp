@@ -61,6 +61,7 @@ set label 2 at  0.1,1.4 'r_{min}(a=0.05)' left  front;
 
 if (exists("beta")) \
 set arrow from 0,(-beta/2.0) to 0,(beta/2.0) nohead; \
+set arrow from (-beta/2.0),0 to (beta/2.0),0 nohead; \
 if (beta>1.0) \
 set xrange [-beta/2.0-0.5:beta/2.0+0.5]; \
 set yrange [-beta/2.0-0.5:beta/2.0+0.5];
