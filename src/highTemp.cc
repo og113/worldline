@@ -125,7 +125,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	number beta, r, t;
 	
 	// setting up integration
-	int workspace_size = 1000;
+	int workspace_size = 1e4;
 	number tolAbs = 0.0;
 	number tolRel = 1.0e-7;
 	number error;
