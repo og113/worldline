@@ -443,7 +443,7 @@ for (uint pl=0; pl<Npl; pl++) {
 			dm = -g*PI/p.Epsi;
 			cusp_scale = -g*2.0*log(p.Mu/p.Epsi);
 			repulsion_scale = -g*sqrt(PI)/p.Epsi/p.Epsi;
-			beta = (p.T>sqrt(MIN_NUMBER)? 1.0/p.T/p.G/p.B: 1.0/sqrt(MIN_NUMBER)); // this is 1/eta
+			beta = ((p.T*p.G*p.B)>sqrt(MIN_NUMBER)? 1.0/(p.T*p.G*p.B): 1.0/sqrt(MIN_NUMBER)); // this is 1/eta
 			if (poto==PotentialOptions::thermalDisjoint)
 				s0 = S0Disjoint(xLoop,beta);
 			else

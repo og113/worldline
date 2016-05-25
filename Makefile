@@ -38,7 +38,7 @@ common: $(COMMONOBJS)
 monte: binaryToAscii circle common floop glmain loop loop2 schwingerRate
 
 .PHONY: nr
-nr: 3dPotentialExtrema binaryToAscii circle common nrmain perturbativeFiniteTemp
+nr: 3dPotentialExtrema binaryToAscii circle common highTemp nrmain perturbativeFiniteTemp
 
 #------------------------------------------------------------------------------------------------------------------------
 # targets, dependencies and rules for executables
@@ -66,6 +66,10 @@ gflmain: $(ODIR)/gflmain.o $(COMMONOBJS)
 glmain: $(MPIODIR)/glmain.o $(COMMONOBJS)
 	$(MPICC) -o $@ $^ $(MPICFLAGS) $(INCLUDES) $(MPILIBS)
 	@echo Simple compiler named glmain has been compiled
+	
+highTemp: $(ODIR)/highTemp.o $(COMMONOBJS) 
+	$(CC) -o $@ $^ $(CFLAGS) $(INCLUDES) $(LIBS)
+	@echo Simple compiler named highTemp has been compiled
 	
 loop: $(MPIODIR)/loop.o $(COMMONOBJS)
 	$(MPICC) -o $@ $^ $(MPICFLAGS) $(INCLUDES) $(MPILIBS)
