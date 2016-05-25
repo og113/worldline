@@ -41,7 +41,7 @@ double Integrand (double x, void* parameters) {
 	double kappa = params->kappa;
 	if ((E + 2.0 - x - kappa/4.0/PI/x)<0)
 	cerr << "Integrand error: sqrt(<0)" << endl;
-	return 1.0/sqrt(E + 2.0 - x - kappa/4.0/PI/x);
+	return 1.0/sqrt(-E + 2.0 - x - kappa/4.0/PI/x);
 }
 
 int main(int argc, char** argv) {
