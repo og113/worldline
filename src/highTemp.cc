@@ -53,6 +53,7 @@ int main(int argc, char** argv) {
 // data to print
 string inputsFile = "inputs4";
 bool verbose = true;
+bool fixBeta = false;
 
 // getting argv
 if (argc % 2 && argc>1) {
@@ -61,6 +62,7 @@ if (argc % 2 && argc>1) {
 		if (id[0]=='-') id = id.substr(1);
 		if (id.compare("inputs")==0) inputsFile = (string)argv[2*j+2];
 		else if (id.compare("verbose")==0) verbose = (stn<uint>(argv[2*j+2])!=0);
+		else if (id.compare("fixBeta")==0 || id.compare("beta")==0) fixBeta = (stn<uint>(argv[2*j+2])!=0);
 		else {
 			cerr << "argv id " << id << " not understood" << endl;
 			return 1;
@@ -111,18 +113,20 @@ for (uint pl=0; pl<Npl; pl++) {
 	Loop<dim> loop(p.K,Seed);
 	Metropolis<dim> met(loop,p,Seed);
 	Point<dim> p0, dpz, dpt;
-	number E = p.P4;
 	number kappa = pow(p.G,3)*p.B;
-	if ((kappa/4.0/PI)>pow(1.0-p.P4/2.0,2)) {
-		cerr << "highTemp error: kappa(" << kappa << ") is too large" << endl;
+	number Ethreshold = 2.0*(1.0-sqrt(kappa/4.0/PI));
+	number E = (fixBeta? 1.0: p.P4);
+	if (E>Ethreshold) {
+		cerr << "highTemp error: E(" << E << ") above threshold(" << Ethreshold << ")" << endl;
 		return 1;
 	}
-	number rL = (1.0-p.P4/2.0) - sqrt(pow((1.0-p.P4/2.0),2) - kappa/4.0/PI) + 1.0e-7;
-	number rR = (1.0-p.P4/2.0) + sqrt(pow((1.0-p.P4/2.0),2) - kappa/4.0/PI) - 1.0e-7;
+	number rL = (1.0-p.P4/2.0) - sqrt(pow((1.0-p.P4/2.0),2) - kappa/4.0/PI);
+	number rR = (1.0-p.P4/2.0) + sqrt(pow((1.0-p.P4/2.0),2) - kappa/4.0/PI);
 	if (verbose)
 		cout << "rL = " << rL << ", rR = " << rR << endl;
 	
 	number beta, r, t;
+	///########################### NOT YET SET UP FIXBETA WITH ROOT FINDING. SEE 3DPOTENTIALEXTREMA.CC ###############################
 	
 	// setting up integration
 	int workspace_size = 1e4;
