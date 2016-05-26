@@ -39,7 +39,7 @@ bool circle = false;
 bool lemon = false;
 bool straightDisjoint = false;
 bool cosDisjoint = false;
-string shape = "circle";
+string shape = "";
 
 // getting argv
 if (argc % 2 && argc>1) {
@@ -111,7 +111,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		
 	uint N = pow(2,p.K);
 
-	cout << "generating " << p.Nl << " " << shape << "shaped unit loops each of ";
+	cout << "generating " << p.Nl << " " << shape << " shaped unit loops each of ";
 	cout << N << " points in " << dim << " dimensions" << endl;
 
 /*-------------------------------------------------------------------------------------------------------------------------

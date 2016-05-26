@@ -218,7 +218,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	uint N = pow(2,p.K);
 	uint zm = dim; //////////////////////////////////******************************////////////////////////////////
 	uint NT = N*dim+zm;
-	number E = p.P2, R = abs(1.0/p.G/p.B);
+	number E = p.P2, R = 1.0; //////////////////////////////////******************************////////////////////////////////
 	Point<dim> P;
 	P[0] = p.P1;
 	P[1] = p.P2;
@@ -261,6 +261,9 @@ for (uint pl=0; pl<Npl; pl++) {
 	Check checkNegEigenvalue("negative eigenvalue",0.1);
 	Check checkNegEigenvector("negative eigenvector",0.1);
 	Check checkGamma("gamma",0.1);
+	Check checkJs("Js conservation",1.0e-3);
+	Check checkP3("P3 conservation",1.0e-3);
+	Check checkP4("P4 conservation",1.0e-3);
 	
 	// defining scalar quantities
 	number len, i0, s, sm, v, vr, fgamma, gamma, angle_neigh, z, t, ic_max, ic_avg, cc_max, kg_max, kg_avg;
@@ -273,6 +276,11 @@ for (uint pl=0; pl<Npl; pl++) {
 	// curvature
 	vec sc_vec;
 	vec kg_vec;
+	
+	// conserved quantities
+	vec Js(N);
+	vec P3(N);
+	vec P4(N);
 	
 	// defining xLoop
 	Loop<dim> xLoop(p.K,0);
@@ -389,6 +397,9 @@ for (uint pl=0; pl<Npl; pl++) {
 		// initializing to zero
 		mds = Eigen::VectorXd::Zero(NT);
 		dds = Eigen::MatrixXd::Zero(NT,NT);
+		Js = Eigen::VectorXd::Zero(N);
+		P3 = Eigen::VectorXd::Zero(N);
+		P4 = Eigen::VectorXd::Zero(N);
 		len = 0.0, i0 = 0.0, v = 0.0, fgamma = 0.0, gamma = 0.0, angle_neigh = 0.0, z = 0.0, t = 0.0;//, s0 = 0.0;
 		ic_max = 0.0, ic_avg = 0.0, cc_max = 0.0, kg_max = 0.0, kg_avg = 0.0;
 		if (curvature) {
@@ -413,6 +424,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		number ic_scale = 1.0;
 		number cc_scale = 1.0;
 		number kg_scale = 1.0;
+		number Js_scale = 4.0*N;
 		number s0, sqrt4s0; 
 		number s0_scale = (abs(p.T)>MIN_NUMBER? 1.0/p.T: 1.0);
 		if (poto==PotentialOptions::original) {
@@ -470,10 +482,17 @@ for (uint pl=0; pl<Npl; pl++) {
 			if (poto!=PotentialOptions::thermalDisjoint) {
 				L		(j, xLoop, 1.0, len);
 				I0		(j, xLoop, mgb, i0);
+				S0		(j, xLoop, Js_scale, Js(j));
+				P3[j] = ((xLoop[posNeigh(j,N)])[2]-(xLoop[j])[2])*(number)N/sqrt(4.0*s0) - mgb*(xLoop[j])[3];
+				P4[j] = ((xLoop[posNeigh(j,N)])[3]-(xLoop[j])[3])*(number)N/sqrt(4.0*s0) + mgb*(xLoop[j])[2];
+				// this is just for weak coupling
 			}
 			else {
 				LDisjoint (j, xLoop, beta, 1.0, len);
 				I0Disjoint(j, xLoop, beta, mgb, i0);
+				S0Disjoint(j, xLoop, beta, Js_scale, Js(j));
+				P3[j] = ((xLoop[posNeighDisjoint(j,N)])[2]-(xLoop[j])[2])*(number)N/sqrt(4.0*s0) - mgb*(xLoop[j])[3];
+				P4[j] = ((xLoop[posNeighDisjoint(j,N)])[3]-(xLoop[j])[3])*(number)N/sqrt(4.0*s0) + mgb*(xLoop[j])[2];
 			}
 			
 			if (poto==PotentialOptions::dimreg)
@@ -737,6 +756,29 @@ for (uint pl=0; pl<Npl; pl++) {
 		checkKgDxMax.add(dx*kg_max);
 		checkKgDxAvg.add(dx*kg_avg);
 		checkStraight.add(angle_neigh);
+		
+		// conservation, Js
+		number Js_mean = Js.sum()/(number)N;
+		number Js_norm = Js.norm();
+		Js -= Eigen::VectorXd::Constant(N,Js_mean);
+		checkJs.add(Js.norm()/Js_norm);
+		checkJs.checkMessage();
+		
+		// conservation, P3
+		number P3_mean = P3.sum()/(number)N;
+		number P3_norm = P3.norm();
+		P3 -= Eigen::VectorXd::Constant(N,P3_mean);
+		checkP3.add(P3.norm()/P3_norm);
+		checkP3.checkMessage();
+		saveVectorAscii("data/temp/P3.dat",P3);
+		
+		// conservation, P4
+		number P4_mean = P4.sum()/(number)N;
+		number P4_norm = P4.norm();
+		P3 -= Eigen::VectorXd::Constant(N,P4_mean);
+		checkP4.add(P4.norm()/P4_norm);
+		checkP4.checkMessage();
+		saveVectorAscii("data/temp/P4.dat",P4);
 				
 		if (alltests) {
 			// checking if dds is symmetric

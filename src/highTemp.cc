@@ -219,6 +219,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	}
 	else {
 		beta = TIntegral(E,&params);
+		params.beta = beta;
 	}
 	if (verbose)
 		cout << "E = " << E << ", beta = " << beta << endl;
