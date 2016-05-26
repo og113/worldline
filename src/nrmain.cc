@@ -58,6 +58,7 @@ int main(int argc, char** argv) {
 bool verbose = true;
 bool guess = false;
 bool straight = false;
+bool nonrelativistic = false;
 bool step = true;
 bool weak = false;
 bool eigen = false;
@@ -80,6 +81,7 @@ if (argc % 2 && argc>1) {
 		if (id.compare("verbose")==0) verbose = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("guess")==0) guess = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("straight")==0) straight = (stn<uint>(argv[2*j+2])!=0);
+		else if (id.compare("nonrelativistic")==0 || id.compare("nonrel")==0) nonrelativistic = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("step")==0) step = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("weak")==0) weak = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("eigen")==0) eigen = (stn<uint>(argv[2*j+2])!=0);
@@ -284,8 +286,12 @@ for (uint pl=0; pl<Npl; pl++) {
 					loadFile = "data/circle/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_R_"+nts(R)+"_rank_0.dat";
 			}
 			else {
-				loadFile = "data/cosDisjoint/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_Kappa_"+nts(pow(p.G,3)*p.B)\
-					+"_T_"+nts(p.T)+"_Lambda_"+nts(p.Lambda)+"_rank_0.dat";
+				if (nonrelativistic)
+					loadFile = "data/highTemp/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/highTemp_Kappa_"+nts(pow(p.G,3)*p.B)\
+					+"_T_"+nts(p.T)+"_rank_0.dat";
+				else 
+					loadFile = "data/cosDisjoint/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_Kappa_"+nts(pow(p.G,3)*p.B)\
+						+"_T_"+nts(p.T)+"_Lambda_"+nts(p.Lambda)+"_rank_0.dat";
 				if (!loadFile.exists() || straight)
 					loadFile = "data/straightDisjoint/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_Kappa_"+nts(pow(p.G,3)*p.B)\
 					+"_T_"+nts(p.T)+"_rank_0.dat";
@@ -323,11 +329,15 @@ for (uint pl=0; pl<Npl; pl++) {
 							loadFile = "data/circle/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_R_"+nts(R)+"_rank_0.dat";
 					}
 					else {
-						loadFile = "data/cosDisjoint/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_Kappa_"+nts(pow(p.G,3)*p.B)\
-							+"_T_"+nts(p.T)+"_Lambda_"+nts(p.Lambda)+"_rank_0.dat";
-						if (!loadFile.exists())
-							loadFile = "data/straightDisjoint/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_Kappa_"\
-							+nts(pow(p.G,3)*p.B)+"_T_"+nts(p.T)+"_rank_0.dat";
+						if (nonrelativistic)
+							loadFile = "data/highTemp/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/highTemp_Kappa_"+nts(pow(p.G,3)*p.B)\
+							+"_T_"+nts(p.T)+"_rank_0.dat";
+						else 
+							loadFile = "data/cosDisjoint/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_Kappa_"+nts(pow(p.G,3)*p.B)\
+								+"_T_"+nts(p.T)+"_Lambda_"+nts(p.Lambda)+"_rank_0.dat";
+						if (!loadFile.exists() || straight)
+							loadFile = "data/straightDisjoint/loops/dim_"+nts(dim)+"/K_"+nts(p.K)\
+							+"/loop_Kappa_"+nts(pow(p.G,3)*p.B)+"_T_"+nts(p.T)+"_rank_0.dat";
 					}
 				}
 			}

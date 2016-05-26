@@ -176,7 +176,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	number kappa = pow(p.G,3)*p.B;
 	number Ethreshold = 2.0*(1.0-sqrt(kappa/4.0/PI));
 	number E = (fixBeta? 1.0: p.P4);
-	number beta = ((p.T*p.G*p.B)>sqrt(MIN_NUMBER) && fixBeta? 1.0/(p.T*p.G*p.B): 0.0);
+	number beta = ((p.T)>sqrt(MIN_NUMBER) && fixBeta? 1.0/(p.T): 0.0);
 	number r, t;
 	if (E>Ethreshold) {
 		cerr << "highTemp error: E(" << E << ") above threshold(" << Ethreshold << ")" << endl;
@@ -207,9 +207,13 @@ for (uint pl=0; pl<Npl; pl++) {
 		number Emin = 1.0e-7;
 		number Emax = Ethreshold-1.0e-7;
 		number Eguess = (Emax+Emin)/2.0;
+		if (verbose)
+			cout << "Left0 = " << BetaZeroIntegral(Emin,&params) << ", Right0 = " << BetaZeroIntegral(Emax,&params) << endl;
 		E = brentRootFinder(&Beta_gsl,Eguess,Emin,Emax,1.0e-7);
 		rL = (1.0-E/2.0) - sqrt(pow((1.0-E/2.0),2) - kappa/4.0/PI);
 		rR = (1.0-E/2.0) + sqrt(pow((1.0-E/2.0),2) - kappa/4.0/PI);
+		params.a = rL;
+		params.b = rR;
 		if (verbose)
 			cout << "rL = " << rL << ", rR = " << rR << endl;
 	}
@@ -219,14 +223,14 @@ for (uint pl=0; pl<Npl; pl++) {
 	if (verbose)
 		cout << "E = " << E << ", beta = " << beta << endl;
 
-	file = "data/highTemp/loops/dim_"+nts<uint>(dim)+"/K_"+nts(p.K)+"/highTemp_kappa_"+nts(kappa)\
+	file = "data/highTemp/loops/dim_"+nts<uint>(dim)+"/K_"+nts(p.K)+"/highTemp_Kappa_"+nts(kappa)\
 														+"_T_"+nts(1.0/beta)+"_rank_"+nts(0)+".dat";
 	
 	for (uint k=0; k<N/4; k++) {
 		r = rL + (rR-rL)*k/(number)(N/4.0-1.0);
 		if (k>0) {
-			params.b = rR;
-			beta = TIntegral(E,&params);
+			params.b = r;
+			t = TIntegral(E,&params)/2.0;
 		}
 		else
 			t = 0.0;
