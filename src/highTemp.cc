@@ -19,7 +19,7 @@
 /*-------------------------------------------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------------------------------------------
 	contents:
-		0 - integrand
+		0 - functions to use in main
 		1 - getting inputs from argv
 		2 - defining basic quantities
 		3 - initialising loops
@@ -28,7 +28,7 @@
 
 
 /*----------------------------------------------------------------------------------------------------------------------------
-	0. integrand
+	0. functions to use in main
 ----------------------------------------------------------------------------------------------------------------------------*/
 
 struct paramsIntegrandStruct {
@@ -103,11 +103,11 @@ double BetaZeroIntegral (double E, void* parameters) {
 	return (TIntegral(E,params) - params->beta);
 }
 
-int main(int argc, char** argv) {
-
 /*----------------------------------------------------------------------------------------------------------------------------
 	1. getting argv
 ----------------------------------------------------------------------------------------------------------------------------*/
+
+int main(int argc, char** argv) {
 
 // data to print
 string inputsFile = "inputs4";
@@ -121,7 +121,8 @@ if (argc % 2 && argc>1) {
 		if (id[0]=='-') id = id.substr(1);
 		if (id.compare("inputs")==0) inputsFile = (string)argv[2*j+2];
 		else if (id.compare("verbose")==0) verbose = (stn<uint>(argv[2*j+2])!=0);
-		else if (id.compare("fixBeta")==0 || id.compare("beta")==0) fixBeta = (stn<uint>(argv[2*j+2])!=0);
+		else if (id.compare("fixT")==0 || id.compare("fixBeta")==0 || id.compare("beta")==0) \
+							fixBeta = (stn<uint>(argv[2*j+2])!=0);
 		else {
 			cerr << "argv id " << id << " not understood" << endl;
 			return 1;
@@ -183,7 +184,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	}
 	number rL = (1.0-E/2.0) - sqrt(pow((1.0-E/2.0),2) - kappa/4.0/PI);
 	number rR = (1.0-E/2.0) + sqrt(pow((1.0-E/2.0),2) - kappa/4.0/PI);
-	if (verbose) 
+	if (verbose && !fixBeta) 
 		cout << "rL = " << rL << ", rR = " << rR << endl;
 	
 	
@@ -209,6 +210,8 @@ for (uint pl=0; pl<Npl; pl++) {
 		E = brentRootFinder(&Beta_gsl,Eguess,Emin,Emax,1.0e-7);
 		rL = (1.0-E/2.0) - sqrt(pow((1.0-E/2.0),2) - kappa/4.0/PI);
 		rR = (1.0-E/2.0) + sqrt(pow((1.0-E/2.0),2) - kappa/4.0/PI);
+		if (verbose)
+			cout << "rL = " << rL << ", rR = " << rR << endl;
 	}
 	else {
 		beta = TIntegral(E,&params);
