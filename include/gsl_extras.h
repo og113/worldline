@@ -35,6 +35,9 @@ CONTENTS
 double rootFinder(gsl_function_fdf * xFDF, double rootGuess);
 	
 //function to find a root of function F, given initial guess, and lower and upper bounds, using brent method
+double brentRootFinder(gsl_function * xF, const double & rootGuess, const double & rootLower, const double &rootUpper, const double& tol);
+	
+//function to find a root of function F, given initial guess, and lower and upper bounds, using brent method
 double brentRootFinder(gsl_function * xF, const double & rootGuess, const double & rootLower, const double &rootUpper);
 
 //function to find the minimum of a gsl function F, given initial guess, and lower and upper bounds, using brent method

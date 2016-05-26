@@ -13,6 +13,7 @@
 #include <gsl/gsl_roots.h>
 #include <gsl/gsl_integration.h>
 #include <gsl/gsl_min.h>
+#include "simple.h"
 #include "gsl_extras.h"
 
 /*-------------------------------------------------------------------------------------------------------------------------
@@ -49,7 +50,7 @@ double rootFinder(gsl_function_fdf * xFDF, double rootGuess)
 		  status = gsl_root_fdfsolver_iterate (s);
 		  x0 = x;
 		  x = gsl_root_fdfsolver_root (s);
-		  status = gsl_root_test_delta (x, x0, 0, DBL_MIN);
+		  status = gsl_root_test_delta (x, x0, 0, MIN_NUMBER);
 		}
 	while (status == GSL_CONTINUE && iter < max_iter);
 
@@ -58,10 +59,9 @@ double rootFinder(gsl_function_fdf * xFDF, double rootGuess)
 	}
 	
 //function to find a root of function FDF, given initial guess, and lower and upper bounds, using brent method
-double brentRootFinder(gsl_function * xF, const double & rootGuess, const double & rootLower, const double &rootUpper)
-	{
+double brentRootFinder(gsl_function * xF, const double & rootGuess, const double & rootLower, const double &rootUpper, const double& tol) {
 	int status;
-	int iter = 0, max_iter = 100;
+	int iter = 0, max_iter = 1e5;
 	const gsl_root_fsolver_type *T;
 	gsl_root_fsolver *s;
 	double x = rootGuess;
@@ -69,24 +69,28 @@ double brentRootFinder(gsl_function * xF, const double & rootGuess, const double
 	double x_hi = rootUpper;
 
 	T = gsl_root_fsolver_brent;
-	s = gsl_root_fsolver_alloc (T);
+	s = gsl_root_fsolver_alloc(T);
 	gsl_root_fsolver_set (s, xF, x_lo, x_hi);
 
-	do
-		{
-		  iter++;
-		  status = gsl_root_fsolver_iterate (s);
-		  x = gsl_root_fsolver_root (s);
-		  x_lo = gsl_root_fsolver_x_lower (s);
-		  x_hi = gsl_root_fsolver_x_upper (s);
-      	  status = gsl_root_test_interval (x_lo, x_hi,
-                                       0, DBL_MIN);
-		}
+	do {
+		iter++;
+		status = gsl_root_fsolver_iterate (s);
+		x = gsl_root_fsolver_root (s);
+		x_lo = gsl_root_fsolver_x_lower (s);
+		x_hi = gsl_root_fsolver_x_upper (s);
+		status = gsl_root_test_interval (x_lo, x_hi,
+		                               0, tol);
+	}
 	while (status == GSL_CONTINUE && iter < max_iter);
 
 	gsl_root_fsolver_free (s);
 	return x;
-	}
+}
+	
+//function to find a root of function FDF, given initial guess, and lower and upper bounds, using brent method
+double brentRootFinder(gsl_function * xF, const double & rootGuess, const double & rootLower, const double &rootUpper) {
+	return brentRootFinder(xF,rootGuess,rootLower,rootUpper,MIN_NUMBER);
+}
 	
 //function to find the minimum of a gsl function F
 double brentMinimum (gsl_function * xF, const double & minimumGuess, const double & minimumLower, const double & minimumUpper)
@@ -111,7 +115,7 @@ double brentMinimum (gsl_function * xF, const double & minimumGuess, const doubl
       tempLower = gsl_min_fminimizer_x_lower (s);
       tempUpper = gsl_min_fminimizer_x_upper (s);
 
-      status = gsl_min_test_interval (tempLower, tempUpper, 1.0e-12, DBL_MIN);
+      status = gsl_min_test_interval (tempLower, tempUpper, 1.0e-12, MIN_NUMBER);
 
       if (status == GSL_SUCCESS)
       	{

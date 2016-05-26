@@ -13,6 +13,7 @@
 #include "simple.h"
 #include "parameters.h"
 #include "genloop.h"
+#include "gsl_extras.h"
 #include "nrloop.h"
 
 /*-------------------------------------------------------------------------------------------------------------------------
@@ -35,13 +36,71 @@ struct paramsIntegrandStruct {
 	double kappa;
 };
 
+struct paramsIntegralStruct {
+	double beta;
+	double kappa;
+	double a;
+	double b;
+	int workspace_size;
+	number tolAbs;
+	number tolRel;
+};
+
 double Integrand (double x, void* parameters) {
 	struct paramsIntegrandStruct* params = (struct paramsIntegrandStruct*)parameters;
 	double E = params->E;
 	double kappa = params->kappa;
 	if ((E + 2.0 - x - kappa/4.0/PI/x)<0)
 	cerr << "Integrand error: sqrt(<0)" << endl;
-	return 1.0/sqrt(-E + 2.0 - x - kappa/4.0/PI/x);
+	return 2.0/sqrt(-E + 2.0 - x - kappa/4.0/PI/x);
+}
+
+double TIntegral (double E, void* parameters) {
+	// getting parameters
+	struct paramsIntegralStruct* params = (struct paramsIntegralStruct*)parameters;
+	double kappa = params->kappa;
+	double a = params->a;
+	double b = params->b;
+	int workspace_size = params->workspace_size;
+	number tolAbs  = params->tolAbs;
+	number tolRel  = params->tolRel;
+	
+	// calculating other parameters
+	paramsIntegrandStruct paramsIntegrand;
+	paramsIntegrand.E = E;
+	paramsIntegrand.kappa = kappa;
+	gsl_function F;
+	F.function = &Integrand;
+	F.params = &paramsIntegrand;
+	number singularities[2];
+	singularities[0] = a;
+	singularities[1] = b;
+	
+	// initializing workspace
+	gsl_integration_workspace* w = gsl_integration_workspace_alloc(workspace_size);
+	
+	// result
+	number beta, error;
+
+	// finding beta
+	gsl_integration_qagp(&F, singularities, 2, tolAbs, tolRel, workspace_size, w, &beta, &error);
+	
+	// clearing workspace
+	gsl_integration_workspace_free (w);
+	
+	return beta;
+}
+
+double BetaZeroIntegral (double E, void* parameters) {
+
+	// getting parameters
+	struct paramsIntegralStruct* params = (struct paramsIntegralStruct*)parameters;
+	
+	// fixing endpoints
+	(*params).a = (1.0-E/2.0) - sqrt(pow((1.0-E/2.0),2) - (params->kappa)/4.0/PI);
+	(*params).b = (1.0-E/2.0) + sqrt(pow((1.0-E/2.0),2) - (params->kappa)/4.0/PI);
+	
+	return (TIntegral(E,params) - params->beta);
 }
 
 int main(int argc, char** argv) {
@@ -116,48 +175,55 @@ for (uint pl=0; pl<Npl; pl++) {
 	number kappa = pow(p.G,3)*p.B;
 	number Ethreshold = 2.0*(1.0-sqrt(kappa/4.0/PI));
 	number E = (fixBeta? 1.0: p.P4);
+	number beta = ((p.T*p.G*p.B)>sqrt(MIN_NUMBER) && fixBeta? 1.0/(p.T*p.G*p.B): 0.0);
+	number r, t;
 	if (E>Ethreshold) {
 		cerr << "highTemp error: E(" << E << ") above threshold(" << Ethreshold << ")" << endl;
 		return 1;
 	}
-	number rL = (1.0-p.P4/2.0) - sqrt(pow((1.0-p.P4/2.0),2) - kappa/4.0/PI);
-	number rR = (1.0-p.P4/2.0) + sqrt(pow((1.0-p.P4/2.0),2) - kappa/4.0/PI);
-	if (verbose)
+	number rL = (1.0-E/2.0) - sqrt(pow((1.0-E/2.0),2) - kappa/4.0/PI);
+	number rR = (1.0-E/2.0) + sqrt(pow((1.0-E/2.0),2) - kappa/4.0/PI);
+	if (verbose) 
 		cout << "rL = " << rL << ", rR = " << rR << endl;
 	
-	number beta, r, t;
-	///########################### NOT YET SET UP FIXBETA WITH ROOT FINDING. SEE 3DPOTENTIALEXTREMA.CC ###############################
 	
-	// setting up integration
-	int workspace_size = 1e4;
-	number tolAbs = 0.0;
-	number tolRel = 1.0e-7;
-	number error;
-	paramsIntegrandStruct params;
-	params.E = E;
+	
+	// params for integration
+	paramsIntegralStruct params;
+	params.beta = beta;
 	params.kappa = kappa;
-	gsl_function F;
-	F.function = &Integrand;
-	F.params = &params;
-	number singularities[2];
-	singularities[0] = rL;
-	singularities[1] = rR;
-	gsl_integration_workspace* w = gsl_integration_workspace_alloc (workspace_size);
+	params.a = rL;
+	params.b = rR;
+	params.workspace_size = 1e5;
+	params.tolAbs = 0.0;
+	params.tolRel = 1.0e-7;
 
-	// finding beta
-	gsl_integration_qagp(&F, singularities, 2, tolAbs, tolRel, workspace_size, w, &beta, &error);
-	beta *= 2.0;
+	// finding beta or E
+	if (fixBeta) {
+		gsl_function Beta_gsl;
+		Beta_gsl.params = &params;
+		Beta_gsl.function = &BetaZeroIntegral;
+		number Emin = 1.0e-7;
+		number Emax = Ethreshold-1.0e-7;
+		number Eguess = (Emax+Emin)/2.0;
+		E = brentRootFinder(&Beta_gsl,Eguess,Emin,Emax,1.0e-7);
+		rL = (1.0-E/2.0) - sqrt(pow((1.0-E/2.0),2) - kappa/4.0/PI);
+		rR = (1.0-E/2.0) + sqrt(pow((1.0-E/2.0),2) - kappa/4.0/PI);
+	}
+	else {
+		beta = TIntegral(E,&params);
+	}
 	if (verbose)
-		cout << "E = " << E << ", beta = " << beta << ", error = " << error << endl;
+		cout << "E = " << E << ", beta = " << beta << endl;
 
 	file = "data/highTemp/loops/dim_"+nts<uint>(dim)+"/K_"+nts(p.K)+"/highTemp_kappa_"+nts(kappa)\
-														+"_beta_"+nts(beta)+"_rank_"+nts(0)+".dat";
+														+"_T_"+nts(1.0/beta)+"_rank_"+nts(0)+".dat";
 	
 	for (uint k=0; k<N/4; k++) {
 		r = rL + (rR-rL)*k/(number)(N/4.0-1.0);
 		if (k>0) {
-			singularities[1] = r;
-			gsl_integration_qagp(&F, singularities, 2, tolAbs, tolRel, workspace_size, w, &t, &error);
+			params.b = rR;
+			beta = TIntegral(E,&params);
 		}
 		else
 			t = 0.0;
@@ -174,8 +240,6 @@ for (uint pl=0; pl<Npl; pl++) {
 	cout << "printing to " << file << endl;
 	loop.save(file);
 	loop.clear();
-	
-	gsl_integration_workspace_free (w);
 
 }
 
