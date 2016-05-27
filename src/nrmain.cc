@@ -63,6 +63,7 @@ bool step = true;
 bool weak = false;
 bool eigen = false;
 bool curvature = false;
+bool conservation = false;
 bool old = true;
 bool gaussian = false;
 bool mu_a = false;
@@ -86,6 +87,7 @@ if (argc % 2 && argc>1) {
 		else if (id.compare("weak")==0) weak = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("eigen")==0) eigen = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("curvature")==0) curvature = (stn<uint>(argv[2*j+2])!=0);
+		else if (id.compare("conservation")==0) conservation = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("old")==0) old = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("gaussian")==0 || id.compare("repulsion")==0) gaussian = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("mu_a")==0) mu_a = (stn<uint>(argv[2*j+2])!=0);
@@ -397,7 +399,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		P4 = Eigen::VectorXd::Zero(N);
 		len = 0.0, i0 = 0.0, v = 0.0, fgamma = 0.0, gamma = 0.0, angle_neigh = 0.0, z = 0.0, t = 0.0;//, s0 = 0.0;
 		ic_max = 0.0, ic_avg = 0.0, cc_max = 0.0, kg_max = 0.0, kg_avg = 0.0;
-		if (curvature) {
+		if (curvature || alltests) {
 			sc_vec = Eigen::VectorXd::Zero(N);
 			kg_vec = Eigen::VectorXd::Zero(N);
 		}
@@ -493,7 +495,7 @@ for (uint pl=0; pl<Npl; pl++) {
 				DistPow	(j, xLoop, p.Epsi, dim_reg_scale, d_dim_reg);
 			
 			//curvatures - N.B. not yet working for thermalDisjoint case
-			if (curvature) {
+			if (curvature || alltests) {
 				InlineCurvatureMax(j, xLoop, ic_scale, sc_vec[j]);
 				KGMaxPlane(j, xLoop, kg_scale, kg_vec[j]);
 			}
@@ -756,9 +758,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		number Js_norm = Js.norm();
 		Js -= Eigen::VectorXd::Constant(N,Js_mean);
 		checkJs.add(Js.norm()/Js_norm);
-		checkJs.checkMessage();
 		Js += Eigen::VectorXd::Constant(N,Js_mean);
-		saveVectorAscii("data/temp/Js.dat",Js);
 		
 		// energy normalization
 		number Enorm = 0.0;
@@ -772,24 +772,20 @@ for (uint pl=0; pl<Npl; pl++) {
 		number P3_norm = P3.norm();
 		P3 -= Eigen::VectorXd::Constant(N,P3_mean);
 		if (Enorm>MIN_NUMBER)
-			checkP3.add(P3.norm()/Enorm/N);
+			checkP3.add(P3.norm()/Enorm/sqrt((number)N));
 		else
 			checkP3.add(P3.norm()/P3_norm);
-		checkP3.checkMessage();
 		P3 += Eigen::VectorXd::Constant(N,P3_mean);
-		saveVectorAscii("data/temp/P3.dat",P3);
 		
 		// conservation, P4
 		number P4_mean = P4.sum()/(number)N;
 		number P4_norm = P4.norm();
 		P4 -= Eigen::VectorXd::Constant(N,P4_mean);
 		if (Enorm>MIN_NUMBER)
-			checkP4.add(P4.norm()/Enorm/N);
+			checkP4.add(P4.norm()/Enorm/sqrt((number)N));
 		else
 			checkP4.add(P4.norm()/P4_norm);
-		checkP4.checkMessage();
 		P4 += Eigen::VectorXd::Constant(N,P4_mean);
-		saveVectorAscii("data/temp/P4.dat",P4);
 				
 		if (alltests) {
 			// checking if dds is symmetric
@@ -1007,10 +1003,10 @@ for (uint pl=0; pl<Npl; pl++) {
 		//printing tests to see convergence
 		if (verbose) {
 			if (runsCount==1) {
-				printf("%4s%4s%11s%11s%11s%11s%11s%11s%11s%11s%11s%11s%11s\n","pl","run","len","i0","s","sol","solM","delta","Sm","dx*kg_max","ic_max","cc_max","dx/a");
+				printf("%4s%4s%11s%11s%11s%11s%11s%11s%11s%11s%11s%11s%11s\n","pl","run","len","i0","s","sol","solM","delta","E_cons","dx*kg_max","ic_max","cc_max","dx/a");
 			}
 			printf("%4i%4i%11.4g%11.4g%11.4g%11.4g%11.4g%11.4g%11.4g%11.4g%11.4g%11.4g%11.4g\n",pl,runsCount,len,i0,s,checkSol.back(),\
-				checkSolMax.back(),checkDelta.back(),checkSm.back(),checkKgDxMax.back(),\
+				checkSolMax.back(),checkDelta.back(),checkP4.back(),checkKgDxMax.back(),\
 				checkICMax.back(),checkCCMax.back(),checkDX.back());
 		}
 		if (alltests) {
@@ -1028,6 +1024,17 @@ for (uint pl=0; pl<Npl; pl++) {
 			cout << "max delta:             " << maxdelta << endl;
 			cout << "position of max delta: " << maxdeltapos << "/" << NT-1 << ", j = " << (uint)(maxdeltapos/dim);
 			cout << ", mu = " << maxdeltapos%dim << endl;
+		}
+		if (conservation || alltests) {
+			checkJs.checkMessage();
+			checkP3.checkMessage();
+			checkP4.checkMessage();
+			saveVectorAscii("data/temp/Js.dat",Js);
+			printf("%12s%50s\n","Js       :","data/temp/Js.dat");
+			saveVectorAscii("data/temp/P3.dat",P3);
+			printf("%12s%50s\n","P3       :","data/temp/P3.dat");
+			saveVectorAscii("data/temp/P4.dat",P4);
+			printf("%12s%50s\n","P4       :","data/temp/P4.dat");
 		}
 	
 	}
@@ -1057,7 +1064,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	}
 	
 	// curvature, if required
-	if (curvature) {
+	if (curvature || alltests) {
 		Filename file = "data/temp/xCurvature_K_"+nts(p.K)+"_kappa_"+nts(pow(p.G,3)*p.B)+"_E_"+nts(E)\
 						+"_a_"+nts(p.Epsi)+"_mu_"+nts(p.Mu)+".dat";
 		printAsLoop(file,dim,x,N*dim);
