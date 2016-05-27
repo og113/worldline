@@ -218,18 +218,13 @@ for (uint pl=0; pl<Npl; pl++) {
 	uint N = pow(2,p.K);
 	uint zm = dim; //////////////////////////////////******************************////////////////////////////////
 	uint NT = N*dim+zm;
-	number E = p.P2, R = 1.0; //////////////////////////////////******************************////////////////////////////////
+	number R = 1.0; //////////////////////////////////******************************////////////////////////////////
 	Point<dim> P;
 	P[0] = p.P1;
 	P[1] = p.P2;
-	if (dim>2) {
-		P[2] = p.P3;
-		E = p.P3;
-		if (dim>3) {
-			P[3] = p.P4;
-			E = p.P4;
-		}
-	}
+	P[2] = p.P3;
+	P[3] = p.P4;
+	number E = p.P4;
 
 /*----------------------------------------------------------------------------------------------------------------------------
 	3 - defining quantitites
@@ -485,7 +480,6 @@ for (uint pl=0; pl<Npl; pl++) {
 				S0		(j, xLoop, Js_scale, Js(j));
 				P3[j] = ((xLoop[posNeigh(j,N)])[2]-(xLoop[j])[2])*(number)N/sqrt(4.0*s0) - mgb*(xLoop[j])[3];
 				P4[j] = ((xLoop[posNeigh(j,N)])[3]-(xLoop[j])[3])*(number)N/sqrt(4.0*s0) + mgb*(xLoop[j])[2];
-				// this is just for weak coupling
 			}
 			else {
 				LDisjoint (j, xLoop, beta, 1.0, len);
@@ -763,21 +757,38 @@ for (uint pl=0; pl<Npl; pl++) {
 		Js -= Eigen::VectorXd::Constant(N,Js_mean);
 		checkJs.add(Js.norm()/Js_norm);
 		checkJs.checkMessage();
+		Js += Eigen::VectorXd::Constant(N,Js_mean);
+		saveVectorAscii("data/temp/Js.dat",Js);
+		
+		// energy normalization
+		number Enorm = 0.0;
+		if (poto==PotentialOptions::thermal || poto==PotentialOptions::thermalDisjoint)
+			Enorm = p.T;
+		else
+			Enorm = p.P4;
 		
 		// conservation, P3
 		number P3_mean = P3.sum()/(number)N;
 		number P3_norm = P3.norm();
 		P3 -= Eigen::VectorXd::Constant(N,P3_mean);
-		checkP3.add(P3.norm()/P3_norm);
+		if (Enorm>MIN_NUMBER)
+			checkP3.add(P3.norm()/Enorm/N);
+		else
+			checkP3.add(P3.norm()/P3_norm);
 		checkP3.checkMessage();
+		P3 += Eigen::VectorXd::Constant(N,P3_mean);
 		saveVectorAscii("data/temp/P3.dat",P3);
 		
 		// conservation, P4
 		number P4_mean = P4.sum()/(number)N;
 		number P4_norm = P4.norm();
-		P3 -= Eigen::VectorXd::Constant(N,P4_mean);
-		checkP4.add(P4.norm()/P4_norm);
+		P4 -= Eigen::VectorXd::Constant(N,P4_mean);
+		if (Enorm>MIN_NUMBER)
+			checkP4.add(P4.norm()/Enorm/N);
+		else
+			checkP4.add(P4.norm()/P4_norm);
 		checkP4.checkMessage();
+		P4 += Eigen::VectorXd::Constant(N,P4_mean);
 		saveVectorAscii("data/temp/P4.dat",P4);
 				
 		if (alltests) {
