@@ -246,12 +246,9 @@ for (uint pl=0; pl<Npl; pl++) {
 	Check checkDX("dx<<a",2.0e-1);
 	Check checkStraight("angle_neigh<<1",2.0e-1);
 	Check checkICMax("ic_max<<1",5.0e-1);
-	Check checkICAvg("ic_avg<<1",2.0e-1);
 	Check checkCCMax("cc_max<<1",5.0e-1);
 	Check checkKgAMax("a*kg_max<<1",5.0e-1);
-	Check checkKgAAvg("a*kg_avg<<1",2.0e-1);
 	Check checkKgDxMax("dx*kg_max<<1",5.0e-1);
-	Check checkKgDxAvg("dx*kg_avg<<1",2.0e-1);
 	Check checkSym("symmetric",1.0e-16*NT*NT);
 	Check checkSymMax("symmetric max",1.0e-14);
 	Check checkInv("inverse",1.0e-16*NT*NT*NT);
@@ -263,7 +260,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	Check checkP4("P4 conservation",1.0e-3);
 	
 	// defining scalar quantities
-	number len, i0, s, sm, v, vr, fgamma, gamma, angle_neigh, z, t, ic_max, ic_avg, cc_max, kg_max, kg_avg;
+	number len, i0, s, sm, v, vr, fgamma, gamma, angle_neigh, z, t, ic_max, cc_max, kg_max;
 	
 	// defining vector and matrix quantities
 	vec x(N*dim);
@@ -398,7 +395,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		P3 = Eigen::VectorXd::Zero(N);
 		P4 = Eigen::VectorXd::Zero(N);
 		len = 0.0, i0 = 0.0, v = 0.0, fgamma = 0.0, gamma = 0.0, angle_neigh = 0.0, z = 0.0, t = 0.0;//, s0 = 0.0;
-		ic_max = 0.0, ic_avg = 0.0, cc_max = 0.0, kg_max = 0.0, kg_avg = 0.0;
+		ic_max = 0.0, cc_max = 0.0, kg_max = 0.0;
 		if (curvature || alltests) {
 			sc_vec = Eigen::VectorXd::Zero(N);
 			kg_vec = Eigen::VectorXd::Zero(N);
@@ -462,7 +459,7 @@ for (uint pl=0; pl<Npl; pl++) {
 			dm = -g*PI/p.Epsi;
 			cusp_scale = -g*2.0*log(p.Mu/p.Epsi);
 			repulsion_scale = -g*sqrt(PI)/p.Epsi/p.Epsi;
-			beta = ((p.T*p.G*p.B)>sqrt(MIN_NUMBER)? 1.0/(p.T*p.G*p.B): 1.0/sqrt(MIN_NUMBER)); // this is 1/eta
+			beta = ((p.T)>sqrt(MIN_NUMBER)? 1.0/(p.T): 1.0/sqrt(MIN_NUMBER)); // this is 1/eta
 			if (poto==PotentialOptions::thermalDisjoint)
 				s0 = S0Disjoint(xLoop,beta);
 			else
@@ -496,21 +493,38 @@ for (uint pl=0; pl<Npl; pl++) {
 			
 			//curvatures - N.B. not yet working for thermalDisjoint case
 			if (curvature || alltests) {
-				InlineCurvatureMax(j, xLoop, ic_scale, sc_vec[j]);
-				KGMaxPlane(j, xLoop, kg_scale, kg_vec[j]);
+				if (poto!=PotentialOptions::thermalDisjoint) {
+					InlineCurvatureMax(j, xLoop, ic_scale, sc_vec[j]);
+					KGMaxPlane(j, xLoop, kg_scale, kg_vec[j]);
+				}
+				else {
+					InlineCurvatureMaxDisjoint(j, xLoop, beta, ic_scale, sc_vec[j]);
+					KGMaxPlaneDisjoint(j, xLoop, beta, kg_scale, kg_vec[j]);
+				}
 			}
 			if (!(P^=P0)) {
-				InlineCurvatureMax(j, xLoop, 0, N/2-1, ic_scale, ic_max);
-				InlineCurvatureAvg(j, xLoop, 0, N/2-1, ic_scale, ic_avg);
-				KGMaxPlane(j, xLoop, 0, N/2-1, kg_scale, kg_max);
-				KGAvgPlane(j, xLoop, 0, N/2-1, kg_scale, kg_avg);
-			} //else if (////THERMAL////) {
+				if (poto!=PotentialOptions::thermalDisjoint) {
+					InlineCurvatureMax(j, xLoop, 0, N/2-1, ic_scale, ic_max);
+					CuspCurvatureMax(j, xLoop, 0, N/2-1, cc_scale, ic_max);
+					KGMaxPlane(j, xLoop, 0, N/2-1, kg_scale, kg_max);
+				}
+				else {
+					InlineCurvatureMaxDisjoint(j, xLoop, 0, N/2-1, beta, ic_scale, ic_max);
+					CuspCurvatureMaxDisjoint(j, xLoop, 0, N/2-1, beta, cc_scale, ic_max);
+					KGMaxPlaneDisjoint(j, xLoop, 0, N/2-1, beta, kg_scale, kg_max);
+				}
+			} 
 			else {
-				InlineCurvatureMax(j, xLoop, ic_scale, ic_max);
-				InlineCurvatureAvg(j, xLoop, ic_scale, ic_avg);
-				CuspCurvatureMax(j,xLoop,cc_scale,ic_max);
-				KGMaxPlane(j, xLoop, kg_scale, kg_max);
-				KGAvgPlane(j, xLoop, kg_scale, kg_avg);
+				if (poto!=PotentialOptions::thermalDisjoint) {
+					InlineCurvatureMax(j, xLoop, ic_scale, ic_max);
+					CuspCurvatureMax(j,xLoop,cc_scale,ic_max);
+					KGMaxPlane(j, xLoop, kg_scale, kg_max);
+				}
+				else {
+					InlineCurvatureMaxDisjoint(j, xLoop, beta, ic_scale, ic_max);
+					CuspCurvatureMaxDisjoint(j,xLoop, beta,cc_scale,ic_max);
+					KGMaxPlaneDisjoint(j, xLoop, beta, kg_scale, kg_max);
+				}
 			}
 		
 			for (mu=0; mu<dim; mu++) {
@@ -664,14 +678,26 @@ for (uint pl=0; pl<Npl; pl++) {
 		
 		// lagrange multiplier terms
 		for (j=0; j<N; j++) {
-			for (mu=0; mu<zm; mu++) {
-			
-				mds(N*dim+mu) -= x[j*dim+mu];
-				mds(j*dim+mu) -= x[N*dim+mu];
+			for (mu=0; mu<zm; mu++) {	
+				if (poto==PotentialOptions::thermalDisjoint && mu==(zm-1)) {
+					uint pj = posNeighDisjoint(j,N);
+					mds(N*dim+mu)  -= -x[j*dim+mu];
+					mds(N*dim+mu)  -= x[pj*dim+mu];
+					mds(j*dim+mu)  -= -x[N*dim+mu];
+					mds(pj*dim+mu) -= x[N*dim+mu];
 				
-				dds(j*dim+mu,N*dim+mu) += 1.0;
-				dds(N*dim+mu,j*dim+mu) += 1.0;
+					dds(j*dim+mu,N*dim+mu)  += -1.0;
+					dds(pj*dim+mu,N*dim+mu) += 1.0;
+					dds(N*dim+mu,j*dim+mu)  += -1.0;
+					dds(N*dim+mu,pj*dim+mu) += 1.0;
+				}
+				else {
+					mds(N*dim+mu) -= x[j*dim+mu];
+					mds(j*dim+mu) -= x[N*dim+mu];
 				
+					dds(j*dim+mu,N*dim+mu) += 1.0;
+					dds(N*dim+mu,j*dim+mu) += 1.0;
+				}
 			}
 		}
 		
@@ -745,12 +771,9 @@ for (uint pl=0; pl<Npl; pl++) {
 		
 		// check ic<<1, a*kg<<1, dx*kg<<1, cc<<1, angle_neigh<<1
 		checkICMax.add(ic_max);
-		checkICAvg.add(ic_avg);
 		checkCCMax.add(cc_max);
 		checkKgAMax.add(p.Epsi*kg_max);
-		checkKgAAvg.add(p.Epsi*kg_avg);
 		checkKgDxMax.add(dx*kg_max);
-		checkKgDxAvg.add(dx*kg_avg);
 		checkStraight.add(angle_neigh);
 		
 		// conservation, Js
@@ -901,24 +924,42 @@ for (uint pl=0; pl<Npl; pl++) {
 				cerr << "mds minCoeff  :        " << minCoeff1 << endl;
 				cerr << "(mds.tail(zm)).mean(): " << (mds.tail(zm)).mean() << endl;
 				cerr << "(mds.head(N)).mean():  " << (mds.head(N)).mean() << endl;
+				cerr << endl << "delta info:    " << endl;
 				cerr << "delta.norm():          " << delta.norm() << endl;
+				cerr << "delta.maxCoeff():        " << delta.maxCoeff(&maxCoeff1) << endl;
+				cerr << "delta.minCoeff():        " << delta.minCoeff(&minCoeff1) << endl;
+				cerr << "delta maxCoeff  :        " << maxCoeff1 << endl;
+				cerr << "delta minCoeff  :        " << minCoeff1 << endl;
+				cerr << "(delta.tail(zm)).mean(): " << (delta.tail(zm)).mean() << endl;
+				cerr << "(delta.head(N)).mean():  " << (delta.head(N)).mean() << endl;
 				cerr << endl << "dds info:      " << endl;
 				cerr << "dds.determinant():      " << dds.determinant() << endl;
 				cerr << "dds.sum():              " << dds.sum()       << endl;
 				cerr << "dds.prod():             " << dds.prod()      << endl;
 				cerr << "dds.mean():             " << dds.mean()      << endl;
-				cerr << "dds.minCoeff():         " << dds.minCoeff(&minCoeff1,&minCoeff2)  << endl;
-				cerr << "dds.maxCoeff():         " << dds.maxCoeff(&maxCoeff1,&maxCoeff2)  << endl;
+				number max = dds.maxCoeff(&maxCoeff1,&maxCoeff2);
+				number min = dds.minCoeff(&maxCoeff1,&maxCoeff2);
+				cerr << "dds.minCoeff():         " << min  << endl;
+				cerr << "dds.maxCoeff():         " << max  << endl;
 				cerr << "dds minCoeff  :         " << "(" << minCoeff1 << "," << minCoeff2 << ")" << endl;
 				cerr << "dds maxCoeff  :         " << "(" << maxCoeff1 << "," << maxCoeff2 << ")" << endl;
-				cerr << "dds.trace():            " << dds.trace()     << endl;
-				cerr << "dds.norm():             " << dds.norm()      << endl;
-				cerr << endl << "action info:" << endl;
-				cerr << "s:                      " << s               << endl;
-				cerr << "kinetic:                " << kinetic         << endl;
-				cerr << "i0:                     " << i0              << endl;
-				cerr << "vr:                     " << vr      << endl;
-				return 1;
+				if (-min>max) max = -min;
+				uint largeCounter = 0;
+				for (uint j=0; j<NT; j++) {
+					for (uint k=0; k<NT; k++) {
+						if (abs(dds(j,k))>max/2.0)
+							largeCounter++;
+					}
+				}
+				cerr << "max/2 counter :         " << largeCounter << endl;
+				cerr << "dds.trace()   :         " << dds.trace()     << endl;
+				cerr << "dds.norm()    :         " << dds.norm()      << endl;
+				cerr << endl << "action info   :         " << endl;
+				cerr << "s             :         " << s               << endl;
+				cerr << "kinetic       :         " << kinetic         << endl;
+				cerr << "i0            :         " << i0              << endl;
+				cerr << "vr            :         " << vr      << endl;
+				passThrough = true;
 			}
 
 			//assigning values to x
@@ -990,16 +1031,34 @@ for (uint pl=0; pl<Npl; pl++) {
 				cerr << "mds minCoeff  :        " << minCoeff1 << endl;
 				cerr << "(mds.tail(zm)).mean(): " << (mds.tail(zm)).mean() << endl;
 				cerr << "(mds.head(N)).mean():  " << (mds.head(N)).mean() << endl;
+				cerr << endl << "delta info:    " << endl;
 				cerr << "delta.norm():          " << delta.norm() << endl;
+				cerr << "delta.maxCoeff():        " << delta.maxCoeff(&maxCoeff1) << endl;
+				cerr << "delta.minCoeff():        " << delta.minCoeff(&minCoeff1) << endl;
+				cerr << "delta maxCoeff  :        " << maxCoeff1 << endl;
+				cerr << "delta minCoeff  :        " << minCoeff1 << endl;
+				cerr << "(delta.tail(zm)).mean(): " << (delta.tail(zm)).mean() << endl;
+				cerr << "(delta.head(N)).mean():  " << (delta.head(N)).mean() << endl;
 				cerr << endl << "dds info:      " << endl;
 				cerr << "dds.determinant():      " << dds.determinant() << endl;
 				cerr << "dds.sum():              " << dds.sum()       << endl;
 				cerr << "dds.prod():             " << dds.prod()      << endl;
 				cerr << "dds.mean():             " << dds.mean()      << endl;
-				cerr << "dds.minCoeff():         " << dds.minCoeff(&minCoeff1,&minCoeff2)  << endl;
-				cerr << "dds.maxCoeff():         " << dds.maxCoeff(&maxCoeff1,&maxCoeff2)  << endl;
+				number max = dds.maxCoeff(&maxCoeff1,&maxCoeff2);
+				number min = dds.minCoeff(&maxCoeff1,&maxCoeff2);
+				cerr << "dds.minCoeff():         " << min  << endl;
+				cerr << "dds.maxCoeff():         " << max  << endl;
 				cerr << "dds minCoeff  :         " << "(" << minCoeff1 << "," << minCoeff2 << ")" << endl;
 				cerr << "dds maxCoeff  :         " << "(" << maxCoeff1 << "," << maxCoeff2 << ")" << endl;
+				if (-min>max) max = -min;
+				uint largeCounter = 0;
+				for (uint j=0; j<NT; j++) {
+					for (uint k=0; k<NT; k++) {
+						if (abs(dds(j,k))>max/2.0)
+							largeCounter++;
+					}
+				}
+				cerr << "max/2 counter :         " << largeCounter << endl;
 				cerr << "dds.trace():            " << dds.trace()     << endl;
 				cerr << "dds.norm():             " << dds.norm()      << endl;
 				cerr << endl << "action info:" << endl;
@@ -1007,7 +1066,8 @@ for (uint pl=0; pl<Npl; pl++) {
 				cerr << "kinetic:                " << kinetic         << endl;
 				cerr << "i0:                     " << i0              << endl;
 				cerr << "vr:                     " << vr      << endl;
-				return 1;
+				if (!checkDelta.good() && !pass)
+					passThrough = true;
 			}
 	
 		//printing tests to see convergence
@@ -1021,10 +1081,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		}
 		if (alltests) {
 			checkSolZM.checkMessage();
-			checkICAvg.checkMessage();
 			checkKgAMax.checkMessage();
-			checkKgAAvg.checkMessage();
-			checkKgDxAvg.checkMessage();
 			checkStraight.checkMessage();
 			cout << "avg mds:               " << mds.mean() << endl;
 			cout << "max mds:               " << maxmds << endl;
@@ -1103,8 +1160,8 @@ for (uint pl=0; pl<Npl; pl++) {
 	if ((checkDelta.good() && checkSol.good() && checkSolMax.good()) || pass) {
 		// printing results to file	
 		
-		string resFile = (pass? "results/nr/nr_pass2.csv":"results/nr/nr2.csv");
-		#define numRes 26
+		string resFile = (pass? "results/nr/nr_pass3.csv":"results/nr/nr3.csv");
+		#define numRes 24
 		vector<string> results(numRes);
 		string results_array[numRes] = {timenumber,\
 									nts(pl),\
@@ -1117,7 +1174,7 @@ for (uint pl=0; pl<Npl; pl++) {
 									nts(p.Mu,16),\
 									nts(p.Lambda,16),\
 									nts(E,16),\
-									nts(p.T*p.G*p.B,16),\
+									nts(p.T,16),\
 									nts(s,16),\
 									nts(gamma,16),\
 									nts(len,16),\
@@ -1128,9 +1185,7 @@ for (uint pl=0; pl<Npl; pl++) {
 									nts(checkSol.back(),16),\
 									nts(checkDX.back(),16),\
 									nts(checkICMax.back(),16),\
-									nts(checkICAvg.back(),16),\
 									nts(checkKgAMax.back(),16),\
-									nts(checkKgDxAvg.back(),16),\
 									nts(checkCCMax.back(),16),\
 									nts(checkStraight.back(),16)};									
 		results.assign(results_array,results_array+numRes);							

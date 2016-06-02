@@ -33,7 +33,7 @@ int main(int argc, char** argv) {
 ----------------------------------------------------------------------------------------------------------------------------*/
 
 // data to print
-string inputsFile = "inputs";
+string inputsFile = "inputs4";
 bool extend = false;
 bool circle = false;
 bool lemon = false;
@@ -123,7 +123,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	Metropolis<dim> met(loop,p,Seed);
 	Point<dim> p0, point;
 	number R = 1.0, R0 = 1.0;
-	number beta = ((p.T*p.G*p.B)>sqrt(MIN_NUMBER)? 1.0/(p.T*p.G*p.B): 1.0/sqrt(MIN_NUMBER));
+	number beta = ((p.T)>sqrt(MIN_NUMBER)? 1.0/(p.T): 1.0/sqrt(MIN_NUMBER));
 	number kappa = pow(p.G,3)*p.B;
 	// scaling loops by g*B, so R = 1.0 always
 	/*if (abs(p.G)>MIN_NUMBER && abs(p.B)>MIN_NUMBER) {
@@ -183,11 +183,11 @@ for (uint pl=0; pl<Npl; pl++) {
 				point = p0;
 				if (k<N/2) {
 					point[2] += r/2.0;
-					point[3] += -beta/2.0 + dt*k;
+					point[3] += -beta/2.0 + dt/2.0 + dt*k;
 				}
 				else {
 					point[2] += -r/2.0;
-					point[3] += beta/2.0 - dt*(k-N/2);
+					point[3] += beta/2.0 - dt/2.0 - dt*(k-N/2);
 				}
 				loop[k] = point;
 			}
@@ -203,11 +203,11 @@ for (uint pl=0; pl<Npl; pl++) {
 				point = p0;
 				if (k<N/2) {
 					point[2] += r/2.0 + p.Lambda*cos(w*k);
-					point[3] += -beta/2.0 + dt*k;
+					point[3] += -beta/2.0 + dt/2.0 + dt*k;
 				}
 				else {
 					point[2] += -r/2.0 - p.Lambda*cos(w*k);
-					point[3] += beta/2.0 - dt*(k-N/2);
+					point[3] += beta/2.0 - dt/2.0 - dt*(k-N/2);
 				}
 				loop[k] = point;
 			}

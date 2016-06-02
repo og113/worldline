@@ -123,17 +123,30 @@ void InlineCurvatureMax (const uint& j, const Loop<Dim>& l, const number& f, num
 template <uint Dim>
 void InlineCurvatureMax (const uint& j, const Loop<Dim>& l, const uint& ex1, const uint& ex2, const number& f, number& result);
 
-// InlineCurvatureAvg
+// InlineCurvatureMaxDisjoint
 template <uint Dim>
-void InlineCurvatureAvg (const uint& j, const Loop<Dim>& l, const number& f, number& result);
+void InlineCurvatureMaxDisjoint (const uint& j, const Loop<Dim>& l, const number& beta, const number& f, number& result);
 
-// InlineCurvatureAvg
+// InlineCurvatureMaxDisjoint
 template <uint Dim>
-void InlineCurvatureAvg (const uint& j, const Loop<Dim>& l, const uint& ex1, const uint& ex2, const number& f, number& result);
+void InlineCurvatureMaxDisjoint (const uint& j, const Loop<Dim>& l, const uint& ex1, const uint& ex2, const number& beta, const number& f, number& result);
+
 
 // CuspCurvatureMax
 template <uint Dim>
 void CuspCurvatureMax (const uint& j, const Loop<Dim>& l, const number& f, number& result);
+
+// CuspCurvatureMax
+template <uint Dim>
+void CuspCurvatureMax (const uint& j, const Loop<Dim>& l, const uint& ex1, const uint& ex2, const number& f, number& result);
+
+// CuspCurvatureMaxDisjoint
+template <uint Dim>
+void CuspCurvatureMaxDisjoint (const uint& j, const Loop<Dim>& l, const number& beta, const number& f, number& result);
+
+// CuspCurvatureMaxDisjoint
+template <uint Dim>
+void CuspCurvatureMaxDisjoint (const uint& j, const Loop<Dim>& l, const uint& ex1, const uint& ex2, const number& beta, const number& f, number& result);
 
 // KGMax
 template <uint Dim>
@@ -143,14 +156,6 @@ void KGMax (const uint& j, const Loop<Dim>& l, const number& f, number& result);
 template <uint Dim>
 void KGMax (const uint& j, const Loop<Dim>& l, const uint& ex1, const uint& ex2, const number& f, number& result);
 
-// KGAvg
-template <uint Dim>
-void KGAvg (const uint& j, const Loop<Dim>& l, const number& f, number& result);
-
-// KGAvg
-template <uint Dim>
-void KGAvg (const uint& j, const Loop<Dim>& l, const uint& ex1, const uint& ex2, const number& f, number& result);
-
 // KGMaxPlane
 template <uint Dim>
 void KGMaxPlane (const uint& j, const Loop<Dim>& l, const number& f, number& result);
@@ -159,13 +164,21 @@ void KGMaxPlane (const uint& j, const Loop<Dim>& l, const number& f, number& res
 template <uint Dim>
 void KGMaxPlane (const uint& j, const Loop<Dim>& l, const uint& ex1, const uint& ex2, const number& f, number& result);
 
-// KGAvgPlane
+// KGMaxDisjoint
 template <uint Dim>
-void KGAvgPlane (const uint& j, const Loop<Dim>& l, const number& f, number& result);
+void KGMaxDisjoint (const uint& j, const Loop<Dim>& l, const number& beta, const number& f, number& result);
 
-// KGAvgPlane
+// KGMaxDisjoint
 template <uint Dim>
-void KGAvgPlane (const uint& j, const Loop<Dim>& l, const uint& ex1, const uint& ex2, const number& f, number& result);
+void KGMaxDisjoint (const uint& j, const Loop<Dim>& l, const uint& ex1, const uint& ex2, const number& beta, const number& f, number& result);
+
+// KGMaxPlaneDisjoint
+template <uint Dim>
+void KGMaxPlaneDisjoint (const uint& j, const Loop<Dim>& l, const number& beta, const number& f, number& result);
+
+// KGMaxPlaneDisjoint
+template <uint Dim>
+void KGMaxPlaneDisjoint (const uint& j, const Loop<Dim>& l, const uint& ex1, const uint& ex2, const number& beta, const number& f, number& result);
 
 // mdPX_nr
 template<uint Dim>
@@ -349,6 +362,58 @@ void mdFGamma_nr(const Loop<Dim>& l, const uint& loc, const number& f, vec& v);
 // ddFGamma_nr
 template<uint Dim>
 void ddFGamma_nr(const Loop<Dim>& l, const uint& loc, const number& f, mat& m);
+
+// PS0_nr
+template<uint Dim>
+void PS0_nr(const Loop<Dim>& l, const uint& loc, const uint& mu, const number& f, vec& v);
+
+// PS0Disjoint_nr
+template<uint Dim>
+void PS0Disjoint_nr(const Loop<Dim>& l, const uint& loc, const uint& mu, const number& beta, const number& f, vec& v);
+
+// PL_nr
+template<uint Dim>
+void PL_nr(const Loop<Dim>& l, const uint& loc, const uint& mu, const number& f, vec& v);
+
+// PLDisjoint_nr
+template<uint Dim>
+void PLDisjoint_nr(const Loop<Dim>& l, const uint& loc, const uint& mu, const number& beta, const number& f, vec& v);
+
+// PsqrtS0_nr
+template<uint Dim>
+void PsqrtS0_nr(const Loop<Dim>& l, const uint& loc, const uint& mu, const number& sqrt4s0, const number& f, vec& v);
+
+// PsqrtS0Disjoint_nr
+template<uint Dim>
+void PsqrtS0Disjoint_nr(const Loop<Dim>& l, const uint& loc, const uint& mu, const number& sqrt4s0, const number& beta, const number& f, vec& v);
+
+// PI0_nr
+template<uint Dim>
+void PI0_nr(const Loop<Dim>& l, const uint& loc, const uint& mu, const number& f, vec& v);
+
+// PI0Disjoint_nr
+template<uint Dim>
+void PI0Disjoint_nr(const Loop<Dim>& l, const uint& loc, const uint& mu, const number& beta, const number& f, vec& v);
+
+// PVor_nr
+template<uint Dim>
+void PVor_nr(const Loop<Dim>& l, const uint& loc, const uint& mu, const number& a, const number& f, vec& v);
+
+// PVthr_nr
+template<uint Dim>
+void PVthr_nr(const Loop<Dim>& l, const uint& loc, const uint& mu, const number& beta, const number& a, const number& f, vec& v);
+
+// PVthrDisjoint_nr
+template<uint Dim>
+void PVthrDisjoint_nr(const Loop<Dim>& l, const uint& loc, const uint& mu, const number& beta, const number& a, const number& f, vec& v);
+
+// PGaussian_nr
+template<uint Dim>
+void PGaussian_nr(const Loop<Dim>& l, const uint& loc, const uint& mu, const number& a, const number& f, vec& v);
+
+// PGaussianDisjoint_nr
+template<uint Dim>
+void PGaussianDisjoint_nr(const Loop<Dim>& l, const uint& loc, const uint& mu, const number& beta, const number& a, const number& f, vec& v);
 
 /*----------------------------------------------------------------------------------------------------------------------------
 	2 - loopToVector, vectorToLoop

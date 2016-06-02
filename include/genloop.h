@@ -173,6 +173,10 @@ number Dot(const Point<Dim>&, const Point<Dim>&, const Point<Dim>&, const Point<
 
 // DotDisjoint
 template <uint Dim>
+number DotDisjoint(const Point<Dim>&, const Point<Dim>&, const number& beta);
+
+// DotDisjoint
+template <uint Dim>
 number DotDisjoint(const Point<Dim>&, const Point<Dim>&, const Point<Dim>&, const Point<Dim>&, const number& beta);
 
 // Angle

@@ -10,6 +10,7 @@
 #include <iomanip>
 #include <fstream>
 #include <gsl/gsl_integration.h>
+#include <gsl/gsl_spline.h>
 #include "simple.h"
 #include "parameters.h"
 #include "genloop.h"
@@ -177,7 +178,6 @@ for (uint pl=0; pl<Npl; pl++) {
 	number Ethreshold = 2.0*(1.0-sqrt(kappa/4.0/PI));
 	number E = (fixBeta? 1.0: p.P4);
 	number beta = ((p.T)>sqrt(MIN_NUMBER) && fixBeta? 1.0/(p.T): 0.0);
-	number r, t;
 	if (E>Ethreshold) {
 		cerr << "highTemp error: E(" << E << ") above threshold(" << Ethreshold << ")" << endl;
 		return 1;
@@ -227,24 +227,39 @@ for (uint pl=0; pl<Npl; pl++) {
 	file = "data/highTemp/loops/dim_"+nts<uint>(dim)+"/K_"+nts(p.K)+"/highTemp_Kappa_"+nts(kappa)\
 														+"_T_"+nts(1.0/beta)+"_rank_"+nts(0)+".dat";
 	
+	vector<number> r(N/4), t(N/4);
+	
 	for (uint k=0; k<N/4; k++) {
-		r = rL + (rR-rL)*k/(number)(N/4.0-1.0);
+		r[k] = rL + (rR-rL)*k/(number)(N/4.0-1.0);
 		if (k>0) {
-			params.b = r;
-			t = TIntegral(E,&params)/2.0;
+			params.b = r[k];
+			t[k] = TIntegral(E,&params)/2.0;
 		}
 		else
-			t = 0.0;
-		
-		dpz[dim-2] = r/2.0;
-		dpt[dim-1] = -beta/2.0 + t;
+			t[k] = 0.0;
+	}
+	
+	gsl_interp_accel *acc = gsl_interp_accel_alloc ();
+	gsl_spline *spline = gsl_spline_alloc (gsl_interp_cspline, N/4);
+	gsl_spline_init (spline, &(t[0]), &(r[0]), N/4);
+    
+    number ti, ri;
+    for (uint k=0; k<N/4; k++) {
+    	ti = (beta/2.0)*(number)k/(number)(N/4.0);
+    	ri = gsl_spline_eval (spline, ti, acc);
+    	
+    	dpz[dim-2] = ri/2.0;
+		dpt[dim-1] = -beta/2.0 + ti;
 
 		loop[k] = p0+dpz+dpt;
 		loop[N/2-1-k] = p0+dpz-dpt;
 		loop[k+N/2] = p0-dpz-dpt;
 		loop[N-1-k] = p0-dpz+dpt;
-	}
-	
+    }
+
+    gsl_spline_free(spline);
+    gsl_interp_accel_free (acc);
+
 	cout << "printing to " << file << endl;
 	loop.save(file);
 	loop.clear();

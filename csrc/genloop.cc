@@ -330,6 +330,16 @@ number Dot(const Point<Dim>& p1, const Point<Dim>& p2, const Point<Dim>& q1, con
 
 // DotDisjoint
 template <uint Dim>
+number DotDisjoint(const Point<Dim>& p1, const Point<Dim>& p2, const number& beta) {
+	number d = mod<number>(p1[Dim-1],-beta/2.0,beta/2.0)*mod<number>(p2[Dim-1],-beta/2.0,beta/2.0);
+	for (uint j=0; j<(Dim-1); j++) {
+		d += p1[j]*p2[j];
+	}
+	return d;
+}
+
+// DotDisjoint
+template <uint Dim>
 number DotDisjoint(const Point<Dim>& p1, const Point<Dim>& p2, const Point<Dim>& q1, const Point<Dim>& q2, const number& beta) {
 	number d = mod<number>(p1[Dim-1]-p2[Dim-1],-beta/2.0,beta/2.0)*mod<number>(q1[Dim-1]-q2[Dim-1],-beta/2.0,beta/2.0);
 	for (uint j=0; j<(Dim-1); j++) {
@@ -623,7 +633,7 @@ number MidpointDistanceSquared(const Loop<Dim>& loop, const uint& i, const uint&
 // DX
 template <uint Dim>
 number DX(const Loop<Dim>& loop, const uint& i, const uint& mu) {
-	uint ni = (i==0? (loop.size()-1): i-1);
+	uint ni = negNeigh(i,loop.size());
 	return (loop[i])[mu]-(loop[ni])[mu];
 }
 
@@ -1229,6 +1239,7 @@ template number DistanceDisjoint<4>(const Point<4>&, const Point<4>&, const numb
 template number DistanceSquaredDisjoint<4>(const Point<4>&, const Point<4>&, const number&);
 template number Dot<4>(const Point<4>&, const Point<4>&);
 template number Dot<4>(const Point<4>&, const Point<4>&, const Point<4>&, const Point<4>&);
+template number DotDisjoint<4>(const Point<4>&, const Point<4>&, const number&);
 template number DotDisjoint<4>(const Point<4>&, const Point<4>&, const Point<4>&, const Point<4>&, const number&);
 template number Angle<4>(const Point<4>&, const Point<4>&, const Point<4>&);
 template number MidpointDistanceSquared<4>(const Point<4>&, const Point<4>&, const Point<4>&, const Point<4>&);
@@ -1431,6 +1442,7 @@ template number DistanceSquaredDisjoint<2>(const Point<2>&, const Point<2>&, con
 template number Norm<2>(const Point<2>&);
 template number Dot<2>(const Point<2>&, const Point<2>&);
 template number Dot<2>(const Point<2>&, const Point<2>&, const Point<2>&, const Point<2>&);
+template number DotDisjoint<2>(const Point<2>&, const Point<2>&, const number&);
 template number DotDisjoint<2>(const Point<2>&, const Point<2>&, const Point<2>&, const Point<2>&, const number&);
 template number Angle<2>(const Point<2>&, const Point<2>&, const Point<2>&);
 template number MidpointDistanceSquared<2>(const Point<2>&, const Point<2>&, const Point<2>&, const Point<2>&);
@@ -1439,6 +1451,8 @@ template number Dot<2>(const Loop<2>&, const uint&, const uint&);
 template number MidpointDistanceSquared<2>(const Loop<2>&, const uint&, const uint&);
 template number DX<2>(const Loop<2>&, const uint&, const uint&);
 template number DX<2>(const Loop<2>&, const uint&, const uint&, const uint&);
+template number DXDisjoint<2>(const Loop<2>&, const uint&, const uint&, const number&);
+template number DXDisjoint<2>(const Loop<2>&, const uint&, const uint&, const uint&, const number&);
 template class Loop<2>;
 template number L<2> (const Loop<2>& l);
 template number DL<2> (const Loop<2>& l, const Point<2>& p, const uint& loc);
