@@ -397,23 +397,23 @@ void PI0Disjoint_nr(const Loop<Dim>& l, const uint& loc, const uint& mu, const n
 
 // PVor_nr
 template<uint Dim>
-void PVor_nr(const Loop<Dim>& l, const uint& loc, const uint& mu, const number& a, const number& f, vec& v);
+void PVor_nr(const Loop<Dim>& l, const uint& j, const uint& mu, const uint& k, const number& a, const number& f, vec& v);
 
 // PVthr_nr
 template<uint Dim>
-void PVthr_nr(const Loop<Dim>& l, const uint& loc, const uint& mu, const number& beta, const number& a, const number& f, vec& v);
+void PVthr_nr(const Loop<Dim>& l, const uint& j, const uint& mu, const uint& k, const number& beta, const number& a, const number& f, vec& v);
 
 // PVthrDisjoint_nr
 template<uint Dim>
-void PVthrDisjoint_nr(const Loop<Dim>& l, const uint& loc, const uint& mu, const number& beta, const number& a, const number& f, vec& v);
+void PVthrDisjoint_nr(const Loop<Dim>& l, const uint& j, const uint& mu, const uint& k, const number& beta, const number& a, const number& f, vec& v);
 
 // PGaussian_nr
 template<uint Dim>
-void PGaussian_nr(const Loop<Dim>& l, const uint& loc, const uint& mu, const number& a, const number& f, vec& v);
+void PGaussian_nr(const Loop<Dim>& l, const uint& loc, const uint& mu, const uint& k, const number& a, const number& f, vec& v);
 
 // PGaussianDisjoint_nr
 template<uint Dim>
-void PGaussianDisjoint_nr(const Loop<Dim>& l, const uint& loc, const uint& mu, const number& beta, const number& a, const number& f, vec& v);
+void PGaussianDisjoint_nr(const Loop<Dim>& l, const uint& j, const uint& mu, const uint& k, const number& beta, const number& a, const number& f, vec& v);
 
 /*----------------------------------------------------------------------------------------------------------------------------
 	2 - loopToVector, vectorToLoop

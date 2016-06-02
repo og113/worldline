@@ -273,8 +273,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	
 	// conserved quantities
 	vec Js(N);
-	vec P3(N);
-	vec P4(N);
+	vec Pmu(NT);
 	
 	// defining xLoop
 	Loop<dim> xLoop(p.K,0);
@@ -392,8 +391,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		mds = Eigen::VectorXd::Zero(NT);
 		dds = Eigen::MatrixXd::Zero(NT,NT);
 		Js = Eigen::VectorXd::Zero(N);
-		P3 = Eigen::VectorXd::Zero(N);
-		P4 = Eigen::VectorXd::Zero(N);
+		Pmu = Eigen::VectorXd::Zero(NT);
 		len = 0.0, i0 = 0.0, v = 0.0, fgamma = 0.0, gamma = 0.0, angle_neigh = 0.0, z = 0.0, t = 0.0;//, s0 = 0.0;
 		ic_max = 0.0, cc_max = 0.0, kg_max = 0.0;
 		if (curvature || alltests) {
@@ -477,15 +475,11 @@ for (uint pl=0; pl<Npl; pl++) {
 				L		(j, xLoop, 1.0, len);
 				I0		(j, xLoop, mgb, i0);
 				S0		(j, xLoop, Js_scale, Js(j));
-				P3[j] = ((xLoop[posNeigh(j,N)])[2]-(xLoop[j])[2])*(number)N/sqrt(4.0*s0) - mgb*(xLoop[j])[3];
-				P4[j] = ((xLoop[posNeigh(j,N)])[3]-(xLoop[j])[3])*(number)N/sqrt(4.0*s0) + mgb*(xLoop[j])[2];
 			}
 			else {
 				LDisjoint (j, xLoop, beta, 1.0, len);
 				I0Disjoint(j, xLoop, beta, mgb, i0);
 				S0Disjoint(j, xLoop, beta, Js_scale, Js(j));
-				P3[j] = ((xLoop[posNeighDisjoint(j,N)])[2]-(xLoop[j])[2])*(number)N/sqrt(4.0*s0) - mgb*(xLoop[j])[3];
-				P4[j] = ((xLoop[posNeighDisjoint(j,N)])[3]-(xLoop[j])[3])*(number)N/sqrt(4.0*s0) + mgb*(xLoop[j])[2];
 			}
 			
 			if (poto==PotentialOptions::dimreg)
@@ -531,38 +525,58 @@ for (uint pl=0; pl<Npl; pl++) {
 			
 				// free particle
 				if (poto!=PotentialOptions::thermalDisjoint) {
-					if (kino==KineticOptions::saddle)
+					if (kino==KineticOptions::saddle) {
 						mdsqrtS0_nr(j,mu,xLoop,sqrt4s0,1.0,mds);
-					else if (kino==KineticOptions::s0)
+						PsqrtS0_nr(xLoop, j, mu, sqrt4s0, 1.0, Pmu);
+					}
+					else if (kino==KineticOptions::s0) {
 						mdS0_nr(j,mu,xLoop,s0_scale,mds);
-					else if (kino==KineticOptions::len)
+						PS0_nr(xLoop, j, mu, s0_scale, Pmu);
+					}
+					else if (kino==KineticOptions::len) {
 						mdL_nr(j,mu,xLoop,1.0,mds);
+						PL_nr(xLoop, j, mu, 1.0, Pmu);
+					}
 				}
 				else {
-					if (kino==KineticOptions::saddle)
+					if (kino==KineticOptions::saddle) {
 						mdsqrtS0Disjoint_nr(j,mu,xLoop,sqrt4s0,beta,1.0,mds);
-					else if (kino==KineticOptions::s0)
+						PsqrtS0Disjoint_nr(xLoop, j, mu, sqrt4s0, beta, 1.0, Pmu);
+					}
+					else if (kino==KineticOptions::s0) {
 						mdS0Disjoint_nr(j,mu,xLoop,beta,s0_scale,mds);
-					else if (kino==KineticOptions::len)
+						PS0Disjoint_nr(xLoop, j, mu, beta, s0_scale, Pmu);
+					}
+					else if (kino==KineticOptions::len) {
 						mdLDisjoint_nr(j,mu,xLoop,beta,1.0,mds);
+						PLDisjoint_nr(xLoop, j, mu, beta, 1.0, Pmu);
+					}
 				}
 				
 				// external field
 				if (poto!=PotentialOptions::thermalDisjoint) {
 					mdI_nr(j,mu,xLoop,mgb,mds);
+					PI0_nr(xLoop, j, mu, 1.0, Pmu);
 				}
 				else {
 					mdIDisjoint_nr(j,mu,xLoop,beta,mgb,mds);
+					PI0Disjoint_nr(xLoop, j, mu, beta, 1.0, Pmu);
 				}
 				
 				if (!weak && !gaussian) {
 					// self-energy regularisation
-					if (poto!=PotentialOptions::dimreg && poto!=PotentialOptions::thermalDisjoint)
+					if (poto!=PotentialOptions::dimreg && poto!=PotentialOptions::thermalDisjoint) {
 						mdL_nr(j,mu,xLoop,dm,mds);
-					else if (poto==PotentialOptions::thermalDisjoint)
+						PL_nr(xLoop, j, mu, dm, Pmu);
+					}
+					else if (poto==PotentialOptions::thermalDisjoint) {
 						mdLDisjoint_nr(j,mu,xLoop,beta,dm,mds);
-					else
+						PLDisjoint_nr(xLoop, j, mu, beta, dm, Pmu);
+					}
+					else {
 						mdDistPow_nr(j, mu, xLoop, p.Epsi, dim_reg_scale, mds);
+						// note there is no implementation of Pmu for dim_reg
+					}
 				}
 				
 				for (k=0; k<N; k++) {
@@ -592,23 +606,33 @@ for (uint pl=0; pl<Npl; pl++) {
 					
 					// dynamical field
 					if (!weak) {
-						if (poto==PotentialOptions::original)
+						if (poto==PotentialOptions::original) {
 							mdVor_nr(j, mu, k, xLoop, p.Epsi, g, mds);
-						if (poto==PotentialOptions::link)
+							PVor_nr(xLoop, j, mu, k, p.Epsi, g, Pmu);
+						}
+						else if (poto==PotentialOptions::link)
 							mdVlr_nr(j, mu, k, xLoop, p.Epsi, g, mds);
-						if (poto==PotentialOptions::exponential)
+						else if (poto==PotentialOptions::exponential)
 							mdVer_nr(j, mu, k, xLoop, p.Epsi, g, mds);
 						else if (poto==PotentialOptions::dimreg)
 							mdVdr_nr(j, mu, k, xLoop, p.Epsi, g, mds);
-						else if (poto==PotentialOptions::thermal)
+						else if (poto==PotentialOptions::thermal) {
 							mdVthr_nr(j, mu, k, xLoop, beta, p.Epsi, g, mds);
-						else if (poto==PotentialOptions::thermalDisjoint)
+							PVthr_nr(xLoop, j, mu, k, beta, p.Epsi, g, Pmu);
+						}
+						else if (poto==PotentialOptions::thermalDisjoint) {
 							mdVthrDisjoint_nr(j, mu, k, xLoop, beta, p.Epsi, g, mds);
+							PVthrDisjoint_nr(xLoop, j, mu, k, beta, p.Epsi, g, Pmu);
+						}
 							
-						if (gaussian && poto!=PotentialOptions::thermalDisjoint)
+						if (gaussian && poto!=PotentialOptions::thermalDisjoint) {
 							mdGaussian_nr(j, mu, k, xLoop, p.Epsi, repulsion_scale, mds);
-						else if (gaussian)
+							PGaussian_nr(xLoop, j, mu, k, p.Epsi, repulsion_scale, Pmu);
+						}
+						else if (gaussian) {
 							mdGaussianDisjoint_nr(j, mu, k, xLoop, beta, p.Epsi, repulsion_scale, mds);
+							PGaussianDisjoint_nr(xLoop, j, mu, k, p.Epsi, beta, repulsion_scale, Pmu);
+						}
 					}
 				
 					for (nu=0; nu<dim; nu++) {
@@ -679,7 +703,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		// lagrange multiplier terms
 		for (j=0; j<N; j++) {
 			for (mu=0; mu<zm; mu++) {	
-				if (poto==PotentialOptions::thermalDisjoint && mu==(zm-1)) {
+				if (poto==PotentialOptions::thermalDisjoint && mu==(zm-1) && false) {
 					uint pj = posNeighDisjoint(j,N);
 					mds(N*dim+mu)  -= -x[j*dim+mu];
 					mds(N*dim+mu)  -= x[pj*dim+mu];
@@ -918,10 +942,19 @@ for (uint pl=0; pl<Npl; pl++) {
 				cerr << endl << "x.norm():              " << x.norm() << endl;
 				cerr << "x_end.norm():          " << x_end << endl;
 				cerr << "mds.norm():            " << mds.norm() << endl;
-				cerr << "mds.maxCoeff():        " << mds.maxCoeff(&maxCoeff1) << endl;
-				cerr << "mds.minCoeff():        " << mds.minCoeff(&minCoeff1) << endl;
-				cerr << "mds maxCoeff  :        " << maxCoeff1 << endl;
-				cerr << "mds minCoeff  :        " << minCoeff1 << endl;
+				number max = mds.maxCoeff(&maxCoeff1);
+				number min = mds.minCoeff(&maxCoeff1);
+				cerr << "mds.minCoeff():         " << min  << endl;
+				cerr << "mds.maxCoeff():         " << max  << endl;
+				cerr << "mds minCoeff  :         " << maxCoeff1 << endl;
+				cerr << "mds maxCoeff  :         " << minCoeff1 << endl;
+				if (-min>max) max = -min;
+				uint largeCounter = 0;
+				for (uint j=0; j<NT; j++) {
+						if (abs(mds(j))>max/2.0)
+							largeCounter++;
+				}
+				cerr << "max/2 counter :         " << largeCounter << endl;
 				cerr << "(mds.tail(zm)).mean(): " << (mds.tail(zm)).mean() << endl;
 				cerr << "(mds.head(N)).mean():  " << (mds.head(N)).mean() << endl;
 				cerr << endl << "delta info:    " << endl;
@@ -937,14 +970,14 @@ for (uint pl=0; pl<Npl; pl++) {
 				cerr << "dds.sum():              " << dds.sum()       << endl;
 				cerr << "dds.prod():             " << dds.prod()      << endl;
 				cerr << "dds.mean():             " << dds.mean()      << endl;
-				number max = dds.maxCoeff(&maxCoeff1,&maxCoeff2);
-				number min = dds.minCoeff(&maxCoeff1,&maxCoeff2);
+				max = dds.maxCoeff(&maxCoeff1,&maxCoeff2);
+				min = dds.minCoeff(&maxCoeff1,&maxCoeff2);
 				cerr << "dds.minCoeff():         " << min  << endl;
 				cerr << "dds.maxCoeff():         " << max  << endl;
 				cerr << "dds minCoeff  :         " << "(" << minCoeff1 << "," << minCoeff2 << ")" << endl;
 				cerr << "dds maxCoeff  :         " << "(" << maxCoeff1 << "," << maxCoeff2 << ")" << endl;
 				if (-min>max) max = -min;
-				uint largeCounter = 0;
+				largeCounter = 0;
 				for (uint j=0; j<NT; j++) {
 					for (uint k=0; k<NT; k++) {
 						if (abs(dds(j,k))>max/2.0)
@@ -1025,10 +1058,19 @@ for (uint pl=0; pl<Npl; pl++) {
 				cerr << endl << "x.norm():              " << x.norm() << endl;
 				cerr << "x_end.norm():          " << x_end << endl;
 				cerr << "mds.norm():            " << mds.norm() << endl;
-				cerr << "mds.maxCoeff():        " << mds.maxCoeff(&maxCoeff1) << endl;
-				cerr << "mds.minCoeff():        " << mds.minCoeff(&minCoeff1) << endl;
-				cerr << "mds maxCoeff  :        " << maxCoeff1 << endl;
-				cerr << "mds minCoeff  :        " << minCoeff1 << endl;
+				number max = mds.maxCoeff(&maxCoeff1);
+				number min = mds.minCoeff(&maxCoeff1);
+				cerr << "mds.minCoeff():         " << min  << endl;
+				cerr << "mds.maxCoeff():         " << max  << endl;
+				cerr << "mds minCoeff  :         " << maxCoeff1 << endl;
+				cerr << "mds maxCoeff  :         " << minCoeff1 << endl;
+				if (-min>max) max = -min;
+				uint largeCounter = 0;
+				for (uint j=0; j<NT; j++) {
+						if (abs(mds(j))>max/2.0)
+							largeCounter++;
+				}
+				cerr << "max/2 counter :         " << largeCounter << endl;
 				cerr << "(mds.tail(zm)).mean(): " << (mds.tail(zm)).mean() << endl;
 				cerr << "(mds.head(N)).mean():  " << (mds.head(N)).mean() << endl;
 				cerr << endl << "delta info:    " << endl;
@@ -1044,14 +1086,14 @@ for (uint pl=0; pl<Npl; pl++) {
 				cerr << "dds.sum():              " << dds.sum()       << endl;
 				cerr << "dds.prod():             " << dds.prod()      << endl;
 				cerr << "dds.mean():             " << dds.mean()      << endl;
-				number max = dds.maxCoeff(&maxCoeff1,&maxCoeff2);
-				number min = dds.minCoeff(&maxCoeff1,&maxCoeff2);
+				max = dds.maxCoeff(&maxCoeff1,&maxCoeff2);
+				min = dds.minCoeff(&maxCoeff1,&maxCoeff2);
 				cerr << "dds.minCoeff():         " << min  << endl;
 				cerr << "dds.maxCoeff():         " << max  << endl;
 				cerr << "dds minCoeff  :         " << "(" << minCoeff1 << "," << minCoeff2 << ")" << endl;
 				cerr << "dds maxCoeff  :         " << "(" << maxCoeff1 << "," << maxCoeff2 << ")" << endl;
 				if (-min>max) max = -min;
-				uint largeCounter = 0;
+				largeCounter = 0;
 				for (uint j=0; j<NT; j++) {
 					for (uint k=0; k<NT; k++) {
 						if (abs(dds(j,k))>max/2.0)

@@ -245,8 +245,9 @@ for (uint pl=0; pl<Npl; pl++) {
     
     number ti, ri;
     for (uint k=0; k<N/4; k++) {
-    	ti = (beta/2.0)*(number)k/(number)(N/4.0);
-    	ri = gsl_spline_eval (spline, ti, acc);
+    	ti = (beta/2.0)*(number)(k + 0.5)/(number)(N/4.0);
+    	ri = gsl_spline_eval(spline, ti, acc); // use if want narrowest part at boundaries
+    	//ri = gsl_spline_eval(spline, beta/2.0 - ti, acc); // use if want widest part at boundaries
     	
     	dpz[dim-2] = ri/2.0;
 		dpt[dim-1] = -beta/2.0 + ti;
