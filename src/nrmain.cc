@@ -273,7 +273,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	
 	// conserved quantities
 	vec Js(N);
-	vec Pmu(NT);
+	vec Pmu(N*dim);
 	
 	// defining xLoop
 	Loop<dim> xLoop(p.K,0);
@@ -391,7 +391,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		mds = Eigen::VectorXd::Zero(NT);
 		dds = Eigen::MatrixXd::Zero(NT,NT);
 		Js = Eigen::VectorXd::Zero(N);
-		Pmu = Eigen::VectorXd::Zero(NT);
+		Pmu = Eigen::VectorXd::Zero(N*dim);
 		len = 0.0, i0 = 0.0, v = 0.0, fgamma = 0.0, gamma = 0.0, angle_neigh = 0.0, z = 0.0, t = 0.0;//, s0 = 0.0;
 		ic_max = 0.0, cc_max = 0.0, kg_max = 0.0;
 		if (curvature || alltests) {
@@ -556,11 +556,17 @@ for (uint pl=0; pl<Npl; pl++) {
 				// external field
 				if (poto!=PotentialOptions::thermalDisjoint) {
 					mdI_nr(j,mu,xLoop,mgb,mds);
-					PI0_nr(xLoop, j, mu, 1.0, Pmu);
+					PI0_nr(xLoop, j, mu, mgb, Pmu);
 				}
 				else {
 					mdIDisjoint_nr(j,mu,xLoop,beta,mgb,mds);
-					PI0Disjoint_nr(xLoop, j, mu, beta, 1.0, Pmu);
+					PI0Disjoint_nr(xLoop, j, mu, beta, mgb, Pmu);
+				}
+				
+				// external momentum
+				if (!(P^=P0)) {
+					if (j>=(N/2-1))
+						Pmu[j*dim+mu] += P[mu];
 				}
 				
 				if (!weak && !gaussian) {
@@ -813,6 +819,13 @@ for (uint pl=0; pl<Npl; pl++) {
 			Enorm = p.T;
 		else
 			Enorm = p.P4;
+			
+		// getting P3 and P4
+		vec P3(N), P4(N);
+		for (uint j=0; j<N; j++) {
+			P3[j] = Pmu[dim*j+2];
+			P4[j] = Pmu[dim*j+3];
+		}
 		
 		// conservation, P3
 		number P3_mean = P3.sum()/(number)N;
