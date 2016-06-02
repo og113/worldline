@@ -809,16 +809,16 @@ for (uint pl=0; pl<Npl; pl++) {
 		// conservation, Js
 		number Js_mean = Js.sum()/(number)N;
 		number Js_norm = Js.norm();
-		Js -= Eigen::VectorXd::Constant(N,Js_mean);
+		Js = Js - Eigen::VectorXd::Constant(N,Js_mean);
 		checkJs.add(Js.norm()/Js_norm);
 		Js += Eigen::VectorXd::Constant(N,Js_mean);
 		
 		// energy normalization
 		number Enorm = 0.0;
 		if (poto==PotentialOptions::thermal || poto==PotentialOptions::thermalDisjoint)
-			Enorm = p.T;
+			Enorm = p.T*2.0;
 		else
-			Enorm = p.P4;
+			Enorm = p.P4/2.0;
 			
 		// getting P3 and P4
 		vec P3(N), P4(N);
@@ -830,7 +830,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		// conservation, P3
 		number P3_mean = P3.sum()/(number)N;
 		number P3_norm = P3.norm();
-		P3 -= Eigen::VectorXd::Constant(N,P3_mean);
+		P3 = P3 - Eigen::VectorXd::Constant(N,P3_mean);
 		if (Enorm>MIN_NUMBER)
 			checkP3.add(P3.norm()/Enorm/sqrt((number)N));
 		else
@@ -840,7 +840,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		// conservation, P4
 		number P4_mean = P4.sum()/(number)N;
 		number P4_norm = P4.norm();
-		P4 -= Eigen::VectorXd::Constant(N,P4_mean);
+		P4 = P4 - Eigen::VectorXd::Constant(N,P4_mean);
 		if (Enorm>MIN_NUMBER)
 			checkP4.add(P4.norm()/Enorm/sqrt((number)N));
 		else
