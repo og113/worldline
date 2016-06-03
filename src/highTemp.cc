@@ -47,6 +47,14 @@ struct paramsIntegralStruct {
 	number tolRel;
 };
 
+struct paramsdS2Struct {
+	paramsIntegralStruct paramsIntegral;
+	double E;
+	double L;
+	uint M;
+	double yi;
+};
+
 double Integrand (double x, void* parameters) {
 	struct paramsIntegrandStruct* params = (struct paramsIntegrandStruct*)parameters;
 	double E = params->E;
@@ -54,6 +62,15 @@ double Integrand (double x, void* parameters) {
 	if ((E + 2.0 - x - kappa/4.0/PI/x)<0)
 	cerr << "Integrand error: sqrt(<0)" << endl;
 	return 2.0/sqrt(-E + 2.0 - x - kappa/4.0/PI/x);
+}
+
+double LIntegrand (double x, void* parameters) {
+	struct paramsIntegrandStruct* params = (struct paramsIntegrandStruct*)parameters;
+	double E = params->E;
+	double kappa = params->kappa;
+	if ((E + 2.0 - x - kappa/4.0/PI/x)<0)
+	cerr << "LIntegrand error: sqrt(<0)" << endl;
+	return sqrt(-E + 3.0 - x - kappa/4.0/PI/x)/sqrt(-E + 2.0 - x - kappa/4.0/PI/x);
 }
 
 double TIntegral (double E, void* parameters) {
@@ -104,6 +121,21 @@ double BetaZeroIntegral (double E, void* parameters) {
 	return (TIntegral(E,params) - params->beta);
 }
 
+double dS2 (double y, void* parameters) {
+
+	// getting parameters
+	struct paramsdS2Struct* params = (struct paramsdS2Struct*)parameters;
+	double E = params->E;
+	double L = params->L;
+	double yi = params->yi;
+	uint M = params->M;
+	struct paramsIntegralStruct paramsIntegral = params->paramsIntegral;
+	paramsIntegral.a = yi;
+	paramsIntegral.b = y;
+	
+	return pow(TIntegral(E,&paramsIntegral)/2.0,2) + pow((y-yi)/2.0,2) - pow(L/(number)M,2);
+}
+
 /*----------------------------------------------------------------------------------------------------------------------------
 	1. getting argv
 ----------------------------------------------------------------------------------------------------------------------------*/
@@ -113,7 +145,7 @@ int main(int argc, char** argv) {
 // data to print
 string inputsFile = "inputs4";
 bool verbose = true;
-bool fixBeta = false;
+bool fixBeta = true;
 
 // getting argv
 if (argc % 2 && argc>1) {
@@ -184,6 +216,8 @@ for (uint pl=0; pl<Npl; pl++) {
 	}
 	number rL = (1.0-E/2.0) - sqrt(pow((1.0-E/2.0),2) - kappa/4.0/PI);
 	number rR = (1.0-E/2.0) + sqrt(pow((1.0-E/2.0),2) - kappa/4.0/PI);
+	if (verbose && fixBeta)
+		cout << "beta = " << beta << endl;
 	if (verbose && !fixBeta) 
 		cout << "rL = " << rL << ", rR = " << rR << endl;
 	
@@ -227,8 +261,21 @@ for (uint pl=0; pl<Npl; pl++) {
 	file = "data/highTemp/loops/dim_"+nts<uint>(dim)+"/K_"+nts(p.K)+"/highTemp_Kappa_"+nts(kappa)\
 														+"_T_"+nts(1.0/beta)+"_rank_"+nts(0)+".dat";
 	
-	vector<number> r(N/4), t(N/4);
+	// calculating length
+	gsl_integration_workspace * w = gsl_integration_workspace_alloc(params.workspace_size);
+	paramsIntegrandStruct paramsIntegrand;
+	paramsIntegrand.E = E;
+	paramsIntegrand.kappa = kappa;
+	gsl_function FL;
+	FL.function = &LIntegrand;
+	FL.params = &paramsIntegrand;
+	number L, errorL;
+	gsl_integration_qags (&FL, rL, rR, params.tolAbs, params.tolRel, params.workspace_size, w, &L, &errorL); 
+	gsl_integration_workspace_free (w);
+	cout << "L = " << 4.0*L << endl;
 	
+	/*// getting interpolating function
+	vector<number> r(N/4), t(N/4);	
 	for (uint k=0; k<N/4; k++) {
 		r[k] = rL + (rR-rL)*k/(number)(N/4.0-1.0);
 		if (k>0) {
@@ -237,20 +284,59 @@ for (uint pl=0; pl<Npl; pl++) {
 		}
 		else
 			t[k] = 0.0;
-	}
-	
+	}	
 	gsl_interp_accel *acc = gsl_interp_accel_alloc ();
 	gsl_spline *spline = gsl_spline_alloc (gsl_interp_cspline, N/4);
-	gsl_spline_init (spline, &(t[0]), &(r[0]), N/4);
+	gsl_spline_init (spline, &(t[0]), &(r[0]), N/4);*/
     
-    number ti, ri;
+    // output
+    number y = rL, yi, ti = 0.0, t = ti;
+    paramsdS2Struct paramsdS2;
+    paramsdS2.paramsIntegral = params;
+    paramsdS2.E = E;
+    paramsdS2.L = L;
+    paramsdS2.M = N/4;
     for (uint k=0; k<N/4; k++) {
-    	ti = (beta/2.0)*(number)(k + 0.5)/(number)(N/4.0);
+    	/*ti = (beta/2.0)*(number)(k + 0.5)/(number)(N/4.0);
     	ri = gsl_spline_eval(spline, ti, acc); // use if want narrowest part at boundaries
-    	//ri = gsl_spline_eval(spline, beta/2.0 - ti, acc); // use if want widest part at boundaries
+    	//ri = gsl_spline_eval(spline, beta/2.0 - ti, acc); // use if want widest part at boundaries*/
+    	yi = y;
+    	ti = t;
+    	if (k==0) {
+    		paramsdS2.L = L/2.0;
+    		paramsdS2.yi = rL;
+    		gsl_function ds2_gsl;
+			ds2_gsl.params = &paramsdS2;
+			ds2_gsl.function = &dS2;
+			number yMin = rL+params.tolRel;
+			number yMax = rR;
+			number yGuess = rL+(rR-rL)*2.0/(number)N;			
+			y = brentRootFinder(&ds2_gsl,yGuess,yMin,yMax,params.tolRel);
+    	}
+    	else {
+    		paramsdS2.L = L;
+    		paramsdS2.yi = y;
+    		gsl_function ds2_gsl;
+			ds2_gsl.params = &paramsdS2;
+			ds2_gsl.function = &dS2;
+			number yMin = y+params.tolRel;
+			number yMax = rR;
+			number yGuess = y+(rR-rL)*4.0/(number)N;
+			y = brentRootFinder(&ds2_gsl,yGuess,yMin,yMax,params.tolRel);
+    	}
     	
-    	dpz[dim-2] = ri/2.0;
-		dpt[dim-1] = -beta/2.0 + ti;
+    	/*---------------------------------------------------------------------------
+    	ERROR: have mixed up y and 2*y. L = int(sqrt(1+(d(y/2)/dt)^2))dt
+    	or L = int(sqrt(1+(d(y/2)/dt)^2)/d(y/2)/dt)d(y/2)
+    	---------------------------------------------------------------------------*/
+    	
+    	params.a = rL;
+    	params.b = y;
+    	
+    	t = TIntegral(E,&params);
+    	
+    	dpz[dim-2] = rL/2.0 + y/2.0;
+		dpt[dim-1] = -beta/2.0 + t/2.0;
 
 		loop[k] = p0+dpz+dpt;
 		loop[N/2-1-k] = p0+dpz-dpt;
@@ -258,8 +344,8 @@ for (uint pl=0; pl<Npl; pl++) {
 		loop[N-1-k] = p0-dpz+dpt;
     }
 
-    gsl_spline_free(spline);
-    gsl_interp_accel_free (acc);
+    //gsl_spline_free(spline);
+    //gsl_interp_accel_free (acc);
 
 	cout << "printing to " << file << endl;
 	loop.save(file);
