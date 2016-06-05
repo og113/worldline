@@ -70,7 +70,7 @@ double LIntegrand (double x, void* parameters) {
 	double kappa = params->kappa;
 	if ((E + 2.0 - x - kappa/4.0/PI/x)<0)
 	cerr << "LIntegrand error: sqrt(<0)" << endl;
-	return sqrt(-E + 3.0 - x - kappa/4.0/PI/x)/sqrt(-E + 2.0 - x - kappa/4.0/PI/x);
+	return sqrt(1.0 + 0.25*(2.0 - E - x - kappa/4.0/PI/x))/sqrt(2.0 - E - x - kappa/4.0/PI/x);
 }
 
 double TIntegral (double E, void* parameters) {
