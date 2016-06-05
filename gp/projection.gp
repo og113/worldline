@@ -45,7 +45,7 @@ set ytic auto
 set title "Worldline, projection onto z-t plane"
 set xlabel "z"
 set ylabel "t"
-set xrange [-1:1]
+#set xrange [-1:1]
 #set yrange [-1:1]
 
 colours="blue red green orange cyan pink yellow black"

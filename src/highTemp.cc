@@ -248,8 +248,10 @@ for (uint pl=0; pl<Npl; pl++) {
 		rR = (1.0-E/2.0) + sqrt(pow((1.0-E/2.0),2) - kappa/4.0/PI);
 		params.a = rL;
 		params.b = rR;
-		if (verbose)
+		if (verbose) {
 			cout << "rL = " << rL << ", rR = " << rR << endl;
+			cout << "rHigh = " << sqrt(kappa/4.0/PI) << endl;
+		}
 	}
 	else {
 		beta = TIntegral(E,&params);
@@ -290,7 +292,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	gsl_spline_init (spline, &(t[0]), &(r[0]), N/4);*/
     
     // output
-    number y = rL, yi, ti = 0.0, t = ti;
+    number y = rL, ti = 0.0, t = ti;
     paramsdS2Struct paramsdS2;
     paramsdS2.paramsIntegral = params;
     paramsdS2.E = E;
@@ -300,7 +302,6 @@ for (uint pl=0; pl<Npl; pl++) {
     	/*ti = (beta/2.0)*(number)(k + 0.5)/(number)(N/4.0);
     	ri = gsl_spline_eval(spline, ti, acc); // use if want narrowest part at boundaries
     	//ri = gsl_spline_eval(spline, beta/2.0 - ti, acc); // use if want widest part at boundaries*/
-    	yi = y;
     	ti = t;
     	if (k==0) {
     		paramsdS2.L = L/2.0;
@@ -325,17 +326,12 @@ for (uint pl=0; pl<Npl; pl++) {
 			y = brentRootFinder(&ds2_gsl,yGuess,yMin,yMax,params.tolRel);
     	}
     	
-    	/*---------------------------------------------------------------------------
-    	ERROR: have mixed up y and 2*y. L = int(sqrt(1+(d(y/2)/dt)^2))dt
-    	or L = int(sqrt(1+(d(y/2)/dt)^2)/d(y/2)/dt)d(y/2)
-    	---------------------------------------------------------------------------*/
-    	
     	params.a = rL;
     	params.b = y;
     	
     	t = TIntegral(E,&params);
     	
-    	dpz[dim-2] = rL/2.0 + y/2.0;
+    	dpz[dim-2] = y/2.0;
 		dpt[dim-1] = -beta/2.0 + t/2.0;
 
 		loop[k] = p0+dpz+dpt;
