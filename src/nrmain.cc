@@ -1121,8 +1121,7 @@ for (uint pl=0; pl<Npl; pl++) {
 				cerr << "kinetic:                " << kinetic         << endl;
 				cerr << "i0:                     " << i0              << endl;
 				cerr << "vr:                     " << vr      << endl;
-				if (!checkDelta.good() && !pass)
-					passThrough = true;
+				passThrough = true;
 			}
 	
 		//printing tests to see convergence
