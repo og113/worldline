@@ -59,7 +59,7 @@ double Integrand (double x, void* parameters) {
 	struct paramsIntegrandStruct* params = (struct paramsIntegrandStruct*)parameters;
 	double E = params->E;
 	double kappa = params->kappa;
-	if ((E + 2.0 - x - kappa/4.0/PI/x)<0)
+	if ((-E + 2.0 - x - kappa/4.0/PI/x)<0)
 	cerr << "Integrand error: sqrt(<0)" << endl;
 	return 2.0/sqrt(-E + 2.0 - x - kappa/4.0/PI/x);
 }
@@ -68,7 +68,7 @@ double LIntegrand (double x, void* parameters) {
 	struct paramsIntegrandStruct* params = (struct paramsIntegrandStruct*)parameters;
 	double E = params->E;
 	double kappa = params->kappa;
-	if ((E + 2.0 - x - kappa/4.0/PI/x)<0)
+	if ((-E + 2.0 - x - kappa/4.0/PI/x)<0)
 	cerr << "LIntegrand error: sqrt(<0)" << endl;
 	return sqrt(1.0 + 0.25*(2.0 - E - x - kappa/4.0/PI/x))/sqrt(2.0 - E - x - kappa/4.0/PI/x);
 }
@@ -280,7 +280,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	cout << "a/dr = " << 4.0*L/(number)N/(rR-rL) << endl;
 	cout << "a/rHigh = " << 4.0*L/(number)N/sqrt(kappa/4.0/PI) << endl;
 	
-	/*// getting interpolating function
+	// getting interpolating function
 	vector<number> r(N/4), t(N/4);	
 	for (uint k=0; k<N/4; k++) {
 		r[k] = rL + (rR-rL)*k/(number)(N/4.0-1.0);
@@ -293,21 +293,21 @@ for (uint pl=0; pl<Npl; pl++) {
 	}	
 	gsl_interp_accel *acc = gsl_interp_accel_alloc ();
 	gsl_spline *spline = gsl_spline_alloc (gsl_interp_cspline, N/4);
-	gsl_spline_init (spline, &(t[0]), &(r[0]), N/4);*/
+	gsl_spline_init (spline, &(t[0]), &(r[0]), N/4);
     
     // output
-    number y = rL, ti = 0.0, t = ti;
+    number y = rL, ti = 0.0, tii = ti;
     paramsdS2Struct paramsdS2;
     paramsdS2.paramsIntegral = params;
     paramsdS2.E = E;
     paramsdS2.L = L;
     paramsdS2.M = N/4;
     for (uint k=0; k<N/4; k++) {
-    	/*ti = (beta/2.0)*(number)(k + 0.5)/(number)(N/4.0);
-    	ri = gsl_spline_eval(spline, ti, acc); // use if want narrowest part at boundaries
-    	//ri = gsl_spline_eval(spline, beta/2.0 - ti, acc); // use if want widest part at boundaries*/
-    	ti = t;
-    	if (k==0) {
+    	ti = (beta/2.0)*(number)(k + 0.5)/(number)(N/4.0);
+    	y = gsl_spline_eval(spline, ti, acc); // use if want narrowest part at boundaries
+    	//y = gsl_spline_eval(spline, beta/2.0 - ti, acc); // use if want widest part at boundaries
+    	ti = tii;
+    	/*if (k==0) {
     		paramsdS2.L = L/2.0;
     		paramsdS2.yi = rL;
     		gsl_function ds2_gsl;
@@ -328,15 +328,15 @@ for (uint pl=0; pl<Npl; pl++) {
 			number yMax = rR;
 			number yGuess = y+(rR-rL)*4.0/(number)N;
 			y = brentRootFinder(&ds2_gsl,yGuess,yMin,yMax,params.tolRel);
-    	}
+    	}*/
     	
     	params.a = rL;
     	params.b = y;
     	
-    	t = TIntegral(E,&params);
+    	tii = TIntegral(E,&params);
     	
     	dpz[dim-2] = y/2.0;
-		dpt[dim-1] = -beta/2.0 + t/2.0;
+		dpt[dim-1] = -beta/2.0 + tii/2.0;
 
 		loop[k] = p0+dpz+dpt;
 		loop[N/2-1-k] = p0+dpz-dpt;
@@ -355,3 +355,4 @@ for (uint pl=0; pl<Npl; pl++) {
 
 return 0;
 }
+
