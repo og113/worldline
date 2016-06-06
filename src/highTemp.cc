@@ -251,6 +251,8 @@ for (uint pl=0; pl<Npl; pl++) {
 		if (verbose) {
 			cout << "rL = " << rL << ", rR = " << rR << endl;
 			cout << "rHigh = " << sqrt(kappa/4.0/PI) << endl;
+			cout << "dr/beta = " << (rR-rL)/beta << endl;
+			cout << "rHigh/beta = " << sqrt(kappa/4.0/PI)/beta << endl;
 		}
 	}
 	else {
@@ -275,6 +277,8 @@ for (uint pl=0; pl<Npl; pl++) {
 	gsl_integration_qags (&FL, rL, rR, params.tolAbs, params.tolRel, params.workspace_size, w, &L, &errorL); 
 	gsl_integration_workspace_free (w);
 	cout << "L = " << 4.0*L << endl;
+	cout << "a/dr = " << 4.0*L/(number)N/(rR-rL) << endl;
+	cout << "a/rHigh = " << 4.0*L/(number)N/sqrt(kappa/4.0/PI) << endl;
 	
 	/*// getting interpolating function
 	vector<number> r(N/4), t(N/4);	
