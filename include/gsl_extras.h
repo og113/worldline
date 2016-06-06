@@ -40,6 +40,18 @@ double brentRootFinder(gsl_function * xF, const double & rootGuess, const double
 //function to find a root of function F, given initial guess, and lower and upper bounds, using brent method
 double brentRootFinder(gsl_function * xF, const double & rootGuess, const double & rootLower, const double &rootUpper);
 
+//function to find a root of function F, given initial guess, and lower and upper bounds, using falsepos method
+double falseposRootFinder(gsl_function * xF, const double & rootGuess, const double & rootLower, const double &rootUpper, const double& tol);
+	
+//function to find a root of function F, given initial guess, and lower and upper bounds, using falsepos method
+double falseposRootFinder(gsl_function * xF, const double & rootGuess, const double & rootLower, const double &rootUpper);
+
+//function to find a root of function F, given initial guess, and lower and upper bounds, using bisection method
+double bisectionRootFinder(gsl_function * xF, const double & rootGuess, const double & rootLower, const double &rootUpper, const double& tol);
+	
+//function to find a root of function F, given initial guess, and lower and upper bounds, using bisection method
+double bisectionRootFinder(gsl_function * xF, const double & rootGuess, const double & rootLower, const double &rootUpper);
+
 //function to find the minimum of a gsl function F, given initial guess, and lower and upper bounds, using brent method
 double brentMinimum (gsl_function * xF, const double & minimumGuess, const double & minimumLower, const double & minimumUpper);
 
