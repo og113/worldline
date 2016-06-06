@@ -146,6 +146,7 @@ int main(int argc, char** argv) {
 string inputsFile = "inputs4";
 bool verbose = true;
 bool fixBeta = true;
+bool fixDS = false;
 
 // getting argv
 if (argc % 2 && argc>1) {
@@ -156,6 +157,8 @@ if (argc % 2 && argc>1) {
 		else if (id.compare("verbose")==0) verbose = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("fixT")==0 || id.compare("fixBeta")==0 || id.compare("beta")==0) \
 							fixBeta = (stn<uint>(argv[2*j+2])!=0);
+		else if (id.compare("fixDS")==0 || id.compare("fixDs")==0 || id.compare("fixds")==0) \
+							fixDS = (stn<uint>(argv[2*j+2])!=0);
 		else {
 			cerr << "argv id " << id << " not understood" << endl;
 			return 1;
@@ -196,6 +199,8 @@ for (uint pl=0; pl<Npl; pl++) {
 		cout << "generating finite temperature bounce of ";
 		cout << N << " points in " << dim << " dimensions ";
 		cout << "using non-relativistic approximation" << endl;
+		if (fixDS)
+			cout << "fixing ds^2" << endl;
 	}
 
 /*-------------------------------------------------------------------------------------------------------------------------
@@ -241,19 +246,11 @@ for (uint pl=0; pl<Npl; pl++) {
 		number Emin = 1.0e-7;
 		number Emax = Ethreshold-1.0e-7;
 		number Eguess = (Emax+Emin)/2.0;
-		if (verbose)
-			cout << "Left0 = " << BetaZeroIntegral(Emin,&params) << ", Right0 = " << BetaZeroIntegral(Emax,&params) << endl;
 		E = brentRootFinder(&Beta_gsl,Eguess,Emin,Emax,1.0e-7);
 		rL = (1.0-E/2.0) - sqrt(pow((1.0-E/2.0),2) - kappa/4.0/PI);
 		rR = (1.0-E/2.0) + sqrt(pow((1.0-E/2.0),2) - kappa/4.0/PI);
 		params.a = rL;
 		params.b = rR;
-		if (verbose) {
-			cout << "rL = " << rL << ", rR = " << rR << endl;
-			cout << "rHigh = " << sqrt(kappa/4.0/PI) << endl;
-			cout << "dr/beta = " << (rR-rL)/beta << endl;
-			cout << "rHigh/beta = " << sqrt(kappa/4.0/PI)/beta << endl;
-		}
 	}
 	else {
 		beta = TIntegral(E,&params);
@@ -277,8 +274,12 @@ for (uint pl=0; pl<Npl; pl++) {
 	gsl_integration_qags (&FL, rL, rR, params.tolAbs, params.tolRel, params.workspace_size, w, &L, &errorL); 
 	gsl_integration_workspace_free (w);
 	cout << "L = " << 4.0*L << endl;
-	cout << "a/dr = " << 4.0*L/(number)N/(rR-rL) << endl;
-	cout << "a/rHigh = " << 4.0*L/(number)N/sqrt(kappa/4.0/PI) << endl;
+	if (verbose) {
+		cout << "rL = " << rL << ", rR = " << rR << endl;
+		cout << "need: dx << a << (rR+rL)/2.0" << endl << "      (rR-rL)/2.0 << beta/2.0 < 1" << endl;
+		cout << "have: " << 4.0*L/(number)N << " << " << p.Epsi << " << " << (rR-rL)/2.0;
+		cout << endl << "      " << (rR-rL)/2.0 << " << " << beta/2.0 << " < 1" << endl;
+	}
 	
 	// getting interpolating function
 	vector<number> r(N/4), t(N/4);	
@@ -303,32 +304,37 @@ for (uint pl=0; pl<Npl; pl++) {
     paramsdS2.L = L;
     paramsdS2.M = N/4;
     for (uint k=0; k<N/4; k++) {
-    	ti = (beta/2.0)*(number)(k + 0.5)/(number)(N/4.0);
-    	y = gsl_spline_eval(spline, ti, acc); // use if want narrowest part at boundaries
-    	//y = gsl_spline_eval(spline, beta/2.0 - ti, acc); // use if want widest part at boundaries
-    	ti = tii;
-    	/*if (k==0) {
-    		paramsdS2.L = L/2.0;
-    		paramsdS2.yi = rL;
-    		gsl_function ds2_gsl;
-			ds2_gsl.params = &paramsdS2;
-			ds2_gsl.function = &dS2;
-			number yMin = rL+params.tolRel;
-			number yMax = rR;
-			number yGuess = rL+(rR-rL)*2.0/(number)N;			
-			y = brentRootFinder(&ds2_gsl,yGuess,yMin,yMax,params.tolRel);
+    
+    	if(fixDS) {
+    		if (k==0) {
+				paramsdS2.L = L/2.0;
+				paramsdS2.yi = rL;
+				gsl_function ds2_gsl;
+				ds2_gsl.params = &paramsdS2;
+				ds2_gsl.function = &dS2;
+				number yMin = rL+params.tolRel;
+				number yMax = rR;
+				number yGuess = rL+(rR-rL)*2.0/(number)N;			
+				y = brentRootFinder(&ds2_gsl,yGuess,yMin,yMax,params.tolRel);
+			}
+			else {
+				paramsdS2.L = L;
+				paramsdS2.yi = y;
+				gsl_function ds2_gsl;
+				ds2_gsl.params = &paramsdS2;
+				ds2_gsl.function = &dS2;
+				number yMin = y+params.tolRel;
+				number yMax = rR;
+				number yGuess = y+(rR-rL)*4.0/(number)N;
+				y = brentRootFinder(&ds2_gsl,yGuess,yMin,yMax,params.tolRel);
+			}
     	}
     	else {
-    		paramsdS2.L = L;
-    		paramsdS2.yi = y;
-    		gsl_function ds2_gsl;
-			ds2_gsl.params = &paramsdS2;
-			ds2_gsl.function = &dS2;
-			number yMin = y+params.tolRel;
-			number yMax = rR;
-			number yGuess = y+(rR-rL)*4.0/(number)N;
-			y = brentRootFinder(&ds2_gsl,yGuess,yMin,yMax,params.tolRel);
-    	}*/
+    		ti = (beta/2.0)*(number)(k + 0.5)/(number)(N/4.0);
+			y = gsl_spline_eval(spline, ti, acc); // use if want narrowest part at boundaries
+			//y = gsl_spline_eval(spline, beta/2.0 - ti, acc); // use if want widest part at boundaries
+			ti = tii;
+    	}
     	
     	params.a = rL;
     	params.b = y;
