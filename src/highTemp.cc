@@ -241,8 +241,6 @@ for (uint pl=0; pl<Npl; pl++) {
 		number Emin = 1.0e-7;
 		number Emax = Ethreshold-1.0e-7;
 		number Eguess = (Emax+Emin)/2.0;
-		if (verbose)
-			cout << "Left0 = " << BetaZeroIntegral(Emin,&params) << ", Right0 = " << BetaZeroIntegral(Emax,&params) << endl;
 		E = brentRootFinder(&Beta_gsl,Eguess,Emin,Emax,1.0e-7);
 		rL = (1.0-E/2.0) - sqrt(pow((1.0-E/2.0),2) - kappa/4.0/PI);
 		rR = (1.0-E/2.0) + sqrt(pow((1.0-E/2.0),2) - kappa/4.0/PI);
