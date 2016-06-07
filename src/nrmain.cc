@@ -911,7 +911,7 @@ for (uint pl=0; pl<Npl; pl++) {
 				(early.Extras).push_back(StringPair("weak","1"));
 			if (poto!=PotentialOptions::original || gaussian)
 				(early.Extras).push_back(potExtras);
-			if (poto==PotentialOptions::thermal)
+			if (poto==PotentialOptions::thermal || poto==PotentialOptions::thermalDisjoint)
 				(early.Extras).push_back(StringPair("T",nts(p.T)));
 			if (kino!=KineticOptions::saddle)
 				(early.Extras).push_back(kinExtras);
@@ -1031,7 +1031,7 @@ for (uint pl=0; pl<Npl; pl++) {
 				(early.Extras).push_back(StringPair("weak","1"));
 			if (poto!=PotentialOptions::original || gaussian)
 				(early.Extras).push_back(potExtras);
-			if (poto==PotentialOptions::thermal)
+			if (poto==PotentialOptions::thermal || poto==PotentialOptions::thermalDisjoint)
 				(early.Extras).push_back(StringPair("T",nts(p.T)));
 			if (kino!=KineticOptions::saddle)
 				(early.Extras).push_back(kinExtras);
@@ -1270,7 +1270,7 @@ for (uint pl=0; pl<Npl; pl++) {
 			(loopRes.Extras).push_back(StringPair("weak","1"));
 		if (poto!=PotentialOptions::original || gaussian)
 			(loopRes.Extras).push_back(potExtras);
-		if (poto==PotentialOptions::thermal)
+		if (poto==PotentialOptions::thermal || poto==PotentialOptions::thermalDisjoint)
 			(loopRes.Extras).push_back(StringPair("T",nts(p.T)));
 		if (kino!=KineticOptions::saddle)
 			(loopRes.Extras).push_back(kinExtras);
