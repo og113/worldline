@@ -907,6 +907,14 @@ for (uint pl=0; pl<Npl; pl++) {
 		if (po!=PrintOptions::none) {
 			Filename early = "data/temp/"+timenumber+"xEarly1_K_"+nts(p.K)+"_kappa_"+nts(pow(p.G,3)*p.B)+"_E_"+nts(E)\
 						+"_a_"+nts(p.Epsi)+"_mu_"+nts(p.Mu)+"_run_"+nts(runsCount)+".dat";
+			if (weak)
+				(early.Extras).push_back(StringPair("weak","1"));
+			if (poto!=PotentialOptions::original || gaussian)
+				(early.Extras).push_back(potExtras);
+			if (poto==PotentialOptions::thermal)
+				(early.Extras).push_back(StringPair("T",nts(p.T)));
+			if (kino!=KineticOptions::saddle)
+				(early.Extras).push_back(kinExtras);
 			if (po==PrintOptions::x || po==PrintOptions::all) {
 				printAsLoop(early,dim,x,N*dim);
 				printf("%12s%50s\n","x:",((string)early).c_str());
@@ -948,7 +956,7 @@ for (uint pl=0; pl<Npl; pl++) {
 			checkInv.checkMessage();
 			if (!checkInv.good()) {
 				number x_end = 0.0;
-				uint minCoeff1, maxCoeff1, minCoeff2, maxCoeff2;
+				uint minCoeff1 = 0, maxCoeff1 = 0, minCoeff2 = 0, maxCoeff2 = 0;
 				for (j=0; j<zm; j++)
 					x_end += pow(x[N*dim+j],2);
 				x_end = sqrt(x_end);
@@ -1019,8 +1027,16 @@ for (uint pl=0; pl<Npl; pl++) {
 		if (po!=PrintOptions::none) {
 			Filename early = "data/temp/"+timenumber+"deltaEarly2_K_"+nts(p.K)+"_kappa_"+nts(pow(p.G,3)*p.B)+"_E_"+nts(E)\
 							+"_a_"+nts(p.Epsi)+"_mu_"+nts(p.Mu)+"_run_"+nts(runsCount)+".dat";
+			if (weak)
+				(early.Extras).push_back(StringPair("weak","1"));
+			if (poto!=PotentialOptions::original || gaussian)
+				(early.Extras).push_back(potExtras);
+			if (poto==PotentialOptions::thermal)
+				(early.Extras).push_back(StringPair("T",nts(p.T)));
+			if (kino!=KineticOptions::saddle)
+				(early.Extras).push_back(kinExtras);
 			if (po==PrintOptions::delta || po==PrintOptions::all) {
-				printAsLoop(early,dim,delta,N*dim);
+					printAsLoop(early,dim,delta,N*dim);
 				printf("%12s%50s\n","delta:",((string)early).c_str());
 			}
 		}
@@ -1064,7 +1080,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		checkDelta.checkMessage();
 		if (!checkDelta.good() && !pass) {
 				number x_end = 0.0;
-				uint minCoeff1, maxCoeff1, minCoeff2, maxCoeff2;
+				uint minCoeff1 = 0, maxCoeff1 = 0, minCoeff2 = 0, maxCoeff2 = 0;
 				for (j=0; j<zm; j++)
 					x_end += pow(x[N*dim+j],2);
 				x_end = sqrt(x_end);

@@ -33,7 +33,7 @@ fi
 lTemp=""
 for f in "$@";
 do
-	if ! kflag
+	if ! $kflag
 	then
 		K=$(echo "$@" | sed -n 's/.*K_\([0-9]\+\).*/\1/ p');
 		kflag=true;
