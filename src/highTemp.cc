@@ -277,7 +277,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	if (verbose) {
 		cout << "rL = " << rL << ", rR = " << rR << endl;
 		cout << "need: dx << a << (rR+rL)/2.0" << endl << "      (rR-rL)/2.0 << beta/2.0 < 1" << endl;
-		cout << "have: " << 4.0*L/(number)N << " << " << p.Epsi << " << " << (rR-rL)/2.0;
+		cout << "have: " << 4.0*L/(number)N << " << " << p.Epsi << " << " << (rR+rL)/2.0;
 		cout << endl << "      " << (rR-rL)/2.0 << " << " << beta/2.0 << " < 1" << endl;
 	}
 	
