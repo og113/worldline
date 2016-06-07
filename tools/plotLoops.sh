@@ -5,6 +5,7 @@ gpFile='gp/projection.gp'
 single=false
 oflag=false # is there an outfile?
 mflag=false # do we want to print min or max?
+kflag=false
 K=11
 
 # checking if outFile required and getting filename if so
@@ -15,7 +16,7 @@ do
 	case $option in
 		o  ) o=$OPTARG; oflag=true;;
 		m  ) mflag=true;;
-		K  ) K=$OPTARG;;
+		K  ) kflag=true; K=$OPTARG;;
 		\? ) echo "Unknown option argument -$OPTARG" >&2; exit 1;;
 		:  )
 	esac
@@ -27,10 +28,17 @@ if [ -z "$1" ]
 	then
 	echo "must supply input file";
 fi
+	
 
 lTemp=""
 for f in "$@";
-do 
+do
+	if ! kflag
+	then
+		K=$(echo "$@" | sed -n 's/.*K_\([0-9]\+\).*/\1/ p');
+		kflag=true;
+	fi
+	
 	if [ -e "$f" ] && [ -f "$f" ];
 	then
 		lTemp+="$f ";
