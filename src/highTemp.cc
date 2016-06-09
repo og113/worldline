@@ -280,7 +280,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		cout << "rL = " << rL << ", rR = " << rR << endl;
 		
 	// tolerances
-	number tol1 = 1.0e-6, tol2 = 1.0e-8, tol3 = 1.0e-10;
+	number tol1 = 1.0e-6, tol2 = 1.0e-8, tol3 = 1.0e-10, tol4 = 1.0e-12;
 	
 	// params for integration
 	paramsTotalStruct params;
@@ -300,7 +300,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		number Emin = tol1;
 		number Emax = Ethreshold - tol1;
 		number Eguess = (Emax+Emin)/2.0;
-		E = brentRootFinder(&Beta_gsl,Eguess,Emin,Emax,tol3);
+		E = brentRootFinder(&Beta_gsl,Eguess,Emin,Emax,tol4);
 		rL = (1.0-E/2.0) - sqrt(pow((1.0-E/2.0),2) - kappa/4.0/PI);
 		rR = (1.0-E/2.0) + sqrt(pow((1.0-E/2.0),2) - kappa/4.0/PI);
 		params.E = E;
@@ -329,8 +329,8 @@ for (uint pl=0; pl<Npl; pl++) {
 	cout << "L = " << 4.0*L << endl;
 	if (verbose) {
 		cout << "rL = " << rL << ", rR = " << rR << endl;
-		cout << "need: dx << a << (rR+rL)/2.0" << endl << "      (rR-rL)/2.0 << beta/2.0 < 1" << endl;
-		cout << "have: " << 4.0*L/(number)N << " << " << p.Epsi << " << " << (rR+rL)/2.0;
+		cout << "need: dx << a << rL" << endl << "      (rR-rL)/2.0 << beta/2.0 < 1" << endl;
+		cout << "have: " << 4.0*L/(number)N << " << " << p.Epsi << " << " << rL;
 		cout << endl << "      " << (rR-rL)/2.0 << " << " << beta/2.0 << " < 1" << endl;
 	}
     
@@ -426,7 +426,7 @@ for (uint pl=0; pl<Npl; pl++) {
     			}
     			rMin = params.a;
     			rGuess = (rMin + rMax)/2.0;
-    			zi = 0.5*brentRootFinder(&Lfway_gsl,rGuess,rMin,rMax,MIN_NUMBER);
+    			zi = 0.5*brentRootFinder(&Lfway_gsl,rGuess,rMin,rMax,tol4);
     			params.a = rL;
     			params.b = 2.0*zi;
     			ti = 0.5*( - beta + TIntegral(E,&params));
@@ -439,10 +439,10 @@ for (uint pl=0; pl<Npl; pl++) {
     		params.f *= 0.5;
     	}
     	
-    	// left hand side by inversion (could mirror instead?)
     	for (uint j=0; j<N/2; j++) {
-    		loop[N/2+j] = loop[j];
-    		loop[N/2+j] *= -1.0;
+    		loop[N/2+j] = loop[j]; 
+    		//loop[N/2+j] *= -1.0; // left hand side by inversion
+    		(loop[N/2+j])[dim-2] *= -1.0; // left hand side by mirroring
     	}
     
     }
