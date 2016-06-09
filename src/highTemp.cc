@@ -280,7 +280,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		cout << "rL = " << rL << ", rR = " << rR << endl;
 		
 	// tolerances
-	number tol1 = 1.0e-6, tol2 = 1.0e-8;
+	number tol1 = 1.0e-6, tol2 = 1.0e-8, tol3 = 1.0e-10;
 	
 	// params for integration
 	paramsTotalStruct params;
@@ -300,7 +300,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		number Emin = tol1;
 		number Emax = Ethreshold - tol1;
 		number Eguess = (Emax+Emin)/2.0;
-		E = brentRootFinder(&Beta_gsl,Eguess,Emin,Emax,tol2);
+		E = brentRootFinder(&Beta_gsl,Eguess,Emin,Emax,tol3);
 		rL = (1.0-E/2.0) - sqrt(pow((1.0-E/2.0),2) - kappa/4.0/PI);
 		rR = (1.0-E/2.0) + sqrt(pow((1.0-E/2.0),2) - kappa/4.0/PI);
 		params.E = E;
@@ -323,7 +323,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	FL.function = &LIntegrand;
 	FL.params = &params;
 	number L, errorL;
-	gsl_integration_qags (&FL, rL, rR, params.tolAbs, params.tolRel, params.workspace_size, w, &L, &errorL); 
+	gsl_integration_qags (&FL, rL, rR, params.tolAbs, tol3, params.workspace_size, w, &L, &errorL); 
 	gsl_integration_workspace_free (w);
 	params.L = L;
 	cout << "L = " << 4.0*L << endl;
@@ -409,15 +409,11 @@ for (uint pl=0; pl<Npl; pl++) {
     	loop[M/2] = p0 + dpz;
     	
     	// following steps
-    	int counter = 2;
-    	for (uint r=2; r<J; r++) {
+    	for (uint r=2; r<=J; r++) {
     		for (uint s=0; s<pow(2,r-1); s++) {
     			u = (M/pow(2,r))*2*s;
     			v = (M/pow(2,r))*(2*s+1);
     			w = (M/pow(2,r))*(2*s+2);
-    			
-    			if (v<M/2 && v>M/4)
-    				counter += 0;
     			
     			// loop[v] = halfway between loop[u] and pM or between loop[u] and loop[w]
     			if (v>M/2) {
@@ -430,7 +426,7 @@ for (uint pl=0; pl<Npl; pl++) {
     			}
     			rMin = params.a;
     			rGuess = (rMin + rMax)/2.0;
-    			zi = 0.5*brentRootFinder(&Lfway_gsl,rGuess,rMin,rMax,params.tolRel);
+    			zi = 0.5*brentRootFinder(&Lfway_gsl,rGuess,rMin,rMax,MIN_NUMBER);
     			params.a = rL;
     			params.b = 2.0*zi;
     			ti = 0.5*( - beta + TIntegral(E,&params));
@@ -439,7 +435,6 @@ for (uint pl=0; pl<Npl; pl++) {
     			
     			(loop[v])[dim-2] = zi;
     			(loop[v])[dim-1] = ti;
-    			counter++;
     		}
     		params.f *= 0.5;
     	}
