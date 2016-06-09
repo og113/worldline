@@ -38,35 +38,37 @@ struct paramsTotalStruct {
 	double a;
 	double b;
 	double E;
-	double yi;
+	double L;
 	double f;
 	int workspace_size;
 	number tolAbs;
 	number tolRel;
 };
 
-double Integrand (double x, void* parameters) {
-	struct paramsTotalStruct* params = (struct paramsTotalStruct*)parameters;
-	double E = params->E;
-	double kappa = params->kappa;
-	if ((-E + 2.0 - x - kappa/4.0/PI/x)<0)
-	cerr << "Integrand error: sqrt(<0)" << endl;
+double TIntegrand (double x, void* parameters) {
+	struct paramsTotalStruct params = *((struct paramsTotalStruct*)parameters);
+	double E = params.E;
+	double kappa = params.kappa;
+	if ((-E + 2.0 - x - kappa/4.0/PI/x)<0) {
+		cerr << "TIntegrand error: sqrt(" << (-E + 2.0 - x - kappa/4.0/PI/x) << ")" << endl;
+		cerr << "x = "<<  x << endl;
+	}
 	return 2.0/sqrt(-E + 2.0 - x - kappa/4.0/PI/x);
 }
 
 double TIntegral (double E, void* parameters) {
 	// getting parameters
-	struct paramsTotalStruct* params = (struct paramsTotalStruct*)parameters;
-	double kappa = params->kappa;
-	double a = params->a;
-	double b = params->b;
-	int workspace_size = params->workspace_size;
-	number tolAbs  = params->tolAbs;
-	number tolRel  = params->tolRel;
+	struct paramsTotalStruct params = *((struct paramsTotalStruct*)parameters);
+	params.E = E;
+	number a = params.a;
+	number b = params.b;
+	int workspace_size = params.workspace_size;
+	number tolAbs  = params.tolAbs;
+	number tolRel  = params.tolRel;
 	
 	// calculating other parameters
 	gsl_function F;
-	F.function = &Integrand;
+	F.function = &TIntegrand;
 	F.params = &params;
 	number singularities[2];
 	singularities[0] = a;
@@ -90,34 +92,37 @@ double TIntegral (double E, void* parameters) {
 double BetaZeroIntegral (double E, void* parameters) {
 
 	// getting parameters
-	struct paramsTotalStruct* params = (struct paramsTotalStruct*)parameters;
+	struct paramsTotalStruct params = *((struct paramsTotalStruct*)parameters);
+	number kappa = params.kappa;
+	params.E = E;
 	
 	// fixing endpoints
-	(*params).a = (1.0-E/2.0) - sqrt(pow((1.0-E/2.0),2) - (params->kappa)/4.0/PI);
-	(*params).b = (1.0-E/2.0) + sqrt(pow((1.0-E/2.0),2) - (params->kappa)/4.0/PI);
+	params.a = (1.0-E/2.0) - sqrt(pow((1.0-E/2.0),2) - kappa/4.0/PI);
+	params.b = (1.0-E/2.0) + sqrt(pow((1.0-E/2.0),2) - kappa/4.0/PI);
 	
-	return (TIntegral(E,params) - params->beta);
+	return (TIntegral(E,&params) - params.beta);
 }
 
 double LIntegrand (double x, void* parameters) {
-	struct paramsTotalStruct* params = (struct paramsTotalStruct*)parameters;
-	double E = params->E;
-	double kappa = params->kappa;
-	if ((-E + 2.0 - x - kappa/4.0/PI/x)<0)
-	cerr << "LIntegrand error: sqrt(<0)" << endl;
+	struct paramsTotalStruct params = *((struct paramsTotalStruct*)parameters);
+	double E = params.E;
+	double kappa = params.kappa;
+	if ((-E + 2.0 - x - kappa/4.0/PI/x)<0){
+		cerr << "LIntegrand error: sqrt(" << (-E + 2.0 - x - kappa/4.0/PI/x) << ")" << endl;
+		cerr << "x = " << x << endl;
+	}
 	return sqrt(1.0 + 0.25*(2.0 - E - x - kappa/4.0/PI/x))/sqrt(2.0 - E - x - kappa/4.0/PI/x);
 }
 
 double LIntegral (double x, void* parameters) {
 	// getting parameters
-	struct paramsTotalStruct* params = (struct paramsTotalStruct*)parameters;
-	double kappa = params->kappa;
-	double a = params->a;
-	double E = params->E;
+	struct paramsTotalStruct params = *((struct paramsTotalStruct*)parameters);
+	double a = params.a;
 	double b = x;
-	int workspace_size = params->workspace_size;
-	number tolAbs  = params->tolAbs;
-	number tolRel  = params->tolRel;
+	params.b = b;
+	int workspace_size = params.workspace_size;
+	number tolAbs  = params.tolAbs;
+	number tolRel  = params.tolRel;
 	
 	// getting other parameters
 	gsl_function F;
@@ -145,11 +150,11 @@ double LIntegral (double x, void* parameters) {
 double dS2 (double y, void* parameters) {
 
 	// getting parameters
-	struct paramsTotalStruct* params = (struct paramsTotalStruct*)parameters;
-	double E = params->E;
-	double L = params->L;
-	double yi = params->yi;
-	double f = params->f;
+	struct paramsTotalStruct params = *((struct paramsTotalStruct*)parameters);
+	double E = params.E;
+	double L = params.L;
+	double yi = params.a;
+	double f = params.f;
 	params.b = y;
 	
 	return pow(TIntegral(E,&params)/2.0,2) + pow((y-yi)/2.0,2) - pow(L*f,2);
@@ -158,14 +163,23 @@ double dS2 (double y, void* parameters) {
 double dt2 (double y, void* parameters) {
 
 	// getting parameters
-	struct paramsTotalStruct* params = (struct paramsTotalStruct*)parameters;
-	double E = params->E;
-	double L = params->L;
-	double yi = params->yi;
-	double f = params->f;
+	struct paramsTotalStruct params = *((struct paramsTotalStruct*)parameters);
+	double E = params.E;
+	double L = params.L;
+	double f = params.f;
 	params.b = y;
 	
 	return pow(TIntegral(E,&params)/2.0,2) - pow(L*f,2);
+}
+
+double Lfway (double y, void* parameters) {
+
+	// getting parameters
+	struct paramsTotalStruct params = *((struct paramsTotalStruct*)parameters);
+	double L = params.L;
+	double f = params.f;
+	
+	return LIntegral(y,&params) - f*L;
 }
 
 /*----------------------------------------------------------------------------------------------------------------------------
@@ -178,7 +192,7 @@ int main(int argc, char** argv) {
 string inputsFile = "inputs4";
 bool verbose = true;
 bool fixBeta = true;
-bool fixDS = false;
+bool fixDS = true;
 
 // getting argv
 if (argc % 2 && argc>1) {
@@ -264,6 +278,9 @@ for (uint pl=0; pl<Npl; pl++) {
 	number rR = (1.0-E/2.0) + sqrt(pow((1.0-E/2.0),2) - kappa/4.0/PI);
 	if (verbose && !fixBeta) 
 		cout << "rL = " << rL << ", rR = " << rR << endl;
+		
+	// tolerances
+	number tol1 = 1.0e-6, tol2 = 1.0e-8;
 	
 	// params for integration
 	paramsTotalStruct params;
@@ -273,19 +290,20 @@ for (uint pl=0; pl<Npl; pl++) {
 	params.b = rR;
 	params.workspace_size = 1e5;
 	params.tolAbs = 0.0;
-	params.tolRel = 1.0e-7;
+	params.tolRel = tol2;
 
 	// finding beta or E
 	if (fixBeta) {
 		gsl_function Beta_gsl;
 		Beta_gsl.params = &params;
 		Beta_gsl.function = &BetaZeroIntegral;
-		number Emin = 1.0e-7;
-		number Emax = Ethreshold-1.0e-7;
+		number Emin = tol1;
+		number Emax = Ethreshold - tol1;
 		number Eguess = (Emax+Emin)/2.0;
-		E = brentRootFinder(&Beta_gsl,Eguess,Emin,Emax,1.0e-7);
+		E = brentRootFinder(&Beta_gsl,Eguess,Emin,Emax,tol2);
 		rL = (1.0-E/2.0) - sqrt(pow((1.0-E/2.0),2) - kappa/4.0/PI);
 		rR = (1.0-E/2.0) + sqrt(pow((1.0-E/2.0),2) - kappa/4.0/PI);
+		params.E = E;
 		params.a = rL;
 		params.b = rR;
 	}
@@ -303,7 +321,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	gsl_integration_workspace * w = gsl_integration_workspace_alloc(params.workspace_size);
 	gsl_function FL;
 	FL.function = &LIntegrand;
-	FL.params = &paramsTotalStruct;
+	FL.params = &params;
 	number L, errorL;
 	gsl_integration_qags (&FL, rL, rR, params.tolAbs, params.tolRel, params.workspace_size, w, &L, &errorL); 
 	gsl_integration_workspace_free (w);
@@ -315,159 +333,124 @@ for (uint pl=0; pl<Npl; pl++) {
 		cout << "have: " << 4.0*L/(number)N << " << " << p.Epsi << " << " << (rR+rL)/2.0;
 		cout << endl << "      " << (rR-rL)/2.0 << " << " << beta/2.0 << " < 1" << endl;
 	}
-	
-	// getting interpolating function
-	vector<number> r(N/4), t(N/4);	
-	for (uint k=0; k<N/4; k++) {
-		r[k] = rL + (rR-rL)*k/(number)(N/4.0-1.0);
-		if (k>0) {
-			params.b = r[k];
-			t[k] = TIntegral(E,&params)/2.0;
-		}
-		else
-			t[k] = 0.0;
-	}	
-	gsl_interp_accel *acc = gsl_interp_accel_alloc ();
-	gsl_spline *spline = gsl_spline_alloc (gsl_interp_cspline, N/4);
-	gsl_spline_init (spline, &(t[0]), &(r[0]), N/4);
     
     // output  
-    Point<dim> p0, pM, dpz, dpt;
-    if (!fixDS) { // if not fixing ds2
-    	number y = rL, ti = 0.0, tii = ti;
+    Point<dim> p0, dpz, dpt;
+    if (!fixDS) { //////// if not fixing ds2
+    	
+    	// getting interpolating function
+		vector<number> r(N/4), t(N/4);	
+		for (uint k=0; k<N/4; k++) {
+			r[k] = rL + (rR-rL)*k/(number)(N/4.0-1.0);
+			if (k>0) {
+				params.b = r[k];
+				t[k] = TIntegral(E,&params)/2.0;
+			}
+			else
+				t[k] = 0.0;
+		}	
+		gsl_interp_accel *acc = gsl_interp_accel_alloc ();
+		gsl_spline *spline = gsl_spline_alloc (gsl_interp_cspline, N/4);
+		gsl_spline_init (spline, &(t[0]), &(r[0]), N/4);
+		cout << "generated interpolating function" << endl;
+
+    	number zi = rL, ti = 0.0, tii = ti;
     	for (uint k=0; k<N/4; k++) {
     	
 			ti = (beta/2.0)*(number)(k + 0.5)/(number)(N/4.0);
-			y = gsl_spline_eval(spline, ti, acc); // use if want narrowest part at boundaries
+			zi = 0.5*gsl_spline_eval(spline, ti, acc); // use if want narrowest part at boundaries
 			//y = gsl_spline_eval(spline, beta/2.0 - ti, acc); // use if want widest part at boundaries
 			ti = tii;
 		
 			params.a = rL;
-			params.b = y;
+			params.b = 2.0*zi;
 			
-			tii = TIntegral(E,&params);
+			tii = 0.5*( - beta + TIntegral(E,&params));
 			
-			dpz[dim-2] = y/2.0;
-			dpt[dim-1] = -beta/2.0 + tii/2.0;
+			dpz[dim-2] = zi;
+			dpt[dim-1] = tii;
 
 			loop[k] = p0+dpz+dpt;
 			loop[N/2-1-k] = p0+dpz-dpt;
 			loop[k+N/2] = p0-dpz-dpt;
 			loop[N-1-k] = p0-dpz+dpt;
 		}
+		       
+		gsl_spline_free(spline);
+		gsl_interp_accel_free (acc);
     }
-    else { // output if fixing ds2
+    else { //////// output if fixing ds2
     
+    	// sorting params
+    	params.L = L;
+    	params.f = 0.5;
+    
+    	// integers
     	uint M = N/2;
-    	uint J = K-1;
-    	uint r, s, t;
+    	uint J = p.K-1;
+    	uint u, v, w;
+    	
+    	// numbers
+    	number zi = 0.0, ti = 0.0;
+    	
+    	// for root finding
+    	gsl_function Lfway_gsl;
+		Lfway_gsl.params = &params;
+		Lfway_gsl.function = &Lfway;
+		number rMin, rMax, rGuess;
     
     	// first step
     	dpt[dim-1] = -beta/2.0;
     	dpz[dim-2] = rL/2.0;  // so narrowest part at boundaries
     	loop[0] = p0 + dpt + dpz;
-    	pM = p0 - dpt + dpz;
+    	
+    	// second step
+    	dpz[dim-2] = rR/2.0;
+    	loop[M/2] = p0 + dpz;
     	
     	// following steps
-    	for (uint p=1; p<(J-1); p++) {
-    		for (uint q=0; q<p; q++) {
-    			r = (M/pow(2,p))*2*q;
-    			s = (M/pow(2,p))*(2*q+1);
-    			t = (M/pow(2,p))*(2*q+2);
+    	int counter = 2;
+    	for (uint r=2; r<J; r++) {
+    		for (uint s=0; s<pow(2,r-1); s++) {
+    			u = (M/pow(2,r))*2*s;
+    			v = (M/pow(2,r))*(2*s+1);
+    			w = (M/pow(2,r))*(2*s+2);
     			
-    			if (q==(p-1)) {
-    				// loop[s] = halfway between loop[r] and pM
+    			if (v<M/2 && v>M/4)
+    				counter += 0;
+    			
+    			// loop[v] = halfway between loop[u] and pM or between loop[u] and loop[w]
+    			if (v>M/2) {
+    				params.a = (s==(pow(2,r-1)-1)? rL: 2.0*(loop[w])[dim-2]);
+    				rMax = 2.0*(loop[u])[dim-2];
     			}
     			else {
-    				// loop[s] = halfway between loop[r] and loop[t]
+    				params.a = 2.0*(loop[u])[dim-2];
+    				rMax = 2.0*(loop[w])[dim-2]; 
     			}
+    			rMin = params.a;
+    			rGuess = (rMin + rMax)/2.0;
+    			zi = 0.5*brentRootFinder(&Lfway_gsl,rGuess,rMin,rMax,params.tolRel);
+    			params.a = rL;
+    			params.b = 2.0*zi;
+    			ti = 0.5*( - beta + TIntegral(E,&params));
+    			if (v>M/2)
+    				ti *= -1.0;
     			
+    			(loop[v])[dim-2] = zi;
+    			(loop[v])[dim-1] = ti;
+    			counter++;
     		}
+    		params.f *= 0.5;
     	}
     	
-    	
-    	// left hand side by rotation (or mirroring?)
-    	
+    	// left hand side by inversion (could mirror instead?)
+    	for (uint j=0; j<N/2; j++) {
+    		loop[N/2+j] = loop[j];
+    		loop[N/2+j] *= -1.0;
+    	}
     
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    // output
-    
-    number y = rL, ti = 0.0, tii = ti;
-    paramsdS2Struct paramsdS2;
-    paramsdS2.paramsIntegral = params;
-    paramsdS2.E = E;
-    paramsdS2.L = L;
-    paramsdS2.M = N/4;
-    
-    
-    
-    
-    for (uint k=0; k<N/4; k++) {
-    
-    	if(fixDS) {
-    		/* ####################################################################################################
-    			THE FOLLOWING (FIXDS) NEEDS REDOING
-    		#################################################################################################### */
-    		if (k==0) {
-				paramsdS2.L = L/2.0;
-				paramsdS2.yi = rL;
-				gsl_function ds2_gsl;
-				ds2_gsl.params = &paramsdS2;
-				ds2_gsl.function = &dS2;
-				number yMin = rL+params.tolRel;
-				number yMax = rR;
-				number yGuess = rL+(rR-rL)*2.0/(number)N;			
-				y = brentRootFinder(&ds2_gsl,yGuess,yMin,yMax,params.tolRel);
-			}
-			else {
-				paramsdS2.L = L;
-				paramsdS2.yi = y;
-				gsl_function ds2_gsl;
-				ds2_gsl.params = &paramsdS2;
-				ds2_gsl.function = &dS2;
-				number yMin = y+params.tolRel;
-				number yMax = rR;
-				number yGuess = y+(rR-rL)*4.0/(number)N;
-				y = brentRootFinder(&ds2_gsl,yGuess,yMin,yMax,params.tolRel);
-			}
-    	}
-    	else {
-    		ti = (beta/2.0)*(number)(k + 0.5)/(number)(N/4.0);
-			y = gsl_spline_eval(spline, ti, acc); // use if want narrowest part at boundaries
-			//y = gsl_spline_eval(spline, beta/2.0 - ti, acc); // use if want widest part at boundaries
-			ti = tii;
-    	}
-    	
-    	params.a = rL;
-    	params.b = y;
-    	
-    	tii = TIntegral(E,&params);
-    	
-    	dpz[dim-2] = y/2.0;
-		dpt[dim-1] = -beta/2.0 + tii/2.0;
-
-		loop[k] = p0+dpz+dpt;
-		loop[N/2-1-k] = p0+dpz-dpt;
-		loop[k+N/2] = p0-dpz-dpt;
-		loop[N-1-k] = p0-dpz+dpt;
-    }
-
-    gsl_spline_free(spline);
-    gsl_interp_accel_free (acc);
 
 	cout << "printing to " << file << endl;
 	loop.save(file);
