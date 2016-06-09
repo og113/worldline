@@ -906,7 +906,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		
 		if (po!=PrintOptions::none) {
 			Filename early = "data/temp/"+timenumber+"xEarly1_K_"+nts(p.K)+"_kappa_"+nts(pow(p.G,3)*p.B)+"_E_"+nts(E)\
-						+"_a_"+nts(p.Epsi)+"_mu_"+nts(p.Mu)+"_run_"+nts(runsCount)+".dat";
+						+"_a_"+nts(p.Epsi)+"_mu_"+nts(p.Mu)+".dat";
 			if (weak)
 				(early.Extras).push_back(StringPair("weak","1"));
 			if (poto!=PotentialOptions::original || gaussian)
@@ -915,6 +915,9 @@ for (uint pl=0; pl<Npl; pl++) {
 				(early.Extras).push_back(StringPair("T",nts(p.T)));
 			if (kino!=KineticOptions::saddle)
 				(early.Extras).push_back(kinExtras);
+				
+			(early.Extras).push_back(StringPair("run",nts(runsCount)));
+			
 			if (po==PrintOptions::x || po==PrintOptions::all) {
 				printAsLoop(early,dim,x,N*dim);
 				printf("%12s%50s\n","x:",((string)early).c_str());
@@ -1026,7 +1029,7 @@ for (uint pl=0; pl<Npl; pl++) {
 
 		if (po!=PrintOptions::none) {
 			Filename early = "data/temp/"+timenumber+"deltaEarly2_K_"+nts(p.K)+"_kappa_"+nts(pow(p.G,3)*p.B)+"_E_"+nts(E)\
-							+"_a_"+nts(p.Epsi)+"_mu_"+nts(p.Mu)+"_run_"+nts(runsCount)+".dat";
+							+"_a_"+nts(p.Epsi)+"_mu_"+nts(p.Mu)+".dat";
 			if (weak)
 				(early.Extras).push_back(StringPair("weak","1"));
 			if (poto!=PotentialOptions::original || gaussian)
@@ -1035,6 +1038,9 @@ for (uint pl=0; pl<Npl; pl++) {
 				(early.Extras).push_back(StringPair("T",nts(p.T)));
 			if (kino!=KineticOptions::saddle)
 				(early.Extras).push_back(kinExtras);
+				
+			(early.Extras).push_back(StringPair("run",nts(runsCount)));
+			
 			if (po==PrintOptions::delta || po==PrintOptions::all) {
 					printAsLoop(early,dim,delta,N*dim);
 				printf("%12s%50s\n","delta:",((string)early).c_str());
