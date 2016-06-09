@@ -354,21 +354,19 @@ for (uint pl=0; pl<Npl; pl++) {
 		gsl_spline_init (spline, &(t[0]), &(r[0]), N/4);
 		cout << "generated interpolating function" << endl;
 
-    	number zi = rL, ti = 0.0, tii = ti;
+    	number zi = rL, ti = 0.0;
     	for (uint k=0; k<N/4; k++) {
     	
-			ti = (beta/2.0)*(number)(k + 0.5)/(number)(N/4.0);
+			ti = (beta/2.0)*((number)k + 0.5)/((number)N/4.0);
 			zi = 0.5*gsl_spline_eval(spline, ti, acc); // use if want narrowest part at boundaries
 			//y = gsl_spline_eval(spline, beta/2.0 - ti, acc); // use if want widest part at boundaries
-			ti = tii;
 		
 			params.a = rL;
 			params.b = 2.0*zi;
 			
-			tii = 0.5*( - beta + TIntegral(E,&params));
 			
 			dpz[dim-2] = zi;
-			dpt[dim-1] = tii;
+			dpt[dim-1] = -beta/2.0 + (beta/2.0)*((number)k + 0.5)/((number)N/4.0);
 
 			loop[k] = p0+dpz+dpt;
 			loop[N/2-1-k] = p0+dpz-dpt;
