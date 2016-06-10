@@ -66,6 +66,9 @@ double TIntegral (double E, void* parameters) {
 	number tolAbs  = params.tolAbs;
 	number tolRel  = params.tolRel;
 	
+	if (abs(b-a)<MIN_NUMBER)
+		return 0.0;
+	
 	// calculating other parameters
 	gsl_function F;
 	F.function = &TIntegrand;
@@ -123,6 +126,9 @@ double LIntegral (double x, void* parameters) {
 	int workspace_size = params.workspace_size;
 	number tolAbs  = params.tolAbs;
 	number tolRel  = params.tolRel;
+	
+	if (abs(b-a)<MIN_NUMBER)
+		return 0.0;
 	
 	// getting other parameters
 	gsl_function F;
@@ -412,6 +418,9 @@ for (uint pl=0; pl<Npl; pl++) {
     			u = (M/pow(2,r))*2*s;
     			v = (M/pow(2,r))*(2*s+1);
     			w = (M/pow(2,r))*(2*s+2);
+    			
+    			if (r==J)
+    				u += 0;
     			
     			// loop[v] = halfway between loop[u] and pM or between loop[u] and loop[w]
     			if (v>M/2) {
