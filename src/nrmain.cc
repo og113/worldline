@@ -1172,12 +1172,15 @@ for (uint pl=0; pl<Npl; pl++) {
 			checkJs.checkMessage();
 			checkP3.checkMessage();
 			checkP4.checkMessage();
-			saveVectorAscii("data/temp/Js.dat",Js);
-			printf("%12s%50s\n","Js       :","data/temp/Js.dat");
-			saveVectorAscii("data/temp/P3.dat",P3);
-			printf("%12s%50s\n","P3       :","data/temp/P3.dat");
-			saveVectorAscii("data/temp/P4.dat",P4);
-			printf("%12s%50s\n","P4       :","data/temp/P4.dat");
+			string consFile = "data/temp/"+timenumber+"Js_run_"+nts(runsCount)+".dat";
+			saveVectorAscii(consFile,Js);
+			printf("%12s%50s\n","Js       :",consFile.c_str());
+			consFile = "data/temp/"+timenumber+"P3_run_"+nts(runsCount)+".dat";
+			saveVectorAscii(consFile,P3);
+			printf("%12s%50s\n","P3       :",consFile.c_str());
+			consFile = "data/temp/"+timenumber+"P4_run_"+nts(runsCount)+".dat";
+			saveVectorAscii(consFile,P4);
+			printf("%12s%50s\n","P4       :",consFile.c_str());
 		}
 	
 	}

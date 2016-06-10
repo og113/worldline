@@ -66,6 +66,9 @@ double TIntegral (double E, void* parameters) {
 	number tolAbs  = params.tolAbs;
 	number tolRel  = params.tolRel;
 	
+	if (abs(b-a)<MIN_NUMBER)
+		return 0.0;
+	
 	// calculating other parameters
 	gsl_function F;
 	F.function = &TIntegrand;
@@ -123,6 +126,9 @@ double LIntegral (double x, void* parameters) {
 	int workspace_size = params.workspace_size;
 	number tolAbs  = params.tolAbs;
 	number tolRel  = params.tolRel;
+	
+	if (abs(b-a)<MIN_NUMBER)
+		return 0.0;
 	
 	// getting other parameters
 	gsl_function F;
@@ -280,7 +286,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		cout << "rL = " << rL << ", rR = " << rR << endl;
 		
 	// tolerances
-	number tol1 = 1.0e-6, tol2 = 1.0e-8;
+	number tol1 = 1.0e-6, tol2 = 1.0e-8, tol3 = 1.0e-10, tol4 = 1.0e-12;
 	
 	// params for integration
 	paramsTotalStruct params;
@@ -300,7 +306,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		number Emin = tol1;
 		number Emax = Ethreshold - tol1;
 		number Eguess = (Emax+Emin)/2.0;
-		E = brentRootFinder(&Beta_gsl,Eguess,Emin,Emax,tol2);
+		E = brentRootFinder(&Beta_gsl,Eguess,Emin,Emax,tol4);
 		rL = (1.0-E/2.0) - sqrt(pow((1.0-E/2.0),2) - kappa/4.0/PI);
 		rR = (1.0-E/2.0) + sqrt(pow((1.0-E/2.0),2) - kappa/4.0/PI);
 		params.E = E;
@@ -323,14 +329,14 @@ for (uint pl=0; pl<Npl; pl++) {
 	FL.function = &LIntegrand;
 	FL.params = &params;
 	number L, errorL;
-	gsl_integration_qags (&FL, rL, rR, params.tolAbs, params.tolRel, params.workspace_size, w, &L, &errorL); 
+	gsl_integration_qags (&FL, rL, rR, params.tolAbs, tol3, params.workspace_size, w, &L, &errorL); 
 	gsl_integration_workspace_free (w);
 	params.L = L;
 	cout << "L = " << 4.0*L << endl;
 	if (verbose) {
 		cout << "rL = " << rL << ", rR = " << rR << endl;
-		cout << "need: dx << a << (rR+rL)/2.0" << endl << "      (rR-rL)/2.0 << beta/2.0 < 1" << endl;
-		cout << "have: " << 4.0*L/(number)N << " << " << p.Epsi << " << " << (rR+rL)/2.0;
+		cout << "need: dx << a << rL" << endl << "      (rR-rL)/2.0 << beta/2.0 < 1" << endl;
+		cout << "have: " << 4.0*L/(number)N << " << " << p.Epsi << " << " << rL;
 		cout << endl << "      " << (rR-rL)/2.0 << " << " << beta/2.0 << " < 1" << endl;
 	}
     
@@ -354,21 +360,19 @@ for (uint pl=0; pl<Npl; pl++) {
 		gsl_spline_init (spline, &(t[0]), &(r[0]), N/4);
 		cout << "generated interpolating function" << endl;
 
-    	number zi = rL, ti = 0.0, tii = ti;
+    	number zi = rL, ti = 0.0;
     	for (uint k=0; k<N/4; k++) {
     	
-			ti = (beta/2.0)*(number)(k + 0.5)/(number)(N/4.0);
+			ti = (beta/2.0)*((number)k + 0.5)/((number)N/4.0);
 			zi = 0.5*gsl_spline_eval(spline, ti, acc); // use if want narrowest part at boundaries
 			//y = gsl_spline_eval(spline, beta/2.0 - ti, acc); // use if want widest part at boundaries
-			ti = tii;
 		
 			params.a = rL;
 			params.b = 2.0*zi;
 			
-			tii = 0.5*( - beta + TIntegral(E,&params));
 			
 			dpz[dim-2] = zi;
-			dpt[dim-1] = tii;
+			dpt[dim-1] = -beta/2.0 + (beta/2.0)*((number)k + 0.5)/((number)N/4.0);
 
 			loop[k] = p0+dpz+dpt;
 			loop[N/2-1-k] = p0+dpz-dpt;
@@ -409,15 +413,14 @@ for (uint pl=0; pl<Npl; pl++) {
     	loop[M/2] = p0 + dpz;
     	
     	// following steps
-    	int counter = 2;
-    	for (uint r=2; r<J; r++) {
+    	for (uint r=2; r<=J; r++) {
     		for (uint s=0; s<pow(2,r-1); s++) {
     			u = (M/pow(2,r))*2*s;
     			v = (M/pow(2,r))*(2*s+1);
     			w = (M/pow(2,r))*(2*s+2);
     			
-    			if (v<M/2 && v>M/4)
-    				counter += 0;
+    			if (r==J)
+    				u += 0;
     			
     			// loop[v] = halfway between loop[u] and pM or between loop[u] and loop[w]
     			if (v>M/2) {
@@ -430,7 +433,7 @@ for (uint pl=0; pl<Npl; pl++) {
     			}
     			rMin = params.a;
     			rGuess = (rMin + rMax)/2.0;
-    			zi = 0.5*brentRootFinder(&Lfway_gsl,rGuess,rMin,rMax,params.tolRel);
+    			zi = 0.5*brentRootFinder(&Lfway_gsl,rGuess,rMin,rMax,tol4);
     			params.a = rL;
     			params.b = 2.0*zi;
     			ti = 0.5*( - beta + TIntegral(E,&params));
@@ -439,15 +442,14 @@ for (uint pl=0; pl<Npl; pl++) {
     			
     			(loop[v])[dim-2] = zi;
     			(loop[v])[dim-1] = ti;
-    			counter++;
     		}
     		params.f *= 0.5;
     	}
     	
-    	// left hand side by inversion (could mirror instead?)
     	for (uint j=0; j<N/2; j++) {
-    		loop[N/2+j] = loop[j];
-    		loop[N/2+j] *= -1.0;
+    		loop[N/2+j] = loop[j]; 
+    		//loop[N/2+j] *= -1.0; // left hand side by inversion
+    		(loop[N/2+j])[dim-2] *= -1.0; // left hand side by mirroring
     	}
     
     }
