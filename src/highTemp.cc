@@ -199,6 +199,7 @@ string inputsFile = "inputs4";
 bool verbose = true;
 bool fixBeta = true;
 bool fixDS = true;
+bool printInputs = false;
 
 // getting argv
 if (argc % 2 && argc>1) {
@@ -211,6 +212,7 @@ if (argc % 2 && argc>1) {
 							fixBeta = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("fixDS")==0 || id.compare("fixDs")==0 || id.compare("fixds")==0) \
 							fixDS = (stn<uint>(argv[2*j+2])!=0);
+		else if (id.compare("printInputs")==0) printInputs = (stn<uint>(argv[2*j+2])!=0);
 		else {
 			cerr << "argv id " << id << " not understood" << endl;
 			return 1;
@@ -226,8 +228,9 @@ cout << "using inputs file " << inputsFile << endl;
 
 #define dim 4
 
-ParametersRange pr;
+ParametersRange pr, prOut;
 pr.load(inputsFile);
+prOut = pr;
 Parameters p = pr.Min;
 if (p.empty()) {
 	cerr << "Parameters empty: nothing in inputs file" << endl;
@@ -286,7 +289,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		cout << "rL = " << rL << ", rR = " << rR << endl;
 		
 	// tolerances
-	number tol1 = 1.0e-6, tol2 = 1.0e-8, tol3 = 1.0e-10, tol4 = 1.0e-12;
+	number tol1 = 1.0e-6, tol2 = 1.0e-7, tol3 = 1.0e-10, tol4 = 1.0e-12;
 	
 	// params for integration
 	paramsTotalStruct params;
@@ -339,6 +342,26 @@ for (uint pl=0; pl<Npl; pl++) {
 		cout << "have: " << 4.0*L/(number)N << " << " << p.Epsi << " << " << rL;
 		cout << endl << "      " << (rR-rL)/2.0 << " << " << beta/2.0 << " < 1" << endl;
 	}
+	
+	// printing suitable parameter range for given beta
+	if (fixBeta && printInputs) {
+		string inputsFileOut = "temp/inputsHighTemp_run_" + nts(pl);
+		uint steps = 10;
+		number muchMore = 3.0;
+		number muchmuchMore = 10.0;
+		number kappaMin = 1.0/(4.0*pow(PI,3)*pow(beta,4));
+		prOut.Min = p;
+		prOut.Max = p;
+		fill((prOut.Steps).begin(),(prOut.Steps).end(),0.0);
+		(prOut.Steps)[7] = steps;
+		(prOut.Steps)[9] = steps;
+		(prOut.Min).B = 1.2*kappaMin;
+		(prOut.Max).B = muchmuchMore*1.2*kappaMin; // kappa max is difficult to calculate so just fudging it
+		(prOut.Min).Epsi = muchMore*2.0*beta/(number)N;
+		(prOut.Max).Epsi = sqrt((prOut.Max).B/4.0/PI)/muchMore;
+		prOut.save(inputsFileOut);
+		cout << "saved inputs to: " << inputsFileOut << endl;
+	}	
     
     // output  
     Point<dim> p0, dpz, dpt;
