@@ -996,80 +996,43 @@ for (uint pl=0; pl<Npl; pl++) {
 		// initializing delta
 		vec delta(NT);
 		number normx = x.norm();
+		
+		// solving for delta
 		if (!pass) {
 				
 			// solving for delta = DDS^{-1}*mdS
-			delta = dds.partialPivLu().solve(mds);	
-		
-			//independent check on whether calculation worked		
-			number invError = (dds*delta - mds).norm();
-			checkInv.add(invError);
-			checkInv.checkMessage();
-			if (!checkInv.good()) {
-				number x_end = 0.0;
-				uint minCoeff1 = 0, maxCoeff1 = 0, minCoeff2 = 0, maxCoeff2 = 0;
-				for (j=0; j<zm; j++)
-					x_end += pow(x[N*dim+j],2);
-				x_end = sqrt(x_end);
-				cerr << endl << "x.norm():              " << x.norm() << endl;
-				cerr << "x_end.norm():          " << x_end << endl;
-				cerr << "mds.norm():            " << mds.norm() << endl;
-				number max = mds.maxCoeff(&maxCoeff1);
-				number min = mds.minCoeff(&maxCoeff1);
-				cerr << "mds.minCoeff():         " << min  << endl;
-				cerr << "mds.maxCoeff():         " << max  << endl;
-				cerr << "mds minCoeff  :         " << maxCoeff1 << endl;
-				cerr << "mds maxCoeff  :         " << minCoeff1 << endl;
-				if (-min>max) max = -min;
-				uint largeCounter = 0;
-				for (uint j=0; j<NT; j++) {
-						if (abs(mds(j))>max/2.0)
-							largeCounter++;
-				}
-				cerr << "max/2 counter :         " << largeCounter << endl;
-				cerr << "(mds.tail(zm)).mean(): " << (mds.tail(zm)).mean() << endl;
-				cerr << "(mds.head(N)).mean():  " << (mds.head(N)).mean() << endl;
-				cerr << endl << "delta info:    " << endl;
-				cerr << "delta.norm():          " << delta.norm() << endl;
-				cerr << "delta.maxCoeff():        " << delta.maxCoeff(&maxCoeff1) << endl;
-				cerr << "delta.minCoeff():        " << delta.minCoeff(&minCoeff1) << endl;
-				cerr << "delta maxCoeff  :        " << maxCoeff1 << endl;
-				cerr << "delta minCoeff  :        " << minCoeff1 << endl;
-				cerr << "(delta.tail(zm)).mean(): " << (delta.tail(zm)).mean() << endl;
-				cerr << "(delta.head(N)).mean():  " << (delta.head(N)).mean() << endl;
-				cerr << endl << "dds info:      " << endl;
-				cerr << "dds.determinant():      " << dds.determinant() << endl;
-				cerr << "dds.sum():              " << dds.sum()       << endl;
-				cerr << "dds.prod():             " << dds.prod()      << endl;
-				cerr << "dds.mean():             " << dds.mean()      << endl;
-				max = dds.maxCoeff(&maxCoeff1,&maxCoeff2);
-				min = dds.minCoeff(&maxCoeff1,&maxCoeff2);
-				cerr << "dds.minCoeff():         " << min  << endl;
-				cerr << "dds.maxCoeff():         " << max  << endl;
-				cerr << "dds minCoeff  :         " << "(" << minCoeff1 << "," << minCoeff2 << ")" << endl;
-				cerr << "dds maxCoeff  :         " << "(" << maxCoeff1 << "," << maxCoeff2 << ")" << endl;
-				if (-min>max) max = -min;
-				largeCounter = 0;
-				for (uint j=0; j<NT; j++) {
-					for (uint k=0; k<NT; k++) {
-						if (abs(dds(j,k))>max/2.0)
-							largeCounter++;
-					}
-				}
-				cerr << "max/2 counter :         " << largeCounter << endl;
-				cerr << "dds.trace()   :         " << dds.trace()     << endl;
-				cerr << "dds.norm()    :         " << dds.norm()      << endl;
-				cerr << endl << "action info   :         " << endl;
-				cerr << "s             :         " << s               << endl;
-				cerr << "kinetic       :         " << kinetic         << endl;
-				cerr << "i0            :         " << i0              << endl;
-				cerr << "vr            :         " << vr      << endl;
-				passThrough = true;
-			}
+			delta = dds.partialPivLu().solve(mds);
 			
-			if (alltests) {
-				// check rotation and check mirror of delta
-				number deltaRotationTest = 0.0, deltaMirrorTest = 0.0;
+		}
+		
+/*----------------------------------------------------------------------------------------------------------------------------
+	9 - printing early 2 (delta), checking delta
+----------------------------------------------------------------------------------------------------------------------------*/	
+
+		// printing delta earlt
+		if (po!=PrintOptions::none) {
+			Filename early = "data/temp/"+timenumber+"deltaEarly2_K_"+nts(p.K)+"_kappa_"+nts(pow(p.G,3)*p.B)+"_E_"+nts(E)\
+							+"_a_"+nts(p.Epsi)+"_mu_"+nts(p.Mu)+".dat";
+			if (weak)
+				(early.Extras).push_back(StringPair("weak","1"));
+			if (poto!=PotentialOptions::original || gaussian)
+				(early.Extras).push_back(potExtras);
+			if (poto==PotentialOptions::thermal || poto==PotentialOptions::thermalDisjoint)
+				(early.Extras).push_back(StringPair("T",nts(p.T)));
+			if (kino!=KineticOptions::saddle)
+				(early.Extras).push_back(kinExtras);
+				
+			(early.Extras).push_back(StringPair("run",nts(runsCount)));
+			
+			if (po==PrintOptions::delta || po==PrintOptions::all) {
+					printAsLoop(early,dim,delta,N*dim);
+				printf("%12s%50s\n","delta:",((string)early).c_str());
+			}
+		}		
+		
+		if (!pass && alltests) {
+			// check rotation and check mirror of delta
+			number deltaRotationTest = 0.0, deltaMirrorTest = 0.0;
 			for (uint j=0; j<N/2; j++) {
 				for (uint k=0; k<dim; k++) {
 					if (k==(dim-2)) {
@@ -1092,38 +1055,10 @@ for (uint pl=0; pl<Npl; pl++) {
 					}
 				}
 			}
-				deltaRotationTest /= (delta.squaredNorm()/2.0);
-				deltaMirrorTest /= (delta.squaredNorm()/2.0);
-				checkDeltaRotation.add(sqrt(deltaRotationTest));
-				checkDeltaMirror.add(sqrt(deltaMirrorTest));
-			}
-
-			//assigning values to x
-			x += delta;
-		}
-	
-/*----------------------------------------------------------------------------------------------------------------------------
-	9 - printing early 2
-----------------------------------------------------------------------------------------------------------------------------*/	
-
-		if (po!=PrintOptions::none) {
-			Filename early = "data/temp/"+timenumber+"deltaEarly2_K_"+nts(p.K)+"_kappa_"+nts(pow(p.G,3)*p.B)+"_E_"+nts(E)\
-							+"_a_"+nts(p.Epsi)+"_mu_"+nts(p.Mu)+".dat";
-			if (weak)
-				(early.Extras).push_back(StringPair("weak","1"));
-			if (poto!=PotentialOptions::original || gaussian)
-				(early.Extras).push_back(potExtras);
-			if (poto==PotentialOptions::thermal || poto==PotentialOptions::thermalDisjoint)
-				(early.Extras).push_back(StringPair("T",nts(p.T)));
-			if (kino!=KineticOptions::saddle)
-				(early.Extras).push_back(kinExtras);
-				
-			(early.Extras).push_back(StringPair("run",nts(runsCount)));
-			
-			if (po==PrintOptions::delta || po==PrintOptions::all) {
-					printAsLoop(early,dim,delta,N*dim);
-				printf("%12s%50s\n","delta:",((string)early).c_str());
-			}
+			deltaRotationTest /= (delta.squaredNorm()/2.0);
+			deltaMirrorTest /= (delta.squaredNorm()/2.0);
+			checkDeltaRotation.add(sqrt(deltaRotationTest));
+			checkDeltaMirror.add(sqrt(deltaMirrorTest));
 		}
 
 /*----------------------------------------------------------------------------------------------------------------------------
@@ -1132,20 +1067,14 @@ for (uint pl=0; pl<Npl; pl++) {
 	
 		// calculating norms etc
 		number normmds = mds.norm();
-		number normdelta = delta.norm();
 		uint maxmdspos, minmdspos;
+		number maxdelta = 0.0;
+		uint maxdeltapos = 0;
 		number maxmds = mds.maxCoeff(&maxmdspos);
 		number minmds = mds.minCoeff(&minmdspos);
 		if (-minmds>maxmds) {
 			maxmds = -minmds;
 			maxmdspos = minmdspos;
-		}
-		uint maxdeltapos, mindeltapos;
-		number maxdelta = delta.maxCoeff(&maxdeltapos);
-		number mindelta = delta.minCoeff(&mindeltapos);
-		if (-mindelta>maxdelta) {
-			maxdelta = -mindelta;
-			maxdeltapos = mindeltapos;
 		}
 		number maxx = x.maxCoeff();
 		number minx = x.minCoeff();
@@ -1159,11 +1088,28 @@ for (uint pl=0; pl<Npl; pl++) {
 		checkSol.add(normmds/normx);
 		checkSolMax.add(maxmds/maxx);
 		checkSolZM.add(avgzm/avgnzm);
-		checkDelta.add(normdelta/normx);
 		
-		// checking delta
-		checkDelta.checkMessage();
-		if (!checkDelta.good() && !pass) {
+		
+		if (!pass) {
+			number normdelta = delta.norm();
+			uint mindeltapos;
+			maxdelta = delta.maxCoeff(&maxdeltapos);
+			number mindelta = delta.minCoeff(&mindeltapos);
+			if (-mindelta>maxdelta) {
+				maxdelta = -mindelta;
+				maxdeltapos = mindeltapos;
+			}
+			checkDelta.add(normdelta/normx);
+			
+			// checking delta
+			checkDelta.checkMessage();
+			
+			//independent check on whether calculation worked		
+			number invError = (dds*delta - mds).norm();
+			checkInv.add(invError);
+			checkInv.checkMessage();
+			
+			if (!checkDelta.good() || !checkInv.good()) {
 				number x_end = 0.0;
 				uint minCoeff1 = 0, maxCoeff1 = 0, minCoeff2 = 0, maxCoeff2 = 0;
 				for (j=0; j<zm; j++)
@@ -1224,6 +1170,11 @@ for (uint pl=0; pl<Npl; pl++) {
 				cerr << "vr:                     " << vr      << endl;
 				passThrough = true;
 			}
+			
+			//assigning values to x
+			x += delta;
+			
+		}
 	
 		//printing tests to see convergence
 		if (verbose) {
@@ -1249,9 +1200,11 @@ for (uint pl=0; pl<Npl; pl++) {
 			cout << "position of max mds:   " << maxmdspos << "/" << NT-1 << ", j = " << (uint)(maxmdspos/dim);
 			cout << ", mu = " << maxmdspos%dim << endl;
 			cout << "avg delta:             " << delta.mean() << endl;
-			cout << "max delta:             " << maxdelta << endl;
-			cout << "position of max delta: " << maxdeltapos << "/" << NT-1 << ", j = " << (uint)(maxdeltapos/dim);
-			cout << ", mu = " << maxdeltapos%dim << endl;
+			if (!pass) {
+				cout << "max delta:             " << maxdelta << endl;
+				cout << "position of max delta: " << maxdeltapos << "/" << NT-1 << ", j = " << (uint)(maxdeltapos/dim);
+				cout << ", mu = " << maxdeltapos%dim << endl;
+			}
 		}
 		if (conservation || alltests) {
 			checkJs.checkMessage();
