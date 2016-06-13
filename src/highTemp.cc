@@ -448,8 +448,8 @@ for (uint pl=0; pl<Npl; pl++) {
     	
     	for (uint j=0; j<N/2; j++) {
     		loop[N/2+j] = loop[j]; 
-    		//loop[N/2+j] *= -1.0; // left hand side by inversion
-    		(loop[N/2+j])[dim-2] *= -1.0; // left hand side by mirroring
+    		loop[N/2+j] *= -1.0; // left hand side by inversion
+    		//(loop[N/2+j])[dim-2] *= -1.0; // left hand side by mirroring
     	}
     
     }

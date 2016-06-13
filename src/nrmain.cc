@@ -258,6 +258,12 @@ for (uint pl=0; pl<Npl; pl++) {
 	Check checkJs("Js conservation",1.0e-3);
 	Check checkP3("P3 conservation",1.0e-3);
 	Check checkP4("P4 conservation",1.0e-3);
+	Check checkXMirror("x mirror symmetry",1.0e-8);
+	Check checkXRotation("x rotation symmetry",1.0e-8);
+	Check checkMDSMirror("mds mirror symmetry",1.0e-8);
+	Check checkMDSRotation("mds rotation symmetry",1.0e-8);
+	Check checkDeltaMirror("delta mirror symmetry",1.0e-8);
+	Check checkDeltaRotation("delta rotation symmetry",1.0e-8);
 	
 	// defining scalar quantities
 	number len, i0, s, sm, v, vr, fgamma, gamma, angle_neigh, z, t, ic_max, cc_max, kg_max;
@@ -898,6 +904,48 @@ for (uint pl=0; pl<Npl; pl++) {
 			}
 			checkGamma.add(gamma_ratio-1.0);
 			checkGamma.checkMessage();
+			
+			// check rotation and check mirror
+			number xRotationTest = 0.0, xMirrorTest = 0.0;
+			number mdsRotationTest = 0.0, mdsMirrorTest = 0.0;
+			for (uint j=0; j<N/2; j++) {
+				for (uint k=0; k<dim; k++) {
+					if (k==(dim-2)) {
+						xRotationTest += pow(x(dim*j+k)+x(dim*(N/2+j)+k),2);
+						xMirrorTest += pow(x(dim*j+k)+x(dim*(N-1-j)+k),2);
+						mdsRotationTest += pow(mds(dim*j+k)+mds(dim*(N/2+j)+k),2);
+						mdsMirrorTest += pow(mds(dim*j+k)+mds(dim*(N-1-j)+k),2);
+					}
+					else if (k==(dim-1)) {
+						if (poto!=PotentialOptions::thermalDisjoint) {
+							xRotationTest += pow(x(dim*j+k)+x(dim*(N/2+j)+k),2);
+							xMirrorTest += pow(x(dim*j+k)-x(dim*(N-1-j)+k),2);
+							mdsRotationTest += pow(mds(dim*j+k)+mds(dim*(N/2+j)+k),2);
+							mdsMirrorTest += pow(mds(dim*j+k)-mds(dim*(N-1-j)+k),2);
+						}
+						else {
+							xRotationTest += pow(mod<number>(x(dim*j+k)+x(dim*(N/2+j)+k),-beta/2.0,beta/2.0),2);
+							xMirrorTest += pow(mod<number>(x(dim*j+k)-x(dim*(N-1-j)+k),-beta/2.0,beta/2.0),2);
+							mdsRotationTest += pow(mod<number>(mds(dim*j+k)+mds(dim*(N/2+j)+k),-beta/2.0,beta/2.0),2);
+							mdsMirrorTest += pow(mod<number>(mds(dim*j+k)-mds(dim*(N-1-j)+k),-beta/2.0,beta/2.0),2);
+						}
+					}
+					else {
+						xRotationTest += pow(x(dim*j+k)-x(dim*(N/2+j)+k),2);
+						xMirrorTest += pow(x(dim*j+k)-x(dim*(N-1-j)+k),2);
+						mdsRotationTest += pow(mds(dim*j+k)-mds(dim*(N/2+j)+k),2);
+						mdsMirrorTest += pow(mds(dim*j+k)-mds(dim*(N-1-j)+k),2);
+					}
+				}
+			}
+			xRotationTest /= (xnorm/2.0);
+			xMirrorTest /= (xnorm/2.0);
+			mdsRotationTest /= (mds.squaredNorm()/2.0);
+			mdsMirrorTest /= (mds.squaredNorm()/2.0);
+			checkXRotation.add(sqrt(xRotationTest));
+			checkXMirror.add(sqrt(xMirrorTest));
+			checkMDSRotation.add(sqrt(mdsRotationTest));
+			checkMDSMirror.add(sqrt(mdsMirrorTest));
 		}		
 	
 /*----------------------------------------------------------------------------------------------------------------------------
@@ -1017,6 +1065,37 @@ for (uint pl=0; pl<Npl; pl++) {
 				cerr << "i0            :         " << i0              << endl;
 				cerr << "vr            :         " << vr      << endl;
 				passThrough = true;
+			}
+			
+			if (alltests) {
+				// check rotation and check mirror of delta
+				number deltaRotationTest = 0.0, deltaMirrorTest = 0.0;
+			for (uint j=0; j<N/2; j++) {
+				for (uint k=0; k<dim; k++) {
+					if (k==(dim-2)) {
+						deltaRotationTest += pow(delta(dim*j+k)+delta(dim*(N/2+j)+k),2);
+						deltaMirrorTest += pow(delta(dim*j+k)+delta(dim*(N-1-j)+k),2);
+					}
+					else if (k==(dim-1)) {
+						if (poto!=PotentialOptions::thermalDisjoint) {
+							deltaRotationTest += pow(delta(dim*j+k)+delta(dim*(N/2+j)+k),2);
+							deltaMirrorTest += pow(delta(dim*j+k)-delta(dim*(N-1-j)+k),2);
+						}
+						else {
+							deltaRotationTest += pow(mod<number>(delta(dim*j+k)+delta(dim*(N/2+j)+k),-beta/2.0,beta/2.0),2);
+							deltaMirrorTest += pow(mod<number>(delta(dim*j+k)-delta(dim*(N-1-j)+k),-beta/2.0,beta/2.0),2);
+						}
+					}
+					else {
+						deltaRotationTest += pow(delta(dim*j+k)-delta(dim*(N/2+j)+k),2);
+						deltaMirrorTest += pow(delta(dim*j+k)-delta(dim*(N-1-j)+k),2);
+					}
+				}
+			}
+				deltaRotationTest /= (delta.squaredNorm()/2.0);
+				deltaMirrorTest /= (delta.squaredNorm()/2.0);
+				checkDeltaRotation.add(sqrt(deltaRotationTest));
+				checkDeltaMirror.add(sqrt(deltaMirrorTest));
 			}
 
 			//assigning values to x
@@ -1159,6 +1238,12 @@ for (uint pl=0; pl<Npl; pl++) {
 			checkSolZM.checkMessage();
 			checkKgAMax.checkMessage();
 			checkStraight.checkMessage();
+			checkXRotation.checkMessage();
+			checkXMirror.checkMessage();
+			checkMDSRotation.checkMessage();
+			checkMDSMirror.checkMessage();
+			checkDeltaRotation.checkMessage();
+			checkDeltaMirror.checkMessage();
 			cout << "avg mds:               " << mds.mean() << endl;
 			cout << "max mds:               " << maxmds << endl;
 			cout << "position of max mds:   " << maxmdspos << "/" << NT-1 << ", j = " << (uint)(maxmdspos/dim);
