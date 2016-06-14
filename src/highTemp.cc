@@ -339,8 +339,14 @@ for (uint pl=0; pl<Npl; pl++) {
 	if (verbose) {
 		cout << "rL = " << rL << ", rR = " << rR << endl;
 		cout << "need: dx << a << rL" << endl << "      (rR-rL)/2.0 << beta/2.0 < 1" << endl;
+		cout << "      (rR-rL) << (rR+rL)/2.0" << endl;
+		cout << "      (Ethreshold-E) << beta^2/((rR+rL)/2.0)" << endl;
+		cout << "      (Ethreshold-E) << (rR+rL)/2.0)/4.0" << endl;
 		cout << "have: " << 4.0*L/(number)N << " << " << p.Epsi << " << " << rL;
 		cout << endl << "      " << (rR-rL)/2.0 << " << " << beta/2.0 << " < 1" << endl;
+		cout << "      " << (rR-rL) << " << " << (rR+rL)/2.0 << endl;
+		cout << "      " << (Ethreshold-E) << " << " << pow(beta,2)/((rR+rL)/2.0) << endl;
+		cout << "      " << (Ethreshold-E) << " << " << (rR+rL)/2.0/4.0 << endl;
 	}
 	
 	// printing suitable parameter range for given beta
