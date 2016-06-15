@@ -57,64 +57,70 @@ if (pr.toStep(labelT)) {
 // starting loop
 for (uint pl=0; pl<Npl; pl++) {
 
-	// stepping parameters
-	if (pr.toStep(labelT) && pl>0) {
-		p = pr.position(pl);
-	}
+	bool pass = false;
+	while (!pass) {
+
+		// stepping parameters
+		if (pr.toStep(labelT) && pl>0) {
+			p = pr.position(pl);
+		}
 	
-	string outputsFile_pl = outputsFile + "_T_"+nts(p.T);
+		string outputsFile_pl = outputsFile + "_T_"+nts(p.T);
 	
-	prOut.Min = p;
-	prOut.Max = p;
+		prOut.Min = p;
+		prOut.Max = p;
 
-	number gg = ((prOut.Min).Lambda>1? (prOut.Min).Lambda: 3.0);
-	number T = (prOut.Min).T;
+		number gg = ((prOut.Min).Lambda>1? (prOut.Min).Lambda: 3.0);
+		number T = (prOut.Min).T;
 
-	// steps
-	uint steps = ((prOut.Min).Ng>1? (prOut.Min).Ng: 10);
-	fill((prOut.Steps).begin(),(prOut.Steps).end(),0.0);
-	(prOut.Steps)[7] = steps;
-	(prOut.Steps)[9] = steps;
+		// steps
+		uint steps = ((prOut.Min).Ng>1? (prOut.Min).Ng: 5);
+		fill((prOut.Steps).begin(),(prOut.Steps).end(),0.0);
+		(prOut.Steps)[7] = steps;
+		(prOut.Steps)[9] = steps;
 
-	// kappa
-	number kappaMax = 1.0/(4.0*pow(PI,3)*pow(T,4)); // so that nonrelativistic solution exists
-	number c = 2.22341;
-	number B = c/(2.0*sqrt(2.0)*pow(PI,1.25));
-	number deltaKappa = B*kappaMax/gg; // deltaKappa << B*kappaMax, so that dr<<r (harder than dr<<beta if sqrt(kappa/4.0/PI)<beta)
-	number kappaMin = kappaMax - deltaKappa;
-	(prOut.Min).B = kappaMin;
-	(prOut.Max).B = kappaMax;
-	(prOut.Min).G = 1.0;
-	(prOut.Max).G = 1.0;
+		// kappa
+		number kappaMax = 1.0/(4.0*pow(PI,3)*pow(T,4)); // so that nonrelativistic solution exists
+		number c = 2.22341;
+		number B = c/(2.0*sqrt(2.0)*pow(PI,1.25));
+		number deltaKappa = B*kappaMax/gg; // deltaKappa << B*kappaMax, so that dr<<r (harder than dr<<beta if sqrt(kappa/4.0/PI)<beta)
+		number kappaMin = kappaMax - deltaKappa;
+		(prOut.Min).B = kappaMin;
+		(prOut.Max).B = kappaMax;
+		(prOut.Min).G = 1.0;
+		(prOut.Max).G = 1.0;
 
-	// a
-	number N = pow(2.0,(prOut.Min).K);
-	number dl = (2.0/T)/N;
-	number aMin = gg*dl;
-	number r0Max = sqrt(kappaMax/4.0/PI);
-	number r0Min = sqrt(kappaMin/4.0/PI);
-	number drMax = (pow(PI,1.0/8.0)/pow(2.0,5.0/4.0)/sqrt(c))*pow(kappaMin,3.0/8.0)*sqrt(deltaKappa);
-	//number drMin = 0.0;
-	number aMax = r0Max/gg; // so a<<r (a<<dr is harder but not so obviously necessary)
-	if (aMax<aMin) {
-		cerr << "aMax(" << aMax << ")<aMin(" << aMin << ")" << endl;
-		return 1;
-	}
-	(prOut.Min).Epsi = aMin;
-	(prOut.Max).Epsi = aMax;
+		// a
+		number N = pow(2.0,(prOut.Min).K);
+		number dl = (2.0/T)/N;
+		number aMin = gg*dl;
+		number r0Max = sqrt(kappaMax/4.0/PI);
+		number r0Min = sqrt(kappaMin/4.0/PI);
+		number drMax = (pow(PI,1.0/8.0)/pow(2.0,5.0/4.0)/sqrt(c))*pow(kappaMin,3.0/8.0)*sqrt(deltaKappa);
+		//number drMin = 0.0;
+		number aMax = r0Max/gg; // so a<<r (a<<dr is harder but not so obviously necessary)
+		if (aMax<aMin) {
+			cerr << "aMax(" << aMax << ")<aMin(" << aMin << ")" << endl;
+			pass = true;
+		}
+		(prOut.Min).Epsi = aMin;
+		(prOut.Max).Epsi = aMax;
 
-	// printing parameters to terminal
-	if (verbose) {
-		printf("\n");
-		printf("%14s%14s%14s%14s%14s%14s%14s%14s%14s\n","kappaMin","kappaMax","aMin","aMax","beta","r0Min","r0Max","drMax","dl");
-		printf("%14.5g%14.5g%14.5g%14.5g%14.5g%14.5g%14.5g%14.5g%14.5g\n",\
-			kappaMin,kappaMax,aMin,aMax,1.0/T,r0Min,r0Max,drMax,dl);
-		printf("\n");
-	}
+		// printing parameters to terminal
+		if (verbose && !pass) {
+			printf("\n");
+			printf("%14s%14s%14s%14s%14s%14s%14s%14s%14s\n","kappaMin","kappaMax","aMin","aMax","beta","r0Min","r0Max","drMax","dl");
+			printf("%14.5g%14.5g%14.5g%14.5g%14.5g%14.5g%14.5g%14.5g%14.5g\n",\
+				kappaMin,kappaMax,aMin,aMax,1.0/T,r0Min,r0Max,drMax,dl);
+			printf("\n");
+		}
 
-	prOut.save(outputsFile_pl);
-	if (verbose)
-		printf("%12s%24s\n","outputs: ",outputsFile_pl.c_str());
+		if (!pass)
+			prOut.save(outputsFile_pl);
+		if (verbose && !pass)
+			printf("%12s%24s\n","outputs: ",outputsFile_pl.c_str());
 
+		pass = true;
+		}
 	}
 }
