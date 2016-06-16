@@ -20,6 +20,7 @@ set ylabel "{/Symbol k}"
 set zlabel "a"
 set title "Errors of failed N-R calculations"
 
-splot file using 11:5:7:15 title "dSdx norm" with points pointtype 7 palette
+splot file using 11:5:7:13 title "dSdx norm" with points pointtype 7 palette
+#splot file using 11:5:7:15 title "delta norm" with points pointtype 7 palette
 
 pause -1
