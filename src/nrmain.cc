@@ -66,7 +66,7 @@ bool curvature = false;
 bool conservation = false;
 bool old = true;
 bool gaussian = false;
-bool fixdt = false;
+bool fixdz = false;
 bool mu_a = false;
 bool pass = false;
 bool alltests = false; // doing alltests
@@ -93,7 +93,7 @@ if (argc % 2 && argc>1) {
 		else if (id.compare("gaussian")==0 || id.compare("repulsion")==0) gaussian = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("mu_a")==0) mu_a = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("pass")==0) pass = (stn<uint>(argv[2*j+2])!=0);
-		else if (id.compare("fixdt")==0) fixdt = (stn<uint>(argv[2*j+2])!=0);
+		else if (id.compare("fixdz")==0) fixdz = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("inputs")==0) inputsFile = (string)argv[2*j+2];
 		else if (id.compare("print")==0) printOpts = (string)argv[2*j+2];
 		else if (id.compare("pot")==0 || id.compare("potential")==0) potOpts = (string)argv[2*j+2];
@@ -717,7 +717,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		// lagrange multiplier terms
 		for (j=0; j<N; j++) {
 			for (mu=0; mu<zm; mu++) {	
-				if (mu==(dim-1) && fixdt) {
+				if (mu==(dim-1) && fixdz) {
 					if (j==(N/2-1) || j==(N-1)) {
 						uint nu = dim-2;
 						uint pj = (poto==PotentialOptions::thermalDisjoint? posNeighDisjoint(j,N): posNeigh(j,N));
