@@ -643,7 +643,7 @@ for (uint pl=0; pl<Npl; pl++) {
 						}
 						else if (gaussian) {
 							mdGaussianDisjoint_nr(j, mu, k, xLoop, beta, p.Epsi, repulsion_scale, mds);
-							PGaussianDisjoint_nr(xLoop, j, mu, k, p.Epsi, beta, repulsion_scale, Pmu);
+							PGaussianDisjoint_nr(xLoop, j, mu, k, beta, p.Epsi, repulsion_scale, Pmu);
 						}
 					}
 				
@@ -1009,7 +1009,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	9 - printing early 2 (delta), checking delta
 ----------------------------------------------------------------------------------------------------------------------------*/	
 
-		// printing delta earlt
+		// printing delta early
 		if (po!=PrintOptions::none) {
 			Filename early = "data/temp/"+timenumber+"deltaEarly2_K_"+nts(p.K)+"_kappa_"+nts(pow(p.G,3)*p.B)+"_E_"+nts(E)\
 							+"_a_"+nts(p.Epsi)+"_mu_"+nts(p.Mu)+".dat";

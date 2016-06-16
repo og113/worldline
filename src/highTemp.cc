@@ -272,9 +272,12 @@ for (uint pl=0; pl<Npl; pl++) {
 	
 	// basic parameters
 	number kappa = pow(p.G,3)*p.B;
+	if (verbose)
+		cout << "kappa = " << kappa << endl;
 	number Ethreshold = 2.0*(1.0-sqrt(kappa/4.0/PI));
 	number E = (fixBeta? 1.0: p.P4);
 	number beta = ((p.T)>sqrt(MIN_NUMBER) && fixBeta? 1.0/(p.T): 0.0);
+	number betaMin = sqrt(2.0)*pow(PI,3.0/4.0)*pow(kappa,0.25);
 	if (E>Ethreshold) {
 		cerr << "highTemp error: E(" << E << ") above threshold(" << Ethreshold << ")" << endl;
 		return 1;
@@ -320,8 +323,11 @@ for (uint pl=0; pl<Npl; pl++) {
 		beta = TIntegral(E,&params);
 		params.beta = beta;
 	}
-	if (verbose)
+	if (verbose) {
 		cout << "E = " << E << ", beta = " << beta << endl;
+		cout << "Ethreshold = " << Ethreshold << ", betaMin = " << betaMin << endl;
+		cout << "Ethreshold-E = " << Ethreshold-E << ", (pow(kappa,0.25)/1.11171)*(beta-betaMin) = " << (pow(kappa,0.25)/2.22341)*(beta-betaMin) << endl;
+	}
 
 	file = "data/highTemp/loops/dim_"+nts<uint>(dim)+"/K_"+nts(p.K)+"/highTemp_Kappa_"+nts(kappa)\
 														+"_T_"+nts(1.0/beta)+"_rank_"+nts(0)+".dat";
