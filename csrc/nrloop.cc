@@ -108,7 +108,7 @@ number DDFThermalDtDt(const number& r, const number& t, const number& beta, cons
 // L
 template <uint Dim>
 void L (const uint& j, const Loop<Dim>& l, const number& f, number& result) {
-	uint pos = (j==(l.size()-1)? 0: j+1);
+	uint pos = posNeigh(j,l.size());
 	result += f*Distance(l[pos],l[j]);
 }
 
@@ -122,7 +122,7 @@ void LDisjoint (const uint& j, const Loop<Dim>& l, const number& beta, const num
 // DistPow
 template <uint Dim>
 void DistPow (const uint& j, const Loop<Dim>& l, const number& w, const number& f, number& result) {
-	uint pos = (j==(l.size()-1)? 0: j+1);
+	uint pos = posNeigh(j,l.size());
 	result += f*pow(DistanceSquared(l[pos],l[j]),w/2.0);
 }
 
@@ -143,7 +143,7 @@ void Sm (const uint& j, const Loop<Dim>& l, const number& f, number& result) {
 // S0
 template <uint Dim>
 void S0 (const uint& j, const Loop<Dim>& l, const number& f, number& result) {
-	uint pj = (j==(l.size()-1)? 0: j+1);
+	uint pj = posNeigh(j,l.size());
 	result += f*DistanceSquared(l[pj],l[j])*(number)l.size()/4.0;
 }
 
@@ -1124,31 +1124,27 @@ void ddFGamma_nr(const Loop<Dim>& l, const uint& j, const number& f, mat& m) {
 // PS0_nr
 template<uint Dim>
 void PS0_nr(const Loop<Dim>& l, const uint& loc, const uint& mu, const number& f, vec& v) {
-	number sigma = (loc<l.size()/2 && mu==(Dim-1)? 1.0: -1.0);
-	v[Dim*loc+mu] += sigma*f*DX(l,posNeigh(loc,l.size()),loc,mu)*(number)l.size()/2.0;
+	v[Dim*loc+mu] += f*DX(l,posNeigh(loc,l.size()),loc,mu)*(number)l.size()/2.0;
 }
 
 // PS0Disjoint_nr
 template<uint Dim>
 void PS0Disjoint_nr(const Loop<Dim>& l, const uint& loc, const uint& mu, const number& beta, const number& f, vec& v) {
-	number sigma = (loc<l.size()/2 && mu==(Dim-1)? 1.0: -1.0);
-	v[Dim*loc+mu] += sigma*f*DXDisjoint(l,posNeighDisjoint(loc,l.size()),loc,mu,beta)*(number)l.size()/2.0;
+	v[Dim*loc+mu] += f*DXDisjoint(l,posNeighDisjoint(loc,l.size()),loc,mu,beta)*(number)l.size()/2.0;
 }
 
 // PL_nr
 template<uint Dim>
 void PL_nr(const Loop<Dim>& l, const uint& loc, const uint& mu, const number& f, vec& v) {
 	uint ploc = posNeigh(loc,l.size());
-	number sigma = (loc<l.size()/2 && mu==(Dim-1)? 1.0: -1.0);
-	v[Dim*loc+mu] += sigma*f*DX(l,ploc,loc,mu)/Distance(l[ploc],l[loc]);
+	v[Dim*loc+mu] += f*DX(l,ploc,loc,mu)/Distance(l[ploc],l[loc]);
 }
 
 // PLDisjoint_nr
 template<uint Dim>
 void PLDisjoint_nr(const Loop<Dim>& l, const uint& loc, const uint& mu, const number& beta, const number& f, vec& v) {
 	uint ploc = posNeighDisjoint(loc,l.size());
-	number sigma = (loc<l.size()/2 && mu==(Dim-1)? 1.0: -1.0);
-	v[Dim*loc+mu] += sigma*f*DXDisjoint(l,ploc,loc,mu,beta)/DistanceDisjoint(l[ploc],l[loc],beta);
+	v[Dim*loc+mu] += f*DXDisjoint(l,ploc,loc,mu,beta)/DistanceDisjoint(l[ploc],l[loc],beta);
 }
 
 // PsqrtS0_nr
@@ -1166,11 +1162,12 @@ void PsqrtS0Disjoint_nr(const Loop<Dim>& l, const uint& loc, const uint& mu, con
 // PI0_nr
 template<uint Dim>
 void PI0_nr(const Loop<Dim>& l, const uint& loc, const uint& mu, const number& f, vec& v) {
-	number sigma = (loc<l.size()/2 && mu==(Dim-1)? 1.0: -1.0);
-	if (mu==(Dim-2)) 
-		v[Dim*loc+mu] += - sigma*f*(l[loc])[Dim-1];
+	if (mu==(Dim-2)) {
+		uint nloc = posNeigh(loc,l.size());
+		v[Dim*loc+mu] += -f*(l[nloc])[Dim-1];
+	}
 	else if (mu==(Dim-1))
-		v[Dim*loc+mu] += sigma*f*(l[loc])[Dim-2];
+		v[Dim*loc+mu] += f*(l[loc])[Dim-2];
 }
 
 // PI0Disjoint_nr
@@ -1183,48 +1180,43 @@ void PI0Disjoint_nr(const Loop<Dim>& l, const uint& loc, const uint& mu, const n
 template<uint Dim>
 void PVor_nr(const Loop<Dim>& l, const uint& j, const uint& mu, const uint& k, const number& a, const number& f, vec& v) {
 	uint pk = posNeigh(k,l.size());
-	number sigma = (j<l.size()/2 && mu==(Dim-1)? 1.0: -1.0);
-	v[Dim*j+mu] += sigma*f*2.0*DX(l,pk,k,mu)/(DistanceSquared(l[j],l[k]) + a*a);
+	v[Dim*j+mu] += f*2.0*DX(l,pk,k,mu)/(DistanceSquared(l[j],l[k]) + a*a);
 }
 
 // PVthr_nr
 template<uint Dim>
 void PVthr_nr(const Loop<Dim>& l, const uint& j, const uint& mu, const uint& k, const number& beta, const number& a, const number& f, vec& v) {
 	uint pk = posNeigh(k,l.size());
-	number sigma = (j<l.size()/2 && mu==(Dim-1)? 1.0: -1.0);
 	
 	number r = SpatialDistance(l[j],l[k]);
 	number t = DX(l,k,j,Dim-1);
 
-	v[Dim*j+mu] += sigma*f*(-pow(2.0*PI,2))*2.0*DX(l,pk,k,mu)*FThermal(r,t,beta,a);	
+	v[Dim*j+mu] += f*(-pow(2.0*PI,2))*2.0*DX(l,pk,k,mu)*FThermal(r,t,beta,a);	
 }
 
 // PVthrDisjoint_nr
 template<uint Dim>
 void PVthrDisjoint_nr(const Loop<Dim>& l, const uint& j, const uint& mu, const uint& k, const number& beta, const number& a, const number& f, vec& v) {
 	uint pk = posNeighDisjoint(k,l.size());
-	number sigma = (j<l.size()/2 && mu==(Dim-1)? 1.0: -1.0);
 	
 	number r = SpatialDistance(l[j],l[k]);
 	number t = DXDisjoint(l,k,j,Dim-1,beta);
 
-	v[Dim*j+mu] += sigma*f*(-pow(2.0*PI,2))*2.0*DXDisjoint(l,pk,k,mu,beta)*FThermal(r,t,beta,a);	
+	v[Dim*j+mu] += f*(-pow(2.0*PI,2))*2.0*DXDisjoint(l,pk,k,mu,beta)*FThermal(r,t,beta,a);	
 }
 
 // PGaussian_nr
 template<uint Dim>
 void PGaussian_nr(const Loop<Dim>& l, const uint& j, const uint& mu, const uint& k, const number& a, const number& f, vec& v) {
 	uint pk = posNeigh(k,l.size());
-	number sigma = (j<l.size()/2 && mu==(Dim-1)? 1.0: -1.0);
-	v[Dim*j+mu] += sigma*f*2.0*DX(l,pk,k,mu)*exp(-DistanceSquared(l[j],l[k])/a/a);
+	v[Dim*j+mu] += f*2.0*DX(l,pk,k,mu)*exp(-DistanceSquared(l[j],l[k])/a/a);
 }
 
 // PGaussianDisjoint_nr
 template<uint Dim>
 void PGaussianDisjoint_nr(const Loop<Dim>& l, const uint& j, const uint& mu, const uint& k, const number& beta, const number& a, const number& f, vec& v) {
 	uint pk = posNeighDisjoint(k,l.size());
-	number sigma = (j<l.size()/2 && mu==(Dim-1)? 1.0: -1.0);
-	v[Dim*j+mu] += sigma*f*2.0*DXDisjoint(l,pk,k,mu,beta)*exp(-DistanceSquaredDisjoint(l[j],l[k],beta)/a/a);
+	v[Dim*j+mu] += f*2.0*DXDisjoint(l,pk,k,mu,beta)*exp(-DistanceSquaredDisjoint(l[j],l[k],beta)/a/a);
 }
 
 /*----------------------------------------------------------------------------------------------------------------------------
