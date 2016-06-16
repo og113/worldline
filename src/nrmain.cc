@@ -66,6 +66,7 @@ bool curvature = false;
 bool conservation = false;
 bool old = true;
 bool gaussian = false;
+bool fixdt = false;
 bool mu_a = false;
 bool pass = false;
 bool alltests = false; // doing alltests
@@ -92,6 +93,7 @@ if (argc % 2 && argc>1) {
 		else if (id.compare("gaussian")==0 || id.compare("repulsion")==0) gaussian = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("mu_a")==0) mu_a = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("pass")==0) pass = (stn<uint>(argv[2*j+2])!=0);
+		else if (id.compare("fixdt")==0) fixdt = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("inputs")==0) inputsFile = (string)argv[2*j+2];
 		else if (id.compare("print")==0) printOpts = (string)argv[2*j+2];
 		else if (id.compare("pot")==0 || id.compare("potential")==0) potOpts = (string)argv[2*j+2];
@@ -715,24 +717,33 @@ for (uint pl=0; pl<Npl; pl++) {
 		// lagrange multiplier terms
 		for (j=0; j<N; j++) {
 			for (mu=0; mu<zm; mu++) {	
-				if (poto==PotentialOptions::thermalDisjoint && mu==(zm-1) && false) {
-					uint pj = posNeighDisjoint(j,N);
-					mds(N*dim+mu)  -= -x[j*dim+mu];
-					mds(N*dim+mu)  -= x[pj*dim+mu];
-					mds(j*dim+mu)  -= -x[N*dim+mu];
-					mds(pj*dim+mu) -= x[N*dim+mu];
-				
-					dds(j*dim+mu,N*dim+mu)  += -1.0;
-					dds(pj*dim+mu,N*dim+mu) += 1.0;
-					dds(N*dim+mu,j*dim+mu)  += -1.0;
-					dds(N*dim+mu,pj*dim+mu) += 1.0;
+				if (mu==(dim-1) && fixdt) {
+					if (j==(N/2-1) || j==(N-1)) {
+						uint nu = dim-2;
+						uint pj = (poto==PotentialOptions::thermalDisjoint? posNeighDisjoint(j,N): posNeigh(j,N));
+						uint locj = j*dim+nu, locpj = pj*dim+nu, locz = N*dim+mu;
+						number ds = 1.0/(number)N;
+						mds(locz)  		-= 0.5*pow((x[locpj]-x[locj])/ds,2);
+						mds(locpj)  	-= x[locz]*(x[locpj]-x[locj])/ds/ds;
+						mds(locj)  		-= -x[locz]*(x[locpj]-x[locj])/ds/ds;				
+						
+						dds(locpj,locpj)  	+= x[locz]/ds/ds;
+						dds(locpj,locj)		+= -x[locz]/ds/ds;
+						dds(locj,locj) 		+= x[locz]/ds/ds;
+						dds(locj,locpj)  	+= -x[locz]/ds/ds;
+						dds(locpj,locz)  	+= (x[locpj]-x[locj])/ds/ds;
+						dds(locj,locz)		+= -(x[locpj]-x[locj])/ds/ds;
+						dds(locz,locpj)  	+= (x[locpj]-x[locj])/ds/ds;
+						dds(locz,locj) 		+= -(x[locpj]-x[locj])/ds/ds;
+					}
 				}
 				else {
-					mds(N*dim+mu) -= x[j*dim+mu];
-					mds(j*dim+mu) -= x[N*dim+mu];
+					uint locj = j*dim+mu, locz = N*dim+mu;
+					mds(locz) -= x[locj];
+					mds(locj) -= x[locz];
 				
-					dds(j*dim+mu,N*dim+mu) += 1.0;
-					dds(N*dim+mu,j*dim+mu) += 1.0;
+					dds(locj,locz) += 1.0;
+					dds(locz,locj) += 1.0;
 				}
 			}
 		}
