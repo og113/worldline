@@ -1,0 +1,43 @@
+NOT YET CHECKED:
+	nrloop.cc:
+		sinch
+		coshsinhc
+		coshsinhcc
+		FThermal
+		DFThermalDr
+		DFThermalDrOnr
+		DFThermalDt
+		DDFThermalDrDr
+		DDFThermalDtDr
+		DDFThermalDtDrOnr
+		DDFThermalDtDt
+		CURVATURE STUFF
+	genloop.cc:
+		
+CHECKED:
+	nrloop.cc:
+		LDisjoint
+		S0Disjoint
+		I0Disjoint
+		VthrDisjoint
+		GaussianDisjoint
+		mdLDisjoint_nr
+		ddLDisjoint_nr
+		mdIDisjoint_nr
+		ddIDisjoint_nr
+		mdS0Disjoint_nr
+		ddS0Disjoint_nr
+		mdsqrtS0Disjoint_nr
+		ddsqrtS0Disjoint_nr
+		mdVthrDisjoint_nr
+		ddVthrDisjoint_nr
+		mdGaussianDisjoint_nr
+		ddGaussianDisjoint_nr
+	genloop.cc:
+		posNeighDisjoint
+		negNeighDisjoint
+		DistanceSquaredDisjoint
+		DistanceDisjoint
+		DotDisjoint
+		DXDisjoint
+		S0Disjoint
