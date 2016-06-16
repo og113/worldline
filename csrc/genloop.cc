@@ -827,9 +827,11 @@ number S0 (const Loop<Dim>& l) {
 // S0Disjoint
 template <uint Dim>
 number S0Disjoint (const Loop<Dim>& l, const number& beta) {
-	number result = 0;
+	number result = 0.0;
+	uint pj;
 	for (uint j=0; j<l.size(); j++) {
-		result += DistanceSquaredDisjoint(l[posNeighDisjoint(j,l.size())],l[j],beta);
+		pj = posNeighDisjoint(j,l.size());
+		result += DistanceSquaredDisjoint(l[pj],l[j],beta);
 	}
 	return result*(number)l.size()/4.0;
 }

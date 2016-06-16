@@ -218,9 +218,9 @@ for (uint pl=0; pl<Npl; pl++) {
 	
 	// defining some derived parameters	
 	uint N = pow(2,p.K);
-	uint zm = dim; //////////////////////////////////******************************////////////////////////////////
+	uint zm = dim; //////////////////////////////////
 	uint NT = N*dim+zm;
-	number R = 1.0; //////////////////////////////////******************************////////////////////////////////
+	number R = 1.0; //////////////////////////////////
 	Point<dim> P;
 	P[0] = p.P1;
 	P[1] = p.P2;
@@ -358,7 +358,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	// check if file exists
 	if (!loadFile.exists()) {
 		cerr << "nrmain error: " << loadFile << " doesn't exist" << endl;
-		return 1;
+		continue; ///////// CONTINUE STATEMENT IF FILE DOESN'T EXIST
 	}
 	cout << "loading loops from:" << endl;
 	cout << loadFile << endl;
