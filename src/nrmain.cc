@@ -1275,8 +1275,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	printf("\n");
 	
 	if ((checkDelta.good() && checkSol.good() && checkSolMax.good()) || pass) {
-		// printing results to file	
-		
+		// printing good results to file	
 		string resFile = (pass? "results/nr/nr_pass3.csv":"results/nr/nr3.csv");
 		#define numRes 24
 		vector<string> results(numRes);
@@ -1308,7 +1307,40 @@ for (uint pl=0; pl<Npl; pl++) {
 		results.assign(results_array,results_array+numRes);							
 		saveVectorCsvAppend(resFile,results);
 		printf("%12s%24s\n","results:",resFile.c_str());
-	}	
+	}
+	else {
+		// printing error results to file	
+		string resFile = "results/nr/nr_error3.csv";
+		#define numResErr 22
+		vector<string> results(numResErr);
+		string results_array[numRes] = {timenumber,\
+									nts(pl),\
+									nts((int)poto+(int)gaussian*NumberPotentialOptions),\
+/*									nts((int)kino),\*/
+									nts(p.K),\
+									nts(pow(p.G,3)*p.B,16),\
+									nts(p.Ng),\
+									nts(p.Epsi,16),\
+									nts(p.Mu,16),\
+									nts(p.Lambda,16),\
+									nts(E,16),\
+									nts(p.T,16),\
+									nts(s,16),\
+									nts(checkSol.back(),16),\
+									nts(checkSolMax.back(),16),\
+									nts(checkDelta.back(),16),\
+									nts(checkDX.back(),16),\
+									nts(checkICMax.back(),16),\
+									nts(checkKgAMax.back(),16),\
+									nts(checkCCMax.back(),16),\
+									nts(checkStraight.back(),16),\
+									nts(checkJs.back(),16),\
+									nts(checkP3.back(),16),\
+									nts(checkP4.back(),16)};									
+		results.assign(results_array,results_array+numRes);							
+		saveVectorCsvAppend(resFile,results);
+		printf("%12s%24s\n","results:",resFile.c_str());
+	}
 	
 	if (checkDelta.good() && checkSol.good() && checkSolMax.good()) {		
 		// printing loop to file
