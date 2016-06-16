@@ -1,5 +1,5 @@
 /*
-	quick test of parameters
+	quick program to output suitable ranges for highTemp
 */
 
 #include <iostream>
@@ -15,7 +15,7 @@ int main() {
 // loading parameters
 ParametersRange pr;
 Parameters p;
-pr.load("inputs");
+pr.load("inputs4");
 p = pr.Min;
 
 // parameter loops
