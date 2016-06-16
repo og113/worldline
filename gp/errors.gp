@@ -16,10 +16,10 @@ set xtic auto
 set ytic auto
 set autoscale
 set xlabel "T"
-set ylabel "a"#{/Symbol k}"
-set zlabel "Sol"
+set ylabel "{/Symbol k}"
+set zlabel "a"
 set title "Errors of failed N-R calculations"
 
-plot file using 11:7:13 with points pointtype 7 palette
+splot file using 11:5:7:15 title "dSdx norm" with points pointtype 7 palette
 
 pause -1
