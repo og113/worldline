@@ -427,7 +427,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	// finding action
 	number S = 4.0*S0Integral(E,&params) - E*beta;
 	number Sstraight = 2.0*beta*(1.0 - sqrt(kappa/4.0/PI));
-	cout << "S = " << S << ", Sstraight = " << Sstraight << endl;
+	cout << "S = " << S << ", Sstraight = " << Sstraight << ", Sstraight-S = " << Sstraight - S << endl;
     
     // output  
     Point<dim> p0, dpz, dpt;
