@@ -188,6 +188,55 @@ double Lfway (double y, void* parameters) {
 	return LIntegral(y,&params) - f*L;
 }
 
+double S0Integrand (double x, void* parameters) {
+	struct paramsTotalStruct params = *((struct paramsTotalStruct*)parameters);
+	double E = params.E;
+	double kappa = params.kappa;
+	if ((-E + 2.0 - x - kappa/4.0/PI/x)<0){
+		cerr << "S0Integrand error: sqrt(" << (-E + 2.0 - x - kappa/4.0/PI/x) << ")" << endl;
+		cerr << "x = " << x << endl;
+	}
+	return (2.0 - x - kappa/4.0/PI/x)/sqrt(2.0 - E - x - kappa/4.0/PI/x);
+}
+
+double S0Integral (double E, void* parameters) {
+	// getting parameters
+	struct paramsTotalStruct params = *((struct paramsTotalStruct*)parameters);
+	number kappa = params.kappa;
+	int workspace_size = params.workspace_size;
+	number tolAbs  = params.tolAbs;
+	number tolRel  = params.tolRel;
+	
+	// fixing endpoints
+	params.a = (1.0-E/2.0) - sqrt(pow((1.0-E/2.0),2) - kappa/4.0/PI);
+	params.b = (1.0-E/2.0) + sqrt(pow((1.0-E/2.0),2) - kappa/4.0/PI);
+	
+	if (abs(params.b-params.a)<MIN_NUMBER)
+		return 0.0;
+	
+	// getting other parameters
+	gsl_function F;
+	F.function = &S0Integrand;
+	F.params = &params;
+	number singularities[2];
+	singularities[0] = params.a;
+	singularities[1] = params.b;
+	
+	// initializing workspace
+	gsl_integration_workspace* w = gsl_integration_workspace_alloc(workspace_size);
+	
+	// result
+	number S0, error;
+
+	// finding beta
+	gsl_integration_qagp(&F, singularities, 2, tolAbs, tolRel, workspace_size, w, &S0, &error);
+	
+	// clearing workspace
+	gsl_integration_workspace_free (w);
+	
+	return S0;
+}
+
 /*----------------------------------------------------------------------------------------------------------------------------
 	1. getting argv
 ----------------------------------------------------------------------------------------------------------------------------*/
@@ -373,7 +422,12 @@ for (uint pl=0; pl<Npl; pl++) {
 		(prOut.Max).Epsi = sqrt((prOut.Max).B/4.0/PI)/muchMore;
 		prOut.save(inputsFileOut);
 		cout << "saved inputs to: " << inputsFileOut << endl;
-	}	
+	}
+	
+	// finding action
+	number S = 4.0*S0Integral(E,&params) - E*beta;
+	number Sstraight = 2.0*beta*(1.0 - sqrt(kappa/4.0/PI));
+	cout << "S = " << S << ", Sstraight = " << Sstraight << endl;
     
     // output  
     Point<dim> p0, dpz, dpt;
