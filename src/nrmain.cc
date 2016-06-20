@@ -260,12 +260,12 @@ for (uint pl=0; pl<Npl; pl++) {
 	Check checkJs("Js conservation",1.0e-3);
 	Check checkP3("P3 conservation",1.0e-3);
 	Check checkP4("P4 conservation",1.0e-3);
-	Check checkXMirror("x mirror symmetry",1.0e-8);
-	Check checkXRotation("x rotation symmetry",1.0e-8);
-	Check checkMDSMirror("mds mirror symmetry",1.0e-8);
-	Check checkMDSRotation("mds rotation symmetry",1.0e-8);
-	Check checkDeltaMirror("delta mirror symmetry",1.0e-8);
-	Check checkDeltaRotation("delta rotation symmetry",1.0e-8);
+	Check checkXMirror("x mirror symmetry",1.0e-3);
+	Check checkXRotation("x rotation symmetry",1.0e-3);
+	Check checkMDSMirror("mds mirror symmetry",1.0e-3);
+	Check checkMDSRotation("mds rotation symmetry",1.0e-3);
+	Check checkDeltaMirror("delta mirror symmetry",1.0e-3);
+	Check checkDeltaRotation("delta rotation symmetry",1.0e-3);
 	
 	// defining scalar quantities
 	number len, i0, s, sm, v, vr, fgamma, gamma, angle_neigh, z, t, ic_max, cc_max, kg_max;
@@ -1239,11 +1239,12 @@ for (uint pl=0; pl<Npl; pl++) {
 		mat dds_wlm = dds.block(0,0,dim*N,dim*N); // dds without Lagrange multipliers
 		number eigenTol = 1.0e-16*dim*N;
 		uint negEigs = 0;
+		uint numEigs = 3*dim;
 		cout << "calculating eigendecomposition of dds..." << endl;
 		Eigen::SelfAdjointEigenSolver<mat> eigensolver(dds_wlm);
 		if (eigensolver.info()!=Eigen::Success) abort();
-		cout << "first " << 2*dim << " eigenvalues are: " << endl;
-		for (uint j=0; j<8; j++) {
+		cout << "first " << numEigs << " eigenvalues are: " << endl;
+		for (uint j=0; j<numEigs; j++) {
 			if ((eigensolver.eigenvalues())[j]<-eigenTol)
 				negEigs++;
 			cout << (eigensolver.eigenvalues())[j] << endl;
