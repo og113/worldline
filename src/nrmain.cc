@@ -728,10 +728,12 @@ for (uint pl=0; pl<Npl; pl++) {
 						mds(locj)  		-= -x[locz]/ds;								
 
 						dds(locpj,locz)  	+= 1.0/ds;
+						dds(locz,locpj)  	+= 1.0/ds;
+						dds(locj,locz) 		+= -1.0/ds;
 						dds(locz,locj) 		+= -1.0/ds;
 					}
 				}
-				else {
+				else if (mu<dim){
 					uint locj = j*dim+mu, locz = N*dim+mu;
 					mds(locz) -= x[locj];
 					mds(locj) -= x[locz];
