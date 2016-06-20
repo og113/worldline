@@ -1383,12 +1383,12 @@ for (uint pl=0; pl<Npl; pl++) {
 				(file.Extras).push_back(kinExtras);
 				
 		if (po==PrintOptions::x || po==PrintOptions::all) {
-			saveVectorAscii(file,x);
+			printAsLoop(file,dim,x,N*dim);
 			printf("%12s%50s\n","x:",((string)file).c_str());
 		}
 		else if (po==PrintOptions::mds || po==PrintOptions::all) {
 			file.ID = "mdsEnd";
-			saveVectorAscii(file,mds);
+			printAsLoop(file,dim,x,N*dim);
 			printf("%12s%50s\n","mds:",((string)file).c_str());
 		}
 	}
