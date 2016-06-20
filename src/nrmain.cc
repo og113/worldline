@@ -722,7 +722,7 @@ for (uint pl=0; pl<Npl; pl++) {
 						uint nu = dim-2;
 						uint pj = (poto==PotentialOptions::thermalDisjoint? posNeighDisjoint(j,N): posNeigh(j,N));
 						uint locj = j*dim+nu, locpj = pj*dim+nu, locz = N*dim+mu;
-						number ds = 1.0/(number)N;
+						number ds = 1.0;///(number)N;
 						mds(locz)  		-= (x[locpj]-x[locj])/ds;
 						mds(locpj)  	-= x[locz]/ds;
 						mds(locj)  		-= -x[locz]/ds;								
@@ -1242,11 +1242,11 @@ for (uint pl=0; pl<Npl; pl++) {
 		cout << "calculating eigendecomposition of dds..." << endl;
 		Eigen::SelfAdjointEigenSolver<mat> eigensolver(dds_wlm);
 		if (eigensolver.info()!=Eigen::Success) abort();
-		//cout << "first " << 2*dim << " eigenvalues are: " << endl;
+		cout << "first " << 2*dim << " eigenvalues are: " << endl;
 		for (uint j=0; j<8; j++) {
 			if ((eigensolver.eigenvalues())[j]<-eigenTol)
 				negEigs++;
-			//cout << (eigensolver.eigenvalues())[j] << endl;
+			cout << (eigensolver.eigenvalues())[j] << endl;
 		}
 		cout << negEigs << " negative eigenvalues found, less than " << -eigenTol << endl;
 		string eigenFile = "data/nr/eigenvalues/dim_"+nts(dim)+"/K_"+nts(p.K)+"/eigenvalues_kappa_"+nts(pow(p.G,3)*p.B)+"_E_"+nts(E)+"_a_"+nts(p.Epsi)+"_mu_"+nts(p.Mu)+".dat";
