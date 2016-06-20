@@ -1322,10 +1322,11 @@ for (uint pl=0; pl<Npl; pl++) {
 	else {
 		// printing error results to file	
 		string resFile = "results/nr/nr_error3.csv";
-		#define numResErr 22
+		#define numResErr 23
 		vector<string> results(numResErr);
 		string results_array[numRes] = {timenumber,\
 									nts(pl),\
+									nts(runsCount),\
 									nts((int)poto+(int)gaussian*NumberPotentialOptions),\
 /*									nts((int)kino),\*/
 									nts(p.K),\
@@ -1370,14 +1371,23 @@ for (uint pl=0; pl<Npl; pl++) {
 
 	// printing extras to ascii files
 	if (po!=PrintOptions::none) {
-		Filename file = "data/temp/"+timenumber+"x_K_"+nts(p.K)+"_kappa_"+nts(pow(p.G,3)*p.B)+"_E_"+nts(E)\
-							+"_a_"+nts(p.Epsi)+"_mu_"+nts(p.Mu)+"_run_"+nts(runsCount)+".dat";
+		Filename file = "data/temp/"+timenumber+"xEnd_K_"+nts(p.K)+"_kappa_"+nts(pow(p.G,3)*p.B)+"_E_"+nts(E)\
+							+"_a_"+nts(p.Epsi)+"_mu_"+nts(p.Mu)+".dat";
+			if (weak)
+				(file.Extras).push_back(StringPair("weak","1"));
+			if (poto!=PotentialOptions::original || gaussian)
+				(file.Extras).push_back(potExtras);
+			if (poto==PotentialOptions::thermal || poto==PotentialOptions::thermalDisjoint)
+				(file.Extras).push_back(StringPair("T",nts(p.T)));
+			if (kino!=KineticOptions::saddle)
+				(file.Extras).push_back(kinExtras);
+				
 		if (po==PrintOptions::x || po==PrintOptions::all) {
 			saveVectorAscii(file,x);
 			printf("%12s%50s\n","x:",((string)file).c_str());
 		}
 		else if (po==PrintOptions::mds || po==PrintOptions::all) {
-			file.ID = "mds";
+			file.ID = "mdsEnd";
 			saveVectorAscii(file,mds);
 			printf("%12s%50s\n","mds:",((string)file).c_str());
 		}
