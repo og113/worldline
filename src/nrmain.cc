@@ -1311,10 +1311,11 @@ for (uint pl=0; pl<Npl; pl++) {
 	else {
 		// printing error results to file	
 		string resFile = "results/nr/nr_error3.csv";
-		#define numResErr 22
+		#define numResErr 23
 		vector<string> results(numResErr);
 		string results_array[numRes] = {timenumber,\
 									nts(pl),\
+									nts(runsCount),\
 									nts((int)poto+(int)gaussian*NumberPotentialOptions),\
 /*									nts((int)kino),\*/
 									nts(p.K),\
