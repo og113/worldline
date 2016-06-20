@@ -11,7 +11,7 @@ kflag=false
 K=11
 
 # checking if outFile required and getting filename if so
-options=':o:K:mb'
+options=':o:K:mbc'
 OPTIND=1
 while getopts $options option
 do
@@ -66,7 +66,7 @@ then
 fi
 
 # converting binary to ascii files
-if cflag
+if $cflag
 then
 	mTemp=""
 	for f in $l;

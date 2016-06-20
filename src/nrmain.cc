@@ -220,7 +220,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	
 	// defining some derived parameters	
 	uint N = pow(2,p.K);
-	uint zm = dim; //////////////////////////////////
+	uint zm = (poto!=PotentialOptions::thermalDisjoint? dim: dim+1) ; //////////////////////////////////
 	uint NT = N*dim+zm;
 	number R = 1.0; //////////////////////////////////
 	Point<dim> P;
@@ -717,24 +717,18 @@ for (uint pl=0; pl<Npl; pl++) {
 		// lagrange multiplier terms
 		for (j=0; j<N; j++) {
 			for (mu=0; mu<zm; mu++) {	
-				if (mu==(dim-1) && fixdz) {
-					if (j==(N/2-1) || j==(N-1)) {
+				if (mu>=(dim-1) && fixdz) {
+					if ( (mu==(dim-1) && j==(N/2-1)) || (mu==dim && j==(N-1)) ) {
 						uint nu = dim-2;
 						uint pj = (poto==PotentialOptions::thermalDisjoint? posNeighDisjoint(j,N): posNeigh(j,N));
 						uint locj = j*dim+nu, locpj = pj*dim+nu, locz = N*dim+mu;
 						number ds = 1.0/(number)N;
-						mds(locz)  		-= 0.5*pow((x[locpj]-x[locj])/ds,2);
-						mds(locpj)  	-= x[locz]*(x[locpj]-x[locj])/ds/ds;
-						mds(locj)  		-= -x[locz]*(x[locpj]-x[locj])/ds/ds;				
-						
-						dds(locpj,locpj)  	+= x[locz]/ds/ds;
-						dds(locpj,locj)		+= -x[locz]/ds/ds;
-						dds(locj,locj) 		+= x[locz]/ds/ds;
-						dds(locj,locpj)  	+= -x[locz]/ds/ds;
-						dds(locpj,locz)  	+= (x[locpj]-x[locj])/ds/ds;
-						dds(locj,locz)		+= -(x[locpj]-x[locj])/ds/ds;
-						dds(locz,locpj)  	+= (x[locpj]-x[locj])/ds/ds;
-						dds(locz,locj) 		+= -(x[locpj]-x[locj])/ds/ds;
+						mds(locz)  		-= (x[locpj]-x[locj])/ds;
+						mds(locpj)  	-= x[locz]/ds;
+						mds(locj)  		-= -x[locz]/ds;								
+
+						dds(locpj,locz)  	+= 1.0/ds;
+						dds(locz,locj) 		+= -1.0/ds;
 					}
 				}
 				else {
