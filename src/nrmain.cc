@@ -715,16 +715,21 @@ for (uint pl=0; pl<Npl; pl++) {
 		}
 		
 		// lagrange multiplier terms
-		for (j=0; j<N; j++) {
-			for (mu=0; mu<zm; mu++) {	
+		for (mu=0; mu<zm; mu++) {
+			for (j=0; j<N; j++) {	
 				if (mu>=(dim-1) && fixdz) {
 					if ( (mu==(dim-1) && j==(N/2-1)) || (mu==dim && j==(N-1)) ) {
 						uint nu = dim-2;
 						uint pj = (poto==PotentialOptions::thermalDisjoint? posNeighDisjoint(j,N): posNeigh(j,N));
 						uint locj = j*dim+nu, locpj = pj*dim+nu, locz = N*dim+mu;
-						number ds = 1.0/(number)N;
+						cout << "j = " << j << endl;
+						cout << "pj = " << pj << endl;
+						cout << "x[locpj] = " << x[locpj] << endl;
+						cout << "x[locj] = " << x[locj] << endl;
+						cout << "x[locz] = " << x[locz] << endl;
+						number ds = 1.0;///(number)N; // using N makes mds large here
 						mds(locz)  		-= (x[locpj]-x[locj])/ds;
-						mds(locpj)  	-= x[locz]/ds;
+						mds(locpj)  		-= x[locz]/ds;
 						mds(locj)  		-= -x[locz]/ds;								
 
 						dds(locpj,locz)  	+= 1.0/ds;
