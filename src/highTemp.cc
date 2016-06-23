@@ -397,11 +397,13 @@ for (uint pl=0; pl<Npl; pl++) {
 		cout << "      (rR-rL) << (rR+rL)/2.0" << endl;
 		cout << "      (Ethreshold-E) << beta^2/((rR+rL)/2.0)" << endl;
 		cout << "      (Ethreshold-E) << (rR+rL)/2.0)/4.0" << endl;
+		cout << "      kappa > beta^6/pi^3" << endl;
 		cout << "have: " << 4.0*L/(number)N << " << " << p.Epsi << " << " << rL;
 		cout << endl << "      " << (rR-rL)/2.0 << " << " << beta/2.0 << " < 1" << endl;
 		cout << "      " << (rR-rL) << " << " << (rR+rL)/2.0 << endl;
 		cout << "      " << (Ethreshold-E) << " << " << pow(beta,2)/((rR+rL)/2.0) << endl;
 		cout << "      " << (Ethreshold-E) << " << " << (rR+rL)/2.0/4.0 << endl;
+		cout << "      " << kappa << " > " << pow(beta,6)/pow(PI,3) << endl;
 	}
 	
 	// printing suitable parameter range for given beta
