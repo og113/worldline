@@ -715,16 +715,16 @@ for (uint pl=0; pl<Npl; pl++) {
 		}
 		
 		// lagrange multiplier terms
-		for (j=0; j<N; j++) {
-			for (mu=0; mu<zm; mu++) {	
+		for (mu=0; mu<zm; mu++) {
+			for (j=0; j<N; j++) {	
 				if (mu>=(dim-1) && fixdz) {
 					if ( (mu==(dim-1) && j==(N/2-1)) || (mu==dim && j==(N-1)) ) {
 						uint nu = dim-2;
 						uint pj = (poto==PotentialOptions::thermalDisjoint? posNeighDisjoint(j,N): posNeigh(j,N));
 						uint locj = j*dim+nu, locpj = pj*dim+nu, locz = N*dim+mu;
-						number ds = 1.0;///(number)N;
+						number ds = 1.0;///(number)N; // using N makes mds large here
 						mds(locz)  		-= (x[locpj]-x[locj])/ds;
-						mds(locpj)  	-= x[locz]/ds;
+						mds(locpj)  		-= x[locz]/ds;
 						mds(locj)  		-= -x[locz]/ds;								
 
 						dds(locpj,locz)  	+= 1.0/ds;
@@ -1237,22 +1237,27 @@ for (uint pl=0; pl<Npl; pl++) {
 	// eigenvalues, if required
 	if (eigen) {
 		mat dds_wlm = dds.block(0,0,dim*N,dim*N); // dds without Lagrange multipliers
-		number eigenTol = 1.0e-16*dim*N;
+		number eigenTol = 1.0e-16*pow(dim*N,2);
 		uint negEigs = 0;
 		uint numEigs = 3*dim;
 		cout << "calculating eigendecomposition of dds..." << endl;
 		Eigen::SelfAdjointEigenSolver<mat> eigensolver(dds_wlm);
 		if (eigensolver.info()!=Eigen::Success) abort();
+		Filename eigenFile = "data/nr/eigenvalues/dim_"+nts(dim)+"/K_"+nts(p.K)+"/"+timenumber+"eigenvalues_pl_"+nts(pl)\
+				+"_run_"+nts(runsCount)+".dat";
+		saveVectorBinary(eigenFile,eigensolver.eigenvalues());
+		printf("%12s%50s\n","eigenvalues:",((string)eigenFile).c_str());
 		cout << "first " << numEigs << " eigenvalues are: " << endl;
 		for (uint j=0; j<numEigs; j++) {
 			if ((eigensolver.eigenvalues())[j]<-eigenTol)
 				negEigs++;
 			cout << (eigensolver.eigenvalues())[j] << endl;
+			eigenFile.ID = "eigenvector"+nts(j);
+			saveVectorBinary(eigenFile,(Eigen::VectorXd)((eigensolver.eigenvectors()).col(j)));
 		}
 		cout << negEigs << " negative eigenvalues found, less than " << -eigenTol << endl;
-		string eigenFile = "data/nr/eigenvalues/dim_"+nts(dim)+"/K_"+nts(p.K)+"/eigenvalues_kappa_"+nts(pow(p.G,3)*p.B)+"_E_"+nts(E)+"_a_"+nts(p.Epsi)+"_mu_"+nts(p.Mu)+".dat";
-		saveVectorBinary(eigenFile,eigensolver.eigenvalues());
-		printf("%12s%50s\n","eigenvalues:",((string)eigenFile).c_str());
+		
+		printf("%12s%50s\n","eigenvectors:",((string)eigenFile).c_str());
 	}
 	
 	// curvature, if required
