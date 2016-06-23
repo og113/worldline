@@ -260,12 +260,12 @@ for (uint pl=0; pl<Npl; pl++) {
 	Check checkJs("Js conservation",1.0e-3);
 	Check checkP3("P3 conservation",1.0e-3);
 	Check checkP4("P4 conservation",1.0e-3);
-	Check checkXMirror("x mirror symmetry",1.0e-8);
-	Check checkXRotation("x rotation symmetry",1.0e-8);
-	Check checkMDSMirror("mds mirror symmetry",1.0e-8);
-	Check checkMDSRotation("mds rotation symmetry",1.0e-8);
-	Check checkDeltaMirror("delta mirror symmetry",1.0e-8);
-	Check checkDeltaRotation("delta rotation symmetry",1.0e-8);
+	Check checkXMirror("x mirror symmetry",1.0e-3);
+	Check checkXRotation("x rotation symmetry",1.0e-3);
+	Check checkMDSMirror("mds mirror symmetry",1.0e-3);
+	Check checkMDSRotation("mds rotation symmetry",1.0e-3);
+	Check checkDeltaMirror("delta mirror symmetry",1.0e-3);
+	Check checkDeltaRotation("delta rotation symmetry",1.0e-3);
 	
 	// defining scalar quantities
 	number len, i0, s, sm, v, vr, fgamma, gamma, angle_neigh, z, t, ic_max, cc_max, kg_max;
@@ -1237,21 +1237,27 @@ for (uint pl=0; pl<Npl; pl++) {
 	// eigenvalues, if required
 	if (eigen) {
 		mat dds_wlm = dds.block(0,0,dim*N,dim*N); // dds without Lagrange multipliers
-		number eigenTol = 1.0e-16*dim*N;
+		number eigenTol = 1.0e-16*pow(dim*N,2);
 		uint negEigs = 0;
+		uint numEigs = 3*dim;
 		cout << "calculating eigendecomposition of dds..." << endl;
 		Eigen::SelfAdjointEigenSolver<mat> eigensolver(dds_wlm);
 		if (eigensolver.info()!=Eigen::Success) abort();
-		cout << "first " << 2*dim << " eigenvalues are: " << endl;
-		for (uint j=0; j<8; j++) {
+		Filename eigenFile = "data/nr/eigenvalues/dim_"+nts(dim)+"/K_"+nts(p.K)+"/"+timenumber+"eigenvalues_pl_"+nts(pl)\
+				+"_run_"+nts(runsCount)+".dat";
+		saveVectorBinary(eigenFile,eigensolver.eigenvalues());
+		printf("%12s%50s\n","eigenvalues:",((string)eigenFile).c_str());
+		cout << "first " << numEigs << " eigenvalues are: " << endl;
+		for (uint j=0; j<numEigs; j++) {
 			if ((eigensolver.eigenvalues())[j]<-eigenTol)
 				negEigs++;
 			cout << (eigensolver.eigenvalues())[j] << endl;
+			eigenFile.ID = "eigenvector"+nts(j);
+			saveVectorBinary(eigenFile,(Eigen::VectorXd)((eigensolver.eigenvectors()).col(j)));
 		}
 		cout << negEigs << " negative eigenvalues found, less than " << -eigenTol << endl;
-		string eigenFile = "data/nr/eigenvalues/dim_"+nts(dim)+"/K_"+nts(p.K)+"/eigenvalues_kappa_"+nts(pow(p.G,3)*p.B)+"_E_"+nts(E)+"_a_"+nts(p.Epsi)+"_mu_"+nts(p.Mu)+".dat";
-		saveVectorBinary(eigenFile,eigensolver.eigenvalues());
-		printf("%12s%50s\n","eigenvalues:",((string)eigenFile).c_str());
+		
+		printf("%12s%50s\n","eigenvectors:",((string)eigenFile).c_str());
 	}
 	
 	// curvature, if required
