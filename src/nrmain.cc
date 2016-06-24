@@ -220,7 +220,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	
 	// defining some derived parameters	
 	uint N = pow(2,p.K);
-	uint zm = dim; //////////////////////////////////
+	uint zm = (poto!=PotentialOptions::thermalDisjoint? dim: dim+1) ; //////////////////////////////////
 	uint NT = N*dim+zm;
 	number R = 1.0; //////////////////////////////////
 	Point<dim> P;
@@ -260,12 +260,12 @@ for (uint pl=0; pl<Npl; pl++) {
 	Check checkJs("Js conservation",1.0e-3);
 	Check checkP3("P3 conservation",1.0e-3);
 	Check checkP4("P4 conservation",1.0e-3);
-	Check checkXMirror("x mirror symmetry",1.0e-8);
-	Check checkXRotation("x rotation symmetry",1.0e-8);
-	Check checkMDSMirror("mds mirror symmetry",1.0e-8);
-	Check checkMDSRotation("mds rotation symmetry",1.0e-8);
-	Check checkDeltaMirror("delta mirror symmetry",1.0e-8);
-	Check checkDeltaRotation("delta rotation symmetry",1.0e-8);
+	Check checkXMirror("x mirror symmetry",1.0e-3);
+	Check checkXRotation("x rotation symmetry",1.0e-3);
+	Check checkMDSMirror("mds mirror symmetry",1.0e-3);
+	Check checkMDSRotation("mds rotation symmetry",1.0e-3);
+	Check checkDeltaMirror("delta mirror symmetry",1.0e-3);
+	Check checkDeltaRotation("delta rotation symmetry",1.0e-3);
 	
 	// defining scalar quantities
 	number len, i0, s, sm, v, vr, fgamma, gamma, angle_neigh, z, t, ic_max, cc_max, kg_max;
@@ -715,29 +715,25 @@ for (uint pl=0; pl<Npl; pl++) {
 		}
 		
 		// lagrange multiplier terms
-		for (j=0; j<N; j++) {
-			for (mu=0; mu<zm; mu++) {	
-				if (mu==(dim-1) && fixdz) {
-					if (j==(N/2-1) || j==(N-1)) {
+		for (mu=0; mu<zm; mu++) {
+			for (j=0; j<N; j++) {	
+				if (mu>=(dim-1) && fixdz) {
+					if ( (mu==(dim-1) && j==(N/2-1)) || (mu==dim && j==(N-1)) ) {
 						uint nu = dim-2;
 						uint pj = (poto==PotentialOptions::thermalDisjoint? posNeighDisjoint(j,N): posNeigh(j,N));
 						uint locj = j*dim+nu, locpj = pj*dim+nu, locz = N*dim+mu;
-						number ds = 1.0/(number)N;
-						mds(locz)  		-= 0.5*pow((x[locpj]-x[locj])/ds,2);
-						mds(locpj)  	-= x[locz]*(x[locpj]-x[locj])/ds/ds;
-						mds(locj)  		-= -x[locz]*(x[locpj]-x[locj])/ds/ds;				
-						
-						dds(locpj,locpj)  	+= x[locz]/ds/ds;
-						dds(locpj,locj)		+= -x[locz]/ds/ds;
-						dds(locj,locj) 		+= x[locz]/ds/ds;
-						dds(locj,locpj)  	+= -x[locz]/ds/ds;
-						dds(locpj,locz)  	+= (x[locpj]-x[locj])/ds/ds;
-						dds(locj,locz)		+= -(x[locpj]-x[locj])/ds/ds;
-						dds(locz,locpj)  	+= (x[locpj]-x[locj])/ds/ds;
-						dds(locz,locj) 		+= -(x[locpj]-x[locj])/ds/ds;
+						number ds = 1.0;///(number)N; // using N makes mds large here
+						mds(locz)  		-= (x[locpj]-x[locj])/ds;
+						mds(locpj)  		-= x[locz]/ds;
+						mds(locj)  		-= -x[locz]/ds;								
+
+						dds(locpj,locz)  	+= 1.0/ds;
+						dds(locz,locpj)  	+= 1.0/ds;
+						dds(locj,locz) 		+= -1.0/ds;
+						dds(locz,locj) 		+= -1.0/ds;
 					}
 				}
-				else {
+				else if (mu<dim){
 					uint locj = j*dim+mu, locz = N*dim+mu;
 					mds(locz) -= x[locj];
 					mds(locj) -= x[locz];
@@ -1241,21 +1237,27 @@ for (uint pl=0; pl<Npl; pl++) {
 	// eigenvalues, if required
 	if (eigen) {
 		mat dds_wlm = dds.block(0,0,dim*N,dim*N); // dds without Lagrange multipliers
-		number eigenTol = 1.0e-16*dim*N;
+		number eigenTol = 1.0e-16*pow(dim*N,2);
 		uint negEigs = 0;
+		uint numEigs = 3*dim;
 		cout << "calculating eigendecomposition of dds..." << endl;
 		Eigen::SelfAdjointEigenSolver<mat> eigensolver(dds_wlm);
 		if (eigensolver.info()!=Eigen::Success) abort();
-		//cout << "first " << 2*dim << " eigenvalues are: " << endl;
-		for (uint j=0; j<8; j++) {
-			if ((eigensolver.eigenvalues())[j]<-eigenTol)
-				negEigs++;
-			//cout << (eigensolver.eigenvalues())[j] << endl;
-		}
-		cout << negEigs << " negative eigenvalues found, less than " << -eigenTol << endl;
-		string eigenFile = "data/nr/eigenvalues/dim_"+nts(dim)+"/K_"+nts(p.K)+"/eigenvalues_kappa_"+nts(pow(p.G,3)*p.B)+"_E_"+nts(E)+"_a_"+nts(p.Epsi)+"_mu_"+nts(p.Mu)+".dat";
+		Filename eigenFile = "data/nr/eigenvalues/dim_"+nts(dim)+"/K_"+nts(p.K)+"/"+timenumber+"eigenvalues_pl_"+nts(pl)\
+				+"_run_"+nts(runsCount)+".dat";
 		saveVectorBinary(eigenFile,eigensolver.eigenvalues());
 		printf("%12s%50s\n","eigenvalues:",((string)eigenFile).c_str());
+		cout << "first " << numEigs << " eigenvalues are: " << endl;
+		for (uint j=0; j<numEigs; j++) {
+			if ((eigensolver.eigenvalues())[j]<-eigenTol)
+				negEigs++;
+			cout << (eigensolver.eigenvalues())[j] << endl;
+			eigenFile.ID = "eigenvector"+nts(j);
+			saveVectorBinary(eigenFile,(Eigen::VectorXd)((eigensolver.eigenvectors()).col(j)));
+		}
+		cout << negEigs << " negative eigenvalues found, less than " << -eigenTol << endl;
+		
+		printf("%12s%50s\n","eigenvectors:",((string)eigenFile).c_str());
 	}
 	
 	// curvature, if required
@@ -1322,10 +1324,11 @@ for (uint pl=0; pl<Npl; pl++) {
 	else {
 		// printing error results to file	
 		string resFile = "results/nr/nr_error3.csv";
-		#define numResErr 22
+		#define numResErr 23
 		vector<string> results(numResErr);
 		string results_array[numRes] = {timenumber,\
 									nts(pl),\
+									nts(runsCount),\
 									nts((int)poto+(int)gaussian*NumberPotentialOptions),\
 /*									nts((int)kino),\*/
 									nts(p.K),\
@@ -1370,15 +1373,24 @@ for (uint pl=0; pl<Npl; pl++) {
 
 	// printing extras to ascii files
 	if (po!=PrintOptions::none) {
-		Filename file = "data/temp/"+timenumber+"x_K_"+nts(p.K)+"_kappa_"+nts(pow(p.G,3)*p.B)+"_E_"+nts(E)\
-							+"_a_"+nts(p.Epsi)+"_mu_"+nts(p.Mu)+"_run_"+nts(runsCount)+".dat";
+		Filename file = "data/temp/"+timenumber+"xEnd_K_"+nts(p.K)+"_kappa_"+nts(pow(p.G,3)*p.B)+"_E_"+nts(E)\
+							+"_a_"+nts(p.Epsi)+"_mu_"+nts(p.Mu)+".dat";
+			if (weak)
+				(file.Extras).push_back(StringPair("weak","1"));
+			if (poto!=PotentialOptions::original || gaussian)
+				(file.Extras).push_back(potExtras);
+			if (poto==PotentialOptions::thermal || poto==PotentialOptions::thermalDisjoint)
+				(file.Extras).push_back(StringPair("T",nts(p.T)));
+			if (kino!=KineticOptions::saddle)
+				(file.Extras).push_back(kinExtras);
+				
 		if (po==PrintOptions::x || po==PrintOptions::all) {
-			saveVectorAscii(file,x);
+			printAsLoop(file,dim,x,N*dim);
 			printf("%12s%50s\n","x:",((string)file).c_str());
 		}
 		else if (po==PrintOptions::mds || po==PrintOptions::all) {
-			file.ID = "mds";
-			saveVectorAscii(file,mds);
+			file.ID = "mdsEnd";
+			printAsLoop(file,dim,x,N*dim);
 			printf("%12s%50s\n","mds:",((string)file).c_str());
 		}
 	}

@@ -72,6 +72,7 @@ for (uint pl=0; pl<Npl; pl++) {
 
 		number gg = ((prOut.Min).Lambda>1? (prOut.Min).Lambda: 3.0);
 		number T = (prOut.Min).T;
+		number beta = 1.0/T;
 
 		// steps
 		uint steps = ((prOut.Min).Ng>1? (prOut.Min).Ng: 5);
@@ -84,8 +85,15 @@ for (uint pl=0; pl<Npl; pl++) {
 		number c = 2.22341;
 		number B = c/(2.0*sqrt(2.0)*pow(PI,1.25));
 		number deltaKappa = B*kappaMax/gg; // deltaKappa << B*kappaMax, so that dr<<r (harder than dr<<beta if sqrt(kappa/4.0/PI)<beta)
-		number kappaMin = kappaMax - deltaKappa;
-		(prOut.Min).B = kappaMin;
+		number kappaMin = pow(beta,6)/pow(PI,3);
+		number kappaMinSoft = kappaMax - deltaKappa;
+		if (kappaMax<kappaMin) {
+			cerr << "highTempParamters Error: on pl=" << pl << ", kappaMax(" << kappaMax << ") < kappaMin(" << kappaMin << ")" << endl;
+			pass = true;
+		}
+		else if (kappaMin>kappaMinSoft)
+			kappaMinSoft = kappaMin;
+		(prOut.Min).B = kappaMinSoft;
 		(prOut.Max).B = kappaMax;
 		(prOut.Min).G = 1.0;
 		(prOut.Max).G = 1.0;
@@ -100,7 +108,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		//number drMin = 0.0;
 		number aMax = r0Max/gg; // so a<<r (a<<dr is harder but not so obviously necessary)
 		if (aMax<aMin) {
-			cerr << "aMax(" << aMax << ")<aMin(" << aMin << ")" << endl;
+			cerr << "highTempParamters Error: on pl=" << pl << ", aMax(" << aMax << ")<aMin(" << aMin << ")" << endl;
 			pass = true;
 		}
 		(prOut.Min).Epsi = aMin;

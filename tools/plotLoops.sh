@@ -3,6 +3,7 @@
 
 gpFile='gp/projection.gp'
 single=false
+cflag=false # should we conevrt to ascii?
 oflag=false # is there an outfile?
 mflag=false # do we want to print min or max?
 bflag=false # do we want to print beta?
@@ -10,12 +11,13 @@ kflag=false
 K=11
 
 # checking if outFile required and getting filename if so
-options=':o:K:mb'
+options=':o:K:mbc'
 OPTIND=1
 while getopts $options option
 do
 	case $option in
 		o  ) o=$OPTARG; oflag=true;;
+		c  ) cflag=true;;
 		m  ) mflag=true;;
 		b  ) bflag=true;;
 		K  ) kflag=true; K=$OPTARG;;
@@ -31,7 +33,6 @@ if [ -z "$1" ]
 	echo "must supply input file";
 fi
 	
-
 lTemp=""
 for f in "$@";
 do
@@ -65,14 +66,20 @@ then
 fi
 
 # converting binary to ascii files
-mTemp=""
-for f in $l;
-do fileID=${f##*/};
-	tf="data/temp/$fileID";
-	./binaryToAscii -b $f -a $tf -loop 1 -K $K
-	mTemp+="$tf ";	
-done
-m=${mTemp::-1}
+if $cflag
+then
+	mTemp=""
+	for f in $l;
+	do fileID=${f##*/};
+		tf="data/temp/$fileID";
+		./binaryToAscii -b $f -a $tf -loop 1 -K $K
+		mTemp+="$tf ";	
+	done
+	m=${mTemp::-1}
+else
+	m=$l
+fi
+
 
 # string to plot
 if $single
