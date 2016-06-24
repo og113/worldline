@@ -5,17 +5,19 @@ gpFile='gp/projection.gp'
 single=false
 oflag=false # is there an outfile?
 mflag=false # do we want to print min or max?
+bflag=false # do we want to print beta?
 kflag=false
 K=11
 
 # checking if outFile required and getting filename if so
-options=':o:K:m'
+options=':o:K:mb'
 OPTIND=1
 while getopts $options option
 do
 	case $option in
 		o  ) o=$OPTARG; oflag=true;;
 		m  ) mflag=true;;
+		b  ) bflag=true;;
 		K  ) kflag=true; K=$OPTARG;;
 		\? ) echo "Unknown option argument -$OPTARG" >&2; exit 1;;
 		:  )
@@ -37,6 +39,12 @@ do
 	then
 		K=$(echo "$@" | sed -n 's/.*K_\([0-9]\+\).*/\1/ p');
 		kflag=true;
+	fi
+	
+	if $bflag
+	then
+		T=$(echo "$@" | sed -n 's/.*T_\([0-9.]\+\).*.dat/\1/ p');
+		beta=$(bc <<< "scale=6;1.0/$T");
 	fi
 	
 	if [ -e "$f" ] && [ -f "$f" ];
@@ -66,32 +74,26 @@ do fileID=${f##*/};
 done
 m=${mTemp::-1}
 
-# plotting
+# string to plot
 if $single
 then
 	gargs="inFile='$m'"
-	if $oflag
-	then
-		gargs+="; outFile='$o'"
-	fi
-	if $mflag
-	then
-		gargs+="; min='1'; max='1'"
-	fi
-	
-	gnuplot -e "$gargs" $gpFile;
-
 else
-	gargs="inFiles='$m'"
-	if $oflag
-	then
-		gargs+="; outFile='$o'"
-	fi
-	if $mflag
-	then
-		gargs+="; min='1'; max='1'"
-	fi
-	
-	gnuplot -e "$gargs" $gpFile;
-	
+	gargs="inFiles='$m'"	
 fi
+
+if $oflag
+then
+	gargs+="; outFile='$o'"
+fi
+if $mflag
+then
+	gargs+="; min='1'; max='1'"
+fi
+if $bflag
+then
+	gargs+="; beta=$beta"
+fi
+
+# plotting
+gnuplot -e "$gargs" $gpFile;
