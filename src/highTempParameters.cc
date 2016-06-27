@@ -72,6 +72,7 @@ for (uint pl=0; pl<Npl; pl++) {
 
 		number gg = ((prOut.Min).Lambda>1? (prOut.Min).Lambda: 3.0);
 		number T = (prOut.Min).T;
+		number beta = 1.0/T;
 
 		// steps
 		uint steps = ((prOut.Min).Ng>1? (prOut.Min).Ng: 5);
@@ -84,8 +85,12 @@ for (uint pl=0; pl<Npl; pl++) {
 		number c = 2.22341;
 		number B = c/(2.0*sqrt(2.0)*pow(PI,1.25));
 		number deltaKappa = B*kappaMax/gg; // deltaKappa << B*kappaMax, so that dr<<r (harder than dr<<beta if sqrt(kappa/4.0/PI)<beta)
-		number kappaMin = kappaMax - deltaKappa;
-		(prOut.Min).B = kappaMin;
+		number kappaMin = pow(beta,6)/pow(PI,3); // need to check this result. To unsure only 1 negative eigenvalue.
+		if (kappaMin>kappaMax) {
+			cerr << "highTempParametersError: "////////////////////////////////////////////
+		}
+		number kappaMinSoft = kappaMax - deltaKappa;
+		(prOut.Min).B = kappaMinSoft;
 		(prOut.Max).B = kappaMax;
 		(prOut.Min).G = 1.0;
 		(prOut.Max).G = 1.0;
