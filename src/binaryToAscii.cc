@@ -67,6 +67,7 @@ if (loop) {
 	Loop<dim> l(K,0);
 	l.load(binaryFile);
 	l.saveAscii(asciiFile);
+	cout << "saving as loop with K=" << K << endl;
 }
 else {
 	vector<number> v;
@@ -74,6 +75,7 @@ else {
 	if (v.size()>pow(2,K) && K!=0)
 		v.resize(pow(2,K));
 	saveVectorAscii< vector<number> >(asciiFile,v);
+	cout << "saving as ascii vector with K=" << K << endl;
 }
 
 cout << "saved binary contents of " << binaryFile << " to " << asciiFile << " in ascii format." << endl;

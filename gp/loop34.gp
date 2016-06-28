@@ -22,7 +22,9 @@ set title "4d loop"
 set xlabel "point"
 set ylabel "loop coordinate"
 plot file using 0:3 t "z" with points pt 1 lc rgb "blue", \
-	file using 0:4 t "t" with points pt 1 lc rgb "green"
+	file using 0:4 t "t" with points pt 1 lc rgb "green", \
+	file using 0:1 t "x" with points pt 1 lc rgb "red", \
+	file using 0:2 t "y" with points pt 1 lc rgb "black", \
 
 pause -1
 
