@@ -773,74 +773,82 @@ void ddI0Disjoint_nr(const uint& j, const uint& mu, const uint& k, const uint& n
 // mdIn_nr
 template<uint Dim>
 void mdIn_nr(const uint& j, const uint& mu, const Loop<Dim>& l, const number& n, const number& f, vec& v) {
-	if (mu==(Dim-1)) {
-		uint nj = negNeigh(j,l.size());
-		v[j*Dim+mu] += -f*(pow((l[nj])[Dim-2],n)-pow((l[j])[Dim-2],n));
-	}
-	else if (mu==(Dim-2)) {
-		uint pj = posNeigh(j,l.size());
-		v[j*Dim+mu] += -f*n*pow((l[j])[Dim-2],n-1.0)*DX(l,pj,j,Dim-1);
+	if (abs(n)>MIN_NUMBER) {
+		if (mu==(Dim-1)) {
+			uint nj = negNeigh(j,l.size());
+			v[j*Dim+mu] += -f*(pow((l[nj])[Dim-2],n)-pow((l[j])[Dim-2],n));
+		}
+		else if (mu==(Dim-2)) {
+			uint pj = posNeigh(j,l.size());
+			v[j*Dim+mu] += -f*n*pow((l[j])[Dim-2],n-1.0)*DX(l,pj,j,Dim-1);
+		}
 	}
 }
 
 // mdInDisjoint_nr
 template<uint Dim>
 void mdInDisjoint_nr(const uint& j, const uint& mu, const Loop<Dim>& l, const number& n, const number& beta, const number& f, vec& v) {
-	if (mu==(Dim-1)) {
-		uint nj = negNeighDisjoint(j,l.size());
-		v[j*Dim+mu] += -f*(pow((l[nj])[Dim-2],n)-pow((l[j])[Dim-2],n));
-	}
-	else if (mu==(Dim-2)) {
-		uint pj = posNeighDisjoint(j,l.size());
-		v[j*Dim+mu] += -f*n*pow((l[j])[Dim-2],n-1.0)*DXDisjoint(l,pj,j,Dim-1,beta);
+	if (abs(n)>MIN_NUMBER) {
+		if (mu==(Dim-1)) {
+			uint nj = negNeighDisjoint(j,l.size());
+			v[j*Dim+mu] += -f*(pow((l[nj])[Dim-2],n)-pow((l[j])[Dim-2],n));
+		}
+		else if (mu==(Dim-2)) {
+			uint pj = posNeighDisjoint(j,l.size());
+			v[j*Dim+mu] += -f*n*pow((l[j])[Dim-2],n-1.0)*DXDisjoint(l,pj,j,Dim-1,beta);
+		}
 	}
 }
 
 // ddIn_nr
 template<uint Dim>
 void ddIn_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l, const number& n, const number& f, mat& m) {
-	if (mu==(Dim-2) && nu==(Dim-2) && abs(n-1.0)>MIN_NUMBER) {
-		uint pj = posNeigh(j,l.size());
-		if (k==j)
-			m(j*Dim+mu,k*Dim+nu) -= f*n*(n-1.0)*pow((l[j])[Dim-2],n-2.0)*DX(l,pj,j,Dim-1);
-	}
-	else if (mu==(Dim-1) && nu==(Dim-2)) {
-		uint nj = negNeigh(j,l.size());
-		if (k==nj)
-			m(j*Dim+mu,k*Dim+nu) += f*n*pow((l[k])[Dim-2],n-1.0);
-		else if (k==j)
-			m(j*Dim+mu,k*Dim+nu) -= f*n*pow((l[k])[Dim-2],n-1.0);
-	}
-	else if (mu==(Dim-2) && nu==(Dim-1)) {
-		uint pj = posNeigh(j,l.size());
-		if (k==pj)
-			m(j*Dim+mu,k*Dim+nu) += f*n*pow((l[j])[Dim-2],n-1.0);
-		else if (k==j)
-			m(j*Dim+mu,k*Dim+nu) -= f*n*pow((l[j])[Dim-2],n-1.0);
+	if (abs(n)>MIN_NUMBER) {
+		if (mu==(Dim-2) && nu==(Dim-2) && abs(n-1.0)>MIN_NUMBER) {
+			uint pj = posNeigh(j,l.size());
+			if (k==j)
+				m(j*Dim+mu,k*Dim+nu) += f*n*(n-1.0)*pow((l[j])[Dim-2],n-2.0)*DX(l,pj,j,Dim-1);
+		}
+		else if (mu==(Dim-1) && nu==(Dim-2)) {
+			uint nj = negNeigh(j,l.size());
+			if (k==nj)
+				m(j*Dim+mu,k*Dim+nu) += f*n*pow((l[k])[Dim-2],n-1.0);
+			else if (k==j)
+				m(j*Dim+mu,k*Dim+nu) -= f*n*pow((l[k])[Dim-2],n-1.0);
+		}
+		else if (mu==(Dim-2) && nu==(Dim-1)) {
+			uint pj = posNeigh(j,l.size());
+			if (k==pj)
+				m(j*Dim+mu,k*Dim+nu) += f*n*pow((l[j])[Dim-2],n-1.0);
+			else if (k==j)
+				m(j*Dim+mu,k*Dim+nu) -= f*n*pow((l[j])[Dim-2],n-1.0);
+		}
 	}
 }
 
 // ddInDisjoint_nr
 template<uint Dim>
 void ddInDisjoint_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l, const number& n, const number& beta, const number& f, mat& m) {
-	if (mu==(Dim-2) && nu==(Dim-2) && abs(n-1.0)>MIN_NUMBER) {
-		uint pj = posNeighDisjoint(j,l.size());
-		if (k==j)
-			m(j*Dim+mu,k*Dim+nu) -= f*n*(n-1.0)*pow((l[j])[Dim-2],n-2.0)*DXDisjoint(l,pj,j,Dim-1,beta);
-	}
-	else if (mu==(Dim-1) && nu==(Dim-2)) {
-		uint nj = negNeighDisjoint(j,l.size());
-		if (k==nj)
-			m(j*Dim+mu,k*Dim+nu) += f*n*pow((l[k])[Dim-2],n-1.0);
-		else if (k==j)
-			m(j*Dim+mu,k*Dim+nu) -= f*n*pow((l[k])[Dim-2],n-1.0);
-	}
-	else if (mu==(Dim-2) && nu==(Dim-1)) {
-		uint pj = posNeighDisjoint(j,l.size());
-		if (k==pj)
-			m(j*Dim+mu,k*Dim+nu) += f*n*pow((l[j])[Dim-2],n-1.0);
-		else if (k==j)
-			m(j*Dim+mu,k*Dim+nu) -= f*n*pow((l[j])[Dim-2],n-1.0);
+	if (abs(n)>MIN_NUMBER) {
+		if (mu==(Dim-2) && nu==(Dim-2) && abs(n-1.0)>MIN_NUMBER) {
+			uint pj = posNeighDisjoint(j,l.size());
+			if (k==j)
+				m(j*Dim+mu,k*Dim+nu) += f*n*(n-1.0)*pow((l[j])[Dim-2],n-2.0)*DXDisjoint(l,pj,j,Dim-1,beta);
+		}
+		else if (mu==(Dim-1) && nu==(Dim-2)) {
+			uint nj = negNeighDisjoint(j,l.size());
+			if (k==nj)
+				m(j*Dim+mu,k*Dim+nu) += f*n*pow((l[k])[Dim-2],n-1.0);
+			else if (k==j)
+				m(j*Dim+mu,k*Dim+nu) -= f*n*pow((l[k])[Dim-2],n-1.0);
+		}
+		else if (mu==(Dim-2) && nu==(Dim-1)) {
+			uint pj = posNeighDisjoint(j,l.size());
+			if (k==pj)
+				m(j*Dim+mu,k*Dim+nu) += f*n*pow((l[j])[Dim-2],n-1.0);
+			else if (k==j)
+				m(j*Dim+mu,k*Dim+nu) -= f*n*pow((l[j])[Dim-2],n-1.0);
+		}
 	}
 }
 

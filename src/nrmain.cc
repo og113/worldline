@@ -42,12 +42,11 @@ struct PrintOptions {
 struct PotentialOptions {
 	enum Option { original, link, exponential, dimreg, thermal, thermalDisjoint, external, externalDisjoint};
 };
+uint NumberPotentialOptions = 8;
 
 struct KineticOptions {
 	enum Option { saddle, s0, len};
 };
-
-uint NumberPotentialOptions = 4;
 
 int main(int argc, char** argv) {
 /*----------------------------------------------------------------------------------------------------------------------------

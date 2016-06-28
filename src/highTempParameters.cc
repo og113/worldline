@@ -87,12 +87,12 @@ for (uint pl=0; pl<Npl; pl++) {
 		number deltaKappa = B*kappaMax/gg; // deltaKappa << B*kappaMax, so that dr<<r (harder than dr<<beta if sqrt(kappa/4.0/PI)<beta)
 		number kappaMin = pow(beta,6)/pow(PI,3);
 		number kappaMinSoft = kappaMax - deltaKappa;
-		if (kappaMax<kappaMin) {
+		/*if (kappaMax<kappaMin) {
 			cerr << "highTempParamters Error: on pl=" << pl << ", kappaMax(" << kappaMax << ") < kappaMin(" << kappaMin << ")" << endl;
 			pass = true;
 		}
 		else if (kappaMin>kappaMinSoft)
-			kappaMinSoft = kappaMin;
+		*/	kappaMinSoft = kappaMin;
 		(prOut.Min).B = kappaMinSoft;
 		(prOut.Max).B = kappaMax;
 		(prOut.Min).G = 1.0;
