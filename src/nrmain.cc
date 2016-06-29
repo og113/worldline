@@ -67,6 +67,7 @@ bool old = true;
 bool gaussian = false;
 bool disjoint = true;
 bool fixdz = false;
+bool extended = false;
 bool mu_a = false;
 bool pass = false;
 bool alltests = false; // doing alltests
@@ -93,6 +94,7 @@ if (argc % 2 && argc>1) {
 		else if (id.compare("gaussian")==0 || id.compare("repulsion")==0) gaussian = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("mu_a")==0) mu_a = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("disjoint")==0) disjoint = (stn<uint>(argv[2*j+2])!=0);
+		else if (id.compare("extended")==0) extended = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("pass")==0) pass = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("fixdz")==0) fixdz = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("inputs")==0) inputsFile = (string)argv[2*j+2];
@@ -317,9 +319,12 @@ for (uint pl=0; pl<Npl; pl++) {
 				else 
 					loadFile = "data/cosDisjoint/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_Kappa_"+nts(pow(p.G,3)*p.B)\
 						+"_T_"+nts(p.T)+"_Lambda_"+nts(p.Lambda)+"_rank_0.dat";
-				if (!loadFile.exists() || straight)
+				if (!loadFile.exists() || straight) {
 					loadFile = "data/straightDisjoint/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_Kappa_"+nts(pow(p.G,3)*p.B)\
 					+"_T_"+nts(p.T)+"_rank_0.dat";
+					if (extended)
+						(loadFile.Extras).push_back(StringPair("Lambda",nts(p.Lambda)));
+				}
 			}
 		}
 		else {
@@ -360,9 +365,12 @@ for (uint pl=0; pl<Npl; pl++) {
 						else 
 							loadFile = "data/cosDisjoint/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_Kappa_"+nts(pow(p.G,3)*p.B)\
 								+"_T_"+nts(p.T)+"_Lambda_"+nts(p.Lambda)+"_rank_0.dat";
-						if (!loadFile.exists() || straight)
+						if (!loadFile.exists() || straight) {
 							loadFile = "data/straightDisjoint/loops/dim_"+nts(dim)+"/K_"+nts(p.K)\
 							+"/loop_Kappa_"+nts(pow(p.G,3)*p.B)+"_T_"+nts(p.T)+"_rank_0.dat";
+							if (extended)
+								(loadFile.Extras).push_back(StringPair("Lambda",nts(p.Lambda)));
+						}
 					}
 				}
 			}

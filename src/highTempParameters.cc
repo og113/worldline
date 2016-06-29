@@ -81,11 +81,11 @@ for (uint pl=0; pl<Npl; pl++) {
 		(prOut.Steps)[9] = steps;
 
 		// kappa
-		number kappaMax = 1.0/(4.0*pow(PI,3)*pow(T,4)); // so that nonrelativistic solution exists
+		number kappaMax = 4.0/(pow(PI,3)*pow(T,4)); // so that nonrelativistic solution exists
 		number c = 1.11171;
 		number B = c/(2.0*sqrt(2.0)*pow(PI,1.25));
 		number deltaKappa = B*kappaMax/gg; // deltaKappa << B*kappaMax, so that dr<<r (harder than dr<<beta if sqrt(kappa/4.0/PI)<beta)
-		number kappaMin = pow(beta,6)/pow(PI,3);
+		number kappaMin = 4.0*pow(beta,6)/pow(PI,3);
 		number kappaMinSoft = kappaMax - deltaKappa;
 		if (kappaMax<kappaMin) {
 			cerr << "highTempParamters Error: on pl=" << pl << ", kappaMax(" << kappaMax << ") < kappaMin(" << kappaMin << ")" << endl;

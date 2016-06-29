@@ -15,10 +15,10 @@ pi=3.1415926535897932
 beta=0.5
 kappa=1
 a0=2.0**8
-a=((2.0*pi/beta)**2)/a0
+a=((2.0*pi/beta)**2)/4.0/a0
 b=2.0*kappa/16.0/pi
-print a
-print b
+#print a
+#print b
 lambda(x)=a*(floor((x)/2)**2)-b
 #fit lambda(x) file using 0:1 via a,b
 
