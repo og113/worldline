@@ -197,7 +197,6 @@ for (uint pl=0; pl<Npl; pl++) {
 					+"_T_"+nts(p.T)+"_Lambda_"+nts(p.Lambda)+"_rank_"+nts<uint>(j)+".dat";	
 			number r = sqrt(pow(p.G,3)*p.B/4.0/PI);
 			number dt = 2.0*beta/(number)N;
-			p0[3] += -beta/2.0;
 			number w = 4.0*PI/(number)N;
 			for (uint k=0; k<N; k++) {
 				point = p0;

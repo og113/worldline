@@ -40,9 +40,9 @@ struct PrintOptions {
 };
 
 struct PotentialOptions {
-	enum Option { original, link, exponential, dimreg, thermal, thermalDisjoint, external, externalDisjoint};
+	enum Option { original, link, exponential, dimreg, thermal, thermalDisjoint, external, externalDisjoint, nonrelDisjoint};
 };
-uint NumberPotentialOptions = 8;
+uint NumberPotentialOptions = 9;
 
 struct KineticOptions {
 	enum Option { saddle, s0, len};
@@ -157,13 +157,17 @@ if (!potOpts.empty()) {
 		poto = PotentialOptions::externalDisjoint;
 		disjoint = true;	
 	}
+	else if (potOpts.compare("nonrelDisjoint")==0) {
+		poto = PotentialOptions::nonrelDisjoint;
+		disjoint = true;	
+	}
 	else {
 		cerr << "potential options not understood: " << potOpts << endl;
 		return 1;
 	}
 }
 if (poto!=PotentialOptions::original || gaussian)
-	potExtras.second = nts((int)poto+(int)gaussian*NumberPotentialOptions);
+	potExtras.second = nts(2*(int)poto+(int)gaussian);
 	
 KineticOptions::Option kino = KineticOptions::saddle;
 StringPair kinExtras("kin",nts((int)kino));
@@ -498,6 +502,19 @@ for (uint pl=0; pl<Npl; pl++) {
 				s0 = S0(xLoop);
 			sqrt4s0 = 2.0*sqrt(s0);
 		}
+		else if (poto==PotentialOptions::nonrelDisjoint) {
+			n = -1.0;
+			g = -pow(p.G,3)*p.B/4.0/PI;
+			dm = 0.0;
+			cusp_scale = 0.0;
+			repulsion_scale = 0.0;
+			beta = ((p.T)>sqrt(MIN_NUMBER)? 1.0/(p.T): 1.0/sqrt(MIN_NUMBER)); // this is 1/eta
+			if (disjoint)
+				s0 = S0Disjoint(xLoop,beta);
+			else
+				s0 = S0(xLoop);
+			sqrt4s0 = 2.0*sqrt(s0);
+		}
 		
 		Point<dim> P0;
 		
@@ -606,6 +623,11 @@ for (uint pl=0; pl<Npl; pl++) {
 					if (poto==PotentialOptions::externalDisjoint) {
 						mdInDisjoint_nr(j, mu, xLoop, n, beta, g, mds);
 						PInDisjoint_nr(xLoop, j, mu, n, beta, g, Pmu);
+					}
+					else if (poto==PotentialOptions::nonrelDisjoint) {
+						VnonrelDisjoint(j, xLoop, beta, g, v);
+						mdVnonrelDisjoint_nr(j, mu, xLoop, beta, g, mds);
+						PVnonrelDisjoint_nr(xLoop, j, mu, beta, g, Pmu);
 					}
 				}
 				
@@ -733,7 +755,9 @@ for (uint pl=0; pl<Npl; pl++) {
 							else if (poto==PotentialOptions::thermal)
 								ddVthr_nr(j, mu, k, nu, xLoop, beta, p.Epsi, g, dds);
 							else if (poto==PotentialOptions::thermalDisjoint)
-								ddVthrDisjoint_nr(j, mu, k, nu, xLoop, beta, p.Epsi, g, dds);		
+								ddVthrDisjoint_nr(j, mu, k, nu, xLoop, beta, p.Epsi, g, dds);
+							else if (poto==PotentialOptions::nonrelDisjoint)
+								ddVnonrelDisjoint_nr(j, mu, k, nu, xLoop, beta, g, dds);		
 								
 							// self-energy regularisation
 							if (!disjoint) {
