@@ -196,7 +196,7 @@ double S0Integrand (double x, void* parameters) {
 		cerr << "S0Integrand error: sqrt(" << (-E + 2.0 - x - kappa/4.0/PI/x) << ")" << endl;
 		cerr << "x = " << x << endl;
 	}
-	return 4.0*(2.0 - x - kappa/4.0/PI/x)/2.0/sqrt(2.0 - E - x - kappa/4.0/PI/x);
+	return 2.0*(2.0 - x - kappa/4.0/PI/x)/2.0/sqrt(2.0 - E - x - kappa/4.0/PI/x);
 }
 
 double S0Integral (double E, void* parameters) {
@@ -427,7 +427,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	}
 	
 	// finding action
-	number S = 4.0*S0Integral(E,&params) - E*beta;
+	number S = 2.0*S0Integral(E,&params) - E*beta;
 	number Sstraight = 2.0*beta*(1.0 - sqrt(kappa/4.0/PI));
 	cout << "S = " << S << ", Sstraight = " << Sstraight << ", Sstraight-S = " << Sstraight - S << endl;
     
