@@ -1388,10 +1388,6 @@ void PVthrDisjoint_nr(const Loop<Dim>& l, const uint& j, const uint& mu, const u
 // PVnonrelDisjoint_nr
 template<uint Dim>
 void PVnonrelDisjoint_nr(const Loop<Dim>& l, const uint& j, const uint& mu, const number& beta, const number& f, vec& v) {
-	if (mu==3) {
-		uint oj = oppNeigh(j,l.size());
-		v[Dim*j+mu] += f/SpatialDistance(l[j],l[oj]);
-	}
 }
 
 // PGaussian_nr
@@ -1747,10 +1743,12 @@ void VthrDisjoint<4> (const uint& j, const uint& k, const Loop<4>& l, const numb
 // VnonrelDisjoint
 template <>
 void VnonrelDisjoint<4> (const uint& j, const Loop<4>& l, const number& beta, const number& f, number& result) {
-	uint pj = posNeighDisjoint(j,l.size());
-	uint oj = oppNeigh(j,l.size());
+	if (j<l.size()/2) {
+		number dt = 2.0*beta/(number)l.size();
+		uint oj = oppNeigh(j,l.size());
 
-	result += f*DXDisjoint(l,pj,j,3,beta)/SpatialDistance(l[j],l[oj]); // dt/r, not lorentz invariant but galilean invariant
+		result += f*dt/SpatialDistance(l[j],l[oj]); // dt/r, not lorentz invariant but galilean invariant
+	}
 }
 
 // mdVor_nr
@@ -1956,17 +1954,10 @@ template <> void mdVthrDisjoint_nr<4>(const uint& j, const uint& mu, const uint&
 // mdVnonrelDisjoint_nr
 template <>
 void mdVnonrelDisjoint_nr<4> (const uint& j, const uint& mu, const Loop<4>& l, const number& beta, const number& f, vec& v) {
-	uint pj = posNeighDisjoint(j,l.size());
-	uint nj = negNeighDisjoint(j,l.size());
-	uint oj = oppNeigh(j,l.size());
-	uint onj = oppNeigh(nj,l.size());
-	
-	if (mu==3) {
-		v[j*4+mu] += -f*( -1.0/SpatialDistance(l[j],l[oj]) + 1.0/SpatialDistance(l[nj],l[onj]) );
-	}
-	else {
-		v[j*4+mu] += -f*( DXDisjoint(l,pj,j,3,beta) + DXDisjoint(l,onj,oj,3,beta) )\
-					*(-DXDisjoint(l,j,oj,mu,beta))/pow(SpatialDistance(l[j],l[oj]),3);
+	if (mu<3) {
+		uint oj = oppNeigh(j,l.size());
+		number dt = 2.0*beta/(number)l.size();
+		v[j*4+mu] += -f*dt*(-DXDisjoint(l,j,oj,mu,beta))/pow(SpatialDistance(l[j],l[oj]),3);
 	}
 }
 
@@ -2766,52 +2757,23 @@ template <> void ddVthrDisjoint_nr<4>(const uint& j, const uint& mu, const uint&
 template <>
 void ddVnonrelDisjoint_nr<4> (const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<4>& l,\
 						 const number& beta, const number& f, mat& m) {
-	uint pj = posNeighDisjoint(j,l.size());
-	uint nj = negNeighDisjoint(j,l.size());
-	uint pk = posNeighDisjoint(k,l.size());
-	uint nk = negNeighDisjoint(k,l.size());
 	
+	if (mu!=3 && nu!=3) {
 	uint oj = oppNeigh(j,l.size());
 	uint ok = oppNeigh(k,l.size());
-	uint onj = oppNeigh(nj,l.size());
-	uint onk = oppNeigh(nk,l.size());
+	number dt = 2.0*beta/(number)l.size();
 	
-	if (mu==3 && nu!=3) {
-		if (j==pk)
-			m(4*j+mu,4*k+nu) += -f*DXDisjoint(l,k,ok,mu,beta)/pow(SpatialDistance(l[k],l[ok]),3);
-		else if (j==k)
-			m(4*j+mu,4*k+nu) += f*DXDisjoint(l,k,ok,mu,beta)/pow(SpatialDistance(l[k],l[ok]),3);
-		else if (j==onk)
-			m(4*j+mu,4*k+nu) += -f*DXDisjoint(l,k,ok,mu,beta)/pow(SpatialDistance(l[k],l[ok]),3);
-		else if (j==ok)
-			m(4*j+mu,4*k+nu) += f*DXDisjoint(l,k,ok,mu,beta)/pow(SpatialDistance(l[k],l[ok]),3);
-	}
-	else if (mu!=3 && nu==3) {
-		if (k==pj)
-			m(4*j+mu,4*k+nu) += -f*DXDisjoint(l,j,oj,mu,beta)/pow(SpatialDistance(l[j],l[oj]),3);
-		else if (k==j)
-			m(4*j+mu,4*k+nu) += f*DXDisjoint(l,j,oj,mu,beta)/pow(SpatialDistance(l[j],l[oj]),3);
-		else if (k==onj)
-			m(4*j+mu,4*k+nu) += -f*DXDisjoint(l,j,oj,mu,beta)/pow(SpatialDistance(l[j],l[oj]),3);
-		else if (k==oj)
-			m(4*j+mu,4*k+nu) += f*DXDisjoint(l,j,oj,mu,beta)/pow(SpatialDistance(l[j],l[oj]),3);
-	}
-	else if (mu!=3 && nu!=3) {
 		if (j==k) {
-			m(4*j+mu,4*k+nu) += -f*( DXDisjoint(l,pj,j,3,beta) + DXDisjoint(l,onj,oj,3,beta) )\
-								*(-3.0)*DXDisjoint(l,j,oj,mu,beta)*DXDisjoint(l,j,oj,nu,beta)\
+			m(4*j+mu,4*k+nu) += -f*dt*(-3.0)*DXDisjoint(l,j,oj,mu,beta)*DXDisjoint(l,j,oj,nu,beta)\
 								/pow(SpatialDistance(l[j],l[oj]),5);
 			if (mu==nu)
-				m(4*j+mu,4*k+nu) += -f*( DXDisjoint(l,pj,j,3,beta) + DXDisjoint(l,onj,oj,3,beta) )\
-								/pow(SpatialDistance(l[j],l[oj]),3);
+				m(4*j+mu,4*k+nu) += -f*dt/pow(SpatialDistance(l[j],l[oj]),3);
 		}
 		else if (k==oj) {
-			m(4*j+mu,4*k+nu) += -f*( DXDisjoint(l,pj,j,3,beta) + DXDisjoint(l,onj,oj,3,beta) )\
-								*(-3.0)*DXDisjoint(l,j,oj,mu,beta)*DXDisjoint(l,k,ok,nu,beta)\
+			m(4*j+mu,4*k+nu) += -f*dt*(-3.0)*DXDisjoint(l,j,oj,mu,beta)*DXDisjoint(l,k,ok,nu,beta)\
 								/pow(SpatialDistance(l[j],l[oj]),5);
 			if (mu==nu)
-				m(4*j+mu,4*k+nu) += f*( DXDisjoint(l,pj,j,3,beta) + DXDisjoint(l,onj,oj,3,beta) )\
-								/pow(SpatialDistance(l[j],l[oj]),3);
+				m(4*j+mu,4*k+nu) += f*dt/pow(SpatialDistance(l[j],l[oj]),3);
 		}
 	}
 	
