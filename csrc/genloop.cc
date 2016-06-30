@@ -243,6 +243,11 @@ uint negNeighDisjoint(const uint& j, const uint& N) {
 		return j-1;
 }
 
+// oppNeigh
+uint oppNeigh(const uint& j, const uint& N) {
+	return N-1-j;
+}
+
 //distance squared
 template <uint Dim>
 number DistanceSquared(const Point<Dim>& p1, const Point<Dim>& p2) {

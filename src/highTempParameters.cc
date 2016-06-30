@@ -81,18 +81,18 @@ for (uint pl=0; pl<Npl; pl++) {
 		(prOut.Steps)[9] = steps;
 
 		// kappa
-		number kappaMax = 1.0/(4.0*pow(PI,3)*pow(T,4)); // so that nonrelativistic solution exists
-		number c = 2.22341;
+		number kappaMax = 4.0/(pow(PI,3)*pow(T,4)); // so that nonrelativistic solution exists
+		number c = 1.11171;
 		number B = c/(2.0*sqrt(2.0)*pow(PI,1.25));
 		number deltaKappa = B*kappaMax/gg; // deltaKappa << B*kappaMax, so that dr<<r (harder than dr<<beta if sqrt(kappa/4.0/PI)<beta)
-		number kappaMin = pow(beta,6)/pow(PI,3);
+		number kappaMin = 4.0*pow(beta,6)/pow(PI,3);
 		number kappaMinSoft = kappaMax - deltaKappa;
-		/*if (kappaMax<kappaMin) {
+		if (kappaMax<kappaMin) {
 			cerr << "highTempParamters Error: on pl=" << pl << ", kappaMax(" << kappaMax << ") < kappaMin(" << kappaMin << ")" << endl;
 			pass = true;
 		}
 		else if (kappaMin>kappaMinSoft)
-		*/	kappaMinSoft = kappaMin;
+		kappaMinSoft = kappaMin;
 		(prOut.Min).B = kappaMinSoft;
 		(prOut.Max).B = kappaMax;
 		(prOut.Min).G = 1.0;
@@ -119,7 +119,7 @@ for (uint pl=0; pl<Npl; pl++) {
 			printf("\n");
 			printf("%14s%14s%14s%14s%14s%14s%14s%14s%14s\n","kappaMin","kappaMax","aMin","aMax","beta","r0Min","r0Max","drMax","dl");
 			printf("%14.5g%14.5g%14.5g%14.5g%14.5g%14.5g%14.5g%14.5g%14.5g\n",\
-				kappaMin,kappaMax,aMin,aMax,1.0/T,r0Min,r0Max,drMax,dl);
+				kappaMinSoft,kappaMax,aMin,aMax,1.0/T,r0Min,r0Max,drMax,dl);
 			printf("\n");
 		}
 

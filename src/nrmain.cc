@@ -40,9 +40,9 @@ struct PrintOptions {
 };
 
 struct PotentialOptions {
-	enum Option { original, link, exponential, dimreg, thermal, thermalDisjoint, external, externalDisjoint};
+	enum Option { original, link, exponential, dimreg, thermal, thermalDisjoint, external, externalDisjoint, nonrelDisjoint};
 };
-uint NumberPotentialOptions = 8;
+uint NumberPotentialOptions = 9;
 
 struct KineticOptions {
 	enum Option { saddle, s0, len};
@@ -67,6 +67,7 @@ bool old = true;
 bool gaussian = false;
 bool disjoint = true;
 bool fixdz = false;
+bool extended = false;
 bool mu_a = false;
 bool pass = false;
 bool alltests = false; // doing alltests
@@ -93,6 +94,7 @@ if (argc % 2 && argc>1) {
 		else if (id.compare("gaussian")==0 || id.compare("repulsion")==0) gaussian = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("mu_a")==0) mu_a = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("disjoint")==0) disjoint = (stn<uint>(argv[2*j+2])!=0);
+		else if (id.compare("extended")==0) extended = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("pass")==0) pass = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("fixdz")==0) fixdz = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("inputs")==0) inputsFile = (string)argv[2*j+2];
@@ -157,13 +159,17 @@ if (!potOpts.empty()) {
 		poto = PotentialOptions::externalDisjoint;
 		disjoint = true;	
 	}
+	else if (potOpts.compare("nonrelDisjoint")==0) {
+		poto = PotentialOptions::nonrelDisjoint;
+		disjoint = true;	
+	}
 	else {
 		cerr << "potential options not understood: " << potOpts << endl;
 		return 1;
 	}
 }
 if (poto!=PotentialOptions::original || gaussian)
-	potExtras.second = nts((int)poto+(int)gaussian*NumberPotentialOptions);
+	potExtras.second = nts(2*(int)poto+(int)gaussian);
 	
 KineticOptions::Option kino = KineticOptions::saddle;
 StringPair kinExtras("kin",nts((int)kino));
@@ -313,9 +319,12 @@ for (uint pl=0; pl<Npl; pl++) {
 				else 
 					loadFile = "data/cosDisjoint/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_Kappa_"+nts(pow(p.G,3)*p.B)\
 						+"_T_"+nts(p.T)+"_Lambda_"+nts(p.Lambda)+"_rank_0.dat";
-				if (!loadFile.exists() || straight)
+				if (!loadFile.exists() || straight) {
 					loadFile = "data/straightDisjoint/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_Kappa_"+nts(pow(p.G,3)*p.B)\
 					+"_T_"+nts(p.T)+"_rank_0.dat";
+					if (extended)
+						(loadFile.Extras).push_back(StringPair("Lambda",nts(p.Lambda)));
+				}
 			}
 		}
 		else {
@@ -356,9 +365,12 @@ for (uint pl=0; pl<Npl; pl++) {
 						else 
 							loadFile = "data/cosDisjoint/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_Kappa_"+nts(pow(p.G,3)*p.B)\
 								+"_T_"+nts(p.T)+"_Lambda_"+nts(p.Lambda)+"_rank_0.dat";
-						if (!loadFile.exists() || straight)
+						if (!loadFile.exists() || straight) {
 							loadFile = "data/straightDisjoint/loops/dim_"+nts(dim)+"/K_"+nts(p.K)\
 							+"/loop_Kappa_"+nts(pow(p.G,3)*p.B)+"_T_"+nts(p.T)+"_rank_0.dat";
+							if (extended)
+								(loadFile.Extras).push_back(StringPair("Lambda",nts(p.Lambda)));
+						}
 					}
 				}
 			}
@@ -388,7 +400,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	if (x.size()<NT) {
 		x.conservativeResize(NT);
 		for (uint mu=0; mu<zm; mu++)
-			x[N*dim+mu] = 1.0e-3;
+			x[N*dim+mu] = 1.0e-4;
 	}
 	else if (x.size()>NT)
 		x.conservativeResize(NT);
@@ -488,6 +500,19 @@ for (uint pl=0; pl<Npl; pl++) {
 		else if (poto==PotentialOptions::external || poto==PotentialOptions::externalDisjoint) {
 			n = -1.0;
 			g = -pow(p.G,3)*p.B/4.0/PI/4.0;
+			dm = 0.0;
+			cusp_scale = 0.0;
+			repulsion_scale = 0.0;
+			beta = ((p.T)>sqrt(MIN_NUMBER)? 1.0/(p.T): 1.0/sqrt(MIN_NUMBER)); // this is 1/eta
+			if (disjoint)
+				s0 = S0Disjoint(xLoop,beta);
+			else
+				s0 = S0(xLoop);
+			sqrt4s0 = 2.0*sqrt(s0);
+		}
+		else if (poto==PotentialOptions::nonrelDisjoint) {
+			n = -1.0;
+			g = -pow(p.G,3)*p.B/4.0/PI;
 			dm = 0.0;
 			cusp_scale = 0.0;
 			repulsion_scale = 0.0;
@@ -606,6 +631,11 @@ for (uint pl=0; pl<Npl; pl++) {
 					if (poto==PotentialOptions::externalDisjoint) {
 						mdInDisjoint_nr(j, mu, xLoop, n, beta, g, mds);
 						PInDisjoint_nr(xLoop, j, mu, n, beta, g, Pmu);
+					}
+					else if (poto==PotentialOptions::nonrelDisjoint) {
+						VnonrelDisjoint(j, xLoop, beta, g, v);
+						mdVnonrelDisjoint_nr(j, mu, xLoop, beta, g, mds);
+						PVnonrelDisjoint_nr(xLoop, j, mu, beta, g, Pmu);
 					}
 				}
 				
@@ -733,7 +763,9 @@ for (uint pl=0; pl<Npl; pl++) {
 							else if (poto==PotentialOptions::thermal)
 								ddVthr_nr(j, mu, k, nu, xLoop, beta, p.Epsi, g, dds);
 							else if (poto==PotentialOptions::thermalDisjoint)
-								ddVthrDisjoint_nr(j, mu, k, nu, xLoop, beta, p.Epsi, g, dds);		
+								ddVthrDisjoint_nr(j, mu, k, nu, xLoop, beta, p.Epsi, g, dds);
+							else if (poto==PotentialOptions::nonrelDisjoint)
+								ddVnonrelDisjoint_nr(j, mu, k, nu, xLoop, beta, g, dds);		
 								
 							// self-energy regularisation
 							if (!disjoint) {
@@ -957,25 +989,27 @@ for (uint pl=0; pl<Npl; pl++) {
 			// check rotation and check mirror
 			number xRotationTest = 0.0, xMirrorTest = 0.0;
 			number mdsRotationTest = 0.0, mdsMirrorTest = 0.0;
+			number offset = (runsCount==1? x[N*dim]: 0.00);
+			number offsetT = (runsCount==1 && !fixdz? x[N*dim]: 0.00);
 			for (uint j=0; j<N/2; j++) {
 				for (uint k=0; k<dim; k++) {
 					if (k==(dim-2)) {
 						xRotationTest += pow(x(dim*j+k)+x(dim*(N/2+j)+k),2);
 						xMirrorTest += pow(x(dim*j+k)+x(dim*(N-1-j)+k),2);
-						mdsRotationTest += pow(mds(dim*j+k)+mds(dim*(N/2+j)+k),2);
-						mdsMirrorTest += pow(mds(dim*j+k)+mds(dim*(N-1-j)+k),2);
+						mdsRotationTest += pow(mds(dim*j+k)+mds(dim*(N/2+j)+k)+2.0*offset,2);
+						mdsMirrorTest += pow(mds(dim*j+k)+mds(dim*(N-1-j)+k)+2.0*offset,2);
 					}
 					else if (k==(dim-1)) {
 						if (!disjoint) {
 							xRotationTest += pow(x(dim*j+k)+x(dim*(N/2+j)+k),2);
 							xMirrorTest += pow(x(dim*j+k)-x(dim*(N-1-j)+k),2);
-							mdsRotationTest += pow(mds(dim*j+k)+mds(dim*(N/2+j)+k),2);
+							mdsRotationTest += pow(mds(dim*j+k)+mds(dim*(N/2+j)+k)+2.0*offsetT,2);
 							mdsMirrorTest += pow(mds(dim*j+k)-mds(dim*(N-1-j)+k),2);
 						}
 						else {
 							xRotationTest += pow(mod<number>(x(dim*j+k)+x(dim*(N/2+j)+k),-beta/2.0,beta/2.0),2);
 							xMirrorTest += pow(mod<number>(x(dim*j+k)-x(dim*(N-1-j)+k),-beta/2.0,beta/2.0),2);
-							mdsRotationTest += pow(mod<number>(mds(dim*j+k)+mds(dim*(N/2+j)+k),-beta/2.0,beta/2.0),2);
+							mdsRotationTest += pow(mod<number>(mds(dim*j+k)+mds(dim*(N/2+j)+k)+2.0*offsetT,-beta/2.0,beta/2.0),2);
 							mdsMirrorTest += pow(mod<number>(mds(dim*j+k)-mds(dim*(N-1-j)+k),-beta/2.0,beta/2.0),2);
 						}
 					}

@@ -115,6 +115,10 @@ void Vthr (const uint& j, const uint& k, const Loop<Dim>& l, const number& beta,
 template <uint Dim>
 void VthrDisjoint (const uint& j, const uint& k, const Loop<Dim>& l, const number& beta, const number& a, const number& f, number& result);
 
+// VnonrelDisjoint
+template <uint Dim>
+void VnonrelDisjoint (const uint& j, const Loop<Dim>& l, const number& beta, const number& f, number& result);
+
 // Gaussian
 template <uint Dim>
 void Gaussian (const uint& j, const uint& k, const Loop<Dim>& l, const number& a, const number& f, number& result);
@@ -329,6 +333,10 @@ void mdVthr_nr(const uint& j, const uint& mu, const uint& i, const Loop<Dim>& l,
 template<uint Dim>
 void mdVthrDisjoint_nr(const uint& j, const uint& mu, const uint& i, const Loop<Dim>& l,\
 					 	const number& beta, const number& a, const number& f, vec& v);
+					 	
+// mdVnonrelDisjoint_nr
+template<uint Dim>
+void mdVnonrelDisjoint_nr(const uint& j, const uint& mu, const Loop<Dim>& l, const number& beta, const number& f, vec& v);
 
 // mdGaussian_nr
 template<uint Dim>
@@ -368,6 +376,11 @@ void ddVthr_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, con
 template<uint Dim>
 void ddVthrDisjoint_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l,\
 						 const number& beta, const number& a, const number& f, mat& m);
+
+// ddVnonrelDisjoint_nr
+template<uint Dim>
+void ddVnonrelDisjoint_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l,\
+						 const number& beta, const number& f, mat& m);
 
 // ddGaussian_nr
 template<uint Dim>
@@ -438,6 +451,10 @@ void PVthr_nr(const Loop<Dim>& l, const uint& j, const uint& mu, const uint& k, 
 // PVthrDisjoint_nr
 template<uint Dim>
 void PVthrDisjoint_nr(const Loop<Dim>& l, const uint& j, const uint& mu, const uint& k, const number& beta, const number& a, const number& f, vec& v);
+
+// PVnonrelDisjoint_nr
+template<uint Dim>
+void PVnonrelDisjoint_nr(const Loop<Dim>& l, const uint& loc, const uint& mu, const number& beta, const number& f, vec& v);
 
 // PGaussian_nr
 template<uint Dim>

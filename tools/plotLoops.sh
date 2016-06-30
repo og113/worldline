@@ -8,7 +8,7 @@ oflag=false # is there an outfile?
 mflag=false # do we want to print min or max?
 bflag=false # do we want to print beta?
 kflag=false
-K=11
+K=8
 
 # checking if outFile required and getting filename if so
 options=':o:K:mbc'

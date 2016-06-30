@@ -12,6 +12,7 @@
 #include "simple.h"
 #include "parameters.h"
 #include "genloop.h"
+#include "folder.h"
 
 /*-------------------------------------------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------------------------------------------
@@ -117,7 +118,7 @@ for (uint pl=0; pl<Npl; pl++) {
 /*-------------------------------------------------------------------------------------------------------------------------
 	3 - making and saving loops
 -------------------------------------------------------------------------------------------------------------------------*/
-	string file;
+	Filename file;
 	uint Seed = time(NULL);
 	Loop<dim> loop(p.K,Seed);
 	Metropolis<dim> met(loop,p,Seed);
@@ -176,8 +177,12 @@ for (uint pl=0; pl<Npl; pl++) {
 		}
 		else if (so==ShapeOptions::straightDisjoint) {
 			file = "data/"+shape+"/loops/dim_"+nts<uint>(dim)+"/K_"+nts(p.K)+"/loop_Kappa_"+nts(kappa)\
-					+"_T_"+nts(p.T)+"_rank_"+nts<uint>(j)+".dat";	
+					+"_T_"+nts(p.T)+"_rank_"+nts<uint>(j)+".dat";
+			if (extend)	
+				(file.Extras).push_back(StringPair("Lambda",nts(p.Lambda)));
 			number r = sqrt(kappa/4.0/PI);
+			if (extend)
+				r *= (1.0 + p.Lambda);
 			number dt = 2.0*beta/(number)N;
 			for (uint k=0; k<N; k++) {
 				point = p0;
@@ -197,7 +202,6 @@ for (uint pl=0; pl<Npl; pl++) {
 					+"_T_"+nts(p.T)+"_Lambda_"+nts(p.Lambda)+"_rank_"+nts<uint>(j)+".dat";	
 			number r = sqrt(pow(p.G,3)*p.B/4.0/PI);
 			number dt = 2.0*beta/(number)N;
-			p0[3] += -beta/2.0;
 			number w = 4.0*PI/(number)N;
 			for (uint k=0; k<N; k++) {
 				point = p0;
