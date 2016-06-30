@@ -40,14 +40,13 @@ struct PrintOptions {
 };
 
 struct PotentialOptions {
-	enum Option { original, link, exponential, dimreg, thermal, thermalDisjoint};
+	enum Option { original, link, exponential, dimreg, thermal, thermalDisjoint, external, externalDisjoint};
 };
+uint NumberPotentialOptions = 8;
 
 struct KineticOptions {
 	enum Option { saddle, s0, len};
 };
-
-uint NumberPotentialOptions = 4;
 
 int main(int argc, char** argv) {
 /*----------------------------------------------------------------------------------------------------------------------------
@@ -66,6 +65,7 @@ bool curvature = false;
 bool conservation = false;
 bool old = true;
 bool gaussian = false;
+bool disjoint = true;
 bool fixdz = false;
 bool mu_a = false;
 bool pass = false;
@@ -92,6 +92,7 @@ if (argc % 2 && argc>1) {
 		else if (id.compare("old")==0) old = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("gaussian")==0 || id.compare("repulsion")==0) gaussian = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("mu_a")==0) mu_a = (stn<uint>(argv[2*j+2])!=0);
+		else if (id.compare("disjoint")==0) disjoint = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("pass")==0) pass = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("fixdz")==0) fixdz = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("inputs")==0) inputsFile = (string)argv[2*j+2];
@@ -126,6 +127,9 @@ if (!printOpts.empty()) {
 		po = PrintOptions::curvature;
 		curvature = true;
 	}
+	else if (printOpts.compare("none")==0) {
+		po = PrintOptions::none;
+	}
 	else
 		cerr << "print options not understood: " << printOpts << endl;
 }
@@ -143,8 +147,16 @@ if (!potOpts.empty()) {
 		poto = PotentialOptions::dimreg;
 	else if (potOpts.compare("thermal")==0)
 		poto = PotentialOptions::thermal;
-	else if (potOpts.compare("thermalDisjoint")==0)
+	else if (potOpts.compare("thermalDisjoint")==0) {
 		poto = PotentialOptions::thermalDisjoint;
+		disjoint = true;
+	}
+	else if (potOpts.compare("external")==0)
+		poto = PotentialOptions::external;
+	else if (potOpts.compare("externalDisjoint")==0) {
+		poto = PotentialOptions::externalDisjoint;
+		disjoint = true;	
+	}
 	else {
 		cerr << "potential options not understood: " << potOpts << endl;
 		return 1;
@@ -211,7 +223,7 @@ for (uint pl=0; pl<Npl; pl++) {
 			(stepFile.Extras).push_back(StringPair("weak","1"));
 		if (poto!=PotentialOptions::original || gaussian)
 			(stepFile.Extras).push_back(potExtras);
-		if (poto==PotentialOptions::thermal || poto==PotentialOptions::thermalDisjoint)
+		if (poto==PotentialOptions::thermal || disjoint)
 			(stepFile.Extras).push_back(StringPair("T",nts(pold.T)));
 		if (kino!=KineticOptions::saddle)
 			(stepFile.Extras).push_back(kinExtras);
@@ -220,7 +232,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	
 	// defining some derived parameters	
 	uint N = pow(2,p.K);
-	uint zm = (poto!=PotentialOptions::thermalDisjoint? dim: dim+1) ; //////////////////////////////////
+	uint zm = (disjoint? dim: dim+1) ; //////////////////////////////////
 	uint NT = N*dim+zm;
 	number R = 1.0; //////////////////////////////////
 	Point<dim> P;
@@ -289,7 +301,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	// x file
 	if (pl==0 || !step || pass) {
 		if (guess) {
-			if (poto!=PotentialOptions::thermalDisjoint) {
+			if (!disjoint) {
 				loadFile = "data/lemon/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_R_"+nts(R)+"_E_"+nts(E)+"_rank_0.dat";
 				if (!loadFile.exists())
 					loadFile = "data/circle/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_R_"+nts(R)+"_rank_0.dat";
@@ -312,7 +324,7 @@ for (uint pl=0; pl<Npl; pl++) {
 				(loadFile.Extras).push_back(StringPair("weak","1"));
 			if (poto!=PotentialOptions::original || gaussian)
 				(loadFile.Extras).push_back(potExtras);
-			if (poto==PotentialOptions::thermal || poto==PotentialOptions::thermalDisjoint)
+			if (poto==PotentialOptions::thermal || disjoint)
 				(loadFile.Extras).push_back(StringPair("T",nts(p.T)));
 			if (kino!=KineticOptions::saddle)
 				(stepFile.Extras).push_back(kinExtras);
@@ -332,7 +344,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		+"_a_"+nts(p.Epsi)+".dat";
 		
 				if (!loadFile.exists()) {
-					if (poto!=PotentialOptions::thermalDisjoint) {
+					if (!disjoint) {
 					loadFile = "data/lemon/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_R_"+nts(R)+"_E_"+nts(E)+"_rank_0.dat";
 						if (!loadFile.exists())
 							loadFile = "data/circle/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_R_"+nts(R)+"_rank_0.dat";
@@ -420,6 +432,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		number kinetic = 0.0;
 		number g, dm, cusp_scale, beta;
 		number dim_reg_scale = 0.0, d_dim_reg = 0.0;
+		number n = 0.0;
 		number repulsion_scale, repulsion = 0.0;
 		number ic_scale = 1.0;
 		number cc_scale = 1.0;
@@ -466,7 +479,20 @@ for (uint pl=0; pl<Npl; pl++) {
 			cusp_scale = -g*2.0*log(p.Mu/p.Epsi);
 			repulsion_scale = -g*sqrt(PI)/p.Epsi/p.Epsi;
 			beta = ((p.T)>sqrt(MIN_NUMBER)? 1.0/(p.T): 1.0/sqrt(MIN_NUMBER)); // this is 1/eta
-			if (poto==PotentialOptions::thermalDisjoint)
+			if (disjoint)
+				s0 = S0Disjoint(xLoop,beta);
+			else
+				s0 = S0(xLoop);
+			sqrt4s0 = 2.0*sqrt(s0);
+		}
+		else if (poto==PotentialOptions::external || poto==PotentialOptions::externalDisjoint) {
+			n = -1.0;
+			g = -pow(p.G,3)*p.B/4.0/PI/4.0;
+			dm = 0.0;
+			cusp_scale = 0.0;
+			repulsion_scale = 0.0;
+			beta = ((p.T)>sqrt(MIN_NUMBER)? 1.0/(p.T): 1.0/sqrt(MIN_NUMBER)); // this is 1/eta
+			if (disjoint)
 				s0 = S0Disjoint(xLoop,beta);
 			else
 				s0 = S0(xLoop);
@@ -479,23 +505,27 @@ for (uint pl=0; pl<Npl; pl++) {
 		for (j=0; j<N; j++) {
 		
 			//S0(j, xLoop, s0norm, s0norm);
-			if (poto!=PotentialOptions::thermalDisjoint) {
+			if (!disjoint) {
 				L		(j, xLoop, 1.0, len);
 				I0		(j, xLoop, mgb, i0);
 				S0		(j, xLoop, Js_scale, Js(j));
+				if (poto==PotentialOptions::external)
+					In(j, xLoop, n, g, v);
 			}
 			else {
 				LDisjoint (j, xLoop, beta, 1.0, len);
 				I0Disjoint(j, xLoop, beta, mgb, i0);
 				S0Disjoint(j, xLoop, beta, Js_scale, Js(j));
+				if (poto==PotentialOptions::externalDisjoint)
+					InDisjoint(j, xLoop, n, beta, g, v);
 			}
 			
 			if (poto==PotentialOptions::dimreg)
 				DistPow	(j, xLoop, p.Epsi, dim_reg_scale, d_dim_reg);
 			
-			//curvatures - N.B. not yet working for thermalDisjoint case
+			//curvatures
 			if (curvature || alltests) {
-				if (poto!=PotentialOptions::thermalDisjoint) {
+				if (!disjoint) {
 					InlineCurvatureMax(j, xLoop, ic_scale, sc_vec[j]);
 					KGMaxPlane(j, xLoop, kg_scale, kg_vec[j]);
 				}
@@ -505,7 +535,7 @@ for (uint pl=0; pl<Npl; pl++) {
 				}
 			}
 			if (!(P^=P0)) {
-				if (poto!=PotentialOptions::thermalDisjoint) {
+				if (!disjoint) {
 					InlineCurvatureMax(j, xLoop, 0, N/2-1, ic_scale, ic_max);
 					CuspCurvatureMax(j, xLoop, 0, N/2-1, cc_scale, ic_max);
 					KGMaxPlane(j, xLoop, 0, N/2-1, kg_scale, kg_max);
@@ -517,7 +547,7 @@ for (uint pl=0; pl<Npl; pl++) {
 				}
 			} 
 			else {
-				if (poto!=PotentialOptions::thermalDisjoint) {
+				if (!disjoint) {
 					InlineCurvatureMax(j, xLoop, ic_scale, ic_max);
 					CuspCurvatureMax(j,xLoop,cc_scale,ic_max);
 					KGMaxPlane(j, xLoop, kg_scale, kg_max);
@@ -532,7 +562,7 @@ for (uint pl=0; pl<Npl; pl++) {
 			for (mu=0; mu<dim; mu++) {
 			
 				// free particle
-				if (poto!=PotentialOptions::thermalDisjoint) {
+				if (!disjoint) {
 					if (kino==KineticOptions::saddle) {
 						mdsqrtS0_nr(j,mu,xLoop,sqrt4s0,1.0,mds);
 						PsqrtS0_nr(xLoop, j, mu, sqrt4s0, 1.0, Pmu);
@@ -562,13 +592,21 @@ for (uint pl=0; pl<Npl; pl++) {
 				}
 				
 				// external field
-				if (poto!=PotentialOptions::thermalDisjoint) {
-					mdI_nr(j,mu,xLoop,mgb,mds);
+				if (!disjoint) {
+					mdI0_nr(j, mu, xLoop, mgb, mds);
 					PI0_nr(xLoop, j, mu, mgb, Pmu);
+					if (poto==PotentialOptions::external) {
+						mdIn_nr(j, mu, xLoop, n, g, mds);
+						PIn_nr(xLoop, j, mu, n, g, Pmu);
+					}
 				}
 				else {
-					mdIDisjoint_nr(j,mu,xLoop,beta,mgb,mds);
+					mdI0Disjoint_nr(j,mu,xLoop,beta,mgb,mds);
 					PI0Disjoint_nr(xLoop, j, mu, beta, mgb, Pmu);
+					if (poto==PotentialOptions::externalDisjoint) {
+						mdInDisjoint_nr(j, mu, xLoop, n, beta, g, mds);
+						PInDisjoint_nr(xLoop, j, mu, n, beta, g, Pmu);
+					}
 				}
 				
 				// external momentum
@@ -579,11 +617,11 @@ for (uint pl=0; pl<Npl; pl++) {
 				
 				if (!weak && !gaussian) {
 					// self-energy regularisation
-					if (poto!=PotentialOptions::dimreg && poto!=PotentialOptions::thermalDisjoint) {
+					if (poto!=PotentialOptions::dimreg && !disjoint) {
 						mdL_nr(j,mu,xLoop,dm,mds);
 						PL_nr(xLoop, j, mu, dm, Pmu);
 					}
-					else if (poto==PotentialOptions::thermalDisjoint) {
+					else if (disjoint) {
 						mdLDisjoint_nr(j,mu,xLoop,beta,dm,mds);
 						PLDisjoint_nr(xLoop, j, mu, beta, dm, Pmu);
 					}
@@ -609,7 +647,7 @@ for (uint pl=0; pl<Npl; pl++) {
 						else if (poto==PotentialOptions::thermalDisjoint)
 							VthrDisjoint(j, k, xLoop, beta, p.Epsi, g, v);
 							
-						if (gaussian && poto!=PotentialOptions::thermalDisjoint)
+						if (gaussian && disjoint)
 							Gaussian(j, k, xLoop, p.Epsi, repulsion_scale, repulsion);
 						else if (gaussian)
 							GaussianDisjoint(j, k, xLoop, beta, p.Epsi, repulsion_scale, repulsion);
@@ -639,7 +677,7 @@ for (uint pl=0; pl<Npl; pl++) {
 							PVthrDisjoint_nr(xLoop, j, mu, k, beta, p.Epsi, g, Pmu);
 						}
 							
-						if (gaussian && poto!=PotentialOptions::thermalDisjoint) {
+						if (gaussian && !disjoint) {
 							mdGaussian_nr(j, mu, k, xLoop, p.Epsi, repulsion_scale, mds);
 							PGaussian_nr(xLoop, j, mu, k, p.Epsi, repulsion_scale, Pmu);
 						}
@@ -652,7 +690,7 @@ for (uint pl=0; pl<Npl; pl++) {
 					for (nu=0; nu<dim; nu++) {
 					
 						// free particle
-						if (poto!=PotentialOptions::thermalDisjoint) {
+						if (!disjoint) {
 							if (kino==KineticOptions::saddle)
 								ddsqrtS0_nr(j,mu,k,nu,xLoop,sqrt4s0,1.0,dds);
 							else if (kino==KineticOptions::s0)
@@ -670,11 +708,15 @@ for (uint pl=0; pl<Npl; pl++) {
 						}
 						
 						// external field
-						if (poto!=PotentialOptions::thermalDisjoint) {
-							ddI_nr(j,mu,k,nu,xLoop,mgb,dds);
+						if (!disjoint) {
+							ddI0_nr(j,mu,k,nu,xLoop,mgb,dds);
+							if (poto==PotentialOptions::external)
+								ddIn_nr(j,mu,k,nu,xLoop,n,g,dds);
 						}
 						else {
-							ddIDisjoint_nr(j,mu,k,nu,xLoop,beta,mgb,dds);
+							ddI0Disjoint_nr(j,mu,k,nu,xLoop,beta,mgb,dds);
+							if (poto==PotentialOptions::externalDisjoint)
+								ddInDisjoint_nr(j,mu,k,nu,xLoop,n,beta,g,dds);
 						}
 						
 						
@@ -694,7 +736,7 @@ for (uint pl=0; pl<Npl; pl++) {
 								ddVthrDisjoint_nr(j, mu, k, nu, xLoop, beta, p.Epsi, g, dds);		
 								
 							// self-energy regularisation
-							if (poto!=PotentialOptions::thermalDisjoint) {
+							if (!disjoint) {
 								if (gaussian)
 									ddGaussian_nr(j, mu, k, nu, xLoop, p.Epsi, repulsion_scale, dds);
 								else if (poto!=PotentialOptions::dimreg)
@@ -720,11 +762,11 @@ for (uint pl=0; pl<Npl; pl++) {
 				if (mu>=(dim-1) && fixdz) {
 					if ( (mu==(dim-1) && j==(N/2-1)) || (mu==dim && j==(N-1)) ) {
 						uint nu = dim-2;
-						uint pj = (poto==PotentialOptions::thermalDisjoint? posNeighDisjoint(j,N): posNeigh(j,N));
+						uint pj = (disjoint? posNeighDisjoint(j,N): posNeigh(j,N));
 						uint locj = j*dim+nu, locpj = pj*dim+nu, locz = N*dim+mu;
-						number ds = 1.0;///(number)N; // using N makes mds large here
+						number ds = 1.0;///(number)N; // using 1/N makes mds large here
 						mds(locz)  		-= (x[locpj]-x[locj])/ds;
-						mds(locpj)  		-= x[locz]/ds;
+						mds(locpj)  	-= x[locz]/ds;
 						mds(locj)  		-= -x[locz]/ds;								
 
 						dds(locpj,locz)  	+= 1.0/ds;
@@ -828,7 +870,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		
 		// energy normalization
 		number Enorm = 0.0;
-		if (poto==PotentialOptions::thermal || poto==PotentialOptions::thermalDisjoint)
+		if (poto==PotentialOptions::thermal || disjoint)
 			Enorm = p.T*2.0;
 		else
 			Enorm = p.P4/2.0;
@@ -924,7 +966,7 @@ for (uint pl=0; pl<Npl; pl++) {
 						mdsMirrorTest += pow(mds(dim*j+k)+mds(dim*(N-1-j)+k),2);
 					}
 					else if (k==(dim-1)) {
-						if (poto!=PotentialOptions::thermalDisjoint) {
+						if (!disjoint) {
 							xRotationTest += pow(x(dim*j+k)+x(dim*(N/2+j)+k),2);
 							xMirrorTest += pow(x(dim*j+k)-x(dim*(N-1-j)+k),2);
 							mdsRotationTest += pow(mds(dim*j+k)+mds(dim*(N/2+j)+k),2);
@@ -966,7 +1008,7 @@ for (uint pl=0; pl<Npl; pl++) {
 				(early.Extras).push_back(StringPair("weak","1"));
 			if (poto!=PotentialOptions::original || gaussian)
 				(early.Extras).push_back(potExtras);
-			if (poto==PotentialOptions::thermal || poto==PotentialOptions::thermalDisjoint)
+			if (poto==PotentialOptions::thermal || disjoint)
 				(early.Extras).push_back(StringPair("T",nts(p.T)));
 			if (kino!=KineticOptions::saddle)
 				(early.Extras).push_back(kinExtras);
@@ -1024,7 +1066,7 @@ for (uint pl=0; pl<Npl; pl++) {
 				(early.Extras).push_back(StringPair("weak","1"));
 			if (poto!=PotentialOptions::original || gaussian)
 				(early.Extras).push_back(potExtras);
-			if (poto==PotentialOptions::thermal || poto==PotentialOptions::thermalDisjoint)
+			if (poto==PotentialOptions::thermal || disjoint)
 				(early.Extras).push_back(StringPair("T",nts(p.T)));
 			if (kino!=KineticOptions::saddle)
 				(early.Extras).push_back(kinExtras);
@@ -1047,7 +1089,7 @@ for (uint pl=0; pl<Npl; pl++) {
 						deltaMirrorTest += pow(delta(dim*j+k)+delta(dim*(N-1-j)+k),2);
 					}
 					else if (k==(dim-1)) {
-						if (poto!=PotentialOptions::thermalDisjoint) {
+						if (!disjoint) {
 							deltaRotationTest += pow(delta(dim*j+k)+delta(dim*(N/2+j)+k),2);
 							deltaMirrorTest += pow(delta(dim*j+k)-delta(dim*(N-1-j)+k),2);
 						}
@@ -1142,10 +1184,19 @@ for (uint pl=0; pl<Npl; pl++) {
 				cerr << "(mds.head(N)).mean():  " << (mds.head(N)).mean() << endl;
 				cerr << endl << "delta info:    " << endl;
 				cerr << "delta.norm():          " << delta.norm() << endl;
-				cerr << "delta.maxCoeff():        " << delta.maxCoeff(&maxCoeff1) << endl;
-				cerr << "delta.minCoeff():        " << delta.minCoeff(&minCoeff1) << endl;
+				max = delta.maxCoeff(&maxCoeff1);
+				min = delta.minCoeff(&minCoeff1);
+				cerr << "delta.maxCoeff():        " << max << endl;
+				cerr << "delta.minCoeff():        " << min << endl;
 				cerr << "delta maxCoeff  :        " << maxCoeff1 << endl;
 				cerr << "delta minCoeff  :        " << minCoeff1 << endl;
+				if (-min>max) max = -min;
+				largeCounter = 0;
+				for (uint j=0; j<NT; j++) {
+						if (abs(delta(j))>max/2.0)
+							largeCounter++;
+				}
+				cerr << "max/2 counter :         " << largeCounter << endl;
 				cerr << "(delta.tail(zm)).mean(): " << (delta.tail(zm)).mean() << endl;
 				cerr << "(delta.head(N)).mean():  " << (delta.head(N)).mean() << endl;
 				cerr << endl << "dds info:      " << endl;
@@ -1239,6 +1290,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		mat dds_wlm = dds.block(0,0,dim*N,dim*N); // dds without Lagrange multipliers
 		number eigenTol = 1.0e-16*pow(dim*N,2);
 		uint negEigs = 0;
+		uint zeroEigs = 0;
 		uint numEigs = 3*dim;
 		cout << "calculating eigendecomposition of dds..." << endl;
 		Eigen::SelfAdjointEigenSolver<mat> eigensolver(dds_wlm);
@@ -1251,11 +1303,14 @@ for (uint pl=0; pl<Npl; pl++) {
 		for (uint j=0; j<numEigs; j++) {
 			if ((eigensolver.eigenvalues())[j]<-eigenTol)
 				negEigs++;
+			if (abs((eigensolver.eigenvalues())[j])<eigenTol)
+				zeroEigs++;
 			cout << (eigensolver.eigenvalues())[j] << endl;
 			eigenFile.ID = "eigenvector"+nts(j);
 			saveVectorBinary(eigenFile,(Eigen::VectorXd)((eigensolver.eigenvectors()).col(j)));
 		}
 		cout << negEigs << " negative eigenvalues found, less than " << -eigenTol << endl;
+		cout << zeroEigs << " zero eigenvalues found, with absolute value less than " << eigenTol << endl;
 		
 		printf("%12s%50s\n","eigenvectors:",((string)eigenFile).c_str());
 	}
@@ -1363,7 +1418,7 @@ for (uint pl=0; pl<Npl; pl++) {
 			(loopRes.Extras).push_back(StringPair("weak","1"));
 		if (poto!=PotentialOptions::original || gaussian)
 			(loopRes.Extras).push_back(potExtras);
-		if (poto==PotentialOptions::thermal || poto==PotentialOptions::thermalDisjoint)
+		if (poto==PotentialOptions::thermal || disjoint)
 			(loopRes.Extras).push_back(StringPair("T",nts(p.T)));
 		if (kino!=KineticOptions::saddle)
 			(loopRes.Extras).push_back(kinExtras);
@@ -1379,7 +1434,7 @@ for (uint pl=0; pl<Npl; pl++) {
 				(file.Extras).push_back(StringPair("weak","1"));
 			if (poto!=PotentialOptions::original || gaussian)
 				(file.Extras).push_back(potExtras);
-			if (poto==PotentialOptions::thermal || poto==PotentialOptions::thermalDisjoint)
+			if (poto==PotentialOptions::thermal || disjoint)
 				(file.Extras).push_back(StringPair("T",nts(p.T)));
 			if (kino!=KineticOptions::saddle)
 				(file.Extras).push_back(kinExtras);

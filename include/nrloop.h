@@ -67,6 +67,14 @@ void I0 (const uint& j, const Loop<Dim>& l, const number& f, number& result);
 template <uint Dim>
 void I0Disjoint (const uint& j, const Loop<Dim>& l, const number& beta, const number& f, number& result);
 
+// In
+template <uint Dim>
+void In (const uint& j, const Loop<Dim>& l, const number& n, const number& f, number& result);
+
+// InDisjoint
+template <uint Dim>
+void InDisjoint (const uint& j, const Loop<Dim>& l, const number& n, const number& beta, const number& f, number& result);
+
 // Angle
 template <uint Dim>
 void Angle (const uint& j, const Loop<Dim>& l, const number& f, number& result);
@@ -209,21 +217,37 @@ void mdDistPow_nr(const uint& j, const uint& mu, const Loop<Dim>& l, const numbe
 template<uint Dim>
 void ddDistPow_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l, const number& w, const number& f, mat& m);
 
-// mdI_nr
+// mdI0_nr
 template<uint Dim>
-void mdI_nr(const uint& j, const uint& mu, const Loop<Dim>& l, const number& f, vec& v);
+void mdI0_nr(const uint& j, const uint& mu, const Loop<Dim>& l, const number& f, vec& v);
 
-// ddI_nr
+// ddI0_nr
 template<uint Dim>
-void ddI_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l, const number& f, mat& m);
+void ddI0_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l, const number& f, mat& m);
 
-// mdIDisjoint_nr
+// mdI0Disjoint_nr
 template<uint Dim>
-void mdIDisjoint_nr(const uint& j, const uint& mu, const Loop<Dim>& l, const number& beta, const number& f, vec& v);
+void mdI0Disjoint_nr(const uint& j, const uint& mu, const Loop<Dim>& l, const number& beta, const number& f, vec& v);
 
-// ddIDisjoint_nr
+// ddI0Disjoint_nr
 template<uint Dim>
-void ddIDisjoint_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l, const number& beta, const number& f, mat& m);
+void ddI0Disjoint_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l, const number& beta, const number& f, mat& m);
+
+// mdIn_nr
+template<uint Dim>
+void mdIn_nr(const uint& j, const uint& mu, const Loop<Dim>& l, const number& n, const number& f, vec& v);
+
+// ddIn_nr
+template<uint Dim>
+void ddIn_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l, const number& n, const number& f, mat& m);
+
+// mdInDisjoint_nr
+template<uint Dim>
+void mdInDisjoint_nr(const uint& j, const uint& mu, const Loop<Dim>& l, const number& n, const number& beta, const number& f, vec& v);
+
+// ddInDisjoint_nr
+template<uint Dim>
+void ddInDisjoint_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l, const number& n, const number& beta, const number& f, mat& m);
 
 // mdS0_nr
 template<uint Dim>
@@ -394,6 +418,14 @@ void PI0_nr(const Loop<Dim>& l, const uint& loc, const uint& mu, const number& f
 // PI0Disjoint_nr
 template<uint Dim>
 void PI0Disjoint_nr(const Loop<Dim>& l, const uint& loc, const uint& mu, const number& beta, const number& f, vec& v);
+
+// PIn_nr
+template<uint Dim>
+void PIn_nr(const Loop<Dim>& l, const uint& loc, const uint& mu, const number& n, const number& f, vec& v);
+
+// PInDisjoint_nr
+template<uint Dim>
+void PInDisjoint_nr(const Loop<Dim>& l, const uint& loc, const uint& mu, const number& n, const number& beta, const number& f, vec& v);
 
 // PVor_nr
 template<uint Dim>
