@@ -400,7 +400,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	if (x.size()<NT) {
 		x.conservativeResize(NT);
 		for (uint mu=0; mu<zm; mu++)
-			x[N*dim+mu] = 1.0e-3;
+			x[N*dim+mu] = 1.0e-4;
 	}
 	else if (x.size()>NT)
 		x.conservativeResize(NT);
@@ -989,25 +989,27 @@ for (uint pl=0; pl<Npl; pl++) {
 			// check rotation and check mirror
 			number xRotationTest = 0.0, xMirrorTest = 0.0;
 			number mdsRotationTest = 0.0, mdsMirrorTest = 0.0;
+			number offset = (runsCount==1? x[N*dim]: 0.00);
+			number offsetT = (runsCount==1 && !fixdz? x[N*dim]: 0.00);
 			for (uint j=0; j<N/2; j++) {
 				for (uint k=0; k<dim; k++) {
 					if (k==(dim-2)) {
 						xRotationTest += pow(x(dim*j+k)+x(dim*(N/2+j)+k),2);
 						xMirrorTest += pow(x(dim*j+k)+x(dim*(N-1-j)+k),2);
-						mdsRotationTest += pow(mds(dim*j+k)+mds(dim*(N/2+j)+k),2);
-						mdsMirrorTest += pow(mds(dim*j+k)+mds(dim*(N-1-j)+k),2);
+						mdsRotationTest += pow(mds(dim*j+k)+mds(dim*(N/2+j)+k)+2.0*offset,2);
+						mdsMirrorTest += pow(mds(dim*j+k)+mds(dim*(N-1-j)+k)+2.0*offset,2);
 					}
 					else if (k==(dim-1)) {
 						if (!disjoint) {
 							xRotationTest += pow(x(dim*j+k)+x(dim*(N/2+j)+k),2);
 							xMirrorTest += pow(x(dim*j+k)-x(dim*(N-1-j)+k),2);
-							mdsRotationTest += pow(mds(dim*j+k)+mds(dim*(N/2+j)+k),2);
+							mdsRotationTest += pow(mds(dim*j+k)+mds(dim*(N/2+j)+k)+2.0*offsetT,2);
 							mdsMirrorTest += pow(mds(dim*j+k)-mds(dim*(N-1-j)+k),2);
 						}
 						else {
 							xRotationTest += pow(mod<number>(x(dim*j+k)+x(dim*(N/2+j)+k),-beta/2.0,beta/2.0),2);
 							xMirrorTest += pow(mod<number>(x(dim*j+k)-x(dim*(N-1-j)+k),-beta/2.0,beta/2.0),2);
-							mdsRotationTest += pow(mod<number>(mds(dim*j+k)+mds(dim*(N/2+j)+k),-beta/2.0,beta/2.0),2);
+							mdsRotationTest += pow(mod<number>(mds(dim*j+k)+mds(dim*(N/2+j)+k)+2.0*offsetT,-beta/2.0,beta/2.0),2);
 							mdsMirrorTest += pow(mod<number>(mds(dim*j+k)-mds(dim*(N-1-j)+k),-beta/2.0,beta/2.0),2);
 						}
 					}
