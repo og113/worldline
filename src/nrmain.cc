@@ -1088,6 +1088,9 @@ for (uint pl=0; pl<Npl; pl++) {
 			delta = dds.partialPivLu().solve(mds);
 			
 		}
+		else {
+			delta = Eigen::VectorXd::Zero(NT);
+		}
 		
 /*----------------------------------------------------------------------------------------------------------------------------
 	9 - printing early 2 (delta), checking delta
