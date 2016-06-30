@@ -7,16 +7,16 @@ set term fig size 1600,800; \
 set output outFile; \
 
 
-file="data/temp/160630113427mdsEarly1_K_9_kappa_0.01_E_0_a_0.01_mu_0.1_pot_11_T_1.8_run_1.dat"
-file2="data/temp/160630112644mdsEarly1_K_9_kappa_0.01_E_0_a_0.01_mu_0.1_pot_17_T_1.8_run_2.dat"
+file="data/temp/160630114523mdsEarly1_K_9_kappa_0.01_E_0_a_0.01_mu_0.1_pot_11_T_1.8_run_1.dat"
+file2="data/temp/160630134229mdsEarly1_K_9_kappa_0.01_E_0_a_0.01_mu_0.1_pot_17_T_1.8_run_1.dat"
 file3="data/temp/160630103011mdsEarly1_K_9_kappa_0.01_E_0_a_0.01_mu_0.1_pot_17_T_1.8_run_1.dat"
 
 #if you want to choose which file to load
 if (exists("inFile")) \
 file=inFile; \
 
-offset=0.0001
-offset4=0.0001
+offset=0.0002
+offset4=0.0002
 
 unset log
 unset label

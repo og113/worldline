@@ -972,9 +972,9 @@ for (uint pl=0; pl<Npl; pl++) {
 			checkNegEigenvector.checkMessage();
 			
 			if (!checkNegEigenvalue.good() || !checkNegEigenvector.good()) {
-				cerr << "negative eigenvalue = " << negEigenvalue << endl;
-				cerr << "analytic result     = " << analyticNegEigenvalue << endl;
-				cerr << "eigenvector test    = " << negEigenvectorTest << endl;
+				cout << "negative eigenvalue = " << negEigenvalue << endl;
+				cout << "analytic result     = " << analyticNegEigenvalue << endl;
+				cout << "eigenvector test    = " << negEigenvectorTest << endl;
 			}
 			
 			// checking if angle gamma agrees with weak coupling result
@@ -1047,6 +1047,7 @@ for (uint pl=0; pl<Npl; pl++) {
 			if (kino!=KineticOptions::saddle)
 				(early.Extras).push_back(kinExtras);
 				
+			(early.Extras).push_back(StringPair("pl",nts(pl)));
 			(early.Extras).push_back(StringPair("run",nts(runsCount)));
 			
 			if (po==PrintOptions::x || po==PrintOptions::all) {
@@ -1105,6 +1106,7 @@ for (uint pl=0; pl<Npl; pl++) {
 			if (kino!=KineticOptions::saddle)
 				(early.Extras).push_back(kinExtras);
 				
+			(early.Extras).push_back(StringPair("pl",nts(pl)));
 			(early.Extras).push_back(StringPair("run",nts(runsCount)));
 			
 			if (po==PrintOptions::delta || po==PrintOptions::all) {
