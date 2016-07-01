@@ -15,8 +15,8 @@ file3="data/temp/160630103011mdsEarly1_K_9_kappa_0.01_E_0_a_0.01_mu_0.1_pot_17_T
 if (exists("inFile")) \
 file=inFile; \
 
-offset=0.000#1
-offset4=0.000#1
+offset=0.0001
+offset4=0.0001
 
 unset log
 unset label
