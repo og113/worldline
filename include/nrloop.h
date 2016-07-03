@@ -119,6 +119,10 @@ void VthrDisjoint (const uint& j, const uint& k, const Loop<Dim>& l, const numbe
 template <uint Dim>
 void VnonrelDisjoint (const uint& j, const Loop<Dim>& l, const number& beta, const number& f, number& result);
 
+// VnonrelrDisjoint
+template <uint Dim>
+void VnonrelrDisjoint (const uint& j, const Loop<Dim>& l, const number& beta, const number& a, const number& f, number& result);
+
 // Gaussian
 template <uint Dim>
 void Gaussian (const uint& j, const uint& k, const Loop<Dim>& l, const number& a, const number& f, number& result);

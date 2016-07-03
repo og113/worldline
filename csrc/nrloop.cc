@@ -291,10 +291,16 @@ void VthrDisjoint (const uint& j, const uint& k, const Loop<Dim>& l, const numbe
 	cerr << "VthrDisjoint error: not defined in dimension " << Dim << endl;
 }
 
-// Vnonrel
+// VnonrelDisjoint
 template <uint Dim>
-void Vnonrel (const uint& j, const Loop<Dim>& l, const number& f, number& result) {
-	cerr << "Vnonrel error: not defined in dimension " << Dim << endl;
+void VnonrelDisjoint (const uint& j, const Loop<Dim>& l, const number& f, number& result) {
+	cerr << "VnonrelDisjoint error: not defined in dimension " << Dim << endl;
+}
+
+// VnonrelrDisjoint
+template <uint Dim>
+void VnonrelrDisjoint (const uint& j, const Loop<Dim>& l, const number& beta, const number& a, const number& f, number& result) {
+	cerr << "VnonrelrDisjoint error: not defined in dimension " << Dim << endl;
 }
 
 // Gaussian
@@ -1748,6 +1754,19 @@ void VnonrelDisjoint<4> (const uint& j, const Loop<4>& l, const number& beta, co
 		uint oj = oppNeigh(j,l.size());
 
 		result += f*dt/SpatialDistance(l[j],l[oj]); // dt/r, not lorentz invariant but galilean invariant
+	}
+}
+
+// VnonrelrDisjoint
+template <>
+void VnonrelrDisjoint<4> (const uint& j, const Loop<4>& l, const number& beta, const number& a, const number& f, number& result) {
+	if (j<l.size()/2) {
+		number dt = 2.0*beta/(number)l.size();
+		number r2 = SpatialDistanceSquared(l[j],l[oj]);
+		number a2 = pow(a,2);
+		uint oj = oppNeigh(j,l.size());
+
+		result += f*dt*(1.0/sqrt(r2 + a2) - exp(-r2/a2)/a); // not lorentz invariant but galilean invariant
 	}
 }
 
