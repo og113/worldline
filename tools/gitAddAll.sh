@@ -33,3 +33,6 @@ git add mout/*.txt
 # adding database outputs
 git add db/nr/plots/*.csv
 git add db/nr/plots/*/*.csv
+
+# adding results
+git add results/*/*.csv
