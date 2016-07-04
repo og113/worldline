@@ -1088,6 +1088,9 @@ for (uint pl=0; pl<Npl; pl++) {
 			delta = dds.partialPivLu().solve(mds);
 			
 		}
+		else {
+			delta = Eigen::VectorXd::Zero(NT);
+		}
 		
 /*----------------------------------------------------------------------------------------------------------------------------
 	9 - printing early 2 (delta), checking delta
@@ -1194,58 +1197,58 @@ for (uint pl=0; pl<Npl; pl++) {
 			checkInv.add(invError);
 			checkInv.checkMessage();
 			
-			if (!checkDelta.good() || !checkInv.good()) {
+			if (!checkDelta.good() || !checkInv.good() || alltests) {
 				number x_end = 0.0;
 				uint minCoeff1 = 0, maxCoeff1 = 0, minCoeff2 = 0, maxCoeff2 = 0;
 				for (j=0; j<zm; j++)
 					x_end += pow(x[N*dim+j],2);
 				x_end = sqrt(x_end);
-				cerr << endl << "x.norm():              " << x.norm() << endl;
-				cerr << "x_end.norm():          " << x_end << endl;
-				cerr << "mds.norm():            " << mds.norm() << endl;
+				cout << endl << "x.norm():              " << x.norm() << endl;
+				cout << "x_end.norm():          " << x_end << endl;
+				cout << "mds.norm():            " << mds.norm() << endl;
 				number max = mds.maxCoeff(&maxCoeff1);
 				number min = mds.minCoeff(&maxCoeff1);
-				cerr << "mds.minCoeff():         " << min  << endl;
-				cerr << "mds.maxCoeff():         " << max  << endl;
-				cerr << "mds minCoeff  :         " << maxCoeff1 << endl;
-				cerr << "mds maxCoeff  :         " << minCoeff1 << endl;
+				cout << "mds.minCoeff():         " << min  << endl;
+				cout << "mds.maxCoeff():         " << max  << endl;
+				cout << "mds minCoeff  :         " << maxCoeff1 << endl;
+				cout << "mds maxCoeff  :         " << minCoeff1 << endl;
 				if (-min>max) max = -min;
 				uint largeCounter = 0;
 				for (uint j=0; j<NT; j++) {
 						if (abs(mds(j))>max/2.0)
 							largeCounter++;
 				}
-				cerr << "max/2 counter :         " << largeCounter << endl;
-				cerr << "(mds.tail(zm)).mean(): " << (mds.tail(zm)).mean() << endl;
-				cerr << "(mds.head(N)).mean():  " << (mds.head(N)).mean() << endl;
-				cerr << endl << "delta info:    " << endl;
-				cerr << "delta.norm():          " << delta.norm() << endl;
+				cout << "max/2 counter :         " << largeCounter << endl;
+				cout << "(mds.tail(zm)).mean(): " << (mds.tail(zm)).mean() << endl;
+				cout << "(mds.head(N)).mean():  " << (mds.head(N)).mean() << endl;
+				cout << endl << "delta info:    " << endl;
+				cout << "delta.norm():          " << delta.norm() << endl;
 				max = delta.maxCoeff(&maxCoeff1);
 				min = delta.minCoeff(&minCoeff1);
-				cerr << "delta.maxCoeff():        " << max << endl;
-				cerr << "delta.minCoeff():        " << min << endl;
-				cerr << "delta maxCoeff  :        " << maxCoeff1 << endl;
-				cerr << "delta minCoeff  :        " << minCoeff1 << endl;
+				cout << "delta.maxCoeff():        " << max << endl;
+				cout << "delta.minCoeff():        " << min << endl;
+				cout << "delta maxCoeff  :        " << maxCoeff1 << endl;
+				cout << "delta minCoeff  :        " << minCoeff1 << endl;
 				if (-min>max) max = -min;
 				largeCounter = 0;
 				for (uint j=0; j<NT; j++) {
 						if (abs(delta(j))>max/2.0)
 							largeCounter++;
 				}
-				cerr << "max/2 counter :         " << largeCounter << endl;
-				cerr << "(delta.tail(zm)).mean(): " << (delta.tail(zm)).mean() << endl;
-				cerr << "(delta.head(N)).mean():  " << (delta.head(N)).mean() << endl;
-				cerr << endl << "dds info:      " << endl;
-				cerr << "dds.determinant():      " << dds.determinant() << endl;
-				cerr << "dds.sum():              " << dds.sum()       << endl;
-				cerr << "dds.prod():             " << dds.prod()      << endl;
-				cerr << "dds.mean():             " << dds.mean()      << endl;
+				cout << "max/2 counter :         " << largeCounter << endl;
+				cout << "(delta.tail(zm)).mean(): " << (delta.tail(zm)).mean() << endl;
+				cout << "(delta.head(N)).mean():  " << (delta.head(N)).mean() << endl;
+				cout << endl << "dds info:      " << endl;
+				cout << "dds.determinant():      " << dds.determinant() << endl;
+				cout << "dds.sum():              " << dds.sum()       << endl;
+				cout << "dds.prod():             " << dds.prod()      << endl;
+				cout << "dds.mean():             " << dds.mean()      << endl;
 				max = dds.maxCoeff(&maxCoeff1,&maxCoeff2);
 				min = dds.minCoeff(&maxCoeff1,&maxCoeff2);
-				cerr << "dds.minCoeff():         " << min  << endl;
-				cerr << "dds.maxCoeff():         " << max  << endl;
-				cerr << "dds minCoeff  :         " << "(" << minCoeff1 << "," << minCoeff2 << ")" << endl;
-				cerr << "dds maxCoeff  :         " << "(" << maxCoeff1 << "," << maxCoeff2 << ")" << endl;
+				cout << "dds.minCoeff():         " << min  << endl;
+				cout << "dds.maxCoeff():         " << max  << endl;
+				cout << "dds minCoeff  :         " << "(" << minCoeff1 << "," << minCoeff2 << ")" << endl;
+				cout << "dds maxCoeff  :         " << "(" << maxCoeff1 << "," << maxCoeff2 << ")" << endl;
 				if (-min>max) max = -min;
 				largeCounter = 0;
 				for (uint j=0; j<NT; j++) {
@@ -1254,15 +1257,16 @@ for (uint pl=0; pl<Npl; pl++) {
 							largeCounter++;
 					}
 				}
-				cerr << "max/2 counter :         " << largeCounter << endl;
-				cerr << "dds.trace():            " << dds.trace()     << endl;
-				cerr << "dds.norm():             " << dds.norm()      << endl;
-				cerr << endl << "action info:" << endl;
-				cerr << "s:                      " << s               << endl;
-				cerr << "kinetic:                " << kinetic         << endl;
-				cerr << "i0:                     " << i0              << endl;
-				cerr << "vr:                     " << vr      << endl;
-				passThrough = true;
+				cout << "max/2 counter :         " << largeCounter << endl;
+				cout << "dds.trace():            " << dds.trace()     << endl;
+				cout << "dds.norm():             " << dds.norm()      << endl;
+				cout << endl << "action info:" << endl;
+				cout << "s:                      " << s               << endl;
+				cout << "kinetic:                " << kinetic         << endl;
+				cout << "i0:                     " << i0              << endl;
+				cout << "vr:                     " << vr      << endl;
+				if (!checkDelta.good() || !checkInv.good())
+					passThrough = true;
 			}
 			
 			//assigning values to x
