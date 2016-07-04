@@ -81,19 +81,20 @@ for (uint pl=0; pl<Npl; pl++) {
 		(prOut.Steps)[9] = steps;
 
 		// kappa
-		number kappaMax = 4.0/(pow(PI,3)*pow(T,4)); // so that nonrelativistic solution exists
+		number kappaMax = 4.0*pow(beta,4)/pow(PI,3); // so that nonrelativistic solution exists
 		number c = 1.11171;
-		number B = c/(2.0*sqrt(2.0)*pow(PI,1.25));
+		number B = c/(sqrt(2.0)*pow(PI,1.25));
 		number deltaKappa = B*kappaMax/gg; // deltaKappa << B*kappaMax, so that dr<<r (harder than dr<<beta if sqrt(kappa/4.0/PI)<beta)
-		number kappaMin = 4.0*pow(beta,6)/pow(PI,3);
 		number kappaMinSoft = kappaMax - deltaKappa;
+		number kappaMin = kappaMinSoft;
+		//number kappaMin = 4.0*pow(beta,6)/pow(PI,3);
 		if (kappaMax<kappaMin) {
 			cerr << "highTempParamters Error: on pl=" << pl << ", kappaMax(" << kappaMax << ") < kappaMin(" << kappaMin << ")" << endl;
 			pass = true;
 		}
-		else if (kappaMin>kappaMinSoft)
-		kappaMinSoft = kappaMin;
-		(prOut.Min).B = kappaMinSoft;
+		/*else if (kappaMin<kappaMinSoft)
+			kappaMin = kappaMinSoft;*/
+		(prOut.Min).B = kappaMin;
 		(prOut.Max).B = kappaMax;
 		(prOut.Min).G = 1.0;
 		(prOut.Max).G = 1.0;
@@ -104,7 +105,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		number aMin = gg*dl;
 		number r0Max = sqrt(kappaMax/4.0/PI);
 		number r0Min = sqrt(kappaMin/4.0/PI);
-		number drMax = (pow(PI,1.0/8.0)/pow(2.0,5.0/4.0)/sqrt(c))*pow(kappaMin,3.0/8.0)*sqrt(deltaKappa);
+		number drMax = (pow(PI,1.0/8.0)/pow(2.0,7.0/4.0)/sqrt(c))*sqrt(deltaKappa);
 		//number drMin = 0.0;
 		number aMax = r0Max/gg; // so a<<r (a<<dr is harder but not so obviously necessary)
 		if (aMax<aMin) {

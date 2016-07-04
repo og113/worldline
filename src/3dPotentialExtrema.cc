@@ -33,6 +33,7 @@ int main(int argc, char** argv) {
 // argv options
 bool verbose = true;
 bool bifurcate = true;
+bool clever = false;
 double frac = 0.5;
 uint pot = 4;
 string inputsFile = "inputs4";
@@ -45,6 +46,7 @@ if (argc % 2 && argc>1) {
 		if (id[0]=='-') id = id.substr(1);
 		if (id.compare("verbose")==0) verbose = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("bifurcate")==0) bifurcate = (stn<uint>(argv[2*j+2])!=0);
+		else if (id.compare("clever")==0) clever = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("frac")==0) frac = stn<double>(argv[2*j+2]);
 		else if (id.compare("pot")==0) pot = stn<uint>(argv[2*j+2]);
 		else if (id.compare("inputs")==0) inputsFile = (string)argv[2*j+2];
@@ -76,9 +78,11 @@ params.setFromParameters(pr.Min);
 double a_min = (pr.Min).Epsi;
 double a_max = (pr.Max).Epsi;
 double tol = (pr.Min).Lambda;
-uint Npl = pr.totalSteps();
+uint Npl = (pr.Steps)[9];
+if (Npl==0)
+	Npl++;
 uint minRuns = 2;
-if (verbose) {
+if (verbose && bifurcate) {
 	cout << "a_min = " << a_min << ", a_max = " << a_max << endl;
 	cout << "bisecting a maximum of " << Npl << " times" << endl;
 	cout << "aiming for a tolerance of " << tol << endl;
@@ -168,9 +172,15 @@ while((test>tol || run<minRuns) && run<Npl) {
 			p = pr.position(run);
 			params.setFromParameters(p);
 		}
-		max_l = ((max_guess - 3.0*pow(params.a,2))>min_guess? (max_guess - 3.0*pow(params.a,2)):\
-						 0.5*((1.0-frac)*max_guess+frac*min_guess) );
-		max_r = max_guess + 3.0*pow(params.a,2);
+		if (clever) {
+			max_l = ((max_guess - 3.0*pow(params.a,2))>min_guess? (max_guess - 3.0*pow(params.a,2)):\
+							 0.5*((1.0-frac)*max_guess+frac*min_guess) );
+			max_r = max_guess + 3.0*pow(params.a,2);
+		}
+		else {
+			max_l = max_guess - params.a;
+			max_r = max_guess + params.a;
+		}
 		min_l = 0.0;
 		min_r = max_l;
 	}

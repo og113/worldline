@@ -5,6 +5,7 @@
 #include <Eigen/Dense>
 #include <gsl/gsl_sf_zeta.h>
 #include <gsl/gsl_sf_gamma.h>
+#include <vector>
 #include "check.h"
 #include "folder.h"
 #include "genloop.h"
@@ -291,6 +292,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	// defining vector and matrix quantities
 	vec x(N*dim);
 	vec mds(NT);
+	vec delta(NT);
 	mat dds(NT,NT);
 	
 	// curvature
@@ -633,9 +635,9 @@ for (uint pl=0; pl<Npl; pl++) {
 						PInDisjoint_nr(xLoop, j, mu, n, beta, g, Pmu);
 					}
 					else if (poto==PotentialOptions::nonrelDisjoint) {
-						VnonrelDisjoint(j, xLoop, beta, g, v);
-						mdVnonrelDisjoint_nr(j, mu, xLoop, beta, g, mds);
-						PVnonrelDisjoint_nr(xLoop, j, mu, beta, g, Pmu);
+						VnonrelrDisjoint(j, xLoop, beta, p.Epsi, g, v); //
+						mdVnonrelrDisjoint_nr(j, mu, xLoop, beta, p.Epsi, g, mds);
+						PVnonrelrDisjoint_nr(xLoop, j, mu, beta, p.Epsi, g, Pmu);
 					}
 				}
 				
@@ -765,7 +767,7 @@ for (uint pl=0; pl<Npl; pl++) {
 							else if (poto==PotentialOptions::thermalDisjoint)
 								ddVthrDisjoint_nr(j, mu, k, nu, xLoop, beta, p.Epsi, g, dds);
 							else if (poto==PotentialOptions::nonrelDisjoint)
-								ddVnonrelDisjoint_nr(j, mu, k, nu, xLoop, beta, g, dds);		
+								ddVnonrelrDisjoint_nr(j, mu, k, nu, xLoop, beta, p.Epsi, g, dds);		
 								
 							// self-energy regularisation
 							if (!disjoint) {
@@ -1061,8 +1063,8 @@ for (uint pl=0; pl<Npl; pl++) {
 			}
 			if (po==PrintOptions::dds || po==PrintOptions::all) {
 				early.ID = "ddsEarly1";
-				//saveMatrixAscii(early,dds); // have stopped this because it just takes up too much space
-				//printf("%12s%50s\n","dds:",((string)early).c_str());
+				saveMatrixAscii(early,dds); // have stopped this because it just takes up too much space
+				printf("%12s%50s\n","dds:",((string)early).c_str());
 			}
 			if (po==PrintOptions::curvature || po==PrintOptions::all) {
 				early.ID = "curvatureEarly1";
@@ -1078,12 +1080,10 @@ for (uint pl=0; pl<Npl; pl++) {
 ----------------------------------------------------------------------------------------------------------------------------*/	
 		
 		// initializing delta
-		vec delta(NT);
 		number normx = x.norm();
 		
 		// solving for delta
-		if (!pass) {
-				
+		if (!pass) {				
 			// solving for delta = DDS^{-1}*mdS
 			delta = dds.partialPivLu().solve(mds);
 			
@@ -1147,6 +1147,46 @@ for (uint pl=0; pl<Npl; pl++) {
 			deltaMirrorTest /= (delta.squaredNorm()/2.0);
 			checkDeltaRotation.add(sqrt(deltaRotationTest));
 			checkDeltaMirror.add(sqrt(deltaMirrorTest));
+			
+			// for disjoint, checking force versus change
+			if (disjoint) {
+				number dsdz_RmL = 0.0;
+				number deltaz_RmL = 0.0;
+				uint mu = dim-2;
+				for (uint j=0; j<N/2; j++) {
+					dsdz_RmL 	+= -mds[dim*j+mu]-(-mds[dim*(j+N/2)+mu]);
+					deltaz_RmL 	+= delta[dim*j+mu]-delta[dim*(j+N/2)+mu];
+				}
+				dsdz_RmL /= (number)N/2.0;
+				deltaz_RmL /= (number)N/2.0;
+				
+				// printing summary
+				string dzSummaryFile = "results/nr/nr_dz.csv";
+				#define numDzSummary 19
+				vector<string> dzSummary(numDzSummary);
+				string dzSummary_array[numDzSummary] = {timenumber,\
+											nts(pl),\
+											nts(runsCount),\
+											potExtras.second,\
+											nts(p.K),\
+											nts(pow(p.G,3)*p.B,16),\
+											nts(p.Epsi,16),\
+											nts(p.Mu,16),\
+											nts(p.Lambda,16),\
+											nts(E,16),\
+											nts(p.T,16),\
+											nts(s,16),\
+											nts(z,16),\
+											nts(dsdz_RmL,16),\
+											nts(deltaz_RmL,16),\
+											nts(checkSol.back(),16),\
+											nts(checkDX.back(),16),\
+											nts(checkDelta.back(),16),\
+											nts(checkInv.back(),16)};								
+				dzSummary.assign(dzSummary_array,dzSummary_array+numDzSummary);							
+				saveVectorCsvAppend(dzSummaryFile,dzSummary);
+				printf("%12s%50s\n","dz summary:",dzSummaryFile.c_str());
+			}
 		}
 
 /*----------------------------------------------------------------------------------------------------------------------------
@@ -1331,7 +1371,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		number eigenTol = 1.0e-16*pow(dim*N,2);
 		uint negEigs = 0;
 		uint zeroEigs = 0;
-		uint numEigs = 3*dim;
+		uint numEigs = 4*dim;
 		cout << "calculating eigendecomposition of dds..." << endl;
 		Eigen::SelfAdjointEigenSolver<mat> eigensolver(dds_wlm);
 		if (eigensolver.info()!=Eigen::Success) abort();
@@ -1351,8 +1391,33 @@ for (uint pl=0; pl<Npl; pl++) {
 		}
 		cout << negEigs << " negative eigenvalues found, less than " << -eigenTol << endl;
 		cout << zeroEigs << " zero eigenvalues found, with absolute value less than " << eigenTol << endl;
-		
 		printf("%12s%50s\n","eigenvectors:",((string)eigenFile).c_str());
+		
+		// printing some eigenvalue information to a file
+		string eigSummaryFile = "results/nr/nr_eigs.csv";
+		#define numEigSummary 18
+		vector<string> eigSummary(numEigSummary);
+		string eigSummary_array[numEigSummary] = {timenumber,\
+									nts(pl),\
+									potExtras.second,\
+									nts(p.K),\
+									nts(pow(p.G,3)*p.B,16),\
+									nts(p.Epsi,16),\
+									nts(p.Mu,16),\
+									nts(p.Lambda,16),\
+									nts(E,16),\
+									nts(p.T,16),\
+									nts(s,16),\
+									nts(z,16),\
+									nts(negEigs),\
+									nts(zeroEigs),\
+									nts(checkSol.back(),16),\
+									nts(checkDX.back(),16),\
+									nts(checkDelta.back(),16),\
+									nts(checkInv.back(),16)};								
+		eigSummary.assign(eigSummary_array,eigSummary_array+numEigSummary);							
+		saveVectorCsvAppend(eigSummaryFile,eigSummary);
+		printf("%12s%50s\n","eigenvalues summary:",eigSummaryFile.c_str());
 	}
 	
 	// curvature, if required
@@ -1389,7 +1454,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		vector<string> results(numRes);
 		string results_array[numRes] = {timenumber,\
 									nts(pl),\
-									nts((int)poto+(int)gaussian*NumberPotentialOptions),\
+									potExtras.second,\
 /*									nts((int)kino),\*/
 									nts(p.K),\
 									nts(pow(p.G,3)*p.B,16),\
@@ -1424,7 +1489,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		string results_array[numRes] = {timenumber,\
 									nts(pl),\
 									nts(runsCount),\
-									nts((int)poto+(int)gaussian*NumberPotentialOptions),\
+									potExtras.second,\
 /*									nts((int)kino),\*/
 									nts(p.K),\
 									nts(pow(p.G,3)*p.B,16),\
