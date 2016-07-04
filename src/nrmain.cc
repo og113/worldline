@@ -635,9 +635,9 @@ for (uint pl=0; pl<Npl; pl++) {
 						PInDisjoint_nr(xLoop, j, mu, n, beta, g, Pmu);
 					}
 					else if (poto==PotentialOptions::nonrelDisjoint) {
-						VnonrelDisjoint(j, xLoop, beta, g, v);
-						mdVnonrelDisjoint_nr(j, mu, xLoop, beta, g, mds);
-						PVnonrelDisjoint_nr(xLoop, j, mu, beta, g, Pmu);
+						VnonrelrDisjoint(j, xLoop, beta, p.Epsi, g, v); //
+						mdVnonrelrDisjoint_nr(j, mu, xLoop, beta, p.Epsi, g, mds);
+						PVnonrelrDisjoint_nr(xLoop, j, mu, beta, p.Epsi, g, Pmu);
 					}
 				}
 				
@@ -767,7 +767,7 @@ for (uint pl=0; pl<Npl; pl++) {
 							else if (poto==PotentialOptions::thermalDisjoint)
 								ddVthrDisjoint_nr(j, mu, k, nu, xLoop, beta, p.Epsi, g, dds);
 							else if (poto==PotentialOptions::nonrelDisjoint)
-								ddVnonrelDisjoint_nr(j, mu, k, nu, xLoop, beta, g, dds);		
+								ddVnonrelrDisjoint_nr(j, mu, k, nu, xLoop, beta, p.Epsi, g, dds);		
 								
 							// self-energy regularisation
 							if (!disjoint) {
