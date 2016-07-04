@@ -1063,8 +1063,8 @@ for (uint pl=0; pl<Npl; pl++) {
 			}
 			if (po==PrintOptions::dds || po==PrintOptions::all) {
 				early.ID = "ddsEarly1";
-				//saveMatrixAscii(early,dds); // have stopped this because it just takes up too much space
-				//printf("%12s%50s\n","dds:",((string)early).c_str());
+				saveMatrixAscii(early,dds); // have stopped this because it just takes up too much space
+				printf("%12s%50s\n","dds:",((string)early).c_str());
 			}
 			if (po==PrintOptions::curvature || po==PrintOptions::all) {
 				early.ID = "curvatureEarly1";
