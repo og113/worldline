@@ -1,0 +1,999 @@
+using inputs file nrinputs/highTemp/inputs_K_11_T_2.6
+print options not understood: none
+timenumber: 160624122345
+looping over 25 steps
+loading loops from:
+data/highTemp/loops/dim_4/K_11/highTemp_Kappa_0.000165386_T_2.6_rank_0.dat
+Check delta: test(3.10895) > closeness(1)
+
+x.norm():              5.02539
+x_end.norm():          0.00223607
+mds.norm():            1.56175
+mds.minCoeff():         -0.0672785
+mds.maxCoeff():         0.0652754
+mds minCoeff  :         2
+mds maxCoeff  :         0
+max/2 counter :         840
+(mds.tail(zm)).mean(): -3.95083e-17
+(mds.head(N)).mean():  -0.000759084
+
+delta info:    
+delta.norm():          15.6237
+delta.maxCoeff():        0.562999
+delta.minCoeff():        -0.562999
+delta maxCoeff  :        6146
+delta minCoeff  :        2050
+(delta.tail(zm)).mean(): -0.001
+(delta.head(N)).mean():  -0.0181472
+
+dds info:      
+dds.determinant():      inf
+dds.sum():              12288
+dds.prod():             0
+dds.mean():             0.000182882
+dds.minCoeff():         -2664.71
+dds.maxCoeff():         5329.74
+dds minCoeff  :         (2050,0)
+dds maxCoeff  :         (606,602)
+max/2 counter :         8192
+dds.trace():            4.36552e+07
+dds.norm():             590723
+
+action info:
+s:                      0.766462
+kinetic:                0.769246
+i0:                     -0.00148669
+vr:                     -0.0012975
+  pl run        len         i0          s        sol       solM      delta     E_cons  dx*kg_max     ic_max     cc_max       dx/a
+   0   1     0.7692  -0.001487     0.7665     0.3108     0.3498      3.109     0.1913    0.00899  7.877e-07          0     0.3333
+
+    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       1     297      11       10.0001654       00.001127     0.1           0         2.6       0.76925    -0.0012975       0.76646
+
+    results:results/nr/nr_error3.csv
+loading loops from:
+data/highTemp/loops/dim_4/K_11/highTemp_Kappa_0.00016815_T_2.6_rank_0.dat
+Check delta: test(2.06845) > closeness(1)
+
+x.norm():              5.02537
+x_end.norm():          0.00223607
+mds.norm():            1.36336
+mds.minCoeff():         -0.0567061
+mds.maxCoeff():         0.0547038
+mds minCoeff  :         2
+mds maxCoeff  :         0
+max/2 counter :         978
+(mds.tail(zm)).mean(): -1.27068e-17
+(mds.head(N)).mean():  -0.000757216
+
+delta info:    
+delta.norm():          10.3947
+delta.maxCoeff():        0.361106
+delta.minCoeff():        -0.361106
+delta maxCoeff  :        6146
+delta minCoeff  :        2050
+(delta.tail(zm)).mean(): -0.001
+(delta.head(N)).mean():  -0.0133808
+
+dds info:      
+dds.determinant():      inf
+dds.sum():              12288
+dds.prod():             0
+dds.mean():             0.000182882
+dds.minCoeff():         -2664.76
+dds.maxCoeff():         5329.83
+dds minCoeff  :         (2050,0)
+dds maxCoeff  :         (646,642)
+max/2 counter :         8192
+dds.trace():            4.36559e+07
+dds.norm():             590734
+
+action info:
+s:                      0.766448
+kinetic:                0.769242
+i0:                     -0.00147525
+vr:                     -0.00131865
+  pl run        len         i0          s        sol       solM      delta     E_cons  dx*kg_max     ic_max     cc_max       dx/a
+   1   1     0.7692  -0.001475     0.7664     0.2713     0.2949      2.068     0.1913   0.007762  1.305e-06          0     0.3333
+
+    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       1     298      11       10.0001681       00.001127     0.1           0         2.6       0.76924    -0.0013186       0.76645
+
+    results:results/nr/nr_error3.csv
+loading loops from:
+data/highTemp/loops/dim_4/K_11/highTemp_Kappa_0.000170913_T_2.6_rank_0.dat
+Check delta: test(1.39843) > closeness(1)
+
+x.norm():              5.02535
+x_end.norm():          0.00223607
+mds.norm():            1.12236
+mds.minCoeff():         -0.0449172
+mds.maxCoeff():         0.0429157
+mds minCoeff  :         2
+mds maxCoeff  :         0
+max/2 counter :         1078
+(mds.tail(zm)).mean(): 5.42101e-18
+(mds.head(N)).mean():  -0.000754506
+
+delta info:    
+delta.norm():          7.02762
+delta.maxCoeff():        0.231714
+delta.minCoeff():        -0.231714
+delta maxCoeff  :        6146
+delta minCoeff  :        2050
+(delta.tail(zm)).mean(): -0.001
+(delta.head(N)).mean():  -0.00892531
+
+dds info:      
+dds.determinant():      inf
+dds.sum():              12288
+dds.prod():             0
+dds.mean():             0.000182882
+dds.minCoeff():         -2664.81
+dds.maxCoeff():         5329.93
+dds minCoeff  :         (2050,0)
+dds maxCoeff  :         (702,698)
+max/2 counter :         8192
+dds.trace():            4.36567e+07
+dds.norm():             590744
+
+action info:
+s:                      0.766435
+kinetic:                0.769238
+i0:                     -0.00146385
+vr:                     -0.00133946
+  pl run        len         i0          s        sol       solM      delta     E_cons  dx*kg_max     ic_max     cc_max       dx/a
+   2   1     0.7692  -0.001464     0.7664     0.2233     0.2336      1.398     0.1913   0.006317  3.648e-07          0     0.3333
+
+    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       1     297      11       10.0001709       00.001127     0.1           0         2.6       0.76924    -0.0013395       0.76644
+
+    results:results/nr/nr_error3.csv
+loading loops from:
+data/highTemp/loops/dim_4/K_11/highTemp_Kappa_0.000173677_T_2.6_rank_0.dat
+  pl run        len         i0          s        sol       solM      delta     E_cons  dx*kg_max     ic_max     cc_max       dx/a
+   3   1     0.7692  -0.001452     0.7664     0.1665      0.562      0.865     0.1913   0.004451  6.792e-08          0     0.3333
+Check delta: test(4016.29) > closeness(1)
+Check inverse: test(0.0404934) > closeness(5.50763e-05)
+
+x.norm():              6.61061
+x_end.norm():          7.23449e-05
+mds.norm():            480.239
+mds.minCoeff():         -56.6442
+mds.maxCoeff():         56.6442
+mds minCoeff  :         6142
+mds maxCoeff  :         0
+max/2 counter :         28
+(mds.tail(zm)).mean(): -5.21538e-15
+(mds.head(N)).mean():  0.0136048
+
+delta info:    
+delta.norm():          26550.1
+delta.maxCoeff():        812.412
+delta.minCoeff():        -812.413
+delta maxCoeff  :        6130
+delta minCoeff  :        2034
+(delta.tail(zm)).mean(): 0.000884168
+(delta.head(N)).mean():  -8.9902
+
+dds info:      
+dds.determinant():      -inf
+dds.sum():              12288
+dds.prod():             0
+dds.mean():             0.000182882
+dds.minCoeff():         -8.30854e+09
+dds.maxCoeff():         8.30854e+09
+dds minCoeff  :         (2034,0)
+dds maxCoeff  :         (4098,8190)
+max/2 counter :         4
+dds.trace():            2.34941e+07
+dds.norm():             2.03517e+10
+
+action info:
+s:                      1.44289
+kinetic:                1.43035
+i0:                     0.0124698
+vr:                     6.50251e-05
+   3   2      1.363    0.01247      1.443      72.65      294.6       4016      0.108      1.267   0.009144          0     0.5908
+
+    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       2     568      11       10.0001737       00.001127     0.1           0         2.6        1.3634    6.5025e-05        1.4429
+
+    results:results/nr/nr_error3.csv
+nrmain error: data/straightDisjoint/loops/dim_4/K_11/loop_Kappa_0.00017644_T_2.6_rank_0.dat doesn't exist
+loading loops from:
+data/highTemp/loops/dim_4/K_11/highTemp_Kappa_0.000165386_T_2.6_rank_0.dat
+Check delta: test(3.58796) > closeness(1)
+
+x.norm():              5.02539
+x_end.norm():          0.00223607
+mds.norm():            1.40366
+mds.minCoeff():         -0.0606338
+mds.maxCoeff():         0.058631
+mds minCoeff  :         2
+mds maxCoeff  :         0
+max/2 counter :         828
+(mds.tail(zm)).mean(): -3.95083e-17
+(mds.head(N)).mean():  -0.000755217
+
+delta info:    
+delta.norm():          18.0309
+delta.maxCoeff():        0.655157
+delta.minCoeff():        -0.655157
+delta maxCoeff  :        6146
+delta minCoeff  :        2050
+(delta.tail(zm)).mean(): -0.001
+(delta.head(N)).mean():  -0.0139553
+
+dds info:      
+dds.determinant():      inf
+dds.sum():              12288
+dds.prod():             0
+dds.mean():             0.000182882
+dds.minCoeff():         -2664.54
+dds.maxCoeff():         5329.45
+dds minCoeff  :         (2050,0)
+dds maxCoeff  :         (614,610)
+max/2 counter :         8192
+dds.trace():            4.36532e+07
+dds.norm():             590694
+
+action info:
+s:                      0.766466
+kinetic:                0.769246
+i0:                     -0.00148669
+vr:                     -0.00129339
+  pl run        len         i0          s        sol       solM      delta     E_cons  dx*kg_max     ic_max     cc_max       dx/a
+   5   1     0.7692  -0.001487     0.7665     0.2793     0.3153      3.588     0.1913    0.00899  7.877e-07          0     0.3245
+
+    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       1     298      11       10.0001654       00.001157     0.1           0         2.6       0.76925    -0.0012934       0.76647
+
+    results:results/nr/nr_error3.csv
+loading loops from:
+data/highTemp/loops/dim_4/K_11/highTemp_Kappa_0.00016815_T_2.6_rank_0.dat
+Check delta: test(2.17015) > closeness(1)
+
+x.norm():              5.02537
+x_end.norm():          0.00223607
+mds.norm():            1.22552
+mds.minCoeff():         -0.0511406
+mds.maxCoeff():         0.0491386
+mds minCoeff  :         2
+mds maxCoeff  :         0
+max/2 counter :         970
+(mds.tail(zm)).mean(): -1.27068e-17
+(mds.head(N)).mean():  -0.000753909
+
+delta info:    
+delta.norm():          10.9058
+delta.maxCoeff():        0.387519
+delta.minCoeff():        -0.387519
+delta maxCoeff  :        6146
+delta minCoeff  :        2050
+(delta.tail(zm)).mean(): -0.001
+(delta.head(N)).mean():  -0.0108792
+
+dds info:      
+dds.determinant():      inf
+dds.sum():              12288
+dds.prod():             0
+dds.mean():             0.000182882
+dds.minCoeff():         -2664.59
+dds.maxCoeff():         5329.54
+dds minCoeff  :         (2050,0)
+dds maxCoeff  :         (654,650)
+max/2 counter :         8192
+dds.trace():            4.36539e+07
+dds.norm():             590704
+
+action info:
+s:                      0.766452
+kinetic:                0.769242
+i0:                     -0.00147525
+vr:                     -0.00131483
+  pl run        len         i0          s        sol       solM      delta     E_cons  dx*kg_max     ic_max     cc_max       dx/a
+   6   1     0.7692  -0.001475     0.7665     0.2439     0.2659       2.17     0.1913   0.007762  1.305e-06          0     0.3245
+
+    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       1     298      11       10.0001681       00.001157     0.1           0         2.6       0.76924    -0.0013148       0.76645
+
+    results:results/nr/nr_error3.csv
+loading loops from:
+data/highTemp/loops/dim_4/K_11/highTemp_Kappa_0.000170913_T_2.6_rank_0.dat
+Check delta: test(1.38856) > closeness(1)
+
+x.norm():              5.02535
+x_end.norm():          0.00223607
+mds.norm():            1.00912
+mds.minCoeff():         -0.0405528
+mds.maxCoeff():         0.0385514
+mds minCoeff  :         2
+mds maxCoeff  :         0
+max/2 counter :         1072
+(mds.tail(zm)).mean(): 5.42101e-18
+(mds.head(N)).mean():  -0.0007518
+
+delta info:    
+delta.norm():          6.97798
+delta.maxCoeff():        0.23779
+delta.minCoeff():        -0.23779
+delta maxCoeff  :        6146
+delta minCoeff  :        2050
+(delta.tail(zm)).mean(): -0.001
+(delta.head(N)).mean():  -0.0074286
+
+dds info:      
+dds.determinant():      inf
+dds.sum():              12288
+dds.prod():             0
+dds.mean():             0.000182882
+dds.minCoeff():         -2664.64
+dds.maxCoeff():         5329.63
+dds minCoeff  :         (2050,0)
+dds maxCoeff  :         (706,702)
+max/2 counter :         8192
+dds.trace():            4.36546e+07
+dds.norm():             590714
+
+action info:
+s:                      0.766439
+kinetic:                0.769238
+i0:                     -0.00146385
+vr:                     -0.0013359
+  pl run        len         i0          s        sol       solM      delta     E_cons  dx*kg_max     ic_max     cc_max       dx/a
+   7   1     0.7692  -0.001464     0.7664     0.2008     0.2109      1.389     0.1913   0.006317  3.648e-07          0     0.3245
+
+    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       1     298      11       10.0001709       00.001157     0.1           0         2.6       0.76924    -0.0013359       0.76644
+
+    results:results/nr/nr_error3.csv
+loading loops from:
+data/highTemp/loops/dim_4/K_11/highTemp_Kappa_0.000173677_T_2.6_rank_0.dat
+  pl run        len         i0          s        sol       solM      delta     E_cons  dx*kg_max     ic_max     cc_max       dx/a
+   8   1     0.7692  -0.001452     0.7664     0.1498      0.506     0.8269     0.1913   0.004451  6.792e-08          0     0.3245
+Check delta: test(3132.47) > closeness(1)
+Check inverse: test(0.0264367) > closeness(5.50763e-05)
+
+x.norm():              6.48699
+x_end.norm():          5.34969e-05
+mds.norm():            389.582
+mds.minCoeff():         -44.258
+mds.maxCoeff():         44.258
+mds minCoeff  :         4094
+mds maxCoeff  :         0
+max/2 counter :         24
+(mds.tail(zm)).mean(): 1.05281e-14
+(mds.head(N)).mean():  0.0134657
+
+delta info:    
+delta.norm():          20320.3
+delta.maxCoeff():        650.769
+delta.minCoeff():        -650.769
+delta maxCoeff  :        6130
+delta minCoeff  :        2034
+(delta.tail(zm)).mean(): -0.00200084
+(delta.head(N)).mean():  -7.3062
+
+dds info:      
+dds.determinant():      inf
+dds.sum():              12288
+dds.prod():             0
+dds.mean():             0.000182882
+dds.minCoeff():         -7.94421e+09
+dds.maxCoeff():         7.94421e+09
+dds minCoeff  :         (2034,0)
+dds maxCoeff  :         (2,2)
+max/2 counter :         12
+dds.trace():            -4.76409e+10
+dds.norm():             2.75196e+10
+
+action info:
+s:                      1.38718
+kinetic:                1.37682
+i0:                     0.0103138
+vr:                     5.11829e-05
+   8   2      1.322    0.01031      1.387      60.06      230.1       3132     0.1114      1.232   0.007238          0     0.5576
+
+    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       2     570      11       10.0001737       00.001157     0.1           0         2.6        1.3216    5.1183e-05        1.3872
+
+    results:results/nr/nr_error3.csv
+nrmain error: data/straightDisjoint/loops/dim_4/K_11/loop_Kappa_0.00017644_T_2.6_rank_0.dat doesn't exist
+loading loops from:
+data/highTemp/loops/dim_4/K_11/highTemp_Kappa_0.000165386_T_2.6_rank_0.dat
+Check delta: test(4.74463) > closeness(1)
+
+x.norm():              5.02539
+x_end.norm():          0.00223607
+mds.norm():            1.26511
+mds.minCoeff():         -0.0548068
+mds.maxCoeff():         0.0528043
+mds minCoeff  :         2
+mds maxCoeff  :         0
+max/2 counter :         818
+(mds.tail(zm)).mean(): -3.95083e-17
+(mds.head(N)).mean():  -0.000751541
+
+delta info:    
+delta.norm():          23.8436
+delta.maxCoeff():        0.85886
+delta.minCoeff():        -0.85886
+delta maxCoeff  :        6146
+delta minCoeff  :        2050
+(delta.tail(zm)).mean(): -0.001
+(delta.head(N)).mean():  -0.00726993
+
+dds info:      
+dds.determinant():      inf
+dds.sum():              12288
+dds.prod():             0
+dds.mean():             0.000182882
+dds.minCoeff():         -2664.39
+dds.maxCoeff():         5329.18
+dds minCoeff  :         (2050,0)
+dds maxCoeff  :         (626,622)
+max/2 counter :         8192
+dds.trace():            4.36513e+07
+dds.norm():             590668
+
+action info:
+s:                      0.76647
+kinetic:                0.769246
+i0:                     -0.00148669
+vr:                     -0.00128903
+  pl run        len         i0          s        sol       solM      delta     E_cons  dx*kg_max     ic_max     cc_max       dx/a
+  10   1     0.7692  -0.001487     0.7665     0.2517      0.285      4.745     0.1913    0.00899  7.877e-07          0     0.3162
+
+    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       1     297      11       10.0001654       00.001188     0.1           0         2.6       0.76925     -0.001289       0.76647
+
+    results:results/nr/nr_error3.csv
+loading loops from:
+data/highTemp/loops/dim_4/K_11/highTemp_Kappa_0.00016815_T_2.6_rank_0.dat
+Check delta: test(2.40111) > closeness(1)
+
+x.norm():              5.02537
+x_end.norm():          0.00223607
+mds.norm():            1.10474
+mds.minCoeff():         -0.0462602
+mds.maxCoeff():         0.0442583
+mds minCoeff  :         2
+mds maxCoeff  :         0
+max/2 counter :         966
+(mds.tail(zm)).mean(): -1.27068e-17
+(mds.head(N)).mean():  -0.000750761
+
+delta info:    
+delta.norm():          12.0665
+delta.maxCoeff():        0.432545
+delta.minCoeff():        -0.432545
+delta maxCoeff  :        6146
+delta minCoeff  :        2050
+(delta.tail(zm)).mean(): -0.001
+(delta.head(N)).mean():  -0.00772826
+
+dds info:      
+dds.determinant():      inf
+dds.sum():              12288
+dds.prod():             0
+dds.mean():             0.000182882
+dds.minCoeff():         -2664.43
+dds.maxCoeff():         5329.27
+dds minCoeff  :         (2050,0)
+dds maxCoeff  :         (662,658)
+max/2 counter :         8192
+dds.trace():            4.3652e+07
+dds.norm():             590677
+
+action info:
+s:                      0.766456
+kinetic:                0.769242
+i0:                     -0.00147525
+vr:                     -0.00131081
+  pl run        len         i0          s        sol       solM      delta     E_cons  dx*kg_max     ic_max     cc_max       dx/a
+  11   1     0.7692  -0.001475     0.7665     0.2198     0.2406      2.401     0.1913   0.007762  1.305e-06          0     0.3162
+
+    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       1     297      11       10.0001681       00.001188     0.1           0         2.6       0.76924    -0.0013108       0.76646
+
+    results:results/nr/nr_error3.csv
+loading loops from:
+data/highTemp/loops/dim_4/K_11/highTemp_Kappa_0.000170913_T_2.6_rank_0.dat
+Check delta: test(1.41726) > closeness(1)
+
+x.norm():              5.02535
+x_end.norm():          0.00223607
+mds.norm():            0.909921
+mds.minCoeff():         -0.0367257
+mds.maxCoeff():         0.0347245
+mds minCoeff  :         2
+mds maxCoeff  :         0
+max/2 counter :         1064
+(mds.tail(zm)).mean(): 5.42101e-18
+(mds.head(N)).mean():  -0.000749221
+
+delta info:    
+delta.norm():          7.12225
+delta.maxCoeff():        0.248023
+delta.minCoeff():        -0.248023
+delta maxCoeff  :        6146
+delta minCoeff  :        2050
+(delta.tail(zm)).mean(): -0.001
+(delta.head(N)).mean():  -0.00580949
+
+dds info:      
+dds.determinant():      inf
+dds.sum():              12288
+dds.prod():             0
+dds.mean():             0.000182882
+dds.minCoeff():         -2664.48
+dds.maxCoeff():         5329.36
+dds minCoeff  :         (2050,0)
+dds maxCoeff  :         (714,710)
+max/2 counter :         8192
+dds.trace():            4.36527e+07
+dds.norm():             590687
+
+action info:
+s:                      0.766442
+kinetic:                0.769238
+i0:                     -0.00146385
+vr:                     -0.00133217
+  pl run        len         i0          s        sol       solM      delta     E_cons  dx*kg_max     ic_max     cc_max       dx/a
+  12   1     0.7692  -0.001464     0.7664     0.1811      0.191      1.417     0.1913   0.006317  3.648e-07          0     0.3162
+
+    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       1     297      11       10.0001709       00.001188     0.1           0         2.6       0.76924    -0.0013322       0.76644
+
+    results:results/nr/nr_error3.csv
+loading loops from:
+data/highTemp/loops/dim_4/K_11/highTemp_Kappa_0.000173677_T_2.6_rank_0.dat
+  pl run        len         i0          s        sol       solM      delta     E_cons  dx*kg_max     ic_max     cc_max       dx/a
+  13   1     0.7692  -0.001452     0.7664     0.1352     0.4568     0.8037     0.1913   0.004451  6.792e-08          0     0.3162
+Check delta: test(2598.07) > closeness(1)
+
+x.norm():              6.4136
+x_end.norm():          3.77822e-05
+mds.norm():            329.702
+mds.minCoeff():         -37.4312
+mds.maxCoeff():         37.4312
+mds minCoeff  :         4094
+mds maxCoeff  :         0
+max/2 counter :         20
+(mds.tail(zm)).mean(): -7.21438e-16
+(mds.head(N)).mean():  0.013301
+
+delta info:    
+delta.norm():          16663
+delta.maxCoeff():        544.954
+delta.minCoeff():        -544.954
+delta maxCoeff  :        6134
+delta minCoeff  :        2038
+(delta.tail(zm)).mean(): 7.97759e-11
+(delta.head(N)).mean():  -3.83736
+
+dds info:      
+dds.determinant():      inf
+dds.sum():              12288
+dds.prod():             0
+dds.mean():             0.000182882
+dds.minCoeff():         -1523.58
+dds.maxCoeff():         3046.34
+dds minCoeff  :         (2038,0)
+dds maxCoeff  :         (955,951)
+max/2 counter :         8200
+dds.trace():            2.49149e+07
+dds.norm():             337184
+
+action info:
+s:                      1.35673
+kinetic:                1.34856
+i0:                     0.00812294
+vr:                     4.42886e-05
+  13   2      1.298   0.008123      1.357      51.41      194.6       2598      0.113      1.213   0.006013          0     0.5335
+
+    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       2     569      11       10.0001737       00.001188     0.1           0         2.6        1.2978    4.4289e-05        1.3567
+
+    results:results/nr/nr_error3.csv
+nrmain error: data/straightDisjoint/loops/dim_4/K_11/loop_Kappa_0.00017644_T_2.6_rank_0.dat doesn't exist
+loading loops from:
+data/highTemp/loops/dim_4/K_11/highTemp_Kappa_0.000165386_T_2.6_rank_0.dat
+Check delta: test(9.20569) > closeness(1)
+
+x.norm():              5.02539
+x_end.norm():          0.00223607
+mds.norm():            1.14327
+mds.minCoeff():         -0.049679
+mds.maxCoeff():         0.0476768
+mds minCoeff  :         2
+mds maxCoeff  :         0
+max/2 counter :         806
+(mds.tail(zm)).mean(): -3.95083e-17
+(mds.head(N)).mean():  -0.000748009
+
+delta info:    
+delta.norm():          46.2622
+delta.maxCoeff():        1.61482
+delta.minCoeff():        -1.61482
+delta maxCoeff  :        6146
+delta minCoeff  :        2050
+(delta.tail(zm)).mean(): -0.001
+(delta.head(N)).mean():  0.012141
+
+dds info:      
+dds.determinant():      inf
+dds.sum():              12288
+dds.prod():             0
+dds.mean():             0.000182882
+dds.minCoeff():         -2664.25
+dds.maxCoeff():         5328.93
+dds minCoeff  :         (2050,0)
+dds maxCoeff  :         (638,634)
+max/2 counter :         8192
+dds.trace():            4.36496e+07
+dds.norm():             590643
+
+action info:
+s:                      0.766475
+kinetic:                0.769246
+i0:                     -0.00148669
+vr:                     -0.0012844
+  pl run        len         i0          s        sol       solM      delta     E_cons  dx*kg_max     ic_max     cc_max       dx/a
+  15   1     0.7692  -0.001487     0.7665     0.2275     0.2583      9.206     0.1913    0.00899  7.877e-07          0     0.3083
+
+    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       1     297      11       10.0001654       00.001218     0.1           0         2.6       0.76925    -0.0012844       0.76647
+
+    results:results/nr/nr_error3.csv
+loading loops from:
+data/highTemp/loops/dim_4/K_11/highTemp_Kappa_0.00016815_T_2.6_rank_0.dat
+Check delta: test(2.91667) > closeness(1)
+
+x.norm():              5.02537
+x_end.norm():          0.00223607
+mds.norm():            0.998544
+mds.minCoeff():         -0.0419654
+mds.maxCoeff():         0.0399637
+mds minCoeff  :         2
+mds maxCoeff  :         0
+max/2 counter :         956
+(mds.tail(zm)).mean(): -1.27068e-17
+(mds.head(N)).mean():  -0.00074773
+
+delta info:    
+delta.norm():          14.6573
+delta.maxCoeff():        0.521762
+delta.minCoeff():        -0.521762
+delta maxCoeff  :        6146
+delta minCoeff  :        2050
+(delta.tail(zm)).mean(): -0.001
+(delta.head(N)).mean():  -0.00312292
+
+dds info:      
+dds.determinant():      inf
+dds.sum():              12288
+dds.prod():             0
+dds.mean():             0.000182882
+dds.minCoeff():         -2664.29
+dds.maxCoeff():         5329.02
+dds minCoeff  :         (2050,0)
+dds maxCoeff  :         (670,666)
+max/2 counter :         8192
+dds.trace():            4.36503e+07
+dds.norm():             590653
+
+action info:
+s:                      0.76646
+kinetic:                0.769242
+i0:                     -0.00147525
+vr:                     -0.00130656
+  pl run        len         i0          s        sol       solM      delta     E_cons  dx*kg_max     ic_max     cc_max       dx/a
+  16   1     0.7692  -0.001475     0.7665     0.1987     0.2182      2.917     0.1913   0.007762  1.305e-06          0     0.3083
+
+    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       1     297      11       10.0001681       00.001218     0.1           0         2.6       0.76924    -0.0013066       0.76646
+
+    results:results/nr/nr_error3.csv
+loading loops from:
+data/highTemp/loops/dim_4/K_11/highTemp_Kappa_0.000170913_T_2.6_rank_0.dat
+Check delta: test(1.50342) > closeness(1)
+
+x.norm():              5.02535
+x_end.norm():          0.00223607
+mds.norm():            0.822725
+mds.minCoeff():         -0.0333581
+mds.maxCoeff():         0.0313569
+mds minCoeff  :         2
+mds maxCoeff  :         0
+max/2 counter :         1056
+(mds.tail(zm)).mean(): 5.42101e-18
+(mds.head(N)).mean():  -0.000746731
+
+delta info:    
+delta.norm():          7.55522
+delta.maxCoeff():        0.265684
+delta.minCoeff():        -0.265684
+delta maxCoeff  :        6146
+delta minCoeff  :        2050
+(delta.tail(zm)).mean(): -0.001
+(delta.head(N)).mean():  -0.00387219
+
+dds info:      
+dds.determinant():      inf
+dds.sum():              12288
+dds.prod():             0
+dds.mean():             0.000182882
+dds.minCoeff():         -2664.34
+dds.maxCoeff():         5329.1
+dds minCoeff  :         (2050,0)
+dds maxCoeff  :         (722,718)
+max/2 counter :         8192
+dds.trace():            4.3651e+07
+dds.norm():             590662
+
+action info:
+s:                      0.766446
+kinetic:                0.769238
+i0:                     -0.00146385
+vr:                     -0.00132826
+  pl run        len         i0          s        sol       solM      delta     E_cons  dx*kg_max     ic_max     cc_max       dx/a
+  17   1     0.7692  -0.001464     0.7664     0.1637     0.1735      1.503     0.1913   0.006317  3.648e-07          0     0.3083
+
+    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       1     298      11       10.0001709       00.001218     0.1           0         2.6       0.76924    -0.0013283       0.76645
+
+    results:results/nr/nr_error3.csv
+loading loops from:
+data/highTemp/loops/dim_4/K_11/highTemp_Kappa_0.000173677_T_2.6_rank_0.dat
+  pl run        len         i0          s        sol       solM      delta     E_cons  dx*kg_max     ic_max     cc_max       dx/a
+  18   1     0.7692  -0.001452     0.7664     0.1223     0.4136     0.7972     0.1913   0.004451  6.792e-08          0     0.3083
+Check delta: test(2321.91) > closeness(1)
+Check inverse: test(0.00179906) > closeness(5.50763e-05)
+
+x.norm():              6.39345
+x_end.norm():          2.48129e-05
+mds.norm():            292.773
+mds.minCoeff():         -31.7506
+mds.maxCoeff():         31.7506
+mds minCoeff  :         4094
+mds maxCoeff  :         0
+max/2 counter :         24
+(mds.tail(zm)).mean(): -5.22252e-15
+(mds.head(N)).mean():  0.0132073
+
+delta info:    
+delta.norm():          14845
+delta.maxCoeff():        495.351
+delta.minCoeff():        -495.351
+delta maxCoeff  :        6134
+delta minCoeff  :        2038
+(delta.tail(zm)).mean(): 0.000255401
+(delta.head(N)).mean():  -0.331215
+
+dds info:      
+dds.determinant():      -inf
+dds.sum():              12288
+dds.prod():             0
+dds.mean():             0.000182882
+dds.minCoeff():         -9.10061e+08
+dds.maxCoeff():         9.10062e+08
+dds minCoeff  :         (2038,0)
+dds maxCoeff  :         (4098,8190)
+max/2 counter :         4
+dds.trace():            2.49711e+07
+dds.norm():             2.22918e+09
+
+action info:
+s:                      1.35126
+kinetic:                1.34544
+i0:                     0.00577357
+vr:                     4.3711e-05
+  18   2      1.293   0.005774      1.351      45.79        165       2322     0.1126      1.212   0.005873          0     0.5182
+
+    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       2     568      11       10.0001737       00.001218     0.1           0         2.6        1.2932    4.3711e-05        1.3513
+
+    results:results/nr/nr_error3.csv
+nrmain error: data/straightDisjoint/loops/dim_4/K_11/loop_Kappa_0.00017644_T_2.6_rank_0.dat doesn't exist
+loading loops from:
+data/highTemp/loops/dim_4/K_11/highTemp_Kappa_0.000165386_T_2.6_rank_0.dat
+Check delta: test(25.6589) > closeness(1)
+
+x.norm():              5.02539
+x_end.norm():          0.00223607
+mds.norm():            1.03579
+mds.minCoeff():         -0.0451515
+mds.maxCoeff():         0.0431494
+mds minCoeff  :         2
+mds maxCoeff  :         0
+max/2 counter :         792
+(mds.tail(zm)).mean(): -3.95083e-17
+(mds.head(N)).mean():  -0.000744587
+
+delta info:    
+delta.norm():          128.946
+delta.maxCoeff():        4.21307
+delta.minCoeff():        -4.21307
+delta maxCoeff  :        2050
+delta minCoeff  :        6146
+(delta.tail(zm)).mean(): -0.001
+(delta.head(N)).mean():  -0.12515
+
+dds info:      
+dds.determinant():      -inf
+dds.sum():              12288
+dds.prod():             0
+dds.mean():             0.000182882
+dds.minCoeff():         -2664.12
+dds.maxCoeff():         5328.69
+dds minCoeff  :         (6146,0)
+dds maxCoeff  :         (650,646)
+max/2 counter :         8192
+dds.trace():            4.36481e+07
+dds.norm():             590621
+
+action info:
+s:                      0.76648
+kinetic:                0.769246
+i0:                     -0.00148669
+vr:                     -0.00127949
+  pl run        len         i0          s        sol       solM      delta     E_cons  dx*kg_max     ic_max     cc_max       dx/a
+  20   1     0.7692  -0.001487     0.7665     0.2061     0.2348      25.66     0.1913    0.00899  7.877e-07          0     0.3007
+
+    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       1     297      11       10.0001654       00.001249     0.1           0         2.6       0.76925    -0.0012795       0.76648
+
+    results:results/nr/nr_error3.csv
+loading loops from:
+data/highTemp/loops/dim_4/K_11/highTemp_Kappa_0.00016815_T_2.6_rank_0.dat
+Check delta: test(4.36146) > closeness(1)
+
+x.norm():              5.02537
+x_end.norm():          0.00223607
+mds.norm():            0.904875
+mds.minCoeff():         -0.0381733
+mds.maxCoeff():         0.0361718
+mds minCoeff  :         2
+mds maxCoeff  :         0
+max/2 counter :         946
+(mds.tail(zm)).mean(): -1.27068e-17
+(mds.head(N)).mean():  -0.00074478
+
+delta info:    
+delta.norm():          21.918
+delta.maxCoeff():        0.758824
+delta.minCoeff():        -0.758824
+delta maxCoeff  :        6146
+delta minCoeff  :        2050
+(delta.tail(zm)).mean(): -0.001
+(delta.head(N)).mean():  0.0066645
+
+dds info:      
+dds.determinant():      inf
+dds.sum():              12288
+dds.prod():             0
+dds.mean():             0.000182882
+dds.minCoeff():         -2664.17
+dds.maxCoeff():         5328.78
+dds minCoeff  :         (2050,0)
+dds maxCoeff  :         (682,678)
+max/2 counter :         8192
+dds.trace():            4.36487e+07
+dds.norm():             590630
+
+action info:
+s:                      0.766465
+kinetic:                0.769242
+i0:                     -0.00147525
+vr:                     -0.00130206
+  pl run        len         i0          s        sol       solM      delta     E_cons  dx*kg_max     ic_max     cc_max       dx/a
+  21   1     0.7692  -0.001475     0.7665     0.1801     0.1985      4.361     0.1913   0.007762  1.305e-06          0     0.3007
+
+    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       1     297      11       10.0001681       00.001249     0.1           0         2.6       0.76924    -0.0013021       0.76646
+
+    results:results/nr/nr_error3.csv
+loading loops from:
+data/highTemp/loops/dim_4/K_11/highTemp_Kappa_0.000170913_T_2.6_rank_0.dat
+Check delta: test(1.69458) > closeness(1)
+
+x.norm():              5.02535
+x_end.norm():          0.00223607
+mds.norm():            0.745839
+mds.minCoeff():         -0.0303846
+mds.maxCoeff():         0.0283836
+mds minCoeff  :         2
+mds maxCoeff  :         0
+max/2 counter :         1048
+(mds.tail(zm)).mean(): 5.42101e-18
+(mds.head(N)).mean():  -0.000744297
+
+delta info:    
+delta.norm():          8.51585
+delta.maxCoeff():        0.298282
+delta.minCoeff():        -0.298282
+delta maxCoeff  :        6146
+delta minCoeff  :        2050
+(delta.tail(zm)).mean(): -0.001
+(delta.head(N)).mean():  -0.00126016
+
+dds info:      
+dds.determinant():      inf
+dds.sum():              12288
+dds.prod():             0
+dds.mean():             0.000182882
+dds.minCoeff():         -2664.21
+dds.maxCoeff():         5328.87
+dds minCoeff  :         (2050,0)
+dds maxCoeff  :         (730,726)
+max/2 counter :         8192
+dds.trace():            4.36494e+07
+dds.norm():             590639
+
+action info:
+s:                      0.76645
+kinetic:                0.769238
+i0:                     -0.00146385
+vr:                     -0.00132414
+  pl run        len         i0          s        sol       solM      delta     E_cons  dx*kg_max     ic_max     cc_max       dx/a
+  22   1     0.7692  -0.001464     0.7665     0.1484      0.158      1.695     0.1913   0.006317  3.648e-07          0     0.3007
+
+    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       1     298      11       10.0001709       00.001249     0.1           0         2.6       0.76924    -0.0013241       0.76645
+
+    results:results/nr/nr_error3.csv
+loading loops from:
+data/highTemp/loops/dim_4/K_11/highTemp_Kappa_0.000173677_T_2.6_rank_0.dat
+  pl run        len         i0          s        sol       solM      delta     E_cons  dx*kg_max     ic_max     cc_max       dx/a
+  23   1     0.7692  -0.001452     0.7664      0.111     0.3755     0.8118     0.1913   0.004451  6.792e-08          0     0.3007
+Check delta: test(2258.77) > closeness(1)
+
+x.norm():              6.43983
+x_end.norm():          1.41695e-05
+mds.norm():            273.407
+mds.minCoeff():         -27.002
+mds.maxCoeff():         27.002
+mds minCoeff  :         4094
+mds maxCoeff  :         0
+max/2 counter :         20
+(mds.tail(zm)).mean(): 1.1911e-14
+(mds.head(N)).mean():  0.0132989
+
+delta info:    
+delta.norm():          14546.1
+delta.maxCoeff():        487.931
+delta.minCoeff():        -487.931
+delta maxCoeff  :        6134
+delta minCoeff  :        2038
+(delta.tail(zm)).mean(): 5.8271e-11
+(delta.head(N)).mean():  3.35433
+
+dds info:      
+dds.determinant():      inf
+dds.sum():              12288
+dds.prod():             0
+dds.mean():             0.000182882
+dds.minCoeff():         -1497.87
+dds.maxCoeff():         2995.68
+dds minCoeff  :         (2038,0)
+dds maxCoeff  :         (3071,3067)
+max/2 counter :         8196
+dds.trace():            2.45019e+07
+dds.norm():             331587
+
+action info:
+s:                      1.37426
+kinetic:                1.37115
+i0:                     0.00306353
+vr:                     4.98163e-05
+  23   2      1.312   0.003064      1.374      42.46      140.4       2259       0.11      1.233   0.006788          0     0.5128
+
+    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       2     569      11       10.0001737       00.001249     0.1           0         2.6        1.3118    4.9816e-05        1.3743
+
+    results:results/nr/nr_error3.csv
+nrmain error: data/straightDisjoint/loops/dim_4/K_11/loop_Kappa_0.00017644_T_2.6_rank_0.dat doesn't exist
+7299.75user 7.25system 2:01:46elapsed 100%CPU (0avgtext+0avgdata 1075232maxresident)k
+520inputs+584outputs (0major+53696minor)pagefaults 0swaps

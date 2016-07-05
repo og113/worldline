@@ -1,0 +1,233 @@
+using inputs file nrinputs/highTemp/inputs_K_11_T_1.8
+timenumber: 160705045801
+looping over 25 steps
+loading loops from:
+data/highTemp/loops/dim_4/K_11/highTemp_Kappa_0.0115192_T_1.8_rank_0.dat
+  pl run        len         i0          s        sol       solM      delta     E_cons  dx*kg_max     ic_max     cc_max       dx/a
+   0   1      1.112   -0.01792     0.9787       28.5      31.41          1     0.2649      0.054  8.662e-07          0     0.3336
+calculating eigendecomposition of dds...
+eigenvalues:data/nr/eigenvalues/dim_4/K_11/160705045801eigenvalues_pl_0_run_1.dat
+first 16 eigenvalues are: 
+-0.101537
+-9.68676e-11
+-9.39835e-11
+-6.72721e-11
+-6.48256e-11
+4.64223e-06
+0.0037042
+0.00576587
+0.0319322
+0.0319322
+0.0687677
+0.0687771
+0.0698144
+0.0698144
+0.069878
+0.069878
+1 negative eigenvalues found, less than -6.71089e-09
+4 zero eigenvalues found, with absolute value less than 6.71089e-09
+eigenvectors:data/nr/eigenvalues/dim_4/K_11/160705045801eigenvector15_pl_0_run_1.dat
+eigenvalues summary:                            results/nr/nr_eigs.csv
+
+    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       11.27e+03      11       1 0.01152       00.001628     0.1           0         1.8        1.1118      -0.11518       0.97874
+
+    results: results/nr/nr_pass3.csv
+loading loops from:
+data/highTemp/loops/dim_4/K_11/highTemp_Kappa_0.0117117_T_1.8_rank_0.dat
+  pl run        len         i0          s        sol       solM      delta     E_cons  dx*kg_max     ic_max     cc_max       dx/a
+   1   1      1.112   -0.01778     0.9664      24.87      26.31          1     0.2649     0.0464  3.122e-07          0     0.3335
+calculating eigendecomposition of dds...
+eigenvalues:data/nr/eigenvalues/dim_4/K_11/160705045801eigenvalues_pl_1_run_1.dat
+first 16 eigenvalues are: 
+-0.0928067
+-9.48142e-11
+-9.40025e-11
+-6.47576e-11
+-6.20763e-11
+3.41571e-06
+0.00364384
+0.00528759
+0.0325236
+0.0325236
+0.0688147
+0.0688238
+0.0698451
+0.0698451
+0.0698934
+0.0698934
+1 negative eigenvalues found, less than -6.71089e-09
+4 zero eigenvalues found, with absolute value less than 6.71089e-09
+eigenvectors:data/nr/eigenvalues/dim_4/K_11/160705045801eigenvector15_pl_1_run_1.dat
+eigenvalues summary:                            results/nr/nr_eigs.csv
+
+    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       11.27e+03      11       1 0.01171       00.001628     0.1           0         1.8        1.1117      -0.12746       0.96641
+
+    results: results/nr/nr_pass3.csv
+loading loops from:
+data/highTemp/loops/dim_4/K_11/highTemp_Kappa_0.0119042_T_1.8_rank_0.dat
+  pl run        len         i0          s        sol       solM      delta     E_cons  dx*kg_max     ic_max     cc_max       dx/a
+   2   1      1.111   -0.01765      0.951      20.46      20.63          1     0.2648    0.03754  1.132e-06          0     0.3334
+calculating eigendecomposition of dds...
+eigenvalues:data/nr/eigenvalues/dim_4/K_11/160705045801eigenvalues_pl_2_run_1.dat
+first 16 eigenvalues are: 
+-0.0844757
+-9.64712e-11
+-9.21185e-11
+-6.6715e-11
+-6.63356e-11
+2.23562e-06
+0.00358697
+0.00475661
+0.0331541
+0.0331541
+0.0688504
+0.0688581
+0.069876
+0.069876
+0.0699086
+0.0699086
+1 negative eigenvalues found, less than -6.71089e-09
+4 zero eigenvalues found, with absolute value less than 6.71089e-09
+eigenvectors:data/nr/eigenvalues/dim_4/K_11/160705045801eigenvector15_pl_2_run_1.dat
+eigenvalues summary:                            results/nr/nr_eigs.csv
+
+    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       11.27e+03      11       1  0.0119       00.001628     0.1           0         1.8        1.1115      -0.14287       0.95096
+
+    results: results/nr/nr_pass3.csv
+loading loops from:
+data/highTemp/loops/dim_4/K_11/highTemp_Kappa_0.0120966_T_1.8_rank_0.dat
+  pl run        len         i0          s        sol       solM      delta     E_cons  dx*kg_max     ic_max     cc_max       dx/a
+   3   1      1.111   -0.01751     0.9299      15.23      51.03          1     0.2648    0.02624  2.267e-06          0     0.3334
+calculating eigendecomposition of dds...
+eigenvalues:data/nr/eigenvalues/dim_4/K_11/160705045801eigenvalues_pl_3_run_1.dat
+first 16 eigenvalues are: 
+-0.0764987
+-1.02406e-10
+-9.86941e-11
+-6.96556e-11
+-6.73637e-11
+1.09638e-06
+0.00352773
+0.00416591
+0.0338292
+0.0338292
+0.068874
+0.0688791
+0.0699071
+0.0699071
+0.0699238
+0.0699238
+1 negative eigenvalues found, less than -6.71089e-09
+4 zero eigenvalues found, with absolute value less than 6.71089e-09
+eigenvectors:data/nr/eigenvalues/dim_4/K_11/160705045801eigenvector15_pl_3_run_1.dat
+eigenvalues summary:                            results/nr/nr_eigs.csv
+
+    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       11.27e+03      11       1  0.0121       00.001628     0.1           0         1.8        1.1113       -0.1639       0.92989
+
+    results: results/nr/nr_pass3.csv
+nrmain error: data/straightDisjoint/loops/dim_4/K_11/loop_Kappa_0.0122891_T_1.8_rank_0.dat doesn't exist
+loading loops from:
+data/highTemp/loops/dim_4/K_11/highTemp_Kappa_0.0115192_T_1.8_rank_0.dat
+  pl run        len         i0          s        sol       solM      delta     E_cons  dx*kg_max     ic_max     cc_max       dx/a
+   5   1      1.112   -0.01792       1.06     0.9326      1.028          1     0.2649      0.054  8.662e-07          0     0.1419
+calculating eigendecomposition of dds...
+eigenvalues:data/nr/eigenvalues/dim_4/K_11/160705045801eigenvalues_pl_5_run_1.dat
+first 16 eigenvalues are: 
+-0.0949017
+3.99103e-12
+5.73467e-12
+9.15691e-12
+1.47442e-11
+6.62801e-06
+0.00540613
+0.00686103
+0.0313077
+0.0313077
+0.067446
+0.0675464
+0.0685204
+0.0685204
+0.0685819
+0.0685819
+1 negative eigenvalues found, less than -6.71089e-09
+4 zero eigenvalues found, with absolute value less than 6.71089e-09
+eigenvectors:data/nr/eigenvalues/dim_4/K_11/160705045801eigenvector15_pl_5_run_1.dat
+eigenvalues summary:                            results/nr/nr_eigs.csv
+
+    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       11.28e+03      11       1 0.01152       00.003827     0.1           0         1.8        1.1118     -0.033784        1.0601
+
+    results: results/nr/nr_pass3.csv
+loading loops from:
+data/highTemp/loops/dim_4/K_11/highTemp_Kappa_0.0117117_T_1.8_rank_0.dat
+  pl run        len         i0          s        sol       solM      delta     E_cons  dx*kg_max     ic_max     cc_max       dx/a
+   6   1      1.112   -0.01778      1.058     0.8138     0.8616          1     0.2649     0.0464  3.122e-07          0     0.1418
+calculating eigendecomposition of dds...
+eigenvalues:data/nr/eigenvalues/dim_4/K_11/160705045801eigenvalues_pl_6_run_1.dat
+first 16 eigenvalues are: 
+-0.0873941
+4.44691e-12
+5.12053e-12
+5.47368e-12
+1.21718e-11
+4.74736e-06
+0.00517161
+0.00636591
+0.0318978
+0.0318978
+0.0674812
+0.0675526
+0.0685289
+0.0685289
+0.0685757
+0.0685757
+1 negative eigenvalues found, less than -6.71089e-09
+4 zero eigenvalues found, with absolute value less than 6.71089e-09
+eigenvectors:data/nr/eigenvalues/dim_4/K_11/160705045801eigenvector15_pl_6_run_1.dat
+eigenvalues summary:                            results/nr/nr_eigs.csv
+
+    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       11.28e+03      11       1 0.01171       00.003827     0.1           0         1.8        1.1117     -0.036192        1.0577
+
+    results: results/nr/nr_pass3.csv
+loading loops from:
+data/highTemp/loops/dim_4/K_11/highTemp_Kappa_0.0119042_T_1.8_rank_0.dat
+  pl run        len         i0          s        sol       solM      delta     E_cons  dx*kg_max     ic_max     cc_max       dx/a
+   7   1      1.111   -0.01765      1.055     0.6694     0.6758          1     0.2649    0.03754  1.132e-06          0     0.1418
+calculating eigendecomposition of dds...
+eigenvalues:data/nr/eigenvalues/dim_4/K_11/160705045801eigenvalues_pl_7_run_1.dat
+first 16 eigenvalues are: 
+-0.0801516
+-8.4216e-13
+8.39067e-12
+1.2188e-11
+1.32668e-11
+3.025e-06
+0.00495103
+0.00582314
+0.0325272
+0.0325272
+0.0675053
+0.0675495
+0.0685377
+0.0685377
+0.0685693
+0.0685693
+1 negative eigenvalues found, less than -6.71089e-09
+4 zero eigenvalues found, with absolute value less than 6.71089e-09
+eigenvectors:data/nr/eigenvalues/dim_4/K_11/160705045801eigenvector15_pl_7_run_1.dat
+eigenvalues summary:                            results/nr/nr_eigs.csv
+
+    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       11.27e+03      11       1  0.0119       00.003827     0.1           0         1.8        1.1115     -0.039164        1.0547
+
+    results: results/nr/nr_pass3.csv
+loading loops from:
+data/highTemp/loops/dim_4/K_11/highTemp_Kappa_0.0120966_T_1.8_rank_0.dat
+  pl run        len         i0          s        sol       solM      delta     E_cons  dx*kg_max     ic_max     cc_max       dx/a
+   8   1      1.111   -0.01751      1.051     0.4982      1.669          1     0.2648    0.02624  2.267e-06          0     0.1418
+calculating eigendecomposition of dds...
