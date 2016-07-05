@@ -240,7 +240,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	
 	// defining some derived parameters	
 	uint N = pow(2,p.K);
-	uint zm = (disjoint? dim: dim+1) ; //////////////////////////////////
+	uint zm = (disjoint? dim: dim+2) ; //////////////////////////////////
 	uint NT = N*dim+zm;
 	number R = 1.0; //////////////////////////////////
 	Point<dim> P;
@@ -317,13 +317,13 @@ for (uint pl=0; pl<Npl; pl++) {
 			}
 			else {
 				if (nonrelativistic)
-					loadFile = "data/highTemp/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/highTemp_Kappa_"+nts(pow(p.G,3)*p.B)\
+					loadFile = "data/highTemp/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/highTemp_kappa_"+nts(pow(p.G,3)*p.B)\
 					+"_T_"+nts(p.T)+"_rank_0.dat";
 				else 
-					loadFile = "data/cosDisjoint/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_Kappa_"+nts(pow(p.G,3)*p.B)\
+					loadFile = "data/cosDisjoint/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_kappa_"+nts(pow(p.G,3)*p.B)\
 						+"_T_"+nts(p.T)+"_mu_"+nts(p.Mu)+"_lambda_"+nts(p.Lambda)+"_rank_0.dat";
 				if (!loadFile.exists() || straight) {
-					loadFile = "data/straightDisjoint/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_Kappa_"+nts(pow(p.G,3)*p.B)\
+					loadFile = "data/straightDisjoint/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_kappa_"+nts(pow(p.G,3)*p.B)\
 					+"_T_"+nts(p.T)+"_rank_0.dat";
 					if (extended)
 						(loadFile.Extras).push_back(StringPair("Lambda",nts(p.Lambda)));
@@ -368,14 +368,14 @@ for (uint pl=0; pl<Npl; pl++) {
 					}
 					else {
 						if (nonrelativistic)
-							loadFile = "data/highTemp/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/highTemp_Kappa_"+nts(pow(p.G,3)*p.B)\
+							loadFile = "data/highTemp/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/highTemp_kappa_"+nts(pow(p.G,3)*p.B)\
 							+"_T_"+nts(p.T)+"_rank_0.dat";
 						else 
-							loadFile = "data/cosDisjoint/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_Kappa_"+nts(pow(p.G,3)*p.B)\
+							loadFile = "data/cosDisjoint/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_kappa_"+nts(pow(p.G,3)*p.B)\
 								+"_T_"+nts(p.T)+"_mu_"+nts(p.Mu)+"_lambda_"+nts(p.Lambda)+"_rank_0.dat";
 						if (!loadFile.exists() || straight) {
 							loadFile = "data/straightDisjoint/loops/dim_"+nts(dim)+"/K_"+nts(p.K)\
-							+"/loop_Kappa_"+nts(pow(p.G,3)*p.B)+"_T_"+nts(p.T)+"_rank_0.dat";
+							+"/loop_kappa_"+nts(pow(p.G,3)*p.B)+"_T_"+nts(p.T)+"_rank_0.dat";
 							if (extended)
 								(loadFile.Extras).push_back(StringPair("Lambda",nts(p.Lambda)));
 						}
@@ -391,7 +391,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	}
 	// check if file exists
 	if (!loadFile.exists()) {
-		cerr << "nrmain error: " << loadFile << " doesn't exist" << endl;
+		cerr << "nrmain error: " << loadFile << " doesn't exist, moving to next parameter loop" << endl;
 		continue; ///////// CONTINUE STATEMENT IF FILE DOESN'T EXIST
 	}
 	cout << "loading loops from:" << endl;
@@ -813,6 +813,20 @@ for (uint pl=0; pl<Npl; pl++) {
 						dds(locz,locpj)  	+= 1.0/ds;
 						dds(locj,locz) 		+= -1.0/ds;
 						dds(locz,locj) 		+= -1.0/ds;
+					}
+					else if (mu==(dim+1) && j==(N/2-1)) {
+						nu = dim-1;
+						uint oj = oppNeigh(j,N);
+						uint locj = j*dim+nu, locoj = oj*dim+nu, locz = N*dim+mu;
+						mds(locz)  		-= x[locoj]-x[locj];
+						mds(locoj)  	-= x[locz];
+						mds(locj)  		-= -x[locz];								
+
+						dds(locoj,locz)  	+= 1.0;
+						dds(locz,locoj)  	+= 1.0;
+						dds(locj,locz) 		+= -1.0;
+						dds(locz,locj) 		+= -1.0;
+						
 					}
 				}
 				else if (mu<dim){
@@ -1377,8 +1391,10 @@ for (uint pl=0; pl<Npl; pl++) {
 
 	// eigenvalues, if required
 	if (eigen) {
-		mat dds_wlm = dds.block(0,0,dim*N,dim*N); // dds without Lagrange multipliers
+		//mat dds_wlm = dds.block(0,0,dim*N,dim*N); // dds without Lagrange multipliers
+		mat dds_wlm = dds;
 		number eigenTol = 1.0e-16*pow(dim*N,2);
+		number cos = 0.0;
 		uint negEigs = 0;
 		uint zeroEigs = 0;
 		uint numEigs = 4*dim;
@@ -1389,13 +1405,15 @@ for (uint pl=0; pl<Npl; pl++) {
 				+"_run_"+nts(runsCount)+".dat";
 		saveVectorBinary(eigenFile,eigensolver.eigenvalues());
 		printf("%12s%50s\n","eigenvalues:",((string)eigenFile).c_str());
-		cout << "first " << numEigs << " eigenvalues are: " << endl;
+		cout << "first " << numEigs << " eigenvalues and their dot products with mds are: " << endl;
 		for (uint j=0; j<numEigs; j++) {
 			if ((eigensolver.eigenvalues())[j]<-eigenTol)
 				negEigs++;
 			if (abs((eigensolver.eigenvalues())[j])<eigenTol)
 				zeroEigs++;
-			cout << (eigensolver.eigenvalues())[j] << endl;
+			cos = mds.dot((Eigen::VectorXd)(eigensolver.eigenvectors()).col(j))/mds.norm();
+			//cos = (mds.head(dim*N)).dot((Eigen::VectorXd)(eigensolver.eigenvectors()).col(j))/(mds.head(dim*N)).norm();
+			cout << (eigensolver.eigenvalues())[j] << " " << cos << endl;
 			eigenFile.ID = "eigenvector"+nts(j);
 			saveVectorBinary(eigenFile,(Eigen::VectorXd)((eigensolver.eigenvectors()).col(j)));
 		}

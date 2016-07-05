@@ -176,7 +176,7 @@ for (uint pl=0; pl<Npl; pl++) {
 			}
 		}
 		else if (so==ShapeOptions::straightDisjoint) {
-			file = "data/"+shape+"/loops/dim_"+nts<uint>(dim)+"/K_"+nts(p.K)+"/loop_Kappa_"+nts(kappa)\
+			file = "data/"+shape+"/loops/dim_"+nts<uint>(dim)+"/K_"+nts(p.K)+"/loop_kappa_"+nts(kappa)\
 					+"_T_"+nts(p.T)+"_rank_"+nts<uint>(j)+".dat";
 			if (extend)	
 				(file.Extras).push_back(StringPair("Lambda",nts(p.Lambda)));
@@ -199,7 +199,7 @@ for (uint pl=0; pl<Npl; pl++) {
 			}
 		}
 		else if (so==ShapeOptions::cosDisjoint) {
-			file = "data/"+shape+"/loops/dim_"+nts<uint>(dim)+"/K_"+nts(p.K)+"/loop_Kappa_"+nts(kappa)\
+			file = "data/"+shape+"/loops/dim_"+nts<uint>(dim)+"/K_"+nts(p.K)+"/loop_kappa_"+nts(kappa)\
 					+"_T_"+nts(p.T)+"_mu_"+nts(p.Mu)+"_lambda_"+nts(p.Lambda)+"_rank_"+nts(j)+".dat";	
 			number r = sqrt(pow(p.G,3)*p.B/4.0/PI) - 3.0*sqrt(PI/4.0/kappa)*pow(p.Epsi,2)\
 							- 15.0*pow(PI/kappa,3.0/2.0)*pow(p.Epsi,4)/4.0;

@@ -45,13 +45,18 @@ if (argc % 2 && argc>1) {
 if (loop && K==0) {
 	vector<number> v;
 	loadVectorBinary< vector<number> >(binaryFile,v);
-	K=log2(v.size()/dim-1); // the -1 assumes a translation invariance lagrange multiplier
+	K=log2(v.size()/dim); // the -1 assumes a translation invariance lagrange multiplier
 }
 
-if (binaryFile.empty() || asciiFile.empty()) {
-	cerr << "must provide two files as input" << endl;
+if (binaryFile.empty()) {
+	cerr << "must provide binary file as input" << endl;
 	cerr << binaryFile << ", " << asciiFile << endl;
 	return 1;
+}
+
+if (asciiFile.empty()) {
+	asciiFile = binaryFile;
+	asciiFile.Directory = "data/temp";
 }
 
 if (!binaryFile.exists()) {
