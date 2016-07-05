@@ -225,13 +225,14 @@ for (uint pl=0; pl<Npl; pl++) {
 			p.Mu = p.Epsi;
 			pold.Mu = pold.Epsi;
 		}
-		stepFile = filenameLoopNR<dim>(pold);
+		if (poto==PotentialOptions::thermal || disjoint)
+			stepFile = filenameThermalNR<dim>(pold);
+		else
+			stepFile = filenameLoopNR<dim>(pold);
 		if (weak)
 			(stepFile.Extras).push_back(StringPair("weak","1"));
 		if (poto!=PotentialOptions::original || gaussian)
 			(stepFile.Extras).push_back(potExtras);
-		if (poto==PotentialOptions::thermal || disjoint)
-			(stepFile.Extras).push_back(StringPair("T",nts(pold.T)));
 		if (kino!=KineticOptions::saddle)
 			(stepFile.Extras).push_back(kinExtras);
 	}
@@ -320,7 +321,7 @@ for (uint pl=0; pl<Npl; pl++) {
 					+"_T_"+nts(p.T)+"_rank_0.dat";
 				else 
 					loadFile = "data/cosDisjoint/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_Kappa_"+nts(pow(p.G,3)*p.B)\
-						+"_T_"+nts(p.T)+"_Lambda_"+nts(p.Lambda)+"_rank_0.dat";
+						+"_T_"+nts(p.T)+"_mu_"+nts(p.Mu)+"_lambda_"+nts(p.Lambda)+"_rank_0.dat";
 				if (!loadFile.exists() || straight) {
 					loadFile = "data/straightDisjoint/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_Kappa_"+nts(pow(p.G,3)*p.B)\
 					+"_T_"+nts(p.T)+"_rank_0.dat";
@@ -330,26 +331,31 @@ for (uint pl=0; pl<Npl; pl++) {
 			}
 		}
 		else {
-			loadFile = filenameLoopNR<dim>(p);
+			if (poto==PotentialOptions::thermal || disjoint)
+				loadFile = filenameThermalNR<dim>(p);
+			else
+				loadFile = filenameLoopNR<dim>(p);
 			if (weak)
 				(loadFile.Extras).push_back(StringPair("weak","1"));
 			if (poto!=PotentialOptions::original || gaussian)
 				(loadFile.Extras).push_back(potExtras);
-			if (poto==PotentialOptions::thermal || disjoint)
-				(loadFile.Extras).push_back(StringPair("T",nts(p.T)));
 			if (kino!=KineticOptions::saddle)
 				(stepFile.Extras).push_back(kinExtras);
 			if (!loadFile.exists() && (poto!=PotentialOptions::original || gaussian)) {
 				loadFile = filenameLoopNR<dim>(p);
 				(loadFile.Extras).push_back(potExtras);
 			}
-			if (!loadFile.exists())
+			if (!loadFile.exists() && (poto==PotentialOptions::thermal || disjoint))
 				loadFile = filenameLoopNR<dim>(p);
+			else if (!loadFile.exists())
+				loadFile = filenameThermalNR<dim>(p);
 			if (!loadFile.exists()) {
 				if (pl>0)
 					loadFile = stepFile;
-					if (!loadFile.exists())
+					if (!loadFile.exists() && (poto==PotentialOptions::thermal || disjoint))
 						loadFile = filenameLoopNR<dim>(pold);
+					else if (!loadFile.exists())
+						loadFile = filenameThermalNR<dim>(pold);
 				if (!loadFile.exists() && old)
 					loadFile = "data/nr/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_kappa_"+nts(pow(p.G,3)*p.B)+"_E_"+nts(p.P4)\
 		+"_a_"+nts(p.Epsi)+".dat";
@@ -366,7 +372,7 @@ for (uint pl=0; pl<Npl; pl++) {
 							+"_T_"+nts(p.T)+"_rank_0.dat";
 						else 
 							loadFile = "data/cosDisjoint/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_Kappa_"+nts(pow(p.G,3)*p.B)\
-								+"_T_"+nts(p.T)+"_Lambda_"+nts(p.Lambda)+"_rank_0.dat";
+								+"_T_"+nts(p.T)+"_mu_"+nts(p.Mu)+"_lambda_"+nts(p.Lambda)+"_rank_0.dat";
 						if (!loadFile.exists() || straight) {
 							loadFile = "data/straightDisjoint/loops/dim_"+nts(dim)+"/K_"+nts(p.K)\
 							+"/loop_Kappa_"+nts(pow(p.G,3)*p.B)+"_T_"+nts(p.T)+"_rank_0.dat";
@@ -1039,13 +1045,15 @@ for (uint pl=0; pl<Npl; pl++) {
 		
 		if (po!=PrintOptions::none) {
 			Filename early = "data/temp/"+timenumber+"xEarly1_K_"+nts(p.K)+"_kappa_"+nts(pow(p.G,3)*p.B)+"_E_"+nts(E)\
-						+"_a_"+nts(p.Epsi)+"_mu_"+nts(p.Mu)+".dat";
+						+"_a_"+nts(p.Epsi)+".dat";
+			if (abs(E)>MIN_NUMBER)
+				(early.Extras).push_back(StringPair("mu",nts(p.Mu)));
+			if (poto==PotentialOptions::thermal || disjoint)
+				(early.Extras).push_back(StringPair("T",nts(p.T)));
 			if (weak)
 				(early.Extras).push_back(StringPair("weak","1"));
 			if (poto!=PotentialOptions::original || gaussian)
 				(early.Extras).push_back(potExtras);
-			if (poto==PotentialOptions::thermal || disjoint)
-				(early.Extras).push_back(StringPair("T",nts(p.T)));
 			if (kino!=KineticOptions::saddle)
 				(early.Extras).push_back(kinExtras);
 				
@@ -1099,13 +1107,15 @@ for (uint pl=0; pl<Npl; pl++) {
 		// printing delta early
 		if (po!=PrintOptions::none) {
 			Filename early = "data/temp/"+timenumber+"deltaEarly2_K_"+nts(p.K)+"_kappa_"+nts(pow(p.G,3)*p.B)+"_E_"+nts(E)\
-							+"_a_"+nts(p.Epsi)+"_mu_"+nts(p.Mu)+".dat";
+							+"_a_"+nts(p.Epsi)+".dat";
+			if (abs(E)>MIN_NUMBER)
+				(early.Extras).push_back(StringPair("mu",nts(p.Mu)));
+			if (poto==PotentialOptions::thermal || disjoint)
+				(early.Extras).push_back(StringPair("T",nts(p.T)));
 			if (weak)
 				(early.Extras).push_back(StringPair("weak","1"));
 			if (poto!=PotentialOptions::original || gaussian)
 				(early.Extras).push_back(potExtras);
-			if (poto==PotentialOptions::thermal || disjoint)
-				(early.Extras).push_back(StringPair("T",nts(p.T)));
 			if (kino!=KineticOptions::saddle)
 				(early.Extras).push_back(kinExtras);
 				
@@ -1422,8 +1432,12 @@ for (uint pl=0; pl<Npl; pl++) {
 	
 	// curvature, if required
 	if (curvature || alltests) {
-		Filename file = "data/temp/xCurvature_K_"+nts(p.K)+"_kappa_"+nts(pow(p.G,3)*p.B)+"_E_"+nts(E)\
-						+"_a_"+nts(p.Epsi)+"_mu_"+nts(p.Mu)+".dat";
+		Filename file = "data/temp/"+timenumber+"xCurvature_K_"+nts(p.K)+"_kappa_"+nts(pow(p.G,3)*p.B)+"_E_"+nts(E)\
+						+"_a_"+nts(p.Epsi)+".dat";
+		if (abs(E)>MIN_NUMBER)
+			(file.Extras).push_back(StringPair("mu",nts(p.Mu)));
+		if (poto==PotentialOptions::thermal || disjoint)
+			(file.Extras).push_back(StringPair("T",nts(p.T)));
 		printAsLoop(file,dim,x,N*dim);
 		saveVectorAsciiAppend(file,sc_vec);
 		saveVectorAsciiAppend(file,kg_vec);
@@ -1518,13 +1532,15 @@ for (uint pl=0; pl<Npl; pl++) {
 	
 	if (checkDelta.good() && checkSol.good() && checkSolMax.good()) {		
 		// printing loop to file
-		Filename loopRes = filenameLoopNR<dim>(p);
+		Filename loopRes;
+		if (poto==PotentialOptions::thermal || disjoint)
+			loopRes = filenameThermalNR<dim>(p);
+		else
+			loopRes = filenameLoopNR<dim>(p);
 		if (weak)
 			(loopRes.Extras).push_back(StringPair("weak","1"));
 		if (poto!=PotentialOptions::original || gaussian)
 			(loopRes.Extras).push_back(potExtras);
-		if (poto==PotentialOptions::thermal || disjoint)
-			(loopRes.Extras).push_back(StringPair("T",nts(p.T)));
 		if (kino!=KineticOptions::saddle)
 			(loopRes.Extras).push_back(kinExtras);
 		saveVectorBinary(loopRes,x);
@@ -1534,13 +1550,15 @@ for (uint pl=0; pl<Npl; pl++) {
 	// printing extras to ascii files
 	if (po!=PrintOptions::none) {
 		Filename file = "data/temp/"+timenumber+"xEnd_K_"+nts(p.K)+"_kappa_"+nts(pow(p.G,3)*p.B)+"_E_"+nts(E)\
-							+"_a_"+nts(p.Epsi)+"_mu_"+nts(p.Mu)+".dat";
+							+"_a_"+nts(p.Epsi)+".dat";
+			if (abs(E)>MIN_NUMBER)
+				(file.Extras).push_back(StringPair("mu",nts(p.Mu)));
+			if (poto==PotentialOptions::thermal || disjoint)
+				(file.Extras).push_back(StringPair("T",nts(p.T)));
 			if (weak)
 				(file.Extras).push_back(StringPair("weak","1"));
 			if (poto!=PotentialOptions::original || gaussian)
 				(file.Extras).push_back(potExtras);
-			if (poto==PotentialOptions::thermal || disjoint)
-				(file.Extras).push_back(StringPair("T",nts(p.T)));
 			if (kino!=KineticOptions::saddle)
 				(file.Extras).push_back(kinExtras);
 				

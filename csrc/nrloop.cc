@@ -1508,6 +1508,19 @@ Filename filenameLoopNR(const Parameters& p) {
 	return f;
 }
 
+// filenameThermal
+template<uint Dim>
+Filename filenameThermalNR(const Parameters& p) {
+	Filename f = "data/nr/loops/dim_"+nts(Dim)+"/K_"+nts(p.K)+"/loop_kappa_"+nts(pow(p.G,3)*p.B)+"_E_"+nts(p.P4)\
+		+"_a_"+nts(p.Epsi)+".dat";
+	if (abs(p.P4)>MIN_NUMBER)
+		(f.Extras).push_back(StringPair("mu",nts(p.Mu)));
+	(f.Extras).push_back(StringPair("T",nts(p.T)));
+	if (p.Ng>0)
+		(f.Extras).push_back(StringPair("Ng",nts(p.Ng)));
+	return f;
+}
+
 /*----------------------------------------------------------------------------------------------------------------------------
 	4 - explicit instantiation
 ----------------------------------------------------------------------------------------------------------------------------*/
@@ -1675,6 +1688,7 @@ template void PGaussianDisjoint_nr<4>(const Loop<4>& l, const uint& j, const uin
 template void loopToVector<4>(const Loop<4>&,vec&);
 template void vectorToLoop<4>(const vec&, Loop<4>&);
 template Filename filenameLoopNR<4>(const Parameters& p);
+template Filename filenameThermalNR<4>(const Parameters& p);
 
 template <> void PseudoAngle<4>(const uint& j, const Loop<4>& l, const number& f, number& result) {
 	uint pj = (j==(l.size()-1)? 0: j+1);

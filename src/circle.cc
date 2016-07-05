@@ -180,7 +180,8 @@ for (uint pl=0; pl<Npl; pl++) {
 					+"_T_"+nts(p.T)+"_rank_"+nts<uint>(j)+".dat";
 			if (extend)	
 				(file.Extras).push_back(StringPair("Lambda",nts(p.Lambda)));
-			number r = sqrt(kappa/4.0/PI);
+			number r = sqrt(kappa/4.0/PI) - 3.0*sqrt(PI/4.0/kappa)*pow(p.Epsi,2)\
+						- 15.0*pow(PI/kappa,3.0/2.0)*pow(p.Epsi,4)/4.0;
 			if (extend)
 				r *= (1.0 + p.Lambda);
 			number dt = 2.0*beta/(number)N;
@@ -199,18 +200,19 @@ for (uint pl=0; pl<Npl; pl++) {
 		}
 		else if (so==ShapeOptions::cosDisjoint) {
 			file = "data/"+shape+"/loops/dim_"+nts<uint>(dim)+"/K_"+nts(p.K)+"/loop_Kappa_"+nts(kappa)\
-					+"_T_"+nts(p.T)+"_Lambda_"+nts(p.Lambda)+"_rank_"+nts<uint>(j)+".dat";	
-			number r = sqrt(pow(p.G,3)*p.B/4.0/PI);
+					+"_T_"+nts(p.T)+"_mu_"+nts(p.Mu)+"_lambda_"+nts(p.Lambda)+"_rank_"+nts(j)+".dat";	
+			number r = sqrt(pow(p.G,3)*p.B/4.0/PI) - 3.0*sqrt(PI/4.0/kappa)*pow(p.Epsi,2)\
+							- 15.0*pow(PI/kappa,3.0/2.0)*pow(p.Epsi,4)/4.0;
 			number dt = 2.0*beta/(number)N;
 			number w = 4.0*PI/(number)N;
 			for (uint k=0; k<N; k++) {
 				point = p0;
 				if (k<N/2) {
-					point[2] += r/2.0 + p.Lambda*cos(w*k);
+					point[2] += (r/2.0)*(1.0 + p.Mu*cos(w*k) + p.Lambda*cos(2.0*w*k));
 					point[3] += -beta/2.0 + dt/2.0 + dt*k;
 				}
 				else {
-					point[2] += -r/2.0 - p.Lambda*cos(w*k);
+					point[2] += -(r/2.0)*(1.0 + p.Mu*cos(w*k) + p.Lambda*cos(2.0*w*k));
 					point[3] += beta/2.0 - dt/2.0 - dt*(k-N/2);
 				}
 				loop[k] = point;
