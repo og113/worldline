@@ -450,7 +450,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		uint j, k, mu, nu;
 		number mgb = -1.0; // not -p.G*p.B as scaled loops
 		number kinetic = 0.0;
-		number g, dm, cusp_scale, beta;
+		number g, dm, cusp_scale;
 		number dim_reg_scale = 0.0, d_dim_reg = 0.0;
 		number n = 0.0;
 		number repulsion_scale, repulsion = 0.0;
@@ -460,6 +460,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		number Js_scale = 4.0*N;
 		number s0, sqrt4s0; 
 		number s0_scale = (abs(p.T)>MIN_NUMBER? 1.0/p.T: 1.0);
+		number beta = ((p.T)>sqrt(MIN_NUMBER)? 1.0/(p.T): 1.0/sqrt(MIN_NUMBER)); // this is 1/eta
 		if (poto==PotentialOptions::original) {
 			s0 = S0(xLoop);
 			sqrt4s0 = 2.0*sqrt(s0);
@@ -498,7 +499,6 @@ for (uint pl=0; pl<Npl; pl++) {
 			dm = -g*PI/p.Epsi;
 			cusp_scale = -g*2.0*log(p.Mu/p.Epsi);
 			repulsion_scale = -g*sqrt(PI)/p.Epsi/p.Epsi;
-			beta = ((p.T)>sqrt(MIN_NUMBER)? 1.0/(p.T): 1.0/sqrt(MIN_NUMBER)); // this is 1/eta
 			if (disjoint)
 				s0 = S0Disjoint(xLoop,beta);
 			else
@@ -511,7 +511,6 @@ for (uint pl=0; pl<Npl; pl++) {
 			dm = 0.0;
 			cusp_scale = 0.0;
 			repulsion_scale = 0.0;
-			beta = ((p.T)>sqrt(MIN_NUMBER)? 1.0/(p.T): 1.0/sqrt(MIN_NUMBER)); // this is 1/eta
 			if (disjoint)
 				s0 = S0Disjoint(xLoop,beta);
 			else
@@ -524,7 +523,6 @@ for (uint pl=0; pl<Npl; pl++) {
 			dm = 0.0;
 			cusp_scale = 0.0;
 			repulsion_scale = 0.0;
-			beta = ((p.T)>sqrt(MIN_NUMBER)? 1.0/(p.T): 1.0/sqrt(MIN_NUMBER)); // this is 1/eta
 			if (disjoint)
 				s0 = S0Disjoint(xLoop,beta);
 			else

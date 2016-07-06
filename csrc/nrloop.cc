@@ -1393,7 +1393,7 @@ void PVthrDisjoint_nr(const Loop<Dim>& l, const uint& j, const uint& mu, const u
 	uint pk = posNeighDisjoint(k,l.size());
 	
 	number r = SpatialDistance(l[j],l[k]);
-	number t = DXDisjoint(l,k,j,Dim-1,beta);
+	number t = DX(l,k,j,Dim-1); // intentionally not DXDisjoint(l,k,j,Dim-1,beta);
 
 	v[Dim*j+mu] += f*(-pow(2.0*PI,2))*2.0*DXDisjoint(l,pk,k,mu,beta)*FThermal(r,t,beta,a);	
 }
@@ -1419,7 +1419,7 @@ void PGaussian_nr(const Loop<Dim>& l, const uint& j, const uint& mu, const uint&
 template<uint Dim>
 void PGaussianDisjoint_nr(const Loop<Dim>& l, const uint& j, const uint& mu, const uint& k, const number& beta, const number& a, const number& f, vec& v) {
 	uint pk = posNeighDisjoint(k,l.size());
-	v[Dim*j+mu] += f*2.0*DXDisjoint(l,pk,k,mu,beta)*exp(-DistanceSquaredDisjoint(l[j],l[k],beta)/a/a);
+	v[Dim*j+mu] += f*2.0*DXDisjoint(l,pk,k,mu,beta)*exp(-DistanceSquared(l[j],l[k])/a/a); //intentionally not disjoint
 }
 
 /*----------------------------------------------------------------------------------------------------------------------------
@@ -1767,7 +1767,7 @@ void VthrDisjoint<4> (const uint& j, const uint& k, const Loop<4>& l, const numb
 		uint pk = posNeighDisjoint(k,l.size());
 		
 		number r = SpatialDistance(l[j],l[k]);
-		number t = DXDisjoint(l,k,j,3,beta);
+		number t = DX(l,k,j,3);//DXDisjoint(l,k,j,3,beta);
 	
 		result += f*(-pow(2.0*PI,2))*(1.0+(number)(k<j))*DotDisjoint(l[pj],l[j],l[pk],l[k],beta)*FThermal(r,t,beta,a);	
 	}
@@ -1958,7 +1958,7 @@ template <> void mdVthrDisjoint_nr<4>(const uint& j, const uint& mu, const uint&
 		
 	if (i!=j) {
 		number r_ij = SpatialDistance(l[i],l[j]);
-		number t_ij = DXDisjoint(l,j,i,3,beta); // checked order
+		number t_ij = DX(l,j,i,3);// DXDisjoint(l,j,i,3,beta); // checked order
 		number FThermal_ij = FThermal(r_ij,t_ij,beta,a);
 		number DFThermalDrOnr_ij = DFThermalDrOnr(r_ij,t_ij,beta,a);
 		number DFThermalDt_ij = DFThermalDt(r_ij,t_ij,beta,a);
@@ -1973,7 +1973,7 @@ template <> void mdVthrDisjoint_nr<4>(const uint& j, const uint& mu, const uint&
 	
 	if (i!=mj) {
 		number r_imj = SpatialDistance(l[i],l[mj]);
-		number t_imj = DXDisjoint(l,mj,i,3,beta); // checked order
+		number t_imj = DX(l,mj,i,3);// DXDisjoint(l,mj,i,3,beta); // checked order
 		number FThermal_imj = FThermal(r_imj,t_imj,beta,a);
 		res +=  -2.0*FThermal_imj*DXDisjoint(l,i,pi,mu,beta); //
 	}
@@ -2062,14 +2062,14 @@ template <> void mdGaussianDisjoint_nr<4>(const uint& j, const uint& mu, const u
 	uint pi = posNeighDisjoint(i,l.size());
 		
 	if (i!=j) {
-		number B_ij = DistanceSquaredDisjoint(l[i],l[j],beta);
+		number B_ij = DistanceSquared(l[i],l[j]); // not DistanceSquaredDisjoint(l[i],l[j],beta);
 		number T_ij = DotDisjoint(l[pi],l[i],l[pj],l[j],beta);
 		number E_ij = exp(-B_ij/a/a);
 		res += + 2.0*E_ij*DXDisjoint(l,i,pi,mu,beta) \
  			- (4.0*E_ij*DXDisjoint(l,j,i,mu,beta)*T_ij)/pow(a,2);
 	}
 	if (i!=mj) {
-		number B_imj = DistanceSquaredDisjoint(l[i],l[mj],beta);
+		number B_imj = DistanceSquared(l[i],l[mj]); // not DistanceSquaredDisjoint(l[i],l[mj],beta);
 		number E_imj = exp(-B_imj/a/a);
 		res += - 2.0*E_imj*DXDisjoint(l,i,pi,mu,beta);
 	}
@@ -2667,10 +2667,14 @@ template <> void ddVthrDisjoint_nr<4>(const uint& j, const uint& mu, const uint&
 	number r_jmk = SpatialDistance(l[j],l[mk]);
 	number r_mjmk = SpatialDistance(l[mj],l[mk]);
 	
-	number t_jk = DXDisjoint(l,k,j,3,beta);
+	number t_jk = DX(l,k,j,3);
+	number t_mjk = DX(l,k,mj,3);
+	number t_jmk = DX(l,mk,j,3);
+	number t_mjmk = DX(l,mk,mj,3);
+	/*number t_jk = DXDisjoint(l,k,j,3,beta);
 	number t_mjk = DXDisjoint(l,k,mj,3,beta);
 	number t_jmk = DXDisjoint(l,mk,j,3,beta);
-	number t_mjmk = DXDisjoint(l,mk,mj,3,beta);
+	number t_mjmk = DXDisjoint(l,mk,mj,3,beta);*/
 		
 	number T_jk = DotDisjoint(l[pj],l[j],l[pk],l[k],beta);
 	
@@ -2749,9 +2753,11 @@ template <> void ddVthrDisjoint_nr<4>(const uint& j, const uint& mu, const uint&
 			pi = posNeighDisjoint(i,l.size());
 			T_ij = DotDisjoint(l[pi],l[i],l[pj],l[j],beta);			
 			r_ij = SpatialDistance(l[j],l[i]);
-			r_imj = SpatialDistance(l[i],l[mj]);	
-			t_ij = DXDisjoint(l,j,i,3,beta);
-			t_imj = DXDisjoint(l,mj,i,3,beta);
+			r_imj = SpatialDistance(l[i],l[mj]);
+			t_ij = DX(l,j,i,3);
+			t_imj = DX(l,mj,i,3);	
+			/*t_ij = DXDisjoint(l,j,i,3,beta);
+			t_imj = DXDisjoint(l,mj,i,3,beta);*/
 
 			if (k==j && i!=j) {
 				DFThermalDrOnr_ij = DFThermalDrOnr(r_ij,t_ij,beta,a);
@@ -2961,10 +2967,14 @@ template <> void ddGaussianDisjoint_nr<4> (const uint& j, const uint& mu, const 
 	uint mk = negNeighDisjoint(k,l.size());
 	uint pk = posNeighDisjoint(k,l.size());
 	
-	number B_jk = DistanceSquaredDisjoint(l[j],l[k],beta);
+	number B_jk = DistanceSquared(l[j],l[k]);
+	number B_mjk = DistanceSquared(l[mj],l[k]);
+	number B_jmk = DistanceSquared(l[j],l[mk]);
+	number B_mjmk = DistanceSquared(l[mj],l[mk]);
+	/*number B_jk = DistanceSquaredDisjoint(l[j],l[k],beta);
 	number B_mjk = DistanceSquaredDisjoint(l[mj],l[k],beta);
 	number B_jmk = DistanceSquaredDisjoint(l[j],l[mk],beta);
-	number B_mjmk = DistanceSquaredDisjoint(l[mj],l[mk],beta);
+	number B_mjmk = DistanceSquaredDisjoint(l[mj],l[mk],beta);*/
 	
 	number E_jk = exp(-B_jk/a/a);
 	number E_mjk = exp(-B_mjk/a/a);
@@ -2988,7 +2998,7 @@ template <> void ddGaussianDisjoint_nr<4> (const uint& j, const uint& mu, const 
 	// terms where mu not nexcessarily equal to nu, without sums
 	if (k!=j)
 		res +=  - (4.0*E_jk*DXDisjoint(l,j,pj,nu,beta)*DXDisjoint(l,j,k,mu,beta))/pow(a,2) \
-				 + (4.0*E_jk*DXDisjoint(l,j,k,nu,beta)*DXDisjoint(l,k,pk,mu,beta))/pow(a,2) \
+						 + (4.0*E_jk*DXDisjoint(l,j,k,nu,beta)*DXDisjoint(l,k,pk,mu,beta))/pow(a,2) \
 				 - (8.0*E_jk*DXDisjoint(l,j,k,mu,beta)*DXDisjoint(l,j,k,nu,beta)*T_jk)/pow(a,4); //
 	if (k!=mj)
 		res +=  - (4.0*E_mjk*DXDisjoint(l,mj,k,nu,beta)*DXDisjoint(l,k,pk,mu,beta))/pow(a,2); //
@@ -3004,8 +3014,10 @@ template <> void ddGaussianDisjoint_nr<4> (const uint& j, const uint& mu, const 
 		for (uint i=0; i<l.size(); i++) {
 		
 			pi = posNeighDisjoint(i,l.size());
-			B_ij = DistanceSquaredDisjoint(l[i],l[j],beta);
-			B_imj = DistanceSquaredDisjoint(l[i],l[mj],beta);
+			B_ij = DistanceSquared(l[i],l[j]);
+			B_imj = DistanceSquared(l[i],l[mj]);
+			/*B_ij = DistanceSquaredDisjoint(l[i],l[j],beta);
+			B_imj = DistanceSquaredDisjoint(l[i],l[mj],beta);*/
 			E_ij = exp(-B_ij/a/a);
 			E_imj = exp(-B_imj/a/a);
 			T_ij = DotDisjoint(l[pi],l[i],l[pj],l[j],beta);

@@ -638,8 +638,8 @@ number MidpointDistanceSquared(const Loop<Dim>& loop, const uint& i, const uint&
 // DX
 template <uint Dim>
 number DX(const Loop<Dim>& loop, const uint& i, const uint& mu) {
-	uint ni = negNeigh(i,loop.size());
-	return (loop[i])[mu]-(loop[ni])[mu];
+	uint pi = posNeigh(i,loop.size());
+	return (loop[pi])[mu]-(loop[i])[mu];
 }
 
 // DX
@@ -651,11 +651,11 @@ number DX(const Loop<Dim>& loop, const uint& i, const uint& j, const uint& mu) {
 // DXDisjoint
 template <uint Dim>
 number DXDisjoint(const Loop<Dim>& loop, const uint& i, const uint& mu, const number& beta) {
-	uint ni = negNeighDisjoint(i,loop.size());
+	uint pi = posNeighDisjoint(i,loop.size());
 	if (mu==(Dim-1))
-		return mod<number>((loop[i])[mu]-(loop[ni])[mu],-beta/2.0,beta/2.0);
+		return mod<number>((loop[pi])[mu]-(loop[i])[mu],-beta/2.0,beta/2.0);
 	else
-		return (loop[i])[mu]-(loop[ni])[mu];
+		return (loop[pi])[mu]-(loop[i])[mu];
 }
 
 // DXDisjoint

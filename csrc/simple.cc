@@ -319,7 +319,7 @@ T mod(const T& x, const T& min, const T& max) {
 		return 1.0;
 	}
 		
-	if (x>=Min && x<Max)
+	if (x>Min && x<=Max)
 		return x;
 	else if (x>Max) {
 		int ranges = (int)((x-Min)/(Max-Min));
