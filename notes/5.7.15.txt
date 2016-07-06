@@ -1,0 +1,19 @@
+trying to discover the difference between the nonrel and the full thermal numerical calculation:
+
+without the lagrange multipliers:
+	zero modes:
+		- nonrel has 5 zero modes. these correspond to 4 translational modes and one moving LHS up and RHS down.
+		- thermal has 4 zero modes and one quasi-zero mode. the zero modes correspond to the translational modes and the quasi zero mode corresponds to moving LHS up and RHS down. mds.quasi is larger than the small size of the quasi zero mode.
+	
+	neg modes:
+		- neg modes are similar in the two cases
+		- inputing nonrel soln into nonrel we find dsdx for nonrel potential mostly in direction of negative mode. for thermal potential dsdx mostly in direction of first cos excitation.
+	
+including the lagrange multipliers:
+	zero modes:
+		- nonrel with "-fixdz 0" the translational zero modes are fixed but not the LHS up RHS down zero mode. with "-fixdz 1" neither the time translational zero mode nor the LHS up RHS down zero mode are fixed, but mds dotted with these modes is comparably small to the size of the small eigenvalue.
+		- thermal with "-fixdz 0" the translational zero modes are fixed but not the quasi zero mode. with "-fixdz 1" neither the time translational zero mode nor the LHS up RHS down zero mode are fixed.
+	
+	neg modes:
+		- neg modes are similar in the two cases
+		- inputing nonrel soln into nonrel we find dsdx for nonrel potential mostly in direction of negative mode. for thermal potential dsdx mostly in direction of first cos excitation.
