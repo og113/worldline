@@ -81,8 +81,10 @@ if (!shape.empty() || circle || lemon || straightDisjoint || cosDisjoint) {
 		so = ShapeOptions::cosDisjoint;
 		shape = "cosDisjoint";
 	}
-	else
+	else {
 		cerr << "shape options not understood: " << shape << endl;
+		return 1;
+	}
 }
 
 cout << "using inputs file " << inputsFile << endl;
