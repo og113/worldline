@@ -554,3 +554,97 @@ data/highTemp/loops/dim_4/K_11/highTemp_Kappa_0.122945_T_1_rank_0.dat
   pl run        len         i0          s        sol       solM      delta     E_cons  dx*kg_max     ic_max     cc_max       dx/a
   21   1      2.003    -0.1037      1.783   0.002117    0.00192          1     0.4269    0.08598  7.303e-07          0    0.02896
 calculating eigendecomposition of dds...
+eigenvalues:data/nr/eigenvalues/dim_4/K_11/160705013338eigenvalues_pl_21_run_1.dat
+first 16 eigenvalues are: 
+-0.0169449
+-1.42058e-13
+3.82957e-13
+8.21255e-13
+1.63355e-12
+2.73078e-05
+0.0148231
+0.0148231
+0.0183003
+0.0266805
+0.0347058
+0.0347721
+0.0365383
+0.0365383
+0.0365935
+0.0365935
+1 negative eigenvalues found, less than -6.71089e-09
+4 zero eigenvalues found, with absolute value less than 6.71089e-09
+eigenvectors:data/nr/eigenvalues/dim_4/K_11/160705013338eigenvector15_pl_21_run_1.dat
+eigenvalues summary:                            results/nr/nr_eigs.csv
+
+    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       11.26e+03      11       1  0.1229       0 0.03377     0.1           0           1        2.0032      -0.11605        1.7834
+
+    results: results/nr/nr_pass3.csv
+loading loops from:
+data/highTemp/loops/dim_4/K_11/highTemp_Kappa_0.124965_T_1_rank_0.dat
+  pl run        len         i0          s        sol       solM      delta     E_cons  dx*kg_max     ic_max     cc_max       dx/a
+  22   1      2.002    -0.1029      1.778   0.001843    0.00172          1     0.4266    0.06926  5.821e-07          0    0.02895
+calculating eigendecomposition of dds...
+eigenvalues:data/nr/eigenvalues/dim_4/K_11/160705013338eigenvalues_pl_22_run_1.dat
+first 16 eigenvalues are: 
+-0.0201025
+-2.92888e-12
+-2.04049e-12
+-1.60695e-12
+1.03327e-12
+1.8576e-05
+0.0153129
+0.0153129
+0.0167709
+0.0215993
+0.0347429
+0.0348013
+0.0365356
+0.0365356
+0.0365741
+0.0365741
+1 negative eigenvalues found, less than -6.71089e-09
+4 zero eigenvalues found, with absolute value less than 6.71089e-09
+eigenvectors:data/nr/eigenvalues/dim_4/K_11/160705013338eigenvector15_pl_22_run_1.dat
+eigenvalues summary:                            results/nr/nr_eigs.csv
+
+    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       11.24e+03      11       1   0.125       0 0.03377     0.1           0           1        2.0021      -0.12138        1.7778
+
+    results: results/nr/nr_pass3.csv
+loading loops from:
+data/highTemp/loops/dim_4/K_11/highTemp_Kappa_0.126986_T_1_rank_0.dat
+  pl run        len         i0          s        sol       solM      delta     E_cons  dx*kg_max     ic_max     cc_max       dx/a
+  23   1      2.001    -0.1021      1.771   0.001452   0.001417          1     0.4263    0.04811  6.816e-07          0    0.02893
+calculating eigendecomposition of dds...
+eigenvalues:data/nr/eigenvalues/dim_4/K_11/160705013338eigenvalues_pl_23_run_1.dat
+first 16 eigenvalues are: 
+-0.0231565
+-8.37609e-13
+-3.35345e-13
+1.1527e-15
+8.43084e-13
+9.17439e-06
+0.0152417
+0.0157882
+0.0157882
+0.0172767
+0.034771
+0.0348054
+0.0365345
+0.0365345
+0.0365545
+0.0365545
+1 negative eigenvalues found, less than -6.71089e-09
+4 zero eigenvalues found, with absolute value less than 6.71089e-09
+eigenvectors:data/nr/eigenvalues/dim_4/K_11/160705013338eigenvector15_pl_23_run_1.dat
+eigenvalues summary:                            results/nr/nr_eigs.csv
+
+    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       11.25e+03      11       1   0.127       0 0.03377     0.1           0           1        2.0011      -0.12818        1.7708
+
+    results: results/nr/nr_pass3.csv
+nrmain error: data/straightDisjoint/loops/dim_4/K_11/loop_Kappa_0.129006_T_1_rank_0.dat doesn't exist
+25155.62user 6.95system 6:59:26elapsed 99%CPU (0avgtext+0avgdata 1577228maxresident)k
+0inputs+44232outputs (0major+40070minor)pagefaults 0swaps
