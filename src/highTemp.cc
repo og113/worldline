@@ -378,7 +378,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		cout << "Ethreshold-E = " << Ethreshold-E << ", (pow(kappa,0.25)/1.11171)*(beta-betaMin) = " << (pow(kappa,0.25)/1.11171)*(beta-betaMin) << endl;
 	}
 
-	file = "data/highTemp/loops/dim_"+nts<uint>(dim)+"/K_"+nts(p.K)+"/highTemp_Kappa_"+nts(kappa)\
+	file = "data/highTemp/loops/dim_"+nts<uint>(dim)+"/K_"+nts(p.K)+"/highTemp_kappa_"+nts(kappa)\
 														+"_T_"+nts(1.0/beta)+"_rank_"+nts(0)+".dat";
 	
 	// calculating length

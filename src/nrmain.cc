@@ -66,7 +66,7 @@ bool curvature = false;
 bool conservation = false;
 bool old = true;
 bool gaussian = false;
-bool disjoint = true;
+bool disjoint = false;
 bool fixdz = false;
 bool extended = false;
 bool mu_a = false;
@@ -225,13 +225,14 @@ for (uint pl=0; pl<Npl; pl++) {
 			p.Mu = p.Epsi;
 			pold.Mu = pold.Epsi;
 		}
-		stepFile = filenameLoopNR<dim>(pold);
+		if (poto==PotentialOptions::thermal || disjoint)
+			stepFile = filenameThermalNR<dim>(pold);
+		else
+			stepFile = filenameLoopNR<dim>(pold);
 		if (weak)
 			(stepFile.Extras).push_back(StringPair("weak","1"));
 		if (poto!=PotentialOptions::original || gaussian)
 			(stepFile.Extras).push_back(potExtras);
-		if (poto==PotentialOptions::thermal || disjoint)
-			(stepFile.Extras).push_back(StringPair("T",nts(pold.T)));
 		if (kino!=KineticOptions::saddle)
 			(stepFile.Extras).push_back(kinExtras);
 	}
@@ -239,7 +240,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	
 	// defining some derived parameters	
 	uint N = pow(2,p.K);
-	uint zm = (disjoint? dim: dim+1) ; //////////////////////////////////
+	uint zm = (disjoint? dim: dim+2) ; //////////////////////////////////
 	uint NT = N*dim+zm;
 	number R = 1.0; //////////////////////////////////
 	Point<dim> P;
@@ -316,13 +317,13 @@ for (uint pl=0; pl<Npl; pl++) {
 			}
 			else {
 				if (nonrelativistic)
-					loadFile = "data/highTemp/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/highTemp_Kappa_"+nts(pow(p.G,3)*p.B)\
+					loadFile = "data/highTemp/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/highTemp_kappa_"+nts(pow(p.G,3)*p.B)\
 					+"_T_"+nts(p.T)+"_rank_0.dat";
 				else 
-					loadFile = "data/cosDisjoint/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_Kappa_"+nts(pow(p.G,3)*p.B)\
-						+"_T_"+nts(p.T)+"_Lambda_"+nts(p.Lambda)+"_rank_0.dat";
+					loadFile = "data/cosDisjoint/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_kappa_"+nts(pow(p.G,3)*p.B)\
+						+"_T_"+nts(p.T)+"_mu_"+nts(p.Mu)+"_lambda_"+nts(p.Lambda)+"_rank_0.dat";
 				if (!loadFile.exists() || straight) {
-					loadFile = "data/straightDisjoint/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_Kappa_"+nts(pow(p.G,3)*p.B)\
+					loadFile = "data/straightDisjoint/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_kappa_"+nts(pow(p.G,3)*p.B)\
 					+"_T_"+nts(p.T)+"_rank_0.dat";
 					if (extended)
 						(loadFile.Extras).push_back(StringPair("Lambda",nts(p.Lambda)));
@@ -330,26 +331,31 @@ for (uint pl=0; pl<Npl; pl++) {
 			}
 		}
 		else {
-			loadFile = filenameLoopNR<dim>(p);
+			if (poto==PotentialOptions::thermal || disjoint)
+				loadFile = filenameThermalNR<dim>(p);
+			else
+				loadFile = filenameLoopNR<dim>(p);
 			if (weak)
 				(loadFile.Extras).push_back(StringPair("weak","1"));
 			if (poto!=PotentialOptions::original || gaussian)
 				(loadFile.Extras).push_back(potExtras);
-			if (poto==PotentialOptions::thermal || disjoint)
-				(loadFile.Extras).push_back(StringPair("T",nts(p.T)));
 			if (kino!=KineticOptions::saddle)
 				(stepFile.Extras).push_back(kinExtras);
 			if (!loadFile.exists() && (poto!=PotentialOptions::original || gaussian)) {
 				loadFile = filenameLoopNR<dim>(p);
 				(loadFile.Extras).push_back(potExtras);
 			}
-			if (!loadFile.exists())
+			if (!loadFile.exists() && (poto==PotentialOptions::thermal || disjoint))
 				loadFile = filenameLoopNR<dim>(p);
+			else if (!loadFile.exists())
+				loadFile = filenameThermalNR<dim>(p);
 			if (!loadFile.exists()) {
 				if (pl>0)
 					loadFile = stepFile;
-					if (!loadFile.exists())
+					if (!loadFile.exists() && (poto==PotentialOptions::thermal || disjoint))
 						loadFile = filenameLoopNR<dim>(pold);
+					else if (!loadFile.exists())
+						loadFile = filenameThermalNR<dim>(pold);
 				if (!loadFile.exists() && old)
 					loadFile = "data/nr/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_kappa_"+nts(pow(p.G,3)*p.B)+"_E_"+nts(p.P4)\
 		+"_a_"+nts(p.Epsi)+".dat";
@@ -362,14 +368,14 @@ for (uint pl=0; pl<Npl; pl++) {
 					}
 					else {
 						if (nonrelativistic)
-							loadFile = "data/highTemp/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/highTemp_Kappa_"+nts(pow(p.G,3)*p.B)\
+							loadFile = "data/highTemp/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/highTemp_kappa_"+nts(pow(p.G,3)*p.B)\
 							+"_T_"+nts(p.T)+"_rank_0.dat";
 						else 
-							loadFile = "data/cosDisjoint/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_Kappa_"+nts(pow(p.G,3)*p.B)\
-								+"_T_"+nts(p.T)+"_Lambda_"+nts(p.Lambda)+"_rank_0.dat";
+							loadFile = "data/cosDisjoint/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_kappa_"+nts(pow(p.G,3)*p.B)\
+								+"_T_"+nts(p.T)+"_mu_"+nts(p.Mu)+"_lambda_"+nts(p.Lambda)+"_rank_0.dat";
 						if (!loadFile.exists() || straight) {
 							loadFile = "data/straightDisjoint/loops/dim_"+nts(dim)+"/K_"+nts(p.K)\
-							+"/loop_Kappa_"+nts(pow(p.G,3)*p.B)+"_T_"+nts(p.T)+"_rank_0.dat";
+							+"/loop_kappa_"+nts(pow(p.G,3)*p.B)+"_T_"+nts(p.T)+"_rank_0.dat";
 							if (extended)
 								(loadFile.Extras).push_back(StringPair("Lambda",nts(p.Lambda)));
 						}
@@ -385,7 +391,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	}
 	// check if file exists
 	if (!loadFile.exists()) {
-		cerr << "nrmain error: " << loadFile << " doesn't exist" << endl;
+		cerr << "nrmain error: " << loadFile << " doesn't exist, moving to next parameter loop" << endl;
 		continue; ///////// CONTINUE STATEMENT IF FILE DOESN'T EXIST
 	}
 	cout << "loading loops from:" << endl;
@@ -444,7 +450,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		uint j, k, mu, nu;
 		number mgb = -1.0; // not -p.G*p.B as scaled loops
 		number kinetic = 0.0;
-		number g, dm, cusp_scale, beta;
+		number g, dm, cusp_scale;
 		number dim_reg_scale = 0.0, d_dim_reg = 0.0;
 		number n = 0.0;
 		number repulsion_scale, repulsion = 0.0;
@@ -454,6 +460,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		number Js_scale = 4.0*N;
 		number s0, sqrt4s0; 
 		number s0_scale = (abs(p.T)>MIN_NUMBER? 1.0/p.T: 1.0);
+		number beta = ((p.T)>sqrt(MIN_NUMBER)? 1.0/(p.T): 1.0/sqrt(MIN_NUMBER)); // this is 1/eta
 		if (poto==PotentialOptions::original) {
 			s0 = S0(xLoop);
 			sqrt4s0 = 2.0*sqrt(s0);
@@ -492,7 +499,6 @@ for (uint pl=0; pl<Npl; pl++) {
 			dm = -g*PI/p.Epsi;
 			cusp_scale = -g*2.0*log(p.Mu/p.Epsi);
 			repulsion_scale = -g*sqrt(PI)/p.Epsi/p.Epsi;
-			beta = ((p.T)>sqrt(MIN_NUMBER)? 1.0/(p.T): 1.0/sqrt(MIN_NUMBER)); // this is 1/eta
 			if (disjoint)
 				s0 = S0Disjoint(xLoop,beta);
 			else
@@ -505,7 +511,6 @@ for (uint pl=0; pl<Npl; pl++) {
 			dm = 0.0;
 			cusp_scale = 0.0;
 			repulsion_scale = 0.0;
-			beta = ((p.T)>sqrt(MIN_NUMBER)? 1.0/(p.T): 1.0/sqrt(MIN_NUMBER)); // this is 1/eta
 			if (disjoint)
 				s0 = S0Disjoint(xLoop,beta);
 			else
@@ -518,7 +523,6 @@ for (uint pl=0; pl<Npl; pl++) {
 			dm = 0.0;
 			cusp_scale = 0.0;
 			repulsion_scale = 0.0;
-			beta = ((p.T)>sqrt(MIN_NUMBER)? 1.0/(p.T): 1.0/sqrt(MIN_NUMBER)); // this is 1/eta
 			if (disjoint)
 				s0 = S0Disjoint(xLoop,beta);
 			else
@@ -808,6 +812,20 @@ for (uint pl=0; pl<Npl; pl++) {
 						dds(locj,locz) 		+= -1.0/ds;
 						dds(locz,locj) 		+= -1.0/ds;
 					}
+					else if (mu==(dim+1) && j==(N/2-1)) {
+						nu = dim-1;
+						uint oj = oppNeigh(j,N);
+						uint locj = j*dim+nu, locoj = oj*dim+nu, locz = N*dim+mu;
+						mds(locz)  		-= x[locoj]-x[locj];
+						mds(locoj)  	-= x[locz];
+						mds(locj)  		-= -x[locz];								
+
+						dds(locoj,locz)  	+= 1.0;
+						dds(locz,locoj)  	+= 1.0;
+						dds(locj,locz) 		+= -1.0;
+						dds(locz,locj) 		+= -1.0;
+						
+					}
 				}
 				else if (mu<dim){
 					uint locj = j*dim+mu, locz = N*dim+mu;
@@ -1039,13 +1057,15 @@ for (uint pl=0; pl<Npl; pl++) {
 		
 		if (po!=PrintOptions::none) {
 			Filename early = "data/temp/"+timenumber+"xEarly1_K_"+nts(p.K)+"_kappa_"+nts(pow(p.G,3)*p.B)+"_E_"+nts(E)\
-						+"_a_"+nts(p.Epsi)+"_mu_"+nts(p.Mu)+".dat";
+						+"_a_"+nts(p.Epsi)+".dat";
+			if (abs(E)>MIN_NUMBER)
+				(early.Extras).push_back(StringPair("mu",nts(p.Mu)));
+			if (poto==PotentialOptions::thermal || disjoint)
+				(early.Extras).push_back(StringPair("T",nts(p.T)));
 			if (weak)
 				(early.Extras).push_back(StringPair("weak","1"));
 			if (poto!=PotentialOptions::original || gaussian)
 				(early.Extras).push_back(potExtras);
-			if (poto==PotentialOptions::thermal || disjoint)
-				(early.Extras).push_back(StringPair("T",nts(p.T)));
 			if (kino!=KineticOptions::saddle)
 				(early.Extras).push_back(kinExtras);
 				
@@ -1099,13 +1119,15 @@ for (uint pl=0; pl<Npl; pl++) {
 		// printing delta early
 		if (po!=PrintOptions::none) {
 			Filename early = "data/temp/"+timenumber+"deltaEarly2_K_"+nts(p.K)+"_kappa_"+nts(pow(p.G,3)*p.B)+"_E_"+nts(E)\
-							+"_a_"+nts(p.Epsi)+"_mu_"+nts(p.Mu)+".dat";
+							+"_a_"+nts(p.Epsi)+".dat";
+			if (abs(E)>MIN_NUMBER)
+				(early.Extras).push_back(StringPair("mu",nts(p.Mu)));
+			if (poto==PotentialOptions::thermal || disjoint)
+				(early.Extras).push_back(StringPair("T",nts(p.T)));
 			if (weak)
 				(early.Extras).push_back(StringPair("weak","1"));
 			if (poto!=PotentialOptions::original || gaussian)
 				(early.Extras).push_back(potExtras);
-			if (poto==PotentialOptions::thermal || disjoint)
-				(early.Extras).push_back(StringPair("T",nts(p.T)));
 			if (kino!=KineticOptions::saddle)
 				(early.Extras).push_back(kinExtras);
 				
@@ -1367,8 +1389,10 @@ for (uint pl=0; pl<Npl; pl++) {
 
 	// eigenvalues, if required
 	if (eigen) {
-		mat dds_wlm = dds.block(0,0,dim*N,dim*N); // dds without Lagrange multipliers
+		//mat dds_wlm = dds.block(0,0,dim*N,dim*N); // dds without Lagrange multipliers
+		mat dds_wlm = dds;
 		number eigenTol = 1.0e-16*pow(dim*N,2);
+		number cos = 0.0;
 		uint negEigs = 0;
 		uint zeroEigs = 0;
 		uint numEigs = 4*dim;
@@ -1379,13 +1403,15 @@ for (uint pl=0; pl<Npl; pl++) {
 				+"_run_"+nts(runsCount)+".dat";
 		saveVectorBinary(eigenFile,eigensolver.eigenvalues());
 		printf("%12s%50s\n","eigenvalues:",((string)eigenFile).c_str());
-		cout << "first " << numEigs << " eigenvalues are: " << endl;
+		cout << "first " << numEigs << " eigenvalues and their dot products with mds are: " << endl;
 		for (uint j=0; j<numEigs; j++) {
 			if ((eigensolver.eigenvalues())[j]<-eigenTol)
 				negEigs++;
 			if (abs((eigensolver.eigenvalues())[j])<eigenTol)
 				zeroEigs++;
-			cout << (eigensolver.eigenvalues())[j] << endl;
+			cos = mds.dot((Eigen::VectorXd)(eigensolver.eigenvectors()).col(j))/mds.norm();
+			//cos = (mds.head(dim*N)).dot((Eigen::VectorXd)(eigensolver.eigenvectors()).col(j))/(mds.head(dim*N)).norm();
+			cout << (eigensolver.eigenvalues())[j] << " " << cos << endl;
 			eigenFile.ID = "eigenvector"+nts(j);
 			saveVectorBinary(eigenFile,(Eigen::VectorXd)((eigensolver.eigenvectors()).col(j)));
 		}
@@ -1422,8 +1448,12 @@ for (uint pl=0; pl<Npl; pl++) {
 	
 	// curvature, if required
 	if (curvature || alltests) {
-		Filename file = "data/temp/xCurvature_K_"+nts(p.K)+"_kappa_"+nts(pow(p.G,3)*p.B)+"_E_"+nts(E)\
-						+"_a_"+nts(p.Epsi)+"_mu_"+nts(p.Mu)+".dat";
+		Filename file = "data/temp/"+timenumber+"xCurvature_K_"+nts(p.K)+"_kappa_"+nts(pow(p.G,3)*p.B)+"_E_"+nts(E)\
+						+"_a_"+nts(p.Epsi)+".dat";
+		if (abs(E)>MIN_NUMBER)
+			(file.Extras).push_back(StringPair("mu",nts(p.Mu)));
+		if (poto==PotentialOptions::thermal || disjoint)
+			(file.Extras).push_back(StringPair("T",nts(p.T)));
 		printAsLoop(file,dim,x,N*dim);
 		saveVectorAsciiAppend(file,sc_vec);
 		saveVectorAsciiAppend(file,kg_vec);
@@ -1518,13 +1548,15 @@ for (uint pl=0; pl<Npl; pl++) {
 	
 	if (checkDelta.good() && checkSol.good() && checkSolMax.good()) {		
 		// printing loop to file
-		Filename loopRes = filenameLoopNR<dim>(p);
+		Filename loopRes;
+		if (poto==PotentialOptions::thermal || disjoint)
+			loopRes = filenameThermalNR<dim>(p);
+		else
+			loopRes = filenameLoopNR<dim>(p);
 		if (weak)
 			(loopRes.Extras).push_back(StringPair("weak","1"));
 		if (poto!=PotentialOptions::original || gaussian)
 			(loopRes.Extras).push_back(potExtras);
-		if (poto==PotentialOptions::thermal || disjoint)
-			(loopRes.Extras).push_back(StringPair("T",nts(p.T)));
 		if (kino!=KineticOptions::saddle)
 			(loopRes.Extras).push_back(kinExtras);
 		saveVectorBinary(loopRes,x);
@@ -1534,13 +1566,15 @@ for (uint pl=0; pl<Npl; pl++) {
 	// printing extras to ascii files
 	if (po!=PrintOptions::none) {
 		Filename file = "data/temp/"+timenumber+"xEnd_K_"+nts(p.K)+"_kappa_"+nts(pow(p.G,3)*p.B)+"_E_"+nts(E)\
-							+"_a_"+nts(p.Epsi)+"_mu_"+nts(p.Mu)+".dat";
+							+"_a_"+nts(p.Epsi)+".dat";
+			if (abs(E)>MIN_NUMBER)
+				(file.Extras).push_back(StringPair("mu",nts(p.Mu)));
+			if (poto==PotentialOptions::thermal || disjoint)
+				(file.Extras).push_back(StringPair("T",nts(p.T)));
 			if (weak)
 				(file.Extras).push_back(StringPair("weak","1"));
 			if (poto!=PotentialOptions::original || gaussian)
 				(file.Extras).push_back(potExtras);
-			if (poto==PotentialOptions::thermal || disjoint)
-				(file.Extras).push_back(StringPair("T",nts(p.T)));
 			if (kino!=KineticOptions::saddle)
 				(file.Extras).push_back(kinExtras);
 				
