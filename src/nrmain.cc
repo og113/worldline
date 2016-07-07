@@ -240,7 +240,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	
 	// defining some derived parameters	
 	uint N = pow(2,p.K);
-	uint zm = (disjoint? dim: dim+2) ; //////////////////////////////////
+	uint zm = (disjoint && fixdz? dim+2: dim) ; //////////////////////////////////
 	uint NT = N*dim+zm;
 	number R = 1.0; //////////////////////////////////
 	Point<dim> P;
@@ -280,12 +280,12 @@ for (uint pl=0; pl<Npl; pl++) {
 	Check checkJs("Js conservation",1.0e-3);
 	Check checkP3("P3 conservation",1.0e-3);
 	Check checkP4("P4 conservation",1.0e-3);
-	Check checkXMirror("x mirror symmetry",1.0e-3);
-	Check checkXRotation("x rotation symmetry",1.0e-3);
-	Check checkMDSMirror("mds mirror symmetry",1.0e-3);
-	Check checkMDSRotation("mds rotation symmetry",1.0e-3);
-	Check checkDeltaMirror("delta mirror symmetry",1.0e-3);
-	Check checkDeltaRotation("delta rotation symmetry",1.0e-3);
+	Check checkXMirror("x mirror symmetry",1.0e-2);
+	Check checkXRotation("x rotation symmetry",1.0e-16*NT*NT);
+	Check checkMDSMirror("mds mirror symmetry",1.0e-2);
+	Check checkMDSRotation("mds rotation symmetry",1.0e-16*NT*NT);
+	Check checkDeltaMirror("delta mirror symmetry",1.0e-2);
+	Check checkDeltaRotation("delta rotation symmetry",1.0e-16*NT*NT);
 	
 	// defining scalar quantities
 	number len, i0, s, sm, v, vr, fgamma, gamma, angle_neigh, z, t, ic_max, cc_max, kg_max;
@@ -1389,8 +1389,8 @@ for (uint pl=0; pl<Npl; pl++) {
 
 	// eigenvalues, if required
 	if (eigen) {
-		//mat dds_wlm = dds.block(0,0,dim*N,dim*N); // dds without Lagrange multipliers
-		mat dds_wlm = dds;
+		mat dds_wlm = dds.block(0,0,dim*N,dim*N); // dds without Lagrange multipliers
+		//mat dds_wlm = dds;
 		number eigenTol = 1.0e-16*pow(dim*N,2);
 		number cos = 0.0;
 		uint negEigs = 0;
@@ -1409,8 +1409,8 @@ for (uint pl=0; pl<Npl; pl++) {
 				negEigs++;
 			if (abs((eigensolver.eigenvalues())[j])<eigenTol)
 				zeroEigs++;
-			cos = mds.dot((Eigen::VectorXd)(eigensolver.eigenvectors()).col(j))/mds.norm();
-			//cos = (mds.head(dim*N)).dot((Eigen::VectorXd)(eigensolver.eigenvectors()).col(j))/(mds.head(dim*N)).norm();
+			//cos = mds.dot((Eigen::VectorXd)(eigensolver.eigenvectors()).col(j))/mds.norm();
+			cos = (mds.head(dim*N)).dot((Eigen::VectorXd)(eigensolver.eigenvectors()).col(j))/(mds.head(dim*N)).norm();
 			cout << (eigensolver.eigenvalues())[j] << " " << cos << endl;
 			eigenFile.ID = "eigenvector"+nts(j);
 			saveVectorBinary(eigenFile,(Eigen::VectorXd)((eigensolver.eigenvectors()).col(j)));
