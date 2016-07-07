@@ -1958,24 +1958,24 @@ template <> void mdVthrDisjoint_nr<4>(const uint& j, const uint& mu, const uint&
 		
 	if (i!=j) {
 		number r_ij = SpatialDistance(l[i],l[j]);
-		number t_ij = DX(l,j,i,3);// DXDisjoint(l,j,i,3,beta); // checked order
+		number t_ij = DX(l,j,i,3); // checked order
 		number FThermal_ij = FThermal(r_ij,t_ij,beta,a);
 		number DFThermalDrOnr_ij = DFThermalDrOnr(r_ij,t_ij,beta,a);
 		number DFThermalDt_ij = DFThermalDt(r_ij,t_ij,beta,a);
 		number T_ij = DotDisjoint(l[pi],l[i],l[pj],l[j],beta);
 		
-		res += 2.0*FThermal_ij*DXDisjoint(l,i,pi,mu,beta);
+		res += 2.0*FThermal_ij*(-DXDisjoint(l,i,mu,beta));
 		if (mu<3)
-			res += 2.0*DFThermalDrOnr_ij*DX(l,j,i,mu)*T_ij; // no need for DXDisjoint here
+			res += 2.0*DFThermalDrOnr_ij*DX(l,j,i,mu)*T_ij;
 		else
 			res += 2.0*DFThermalDt_ij*T_ij;
 	}
 	
 	if (i!=mj) {
 		number r_imj = SpatialDistance(l[i],l[mj]);
-		number t_imj = DX(l,mj,i,3);// DXDisjoint(l,mj,i,3,beta); // checked order
+		number t_imj = DX(l,mj,i,3); // checked order
 		number FThermal_imj = FThermal(r_imj,t_imj,beta,a);
-		res +=  -2.0*FThermal_imj*DXDisjoint(l,i,pi,mu,beta); //
+		res +=  -2.0*FThermal_imj*(-DXDisjoint(l,i,mu,beta)); //
 	}
 	
 	//coincident terms
@@ -2671,10 +2671,6 @@ template <> void ddVthrDisjoint_nr<4>(const uint& j, const uint& mu, const uint&
 	number t_mjk = DX(l,k,mj,3);
 	number t_jmk = DX(l,mk,j,3);
 	number t_mjmk = DX(l,mk,mj,3);
-	/*number t_jk = DXDisjoint(l,k,j,3,beta);
-	number t_mjk = DXDisjoint(l,k,mj,3,beta);
-	number t_jmk = DXDisjoint(l,mk,j,3,beta);
-	number t_mjmk = DXDisjoint(l,mk,mj,3,beta);*/
 		
 	number T_jk = DotDisjoint(l[pj],l[j],l[pk],l[k],beta);
 	
@@ -2697,14 +2693,14 @@ template <> void ddVthrDisjoint_nr<4>(const uint& j, const uint& mu, const uint&
 			number DDFThermalDrDtOnr_jk = DDFThermalDtDrOnr(r_jk,t_jk,beta,a);
 			number DDFThermalDtDt_jk = DDFThermalDtDt(r_jk,t_jk,beta,a);
 			if (mu==3) {
-				res += - 2.0*DFThermalDt_jk*DXDisjoint(l,j,pj,nu,beta); //
+				res += - 2.0*DFThermalDt_jk*(-DXDisjoint(l,j,nu,beta)); //
 				if (nu<3)
-					res += (2.0*DDFThermalDrDtOnr_jk*DX(l,j,k,nu)*T_jk); // no need for DXDisjoint here
+					res += (2.0*DDFThermalDrDtOnr_jk*DX(l,j,k,nu)*T_jk); //
 				else
 					res += -2.0*DDFThermalDtDt_jk*T_jk;//
 			}
 			else {
-				res += + 2.0*DFThermalDrOnr_jk*DXDisjoint(l,j,pj,nu,beta)*DX(l,j,k,mu); //
+				res += + 2.0*DFThermalDrOnr_jk*(-DXDisjoint(l,j,nu,beta))*DX(l,j,k,mu); //
 				if (nu==3) 
 					res += + 2.0*DDFThermalDrDtOnr_jk*DX(l,j,k,mu)*T_jk; //
 				else if (r_jk>MIN_NUMBER) //as -DFThermalDrOnr+DDFThermalDrDr->0 as r->0
@@ -2715,24 +2711,24 @@ template <> void ddVthrDisjoint_nr<4>(const uint& j, const uint& mu, const uint&
 			}
 			
 			if (nu==3) {
-				res += 2.0*DFThermalDt_jk*DXDisjoint(l,k,pk,mu,beta); //
+				res += 2.0*DFThermalDt_jk*(-DXDisjoint(l,k,mu,beta)); //
 			}
 			else {
-				res += - (2.0*DFThermalDrOnr_jk*DX(l,j,k,nu)*DXDisjoint(l,k,pk,mu,beta)); //
+				res += - 2.0*DFThermalDrOnr_jk*DX(l,j,k,nu)*(-DXDisjoint(l,k,mu,beta)); //
 			}
 			
 		}
 		if (k!=mj) {
 			if (nu==3)
-				res += - 2.0*DFThermalDt(r_mjk,t_mjk,beta,a)*DXDisjoint(l,k,pk,mu,beta); //
+				res += - 2.0*DFThermalDt(r_mjk,t_mjk,beta,a)*(-DXDisjoint(l,k,mu,beta)); //
 			else
-				res += (2.0*DFThermalDrOnr(r_mjk,t_mjk,beta,a)*DX(l,mj,k,nu)*DXDisjoint(l,k,pk,mu,beta)); //
+				res += 2.0*DFThermalDrOnr(r_mjk,t_mjk,beta,a)*DX(l,mj,k,nu)*(-DXDisjoint(l,k,mu,beta)); //
 		}
 		if (j!=mk) {
 			if (mu==3)
-				res += 2.0*DFThermalDt(r_jmk,t_jmk,beta,a)*DXDisjoint(l,j,pj,nu,beta);//
+				res += 2.0*DFThermalDt(r_jmk,t_jmk,beta,a)*(-DXDisjoint(l,j,nu,beta));//
 			else
-				res += -(2.0*DFThermalDrOnr(r_jmk,t_jmk,beta,a)*DXDisjoint(l,j,pj,nu,beta)*DX(l,j,mk,mu)); //
+				res += -(2.0*DFThermalDrOnr(r_jmk,t_jmk,beta,a)*(-DXDisjoint(l,j,nu,beta))*DX(l,j,mk,mu)); //
 		}
 	
 	// terms with sums
@@ -2753,11 +2749,9 @@ template <> void ddVthrDisjoint_nr<4>(const uint& j, const uint& mu, const uint&
 			pi = posNeighDisjoint(i,l.size());
 			T_ij = DotDisjoint(l[pi],l[i],l[pj],l[j],beta);			
 			r_ij = SpatialDistance(l[j],l[i]);
-			r_imj = SpatialDistance(l[i],l[mj]);
+			r_imj = SpatialDistance(l[i],l[mj]);	
 			t_ij = DX(l,j,i,3);
-			t_imj = DX(l,mj,i,3);	
-			/*t_ij = DXDisjoint(l,j,i,3,beta);
-			t_imj = DXDisjoint(l,mj,i,3,beta);*/
+			t_imj = DX(l,mj,i,3);
 
 			if (k==j && i!=j) {
 				DFThermalDrOnr_ij = DFThermalDrOnr(r_ij,t_ij,beta,a);
@@ -2766,14 +2760,14 @@ template <> void ddVthrDisjoint_nr<4>(const uint& j, const uint& mu, const uint&
 				DDFThermalDrDtOnr_ij = DDFThermalDtDrOnr(r_ij,t_ij,beta,a);
 				DDFThermalDtDt_ij = DDFThermalDtDt(r_ij,t_ij,beta,a);
 				if (mu==3) {
-					res += 2.0*DFThermalDt_ij*DXDisjoint(l,i,pi,nu,beta); //
+					res += 2.0*DFThermalDt_ij*(-DXDisjoint(l,i,nu,beta)); //
 					if (nu==3) 
 						res += 2.0*DDFThermalDtDt_ij*T_ij; //
 					else
 						res += 2.0*DDFThermalDrDtOnr_ij*DX(l,j,i,nu)*T_ij; //
 				}
 				else {
-					res += 2.0*DFThermalDrOnr_ij*DXDisjoint(l,i,pi,nu,beta)*DX(l,j,i,mu); //
+					res += 2.0*DFThermalDrOnr_ij*(-DXDisjoint(l,i,nu,beta))*DX(l,j,i,mu); //
 					if (nu==3)
 						res += 2.0*DDFThermalDrDtOnr_ij*DX(l,j,i,mu)*T_ij; //
 					else if (r_ij>MIN_NUMBER) { // as -DFThermalDrOnr+DDFThermalDrDr->0 as r->0
@@ -2784,23 +2778,23 @@ template <> void ddVthrDisjoint_nr<4>(const uint& j, const uint& mu, const uint&
 						res += 2.0*DFThermalDrOnr_ij*T_ij; //
 				}
 				if (nu==3) {
-					res += 2.0*DFThermalDt_ij*DXDisjoint(l,i,pi,mu,beta); //
+					res += 2.0*DFThermalDt_ij*(-DXDisjoint(l,i,mu,beta)); //
 				}
 				else {
-					res += - 2.0*DFThermalDrOnr_ij*DXDisjoint(l,i,pi,mu,beta)*DX(l,i,j,nu); //
+					res += - 2.0*DFThermalDrOnr_ij*(-DXDisjoint(l,i,mu,beta))*DX(l,i,j,nu); //
 				}
 			} 
 			if (j==pk && i!=mj) {
 				if (nu==3)
-					res += - 2.0*DFThermalDt(r_imj,t_imj,beta,a)*DXDisjoint(l,i,pi,mu,beta);//
+					res += - 2.0*DFThermalDt(r_imj,t_imj,beta,a)*(-DXDisjoint(l,i,mu,beta));//
 				else
-					res += 2.0*DFThermalDrOnr(r_imj,t_imj,beta,a)*DXDisjoint(l,i,pi,mu,beta)*DX(l,i,k,nu);//
+					res += 2.0*DFThermalDrOnr(r_imj,t_imj,beta,a)*(-DXDisjoint(l,i,mu,beta))*DX(l,i,k,nu);//
 			} 
 			if (j==mk && i!=j) {
 				if (mu==3)
-					res += - 2.0*DFThermalDt(r_ij,t_ij,beta,a)*DXDisjoint(l,i,pi,nu,beta);//
+					res += - 2.0*DFThermalDt(r_ij,t_ij,beta,a)*(-DXDisjoint(l,i,nu,beta));//
 				else
-					res += - 2.0*DFThermalDrOnr(r_ij,t_ij,beta,a)*DXDisjoint(l,i,pi,nu,beta)*DX(l,j,i,mu);//
+					res += - 2.0*DFThermalDrOnr(r_ij,t_ij,beta,a)*(-DXDisjoint(l,i,nu,beta))*DX(l,j,i,mu);//
 			}	
 		}		
 	}

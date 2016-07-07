@@ -68,6 +68,7 @@ bool old = true;
 bool gaussian = false;
 bool disjoint = false;
 bool fixdz = false;
+bool fixlr = false;
 bool extended = false;
 bool mu_a = false;
 bool pass = false;
@@ -98,6 +99,7 @@ if (argc % 2 && argc>1) {
 		else if (id.compare("extended")==0) extended = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("pass")==0) pass = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("fixdz")==0) fixdz = (stn<uint>(argv[2*j+2])!=0);
+		else if (id.compare("fixlr")==0) fixlr = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("inputs")==0) inputsFile = (string)argv[2*j+2];
 		else if (id.compare("print")==0) printOpts = (string)argv[2*j+2];
 		else if (id.compare("pot")==0 || id.compare("potential")==0) potOpts = (string)argv[2*j+2];
@@ -186,6 +188,11 @@ if (!kinOpts.empty()) {
 		return 1;
 	}
 }
+
+if (fixdz)
+	fixlr = false;
+if (fixlr)
+	fixdz = false;
 	
 //dimension
 #define dim 4
@@ -240,7 +247,11 @@ for (uint pl=0; pl<Npl; pl++) {
 	
 	// defining some derived parameters	
 	uint N = pow(2,p.K);
-	uint zm = (disjoint && fixdz? dim+2: dim) ; //////////////////////////////////
+	uint zm = dim;
+	if (disjoint && fixdz)
+		zm += 2;
+	else if (disjoint && fixlr)
+		zm += 1; //////////////////////////////////
 	uint NT = N*dim+zm;
 	number R = 1.0; //////////////////////////////////
 	Point<dim> P;
@@ -825,6 +836,24 @@ for (uint pl=0; pl<Npl; pl++) {
 						dds(locj,locz) 		+= -1.0;
 						dds(locz,locj) 		+= -1.0;
 						
+					}
+				}
+				else if (mu>=(dim-1) && fixlr) {
+					if (mu==(dim-1) && j<N/2) {	
+						uint locj = j*dim+(dim-1), locz = N*dim+mu;
+						mds(locz) -= x[locj];
+						mds(locj) -= x[locz];
+				
+						dds(locj,locz) += 1.0;
+						dds(locz,locj) += 1.0;
+					}
+					else if (mu==dim && j>N/2){
+						uint locj = j*dim+(dim-1), locz = N*dim+mu;
+						mds(locz) -= x[locj];
+						mds(locj) -= x[locz];
+				
+						dds(locj,locz) += 1.0;
+						dds(locz,locj) += 1.0;
 					}
 				}
 				else if (mu<dim){
