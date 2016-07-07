@@ -68,6 +68,7 @@ bool old = true;
 bool gaussian = false;
 bool disjoint = false;
 bool fixdz = false;
+bool fixlr = false;
 bool extended = false;
 bool mu_a = false;
 bool pass = false;
@@ -98,6 +99,7 @@ if (argc % 2 && argc>1) {
 		else if (id.compare("extended")==0) extended = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("pass")==0) pass = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("fixdz")==0) fixdz = (stn<uint>(argv[2*j+2])!=0);
+		else if (id.compare("fixlr")==0) fixlr = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("inputs")==0) inputsFile = (string)argv[2*j+2];
 		else if (id.compare("print")==0) printOpts = (string)argv[2*j+2];
 		else if (id.compare("pot")==0 || id.compare("potential")==0) potOpts = (string)argv[2*j+2];
@@ -186,6 +188,11 @@ if (!kinOpts.empty()) {
 		return 1;
 	}
 }
+
+if (fixdz)
+	fixlr = false;
+if (fixlr)
+	fixdz = false;
 	
 //dimension
 #define dim 4
@@ -240,7 +247,11 @@ for (uint pl=0; pl<Npl; pl++) {
 	
 	// defining some derived parameters	
 	uint N = pow(2,p.K);
-	uint zm = (disjoint? dim: dim+2) ; //////////////////////////////////
+	uint zm = dim;
+	if (disjoint && fixdz)
+		zm += 2;
+	else if (disjoint && fixlr)
+		zm += 1; //////////////////////////////////
 	uint NT = N*dim+zm;
 	number R = 1.0; //////////////////////////////////
 	Point<dim> P;
@@ -280,12 +291,12 @@ for (uint pl=0; pl<Npl; pl++) {
 	Check checkJs("Js conservation",1.0e-3);
 	Check checkP3("P3 conservation",1.0e-3);
 	Check checkP4("P4 conservation",1.0e-3);
-	Check checkXMirror("x mirror symmetry",1.0e-3);
-	Check checkXRotation("x rotation symmetry",1.0e-3);
-	Check checkMDSMirror("mds mirror symmetry",1.0e-3);
-	Check checkMDSRotation("mds rotation symmetry",1.0e-3);
-	Check checkDeltaMirror("delta mirror symmetry",1.0e-3);
-	Check checkDeltaRotation("delta rotation symmetry",1.0e-3);
+	Check checkXMirror("x mirror symmetry",1.0e-2);
+	Check checkXRotation("x rotation symmetry",1.0e-16*NT*NT);
+	Check checkMDSMirror("mds mirror symmetry",1.0e-2);
+	Check checkMDSRotation("mds rotation symmetry",1.0e-16*NT*NT);
+	Check checkDeltaMirror("delta mirror symmetry",1.0e-2);
+	Check checkDeltaRotation("delta rotation symmetry",1.0e-16*NT*NT);
 	
 	// defining scalar quantities
 	number len, i0, s, sm, v, vr, fgamma, gamma, angle_neigh, z, t, ic_max, cc_max, kg_max;
@@ -825,6 +836,24 @@ for (uint pl=0; pl<Npl; pl++) {
 						dds(locj,locz) 		+= -1.0;
 						dds(locz,locj) 		+= -1.0;
 						
+					}
+				}
+				else if (mu>=(dim-1) && fixlr) {
+					if (mu==(dim-1) && j<N/2) {	
+						uint locj = j*dim+(dim-1), locz = N*dim+mu;
+						mds(locz) -= x[locj];
+						mds(locj) -= x[locz];
+				
+						dds(locj,locz) += 1.0;
+						dds(locz,locj) += 1.0;
+					}
+					else if (mu==dim && j>N/2){
+						uint locj = j*dim+(dim-1), locz = N*dim+mu;
+						mds(locz) -= x[locj];
+						mds(locj) -= x[locz];
+				
+						dds(locj,locz) += 1.0;
+						dds(locz,locj) += 1.0;
 					}
 				}
 				else if (mu<dim){
@@ -1389,8 +1418,8 @@ for (uint pl=0; pl<Npl; pl++) {
 
 	// eigenvalues, if required
 	if (eigen) {
-		//mat dds_wlm = dds.block(0,0,dim*N,dim*N); // dds without Lagrange multipliers
-		mat dds_wlm = dds;
+		mat dds_wlm = dds.block(0,0,dim*N,dim*N); // dds without Lagrange multipliers
+		//mat dds_wlm = dds;
 		number eigenTol = 1.0e-16*pow(dim*N,2);
 		number cos = 0.0;
 		uint negEigs = 0;
@@ -1409,8 +1438,8 @@ for (uint pl=0; pl<Npl; pl++) {
 				negEigs++;
 			if (abs((eigensolver.eigenvalues())[j])<eigenTol)
 				zeroEigs++;
-			cos = mds.dot((Eigen::VectorXd)(eigensolver.eigenvectors()).col(j))/mds.norm();
-			//cos = (mds.head(dim*N)).dot((Eigen::VectorXd)(eigensolver.eigenvectors()).col(j))/(mds.head(dim*N)).norm();
+			//cos = mds.dot((Eigen::VectorXd)(eigensolver.eigenvectors()).col(j))/mds.norm();
+			cos = (mds.head(dim*N)).dot((Eigen::VectorXd)(eigensolver.eigenvectors()).col(j))/(mds.head(dim*N)).norm();
 			cout << (eigensolver.eigenvalues())[j] << " " << cos << endl;
 			eigenFile.ID = "eigenvector"+nts(j);
 			saveVectorBinary(eigenFile,(Eigen::VectorXd)((eigensolver.eigenvectors()).col(j)));
