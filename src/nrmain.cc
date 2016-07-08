@@ -67,8 +67,7 @@ bool conservation = false;
 bool old = true;
 bool gaussian = false;
 bool disjoint = false;
-bool fixdz = false;
-bool fixlr = false;
+bool fixall = false;
 bool extended = false;
 bool mu_a = false;
 bool pass = false;
@@ -98,8 +97,7 @@ if (argc % 2 && argc>1) {
 		else if (id.compare("disjoint")==0) disjoint = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("extended")==0) extended = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("pass")==0) pass = (stn<uint>(argv[2*j+2])!=0);
-		else if (id.compare("fixdz")==0) fixdz = (stn<uint>(argv[2*j+2])!=0);
-		else if (id.compare("fixlr")==0) fixlr = (stn<uint>(argv[2*j+2])!=0);
+		else if (id.compare("fixall")==0) fixall = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("inputs")==0) inputsFile = (string)argv[2*j+2];
 		else if (id.compare("print")==0) printOpts = (string)argv[2*j+2];
 		else if (id.compare("pot")==0 || id.compare("potential")==0) potOpts = (string)argv[2*j+2];
@@ -188,11 +186,6 @@ if (!kinOpts.empty()) {
 		return 1;
 	}
 }
-
-if (fixdz)
-	fixlr = false;
-if (fixlr)
-	fixdz = false;
 	
 //dimension
 #define dim 4
@@ -248,10 +241,8 @@ for (uint pl=0; pl<Npl; pl++) {
 	// defining some derived parameters	
 	uint N = pow(2,p.K);
 	uint zm = dim;
-	if (disjoint && fixdz)
-		zm += 2;
-	else if (disjoint && fixlr)
-		zm += 1; //////////////////////////////////
+	if (disjoint && fixall)
+		zm += 3;
 	uint NT = N*dim+zm;
 	number R = 1.0; //////////////////////////////////
 	Point<dim> P;
@@ -808,9 +799,25 @@ for (uint pl=0; pl<Npl; pl++) {
 		// lagrange multiplier terms
 		for (mu=0; mu<zm; mu++) {
 			for (j=0; j<N; j++) {	
-				if (mu>=(dim-1) && fixdz) {
-					if ( (mu==(dim-1) && j==(N/2-1)) || (mu==dim && j==(N-1)) ) {
-						uint nu = dim-2;
+				if (mu>=(dim-1) && fixall) {
+					if (mu==(dim-1) && j<N/2) {	// fixing average time coord of LHS
+						uint locj = j*dim+(dim-1), locz = N*dim+mu;
+						mds(locz) -= x[locj];
+						mds(locj) -= x[locz];
+				
+						dds(locj,locz) += 1.0;
+						dds(locz,locj) += 1.0;
+					}
+					else if (mu==dim && j>N/2) {// fixing average time coord of RHS
+						uint locj = j*dim+(dim-1), locz = N*dim+mu;
+						mds(locz) -= x[locj];
+						mds(locj) -= x[locz];
+				
+						dds(locj,locz) += 1.0;
+						dds(locz,locj) += 1.0;
+					}
+					else if ( (mu==(dim+1) && j==(N/2-1)) || (mu==(dim+2) && j==(N-1)) ) {
+						uint nu = dim-2; // fixing dz=0 at top and bottom of LHS and RHS
 						uint pj = (disjoint? posNeighDisjoint(j,N): posNeigh(j,N));
 						uint locj = j*dim+nu, locpj = pj*dim+nu, locz = N*dim+mu;
 						number ds = 1.0;///(number)N; // using 1/N makes mds large here
@@ -823,7 +830,7 @@ for (uint pl=0; pl<Npl; pl++) {
 						dds(locj,locz) 		+= -1.0/ds;
 						dds(locz,locj) 		+= -1.0/ds;
 					}
-					else if (mu==(dim+1) && j==(N/2-1)) {
+					/*else if (mu==(dim+1) && j==(N/2-1)) { // fixing relative heights of top and bottom points on both sides
 						nu = dim-1;
 						uint oj = oppNeigh(j,N);
 						uint locj = j*dim+nu, locoj = oj*dim+nu, locz = N*dim+mu;
@@ -836,25 +843,7 @@ for (uint pl=0; pl<Npl; pl++) {
 						dds(locj,locz) 		+= -1.0;
 						dds(locz,locj) 		+= -1.0;
 						
-					}
-				}
-				else if (mu>=(dim-1) && fixlr) {
-					if (mu==(dim-1) && j<N/2) {	
-						uint locj = j*dim+(dim-1), locz = N*dim+mu;
-						mds(locz) -= x[locj];
-						mds(locj) -= x[locz];
-				
-						dds(locj,locz) += 1.0;
-						dds(locz,locj) += 1.0;
-					}
-					else if (mu==dim && j>N/2){
-						uint locj = j*dim+(dim-1), locz = N*dim+mu;
-						mds(locz) -= x[locj];
-						mds(locj) -= x[locz];
-				
-						dds(locj,locz) += 1.0;
-						dds(locz,locj) += 1.0;
-					}
+					}*/
 				}
 				else if (mu<dim){
 					uint locj = j*dim+mu, locz = N*dim+mu;
@@ -1039,7 +1028,7 @@ for (uint pl=0; pl<Npl; pl++) {
 			number xRotationTest = 0.0, xMirrorTest = 0.0;
 			number mdsRotationTest = 0.0, mdsMirrorTest = 0.0;
 			number offset = (runsCount==1? x[N*dim]: 0.00);
-			number offsetT = (runsCount==1 && !fixdz? x[N*dim]: 0.00);
+			number offsetT = (runsCount==1? x[N*dim]: 0.00); // used to be different if fixdz
 			for (uint j=0; j<N/2; j++) {
 				for (uint k=0; k<dim; k++) {
 					if (k==(dim-2)) {
