@@ -1,0 +1,111 @@
+using inputs file nrinputs/highTemp/inputs_K_11_T_1.1
+timenumber: 160707165625
+looping over 5 steps
+loading loops from:
+data/highTemp/loops/dim_4/K_11/highTemp_kappa_0.0825927_T_1.1_rank_0.dat
+  pl run        len         i0          s        sol       solM      delta     E_cons  dx*kg_max     ic_max     cc_max       dx/a
+   0   1      1.821   -0.07853      1.671  0.0006651   0.001957    0.00807     0.5643    0.09071  1.031e-06          0    0.09909
+   0   2       1.82   -0.07597      1.671  1.534e-05  1.239e-05   0.007072     0.5646    0.07304  2.702e-06          0    0.09903
+   0   3      1.819   -0.07459      1.671  2.183e-05  3.063e-05   0.002701      0.565    0.05406  1.887e-06          0    0.09898
+   0   4      1.819    -0.0743      1.671  3.837e-06  5.204e-06  0.0004828     0.5652    0.04647   4.67e-07          0    0.09896
+   0   5      1.819    -0.0744      1.671  9.313e-08  1.022e-07   4.62e-05     0.5652    0.04771  4.272e-07          0    0.09896
+
+    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       5     929      11       1 0.08259       00.008976     0.1           0         1.1        1.8191     -0.073784        1.6709
+
+    results:      results/nr/nr3.csv
+          x:data/nr/loops/dim_4/K_11/loop_kappa_0.0825927_E_0_a_0.00897556_T_1.1_pot_10.dat
+loading loops from:
+data/highTemp/loops/dim_4/K_11/highTemp_kappa_0.0839727_T_1.1_rank_0.dat
+  pl run        len         i0          s        sol       solM      delta     E_cons  dx*kg_max     ic_max     cc_max       dx/a
+   1   1      1.821   -0.07792       1.67  0.0006631   0.001956   0.008055      0.567    0.07772  6.911e-07          0    0.09904
+   1   2       1.82   -0.07556       1.67  1.725e-05  1.461e-05   0.009102     0.5672     0.0595  1.682e-06          0    0.09899
+   1   3      1.819   -0.07407       1.67  3.675e-05  4.703e-05    0.02505     0.5676    0.03523  2.722e-06          0    0.09894
+Check inverse: test(0.000135718) > closeness(5.50965e-05)
+
+x.norm():              12.0102
+x_end.norm():          1.51816e-05
+mds.norm():            0.00372743
+mds.minCoeff():         -0.000135354
+mds.maxCoeff():         0.000309708
+mds minCoeff  :         2046
+mds maxCoeff  :         0
+max/2 counter :         1
+(mds.tail(zm)).mean(): -9.69017e-15
+(mds.head(N)).mean():  -1.71241e-05
+
+delta info:    
+delta.norm():          0.0663394
+delta.maxCoeff():        0.00194517
+delta.minCoeff():        -0.00194525
+delta maxCoeff  :        974
+delta minCoeff  :        5070
+max/2 counter :         1697
+(delta.tail(zm)).mean(): -1.76387e-06
+(delta.head(N)).mean():  0.000352725
+
+dds info:      
+dds.determinant():      inf
+dds.sum():              12288.3
+dds.prod():             0
+dds.mean():             0.000182842
+dds.minCoeff():         -8.85204e+12
+dds.maxCoeff():         8.85204e+12
+dds minCoeff  :         (5070,0)
+dds maxCoeff  :         (4098,8190)
+max/2 counter :         12
+dds.trace():            5.31123e+13
+dds.norm():             3.06644e+13
+
+action info:
+s:                      1.66962
+kinetic:                1.81859
+i0:                     -0.0715078
+vr:                     -0.0774643
+   1   4      1.819   -0.07151       1.67  0.0003104   0.000682   0.005524      0.567    0.03172  1.536e-05          0    0.09893
+
+    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       4     789      11       1 0.08397       00.008976     0.1           0         1.1        1.8186     -0.077464        1.6696
+
+    results:results/nr/nr_error3.csv
+loading loops from:
+data/highTemp/loops/dim_4/K_11/highTemp_kappa_0.0853528_T_1.1_rank_0.dat
+  pl run        len         i0          s        sol       solM      delta     E_cons  dx*kg_max     ic_max     cc_max       dx/a
+   2   1       1.82   -0.07732      1.669  0.0006614   0.001955   0.007762     0.5697    0.06266  6.444e-07          0      0.099
+   2   2      1.819   -0.07527      1.668  1.815e-05  1.637e-05    0.01108     0.5698    0.04463  1.031e-06          0    0.09896
+   2   3      1.818   -0.07387      1.668   5.58e-05  6.393e-05    0.00743     0.5701     0.0155  3.523e-06          0    0.09892
+   2   4      1.819   -0.07475      1.668  2.535e-05  2.487e-05    0.01237     0.5699    0.03478  1.253e-06          0    0.09894
+   2   5      1.818   -0.07358      1.668  7.174e-05  7.647e-05   0.001464     0.5701   0.003291  3.704e-06          0    0.09891
+   2   6      1.818   -0.07423      1.668  1.008e-06  9.643e-07   0.001343     0.5702   0.003347  4.377e-08          0    0.09891
+   2   7      1.818   -0.07423      1.668  8.691e-07  8.446e-07  6.318e-05     0.5702  0.0001573   3.87e-08          0    0.09891
+   2   8      1.818   -0.07424      1.668  1.989e-09  4.716e-09  2.114e-06     0.5702  5.486e-06  9.213e-11          0    0.09891
+
+    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       81.49e+03      11       1 0.08535       00.008976     0.1           0         1.1        1.8182      -0.07547        1.6685
+
+    results:      results/nr/nr3.csv
+          x:data/nr/loops/dim_4/K_11/loop_kappa_0.0853528_E_0_a_0.00897556_T_1.1_pot_10.dat
+loading loops from:
+data/highTemp/loops/dim_4/K_11/highTemp_kappa_0.0867329_T_1.1_rank_0.dat
+  pl run        len         i0          s        sol       solM      delta     E_cons  dx*kg_max     ic_max     cc_max       dx/a
+   3   1      1.819   -0.07672      1.667    0.00066   0.001954   0.006745     0.5724    0.04357  6.769e-07          0    0.09895
+   3   2      1.819   -0.07518      1.667  1.556e-05   1.54e-05    0.01024     0.5724    0.02775  7.615e-07          0    0.09893
+   3   3      1.818   -0.07439      1.667  4.889e-05  5.063e-05    0.01138     0.5724    0.00162  3.029e-06          0    0.09891
+   3   4      1.819   -0.07481      1.667  6.207e-05  6.124e-05    0.03608     0.5722    0.02956  2.825e-06          0    0.09893
+   3   5       1.82   -0.07188      1.667  0.0006963  0.0007639    0.01324     0.5701    0.06837  3.127e-05          0    0.09901
+   3   6      1.821   -0.07774      1.667   7.56e-05  7.222e-05     0.0248     0.5712    0.08038  5.731e-06          0    0.09905
+   3   7      1.818   -0.07272      1.667  0.0002609  0.0003424   0.005108     0.5719    0.01885  1.896e-05          0    0.09892
+   3   8      1.818   -0.07499      1.667  1.183e-05  9.675e-06   0.008778     0.5724    0.02032  5.921e-07          0    0.09892
+   3   9      1.818   -0.07451      1.667  3.642e-05   3.71e-05   0.003811     0.5725    0.00311  1.805e-06          0    0.09891
+   3  10      1.818   -0.07481      1.667   7.02e-06  7.412e-06   0.003049     0.5725   0.007075   3.28e-07          0    0.09891
+   3  11      1.818   -0.07481      1.667  4.423e-06  4.394e-06  0.0003891     0.5726  0.0009209  2.011e-07          0    0.09891
+   3  12      1.818   -0.07485      1.667  7.348e-08  8.043e-08   3.33e-05     0.5726   8.64e-05  3.338e-09          0    0.09891
+
+    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      122.23e+03      11       1 0.08673       00.008976     0.1           0         1.1        1.8182     -0.076077        1.6673
+
+    results:      results/nr/nr3.csv
+          x:data/nr/loops/dim_4/K_11/loop_kappa_0.0867329_E_0_a_0.00897556_T_1.1_pot_10.dat
+nrmain error: data/straightDisjoint/loops/dim_4/K_11/loop_kappa_0.0881129_T_1.1_rank_0.dat doesn't exist, moving to next parameter loop
+5436.12user 3.96system 1:30:40elapsed 100%CPU (0avgtext+0avgdata 1075464maxresident)k
+8inputs+496outputs (0major+34190minor)pagefaults 0swaps
