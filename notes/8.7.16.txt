@@ -1,0 +1,4 @@
+to do:
+	- replace deltaNr.sh and deltaNR2.sh with a single file that also does some sqlite by passing variables to sqlite from bash, to do import of new data. really annyoing and confusing to have to do so much by hand. also want it to be able to deal with more files than just nr.csv. perhaps better to take a filename as an argument. also comment the program better as it is difficult to read.
+	- set some more runs going to try to get to kappa=1
+	- play around looking at smaller T and at smaller a

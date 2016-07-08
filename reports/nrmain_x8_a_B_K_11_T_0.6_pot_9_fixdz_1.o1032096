@@ -1,0 +1,59 @@
+using inputs file nrinputs/inputs1
+timenumber: 160621102120
+looping over 1 steps
+loading loops from:
+data/nr/loops/dim_4/K_10/loop_kappa_1_E_0_a_0.1_mu_0.1_pot_8_T_0.7.dat
+position of max symmetric: (3979,3978)/4099, (j,k) = (994,994), (mu,nu) = (3,2)
+Check negative eigenvalue: test(12.5619) > closeness(0.1)
+negative eigenvalue = 0.0709428
+analytic result     = -6.28319
+eigenvector test    = 0.0404037
+Check gamma: test(1) > closeness(0.1)
+          x:data/temp/160621102120xEarly1_K_10_kappa_1_E_0_a_0.1_mu_0.1_pot_8_T_0.7_run_1.dat
+  pl run        len         i0          s        sol       solM      delta     E_cons  dx*kg_max     ic_max     cc_max       dx/a
+   0   1      3.882     -1.142      2.229  3.625e-14  1.211e-13  0.0005563     0.2555      1.224  0.0003559          0    0.03791
+Check solution zero modes: test(1.08315) > closeness(0.001)
+Check a*kg_max<<1: test(32.2937) > closeness(0.5)
+Check x mirror symmetry: test(0.0108286) > closeness(0.001)
+Check mds rotation symmetry: test(1.20182) > closeness(0.001)
+Check mds mirror symmetry: test(1.18857) > closeness(0.001)
+Check delta mirror symmetry: test(1.99995) > closeness(0.001)
+avg mds:               -1.53255e-18
+max mds:               8.57381e-14
+position of max mds:   2243/4099, j = 560, mu = 3
+avg delta:             7.51925e-19
+max delta:             0.000340862
+position of max delta: 10/4099, j = 2, mu = 2
+Check Js conservation: test(0.00242113) > closeness(0.001)
+Check P3 conservation: test(0.159473) > closeness(0.001)
+Check P4 conservation: test(0.255464) > closeness(0.001)
+  Js       :                data/temp/160621102120Js_run_1.dat
+  P3       :                data/temp/160621102120P3_run_1.dat
+  P4       :                data/temp/160621102120P4_run_1.dat
+calculating eigendecomposition of dds...
+first 12 eigenvalues are: 
+-0.00455672
+-1.59983e-12
+-6.11159e-13
+-4.58986e-13
+-9.14615e-15
+7.44081e-14
+0.00805947
+0.00805947
+0.0155401
+0.0192168
+0.0259911
+0.0304174
+4 negative eigenvalues found, less than -4.096e-13
+eigenvalues:data/nr/eigenvalues/dim_4/K_10/160621102120eigenvalues_pl_0_run_1.dat
+eigenvectors:data/nr/eigenvalues/dim_4/K_10/160621102120eigenvectors_pl_0_run_1.dat
+  curvature:data/temp/xCurvature_K_10_kappa_1_E_0_a_0.1_mu_0.1.dat
+
+    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       1     189      10       1       1       0     0.1     0.1           0         0.7        3.8823      -0.51077        2.2294
+
+    results:      results/nr/nr3.csv
+          x:data/nr/loops/dim_4/K_10/loop_kappa_1_E_0_a_0.1_mu_0.1_pot_8_T_0.7.dat
+          x:data/temp/160621102120xEnd_K_10_kappa_1_E_0_a_0.1_mu_0.1_pot_8_T_0.7.dat
+188.96user 0.26system 3:09.77elapsed 99%CPU (0avgtext+0avgdata 409268maxresident)k
+80inputs+264168outputs (0major+5360minor)pagefaults 0swaps

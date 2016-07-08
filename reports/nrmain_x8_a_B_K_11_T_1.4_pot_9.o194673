@@ -1,0 +1,1742 @@
+using inputs file nrinputs/highTemp/inputs_K_11_T_1.4
+timenumber: 160616160853
+looping over 25 steps
+loading loops from:
+data/highTemp/loops/dim_4/K_11/highTemp_Kappa_0.00196734_T_1.4_rank_0.dat
+Check symmetric max: test(1.13687e-13) > closeness(1e-14)
+position of max symmetric: (19,15)/8195, (j,k) = (4,3), (mu,nu) = (3,3)
+Check negative eigenvalue: test(2.78503e+06) > closeness(0.1)
+Check negative eigenvector: test(48123.2) > closeness(0.1)
+negative eigenvalue = 16.8097
+analytic result     = -0.0123612
+eigenvector test    = 48123.2
+Check gamma: test(1) > closeness(0.1)
+Check delta: test(6.54446) > closeness(1)
+
+x.norm():              9.33647
+x_end.norm():          0.002
+mds.norm():            5.37975
+mds.minCoeff():         -0.226421
+mds.maxCoeff():         0.224421
+mds minCoeff  :         2
+mds maxCoeff  :         0
+max/2 counter :         902
+(mds.tail(zm)).mean(): -4.66662e-15
+(mds.head(N)).mean():  -0.00107737
+
+delta info:    
+delta.norm():          61.1022
+delta.maxCoeff():        2.34382
+delta.minCoeff():        -2.34382
+delta maxCoeff  :        2
+delta minCoeff  :        4098
+(delta.tail(zm)).mean(): -0.001
+(delta.head(N)).mean():  -0.0905184
+
+dds info:      
+dds.determinant():      inf
+dds.sum():              16384
+dds.prod():             0
+dds.mean():             0.000243902
+dds.minCoeff():         -1441.65
+dds.maxCoeff():         2883.92
+dds minCoeff  :         (4098,0)
+dds maxCoeff  :         (550,546)
+max/2 counter :         8192
+dds.trace():            2.36077e+07
+dds.norm():             319443
+
+action info:
+s:                      1.41053
+kinetic:                1.42867
+i0:                     -0.00952265
+vr:                     -0.00861764
+  pl run        len         i0          s        sol       solM      delta     E_cons  dx*kg_max     ic_max     cc_max       dx/a
+   0   1      1.429  -0.009523      1.411     0.5762      0.634      6.544     0.3504    0.01682   7.74e-07          0     0.3334
+Check x mirror symmetry: test(0.0033813) > closeness(1e-08)
+Check mds rotation symmetry: test(0.0237929) > closeness(1e-08)
+Check mds mirror symmetry: test(0.0182378) > closeness(1e-08)
+Check delta mirror symmetry: test(0.0124648) > closeness(1e-08)
+avg mds:               -0.000999512
+max mds:               0.226421
+position of max mds:   2/8195, j = 0, mu = 2
+avg delta:             -4.88043e-07
+max delta:             2.34382
+position of max delta: 4098/8195, j = 1024, mu = 2
+Check P3 conservation: test(0.0701683) > closeness(0.001)
+Check P4 conservation: test(0.350429) > closeness(0.001)
+  Js       :                data/temp/160616160853Js_run_1.dat
+  P3       :                data/temp/160616160853P3_run_1.dat
+  P4       :                data/temp/160616160853P4_run_1.dat
+  curvature:data/temp/xCurvature_K_11_kappa_0.00196734_E_0_a_0.00209263_mu_0.15.dat
+
+    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       1     279      11       10.001967       00.002093    0.15           0         1.4        1.4287    -0.0086176        1.4105
+
+    results:results/nr/nr_error3.csv
+loading loops from:
+data/highTemp/loops/dim_4/K_11/highTemp_Kappa_0.00200021_T_1.4_rank_0.dat
+Check symmetric max: test(1.13687e-13) > closeness(1e-14)
+position of max symmetric: (1015,1019)/8195, (j,k) = (253,254), (mu,nu) = (3,3)
+Check negative eigenvalue: test(2.73951e+06) > closeness(0.1)
+Check negative eigenvector: test(48131) > closeness(0.1)
+negative eigenvalue = 16.8112
+analytic result     = -0.0125677
+eigenvector test    = 48131
+Check gamma: test(1) > closeness(0.1)
+Check delta: test(5.41807) > closeness(1)
+
+x.norm():              9.33634
+x_end.norm():          0.002
+mds.norm():            4.69394
+mds.minCoeff():         -0.189869
+mds.maxCoeff():         0.187869
+mds minCoeff  :         2
+mds maxCoeff  :         0
+max/2 counter :         1030
+(mds.tail(zm)).mean(): 5.74736e-15
+(mds.head(N)).mean():  -0.00106612
+
+delta info:    
+delta.norm():          50.5849
+delta.maxCoeff():        2.00355
+delta.minCoeff():        -2.00355
+delta maxCoeff  :        2
+delta minCoeff  :        4098
+(delta.tail(zm)).mean(): -0.001
+(delta.head(N)).mean():  -0.0733155
+
+dds info:      
+dds.determinant():      inf
+dds.sum():              16384
+dds.prod():             0
+dds.mean():             0.000243902
+dds.minCoeff():         -1441.81
+dds.maxCoeff():         2884.23
+dds minCoeff  :         (4098,0)
+dds maxCoeff  :         (598,594)
+max/2 counter :         8192
+dds.trace():            2.36101e+07
+dds.norm():             319475
+
+action info:
+s:                      1.41045
+kinetic:                1.42864
+i0:                     -0.00944934
+vr:                     -0.00874254
+  pl run        len         i0          s        sol       solM      delta     E_cons  dx*kg_max     ic_max     cc_max       dx/a
+   1   1      1.429  -0.009449       1.41     0.5028     0.5316      5.418     0.3504    0.01451  1.326e-06          0     0.3334
+Check x mirror symmetry: test(0.00338129) > closeness(1e-08)
+Check mds rotation symmetry: test(0.0272692) > closeness(1e-08)
+Check mds mirror symmetry: test(0.0205696) > closeness(1e-08)
+Check delta mirror symmetry: test(0.0121435) > closeness(1e-08)
+avg mds:               -0.000999512
+max mds:               0.189869
+position of max mds:   2/8195, j = 0, mu = 2
+avg delta:             -4.88043e-07
+max delta:             2.00355
+position of max delta: 4098/8195, j = 1024, mu = 2
+Check P3 conservation: test(0.0706592) > closeness(0.001)
+Check P4 conservation: test(0.350391) > closeness(0.001)
+  Js       :                data/temp/160616160853Js_run_1.dat
+  P3       :                data/temp/160616160853P3_run_1.dat
+  P4       :                data/temp/160616160853P4_run_1.dat
+  curvature:data/temp/xCurvature_K_11_kappa_0.00200021_E_0_a_0.00209263_mu_0.15.dat
+
+    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       1     278      11       1   0.002       00.002093    0.15           0         1.4        1.4286    -0.0087425        1.4105
+
+    results:results/nr/nr_error3.csv
+loading loops from:
+data/highTemp/loops/dim_4/K_11/highTemp_Kappa_0.00203309_T_1.4_rank_0.dat
+Check symmetric max: test(1.13687e-13) > closeness(1e-14)
+position of max symmetric: (98,102)/8195, (j,k) = (24,25), (mu,nu) = (2,2)
+Check negative eigenvalue: test(2.69545e+06) > closeness(0.1)
+Check negative eigenvector: test(48138.9) > closeness(0.1)
+negative eigenvalue = 16.8127
+analytic result     = -0.0127742
+eigenvector test    = 48138.9
+Check gamma: test(1) > closeness(0.1)
+Check delta: test(4.11164) > closeness(1)
+
+x.norm():              9.33621
+x_end.norm():          0.002
+mds.norm():            3.86104
+mds.minCoeff():         -0.149154
+mds.maxCoeff():         0.147154
+mds minCoeff  :         2
+mds maxCoeff  :         0
+max/2 counter :         1128
+(mds.tail(zm)).mean(): 1.31362e-15
+(mds.head(N)).mean():  -0.00105275
+
+delta info:    
+delta.norm():          38.3872
+delta.maxCoeff():        1.57392
+delta.minCoeff():        -1.57392
+delta maxCoeff  :        2
+delta minCoeff  :        4098
+(delta.tail(zm)).mean(): -0.001
+(delta.head(N)).mean():  -0.0527263
+
+dds info:      
+dds.determinant():      inf
+dds.sum():              16384
+dds.prod():             0
+dds.mean():             0.000243902
+dds.minCoeff():         -1441.96
+dds.maxCoeff():         2884.55
+dds minCoeff  :         (4098,0)
+dds maxCoeff  :         (666,662)
+max/2 counter :         8192
+dds.trace():            2.36125e+07
+dds.norm():             319508
+
+action info:
+s:                      1.41038
+kinetic:                1.42862
+i0:                     -0.00937632
+vr:                     -0.00886699
+  pl run        len         i0          s        sol       solM      delta     E_cons  dx*kg_max     ic_max     cc_max       dx/a
+   2   1      1.429  -0.009376       1.41     0.4136     0.4176      4.112     0.3504    0.01179  1.243e-06          0     0.3333
+Check x mirror symmetry: test(0.00338128) > closeness(1e-08)
+Check mds rotation symmetry: test(0.0331517) > closeness(1e-08)
+Check mds mirror symmetry: test(0.0244714) > closeness(1e-08)
+Check delta mirror symmetry: test(0.0116455) > closeness(1e-08)
+avg mds:               -0.000999512
+max mds:               0.149154
+position of max mds:   2/8195, j = 0, mu = 2
+avg delta:             -4.88043e-07
+max delta:             1.57392
+position of max delta: 4098/8195, j = 1024, mu = 2
+Check P3 conservation: test(0.0712307) > closeness(0.001)
+Check P4 conservation: test(0.350353) > closeness(0.001)
+  Js       :                data/temp/160616160853Js_run_1.dat
+  P3       :                data/temp/160616160853P3_run_1.dat
+  P4       :                data/temp/160616160853P4_run_1.dat
+  curvature:data/temp/xCurvature_K_11_kappa_0.00203309_E_0_a_0.00209263_mu_0.15.dat
+
+    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       1     279      11       10.002033       00.002093    0.15           0         1.4        1.4286     -0.008867        1.4104
+
+    results:results/nr/nr_error3.csv
+loading loops from:
+data/highTemp/loops/dim_4/K_11/highTemp_Kappa_0.00206596_T_1.4_rank_0.dat
+Check symmetric max: test(1.13687e-13) > closeness(1e-14)
+position of max symmetric: (42,38)/8195, (j,k) = (10,9), (mu,nu) = (2,2)
+Check negative eigenvalue: test(2.6528e+06) > closeness(0.1)
+Check negative eigenvector: test(48146.6) > closeness(0.1)
+negative eigenvalue = 16.8142
+analytic result     = -0.0129808
+eigenvector test    = 48146.6
+Check gamma: test(1) > closeness(0.1)
+Check delta: test(2.57334) > closeness(1)
+
+x.norm():              9.33609
+x_end.norm():          0.002
+mds.norm():            2.75065
+mds.minCoeff():         -0.10028
+mds.maxCoeff():         0.09828
+mds minCoeff  :         2
+mds maxCoeff  :         0
+max/2 counter :         1218
+(mds.tail(zm)).mean(): -5.01227e-15
+(mds.head(N)).mean():  -0.00103538
+
+delta info:    
+delta.norm():          24.0249
+delta.maxCoeff():        1.01304
+delta.minCoeff():        -1.01304
+delta maxCoeff  :        2
+delta minCoeff  :        4098
+(delta.tail(zm)).mean(): -0.001
+(delta.head(N)).mean():  -0.0282183
+
+dds info:      
+dds.determinant():      inf
+dds.sum():              16384
+dds.prod():             0
+dds.mean():             0.000243902
+dds.minCoeff():         -1442.12
+dds.maxCoeff():         2884.86
+dds minCoeff  :         (4098,0)
+dds maxCoeff  :         (762,758)
+max/2 counter :         8192
+dds.trace():            2.36149e+07
+dds.norm():             319540
+
+action info:
+s:                      1.4103
+kinetic:                1.4286
+i0:                     -0.0093036
+vr:                     -0.00899101
+  pl run        len         i0          s        sol       solM      delta     E_cons  dx*kg_max     ic_max     cc_max       dx/a
+   3   1      1.429  -0.009304       1.41     0.2946     0.2808      2.573     0.3503   0.008297  5.856e-07          0     0.3333
+Check x mirror symmetry: test(0.00338126) > closeness(1e-08)
+Check mds rotation symmetry: test(0.0465345) > closeness(1e-08)
+Check mds mirror symmetry: test(0.0335881) > closeness(1e-08)
+Check delta mirror symmetry: test(0.0108275) > closeness(1e-08)
+avg mds:               -0.000999512
+max mds:               0.10028
+position of max mds:   2/8195, j = 0, mu = 2
+avg delta:             -4.88043e-07
+max delta:             1.01304
+position of max delta: 2/8195, j = 0, mu = 2
+Check P3 conservation: test(0.0719585) > closeness(0.001)
+Check P4 conservation: test(0.350315) > closeness(0.001)
+  Js       :                data/temp/160616160853Js_run_1.dat
+  P3       :                data/temp/160616160853P3_run_1.dat
+  P4       :                data/temp/160616160853P4_run_1.dat
+  curvature:data/temp/xCurvature_K_11_kappa_0.00206596_E_0_a_0.00209263_mu_0.15.dat
+
+    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       1     278      11       10.002066       00.002093    0.15           0         1.4        1.4286     -0.008991        1.4103
+
+    results:results/nr/nr_error3.csv
+nrmain error: data/straightDisjoint/loops/dim_4/K_11/loop_Kappa_0.00209883_T_1.4_rank_0.dat doesn't exist
+loading loops from:
+data/highTemp/loops/dim_4/K_11/highTemp_Kappa_0.00196734_T_1.4_rank_0.dat
+Check symmetric max: test(1.13687e-13) > closeness(1e-14)
+position of max symmetric: (415,411)/8195, (j,k) = (103,102), (mu,nu) = (3,3)
+Check negative eigenvalue: test(2.78241e+06) > closeness(0.1)
+Check negative eigenvector: test(48013) > closeness(0.1)
+negative eigenvalue = 16.7938
+analytic result     = -0.0123612
+eigenvector test    = 48013
+Check gamma: test(1) > closeness(0.1)
+Check delta: test(2.0605) > closeness(1)
+
+x.norm():              9.33647
+x_end.norm():          0.002
+mds.norm():            2.10956
+mds.minCoeff():         -0.0892794
+mds.maxCoeff():         0.0872794
+mds minCoeff  :         2
+mds maxCoeff  :         0
+max/2 counter :         886
+(mds.tail(zm)).mean(): -4.66662e-15
+(mds.head(N)).mean():  -0.00102077
+
+delta info:    
+delta.norm():          19.2378
+delta.maxCoeff():        0.745046
+delta.minCoeff():        -0.745046
+delta maxCoeff  :        2
+delta minCoeff  :        4098
+(delta.tail(zm)).mean(): -0.001
+(delta.head(N)).mean():  -0.0419752
+
+dds info:      
+dds.determinant():      inf
+dds.sum():              16384
+dds.prod():             0
+dds.mean():             0.000243902
+dds.minCoeff():         -1437.78
+dds.maxCoeff():         2876.98
+dds minCoeff  :         (4098,0)
+dds maxCoeff  :         (562,558)
+max/2 counter :         8192
+dds.trace():            2.35584e+07
+dds.norm():             318748
+
+action info:
+s:                      1.4106
+kinetic:                1.42867
+i0:                     -0.00952265
+vr:                     -0.00854345
+  pl run        len         i0          s        sol       solM      delta     E_cons  dx*kg_max     ic_max     cc_max       dx/a
+   5   1      1.429  -0.009523      1.411     0.2259       0.25      2.061     0.3505    0.01682   7.74e-07          0     0.2636
+Check x mirror symmetry: test(0.0033813) > closeness(1e-08)
+Check mds rotation symmetry: test(0.0606762) > closeness(1e-08)
+Check mds mirror symmetry: test(0.0434772) > closeness(1e-08)
+Check delta mirror symmetry: test(0.010841) > closeness(1e-08)
+avg mds:               -0.000999512
+max mds:               0.0892794
+position of max mds:   2/8195, j = 0, mu = 2
+avg delta:             -4.88043e-07
+max delta:             0.745046
+position of max delta: 2/8195, j = 0, mu = 2
+Check P3 conservation: test(0.0701687) > closeness(0.001)
+Check P4 conservation: test(0.350466) > closeness(0.001)
+  Js       :                data/temp/160616160853Js_run_1.dat
+  P3       :                data/temp/160616160853P3_run_1.dat
+  P4       :                data/temp/160616160853P4_run_1.dat
+  curvature:data/temp/xCurvature_K_11_kappa_0.00196734_E_0_a_0.00264644_mu_0.15.dat
+
+    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       1     278      11       10.001967       00.002646    0.15           0         1.4        1.4287    -0.0085434        1.4106
+
+    results:results/nr/nr_error3.csv
+loading loops from:
+data/highTemp/loops/dim_4/K_11/highTemp_Kappa_0.00200021_T_1.4_rank_0.dat
+Check symmetric max: test(1.13687e-13) > closeness(1e-14)
+position of max symmetric: (346,350)/8195, (j,k) = (86,87), (mu,nu) = (2,2)
+Check negative eigenvalue: test(2.73689e+06) > closeness(0.1)
+Check negative eigenvector: test(48019) > closeness(0.1)
+negative eigenvalue = 16.7951
+analytic result     = -0.0125677
+eigenvector test    = 48019
+Check gamma: test(1) > closeness(0.1)
+Check delta: test(1.74939) > closeness(1)
+
+x.norm():              9.33634
+x_end.norm():          0.002
+mds.norm():            1.84107
+mds.minCoeff():         -0.074961
+mds.maxCoeff():         0.072961
+mds minCoeff  :         2
+mds maxCoeff  :         0
+max/2 counter :         1016
+(mds.tail(zm)).mean(): 5.74736e-15
+(mds.head(N)).mean():  -0.00101684
+
+delta info:    
+delta.norm():          16.3329
+delta.maxCoeff():        0.64342
+delta.minCoeff():        -0.64342
+delta maxCoeff  :        2
+delta minCoeff  :        4098
+(delta.tail(zm)).mean(): -0.001
+(delta.head(N)).mean():  -0.0325852
+
+dds info:      
+dds.determinant():      inf
+dds.sum():              16384
+dds.prod():             0
+dds.mean():             0.000243902
+dds.minCoeff():         -1437.88
+dds.maxCoeff():         2877.18
+dds minCoeff  :         (4098,0)
+dds maxCoeff  :         (614,610)
+max/2 counter :         8192
+dds.trace():            2.356e+07
+dds.norm():             318769
+
+action info:
+s:                      1.41052
+kinetic:                1.42864
+i0:                     -0.00944934
+vr:                     -0.00866982
+  pl run        len         i0          s        sol       solM      delta     E_cons  dx*kg_max     ic_max     cc_max       dx/a
+   6   1      1.429  -0.009449      1.411     0.1972     0.2099      1.749     0.3504    0.01451  1.326e-06          0     0.2636
+Check x mirror symmetry: test(0.00338129) > closeness(1e-08)
+Check mds rotation symmetry: test(0.0695249) > closeness(1e-08)
+Check mds mirror symmetry: test(0.0496791) > closeness(1e-08)
+Check delta mirror symmetry: test(0.0104907) > closeness(1e-08)
+avg mds:               -0.000999512
+max mds:               0.074961
+position of max mds:   2/8195, j = 0, mu = 2
+avg delta:             -4.88043e-07
+max delta:             0.64342
+position of max delta: 4098/8195, j = 1024, mu = 2
+Check P3 conservation: test(0.0706596) > closeness(0.001)
+Check P4 conservation: test(0.350427) > closeness(0.001)
+  Js       :                data/temp/160616160853Js_run_1.dat
+  P3       :                data/temp/160616160853P3_run_1.dat
+  P4       :                data/temp/160616160853P4_run_1.dat
+  curvature:data/temp/xCurvature_K_11_kappa_0.00200021_E_0_a_0.00264644_mu_0.15.dat
+
+    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       1     278      11       1   0.002       00.002646    0.15           0         1.4        1.4286    -0.0086698        1.4105
+
+    results:results/nr/nr_error3.csv
+loading loops from:
+data/highTemp/loops/dim_4/K_11/highTemp_Kappa_0.00203309_T_1.4_rank_0.dat
+Check symmetric max: test(1.13687e-13) > closeness(1e-14)
+position of max symmetric: (98,102)/8195, (j,k) = (24,25), (mu,nu) = (2,2)
+Check negative eigenvalue: test(2.69283e+06) > closeness(0.1)
+Check negative eigenvector: test(48025) > closeness(0.1)
+negative eigenvalue = 16.7963
+analytic result     = -0.0127742
+eigenvector test    = 48025
+Check gamma: test(1) > closeness(0.1)
+Check delta: test(1.38131) > closeness(1)
+
+x.norm():              9.33621
+x_end.norm():          0.002
+mds.norm():            1.51511
+mds.minCoeff():         -0.0590111
+mds.maxCoeff():         0.0570111
+mds minCoeff  :         2
+mds maxCoeff  :         0
+max/2 counter :         1116
+(mds.tail(zm)).mean(): 1.31362e-15
+(mds.head(N)).mean():  -0.00101205
+
+delta info:    
+delta.norm():          12.8962
+delta.maxCoeff():        0.513792
+delta.minCoeff():        -0.513792
+delta maxCoeff  :        2
+delta minCoeff  :        4098
+(delta.tail(zm)).mean(): -0.001
+(delta.head(N)).mean():  -0.0225185
+
+dds info:      
+dds.determinant():      inf
+dds.sum():              16384
+dds.prod():             0
+dds.mean():             0.000243902
+dds.minCoeff():         -1437.97
+dds.maxCoeff():         2877.38
+dds minCoeff  :         (4098,0)
+dds maxCoeff  :         (678,674)
+max/2 counter :         8192
+dds.trace():            2.35616e+07
+dds.norm():             318790
+
+action info:
+s:                      1.41045
+kinetic:                1.42862
+i0:                     -0.00937632
+vr:                     -0.00879571
+  pl run        len         i0          s        sol       solM      delta     E_cons  dx*kg_max     ic_max     cc_max       dx/a
+   7   1      1.429  -0.009376       1.41     0.1623     0.1652      1.381     0.3504    0.01179  1.243e-06          0     0.2636
+Check x mirror symmetry: test(0.00338128) > closeness(1e-08)
+Check mds rotation symmetry: test(0.0844825) > closeness(1e-08)
+Check mds mirror symmetry: test(0.060148) > closeness(1e-08)
+Check delta mirror symmetry: test(0.00998062) > closeness(1e-08)
+avg mds:               -0.000999512
+max mds:               0.0590111
+position of max mds:   2/8195, j = 0, mu = 2
+avg delta:             -4.88043e-07
+max delta:             0.513792
+position of max delta: 2/8195, j = 0, mu = 2
+Check P3 conservation: test(0.071231) > closeness(0.001)
+Check P4 conservation: test(0.350389) > closeness(0.001)
+  Js       :                data/temp/160616160853Js_run_1.dat
+  P3       :                data/temp/160616160853P3_run_1.dat
+  P4       :                data/temp/160616160853P4_run_1.dat
+  curvature:data/temp/xCurvature_K_11_kappa_0.00203309_E_0_a_0.00264644_mu_0.15.dat
+
+    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       1     278      11       10.002033       00.002646    0.15           0         1.4        1.4286    -0.0087957        1.4104
+
+    results:results/nr/nr_error3.csv
+loading loops from:
+data/highTemp/loops/dim_4/K_11/highTemp_Kappa_0.00206596_T_1.4_rank_0.dat
+Check symmetric max: test(1.13687e-13) > closeness(1e-14)
+position of max symmetric: (10,6)/8195, (j,k) = (2,1), (mu,nu) = (2,2)
+Check negative eigenvalue: test(2.65018e+06) > closeness(0.1)
+Check negative eigenvector: test(48030.9) > closeness(0.1)
+negative eigenvalue = 16.7976
+analytic result     = -0.0129808
+eigenvector test    = 48030.9
+Check gamma: test(1) > closeness(0.1)
+  pl run        len         i0          s        sol       solM      delta     E_cons  dx*kg_max     ic_max     cc_max       dx/a
+   8   1      1.429  -0.009304       1.41     0.1158     0.1116     0.9269     0.3504   0.008297  5.856e-07          0     0.2636
+Check x mirror symmetry: test(0.00338126) > closeness(1e-08)
+Check mds rotation symmetry: test(0.118415) > closeness(1e-08)
+Check mds mirror symmetry: test(0.0840007) > closeness(1e-08)
+Check delta mirror symmetry: test(0.0094199) > closeness(1e-08)
+avg mds:               -0.000999512
+max mds:               0.0398646
+position of max mds:   2/8195, j = 0, mu = 2
+avg delta:             -4.88043e-07
+max delta:             0.342014
+position of max delta: 4098/8195, j = 1024, mu = 2
+Check P3 conservation: test(0.0719586) > closeness(0.001)
+Check P4 conservation: test(0.35035) > closeness(0.001)
+  Js       :                data/temp/160616160853Js_run_1.dat
+  P3       :                data/temp/160616160853P3_run_1.dat
+  P4       :                data/temp/160616160853P4_run_1.dat
+Check symmetric max: test(1.13687e-13) > closeness(1e-14)
+position of max symmetric: (1862,1866)/8195, (j,k) = (465,466), (mu,nu) = (2,2)
+Check negative eigenvalue: test(568874) > closeness(0.1)
+Check negative eigenvector: test(4072.18) > closeness(0.1)
+negative eigenvalue = 3.60568
+analytic result     = -0.0129808
+eigenvector test    = 4072.18
+Check gamma: test(1) > closeness(0.1)
+Check delta: test(10070.7) > closeness(1)
+
+x.norm():              12.6738
+x_end.norm():          6.28016e-15
+mds.norm():            766.162
+mds.minCoeff():         -37.9994
+mds.maxCoeff():         37.9994
+mds minCoeff  :         4098
+mds maxCoeff  :         0
+max/2 counter :         606
+(mds.tail(zm)).mean(): 1.57607e-14
+(mds.head(N)).mean():  -0.00609492
+
+delta info:    
+delta.norm():          127633
+delta.maxCoeff():        4840.53
+delta.minCoeff():        -4840.53
+delta maxCoeff  :        2
+delta minCoeff  :        4098
+(delta.tail(zm)).mean(): 1.25745e-11
+(delta.head(N)).mean():  -22.6204
+
+dds info:      
+dds.determinant():      inf
+dds.sum():              16384
+dds.prod():             0
+dds.mean():             0.000243902
+dds.minCoeff():         -572.74
+dds.maxCoeff():         1155.88
+dds minCoeff  :         (4098,0)
+dds maxCoeff  :         (4288,4284)
+max/2 counter :         8192
+dds.trace():            9.30271e+06
+dds.norm():             125926
+
+action info:
+s:                      3.69177
+kinetic:                3.63127
+i0:                     0.0592296
+vr:                     0.00126755
+   8   2      3.156    0.05923      3.692      60.45      106.4  1.007e+04     0.1685      1.665    0.03021          0     0.5823
+Check a*kg_max<<1: test(2.85858) > closeness(0.5)
+Check x mirror symmetry: test(0.00575981) > closeness(1e-08)
+Check mds mirror symmetry: test(0.0124943) > closeness(1e-08)
+Check delta mirror symmetry: test(0.00783058) > closeness(1e-08)
+avg mds:               -5.30394e-14
+max mds:               37.9994
+position of max mds:   4098/8195, j = 1024, mu = 2
+avg delta:             2.73667e-13
+max delta:             4840.53
+position of max delta: 2/8195, j = 0, mu = 2
+Check Js conservation: test(0.720814) > closeness(0.001)
+Check P3 conservation: test(0.39061) > closeness(0.001)
+Check P4 conservation: test(0.168487) > closeness(0.001)
+  Js       :                data/temp/160616160853Js_run_2.dat
+  P3       :                data/temp/160616160853P3_run_2.dat
+  P4       :                data/temp/160616160853P4_run_2.dat
+  curvature:data/temp/xCurvature_K_11_kappa_0.00206596_E_0_a_0.00264644_mu_0.15.dat
+
+    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       2     530      11       10.002066       00.002646    0.15           0         1.4        3.1562     0.0012676        3.6918
+
+    results:results/nr/nr_error3.csv
+nrmain error: data/straightDisjoint/loops/dim_4/K_11/loop_Kappa_0.00209883_T_1.4_rank_0.dat doesn't exist
+loading loops from:
+data/highTemp/loops/dim_4/K_11/highTemp_Kappa_0.00196734_T_1.4_rank_0.dat
+Check symmetric max: test(1.13687e-13) > closeness(1e-14)
+position of max symmetric: (455,451)/8195, (j,k) = (113,112), (mu,nu) = (3,3)
+Check negative eigenvalue: test(2.78092e+06) > closeness(0.1)
+Check negative eigenvector: test(47954.7) > closeness(0.1)
+negative eigenvalue = 16.7849
+analytic result     = -0.0123612
+eigenvector test    = 47954.7
+Check gamma: test(1) > closeness(0.1)
+  pl run        len         i0          s        sol       solM      delta     E_cons  dx*kg_max     ic_max     cc_max       dx/a
+  10   1      1.429  -0.009523      1.411     0.1064     0.1186     0.9947     0.3505    0.01682   7.74e-07          0      0.218
+Check x mirror symmetry: test(0.0033813) > closeness(1e-08)
+Check mds rotation symmetry: test(0.128875) > closeness(1e-08)
+Check mds mirror symmetry: test(0.0913974) > closeness(1e-08)
+Check delta mirror symmetry: test(0.00776844) > closeness(1e-08)
+avg mds:               -0.000999512
+max mds:               0.0423638
+position of max mds:   2/8195, j = 0, mu = 2
+avg delta:             -4.88043e-07
+max delta:             0.300971
+position of max delta: 2/8195, j = 0, mu = 2
+Check P3 conservation: test(0.0701692) > closeness(0.001)
+Check P4 conservation: test(0.350511) > closeness(0.001)
+  Js       :                data/temp/160616160853Js_run_1.dat
+  P3       :                data/temp/160616160853P3_run_1.dat
+  P4       :                data/temp/160616160853P4_run_1.dat
+Check symmetric max: test(5.68434e-14) > closeness(1e-14)
+position of max symmetric: (846,842)/8195, (j,k) = (211,210), (mu,nu) = (2,2)
+Check negative eigenvalue: test(587227) > closeness(0.1)
+Check negative eigenvector: test(4162.89) > closeness(0.1)
+negative eigenvalue = 3.54434
+analytic result     = -0.0123612
+eigenvector test    = 4162.89
+Check gamma: test(1) > closeness(0.1)
+Check delta: test(4041.16) > closeness(1)
+
+x.norm():              13.0375
+x_end.norm():          7.14e-16
+mds.norm():            325.455
+mds.minCoeff():         -17.6215
+mds.maxCoeff():         17.6215
+mds minCoeff  :         4098
+mds maxCoeff  :         0
+max/2 counter :         298
+(mds.tail(zm)).mean(): -9.42361e-14
+(mds.head(N)).mean():  -0.0038366
+
+delta info:    
+delta.norm():          52686.8
+delta.maxCoeff():        1664.21
+delta.minCoeff():        -1664.21
+delta maxCoeff  :        2
+delta minCoeff  :        4098
+(delta.tail(zm)).mean(): -1.50451e-12
+(delta.head(N)).mean():  -63.6451
+
+dds info:      
+dds.determinant():      -inf
+dds.sum():              16384
+dds.prod():             0
+dds.mean():             0.000243902
+dds.minCoeff():         -593.956
+dds.maxCoeff():         1193.29
+dds minCoeff  :         (4098,0)
+dds maxCoeff  :         (3535,3531)
+max/2 counter :         8192
+dds.trace():            9.67484e+06
+dds.norm():             130941
+
+action info:
+s:                      3.60589
+kinetic:                3.48486
+i0:                     0.119997
+vr:                     0.00103374
+  10   2      2.981       0.12      3.606      24.96      49.38       4041     0.1879       1.62    0.03257          0     0.4548
+Check a*kg_max<<1: test(3.56194) > closeness(0.5)
+Check x mirror symmetry: test(0.0054133) > closeness(1e-08)
+Check mds mirror symmetry: test(0.013269) > closeness(1e-08)
+Check delta mirror symmetry: test(0.00704119) > closeness(1e-08)
+avg mds:               3.95031e-14
+max mds:               17.6215
+position of max mds:   4098/8195, j = 1024, mu = 2
+avg delta:             -8.83525e-14
+max delta:             1664.21
+position of max delta: 2/8195, j = 0, mu = 2
+Check Js conservation: test(0.73743) > closeness(0.001)
+Check P3 conservation: test(0.390529) > closeness(0.001)
+Check P4 conservation: test(0.187924) > closeness(0.001)
+  Js       :                data/temp/160616160853Js_run_2.dat
+  P3       :                data/temp/160616160853P3_run_2.dat
+  P4       :                data/temp/160616160853P4_run_2.dat
+  curvature:data/temp/xCurvature_K_11_kappa_0.00196734_E_0_a_0.00320025_mu_0.15.dat
+
+    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       2     527      11       10.001967       0  0.0032    0.15           0         1.4        2.9809     0.0010337        3.6059
+
+    results:results/nr/nr_error3.csv
+loading loops from:
+data/highTemp/loops/dim_4/K_11/highTemp_Kappa_0.00200021_T_1.4_rank_0.dat
+Check symmetric max: test(1.13687e-13) > closeness(1e-14)
+position of max symmetric: (3478,3474)/8195, (j,k) = (869,868), (mu,nu) = (2,2)
+Check negative eigenvalue: test(2.7354e+06) > closeness(0.1)
+Check negative eigenvector: test(47959.7) > closeness(0.1)
+negative eigenvalue = 16.786
+analytic result     = -0.0125677
+eigenvector test    = 47959.7
+Check gamma: test(1) > closeness(0.1)
+  pl run        len         i0          s        sol       solM      delta     E_cons  dx*kg_max     ic_max     cc_max       dx/a
+  11   1      1.429  -0.009449      1.411    0.09294    0.09984     0.8295     0.3505    0.01451  1.326e-06          0      0.218
+Check x mirror symmetry: test(0.00338129) > closeness(1e-08)
+Check mds rotation symmetry: test(0.14751) > closeness(1e-08)
+Check mds mirror symmetry: test(0.104548) > closeness(1e-08)
+Check delta mirror symmetry: test(0.00808469) > closeness(1e-08)
+avg mds:               -0.000999512
+max mds:               0.0356555
+position of max mds:   2/8195, j = 0, mu = 2
+avg delta:             -4.88043e-07
+max delta:             0.265363
+position of max delta: 2/8195, j = 0, mu = 2
+Check P3 conservation: test(0.07066) > closeness(0.001)
+Check P4 conservation: test(0.350471) > closeness(0.001)
+  Js       :                data/temp/160616160853Js_run_1.dat
+  P3       :                data/temp/160616160853P3_run_1.dat
+  P4       :                data/temp/160616160853P4_run_1.dat
+Check symmetric max: test(5.68434e-14) > closeness(1e-14)
+position of max symmetric: (446,450)/8195, (j,k) = (111,112), (mu,nu) = (2,2)
+Check negative eigenvalue: test(767425) > closeness(0.1)
+Check negative eigenvector: test(6254.32) > closeness(0.1)
+negative eigenvalue = 4.70935
+analytic result     = -0.0125677
+eigenvector test    = 6254.32
+Check gamma: test(1) > closeness(0.1)
+Check delta: test(2277.59) > closeness(1)
+
+x.norm():              12.0257
+x_end.norm():          4.27104e-16
+mds.norm():            283.672
+mds.minCoeff():         -15.3093
+mds.maxCoeff():         15.3093
+mds minCoeff  :         4098
+mds maxCoeff  :         0
+max/2 counter :         294
+(mds.tail(zm)).mean(): 3.60193e-14
+(mds.head(N)).mean():  -0.00258431
+
+delta info:    
+delta.norm():          27389.6
+delta.maxCoeff():        922.718
+delta.minCoeff():        -922.718
+delta maxCoeff  :        2
+delta minCoeff  :        4098
+(delta.tail(zm)).mean(): 3.05669e-13
+(delta.head(N)).mean():  -30.153
+
+dds info:      
+dds.determinant():      inf
+dds.sum():              16384
+dds.prod():             0
+dds.mean():             0.000243902
+dds.minCoeff():         -672.175
+dds.maxCoeff():         1346.87
+dds minCoeff  :         (4098,0)
+dds maxCoeff  :         (603,599)
+max/2 counter :         8192
+dds.trace():            1.09431e+07
+dds.norm():             148103
+
+action info:
+s:                      3.16877
+kinetic:                3.08019
+i0:                     0.0879205
+vr:                     0.000660021
+  11   2      2.704    0.08792      3.169      23.59       42.9       2278     0.1954      1.434     0.0269          0     0.4125
+Check a*kg_max<<1: test(3.47718) > closeness(0.5)
+Check x mirror symmetry: test(0.00506921) > closeness(1e-08)
+Check mds mirror symmetry: test(0.0132135) > closeness(1e-08)
+Check delta mirror symmetry: test(0.00734369) > closeness(1e-08)
+avg mds:               9.77902e-15
+max mds:               15.3093
+position of max mds:   2/8195, j = 0, mu = 2
+avg delta:             6.49732e-14
+max delta:             922.718
+position of max delta: 2/8195, j = 0, mu = 2
+Check Js conservation: test(0.713426) > closeness(0.001)
+Check P3 conservation: test(0.380813) > closeness(0.001)
+Check P4 conservation: test(0.195449) > closeness(0.001)
+  Js       :                data/temp/160616160853Js_run_2.dat
+  P3       :                data/temp/160616160853P3_run_2.dat
+  P4       :                data/temp/160616160853P4_run_2.dat
+  curvature:data/temp/xCurvature_K_11_kappa_0.00200021_E_0_a_0.00320025_mu_0.15.dat
+
+    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       2     527      11       1   0.002       0  0.0032    0.15           0         1.4        2.7036    0.00066002        3.1688
+
+    results:results/nr/nr_error3.csv
+loading loops from:
+data/highTemp/loops/dim_4/K_11/highTemp_Kappa_0.00203309_T_1.4_rank_0.dat
+position of max symmetric: (139,131)/8195, (j,k) = (34,32), (mu,nu) = (3,3)
+Check negative eigenvalue: test(2.69135e+06) > closeness(0.1)
+Check negative eigenvector: test(47964.7) > closeness(0.1)
+negative eigenvalue = 16.7871
+analytic result     = -0.0127742
+eigenvector test    = 47964.7
+Check gamma: test(1) > closeness(0.1)
+  pl run        len         i0          s        sol       solM      delta     E_cons  dx*kg_max     ic_max     cc_max       dx/a
+  12   1      1.429  -0.009376      1.411    0.07665     0.0789     0.6575     0.3504    0.01179  1.243e-06          0      0.218
+Check x mirror symmetry: test(0.00338128) > closeness(1e-08)
+Check mds rotation symmetry: test(0.178877) > closeness(1e-08)
+Check mds mirror symmetry: test(0.126676) > closeness(1e-08)
+Check delta mirror symmetry: test(0.00820019) > closeness(1e-08)
+avg mds:               -0.000999512
+max mds:               0.0281776
+position of max mds:   2/8195, j = 0, mu = 2
+avg delta:             -4.88043e-07
+max delta:             0.217325
+position of max delta: 2/8195, j = 0, mu = 2
+Check P3 conservation: test(0.0712313) > closeness(0.001)
+Check P4 conservation: test(0.350432) > closeness(0.001)
+  Js       :                data/temp/160616160853Js_run_1.dat
+  P3       :                data/temp/160616160853P3_run_1.dat
+  P4       :                data/temp/160616160853P4_run_1.dat
+Check symmetric max: test(5.68434e-14) > closeness(1e-14)
+position of max symmetric: (554,558)/8195, (j,k) = (138,139), (mu,nu) = (2,2)
+Check negative eigenvalue: test(1.0641e+06) > closeness(0.1)
+Check negative eigenvector: test(10569.9) > closeness(0.1)
+negative eigenvalue = 6.63723
+analytic result     = -0.0127742
+eigenvector test    = 10569.9
+Check gamma: test(1) > closeness(0.1)
+Check delta: test(1043.26) > closeness(1)
+
+x.norm():              11.0913
+x_end.norm():          2.91047e-15
+mds.norm():            215.973
+mds.minCoeff():         -11.4003
+mds.maxCoeff():         11.4003
+mds minCoeff  :         4098
+mds maxCoeff  :         0
+max/2 counter :         306
+(mds.tail(zm)).mean(): -7.47592e-14
+(mds.head(N)).mean():  -0.000271503
+
+delta info:    
+delta.norm():          11571
+delta.maxCoeff():        430.428
+delta.minCoeff():        -430.428
+delta maxCoeff  :        2
+delta minCoeff  :        4098
+(delta.tail(zm)).mean(): -9.42893e-14
+(delta.head(N)).mean():  -6.65547
+
+dds info:      
+dds.determinant():      inf
+dds.sum():              16384
+dds.prod():             0
+dds.mean():             0.000243902
+dds.minCoeff():         -805.551
+dds.maxCoeff():         1610.93
+dds minCoeff  :         (4098,0)
+dds maxCoeff  :         (643,639)
+max/2 counter :         8200
+dds.trace():            1.31243e+07
+dds.norm():             177607
+
+action info:
+s:                      2.62332
+kinetic:                2.56681
+i0:                     0.0562875
+vr:                     0.000224221
+  12   2      2.342    0.05629      2.623      19.47      31.95       1043     0.2172      1.206    0.01867          0     0.3573
+Check a*kg_max<<1: test(3.37516) > closeness(0.5)
+Check x mirror symmetry: test(0.00435673) > closeness(1e-08)
+Check mds mirror symmetry: test(0.0127492) > closeness(1e-08)
+Check delta mirror symmetry: test(0.00752224) > closeness(1e-08)
+avg mds:               -6.38048e-14
+max mds:               11.4003
+position of max mds:   2/8195, j = 0, mu = 2
+avg delta:             -1.69103e-14
+max delta:             430.428
+position of max delta: 2/8195, j = 0, mu = 2
+Check Js conservation: test(0.656311) > closeness(0.001)
+Check P3 conservation: test(0.361756) > closeness(0.001)
+Check P4 conservation: test(0.21722) > closeness(0.001)
+  Js       :                data/temp/160616160853Js_run_2.dat
+  P3       :                data/temp/160616160853P3_run_2.dat
+  P4       :                data/temp/160616160853P4_run_2.dat
+  curvature:data/temp/xCurvature_K_11_kappa_0.00203309_E_0_a_0.00320025_mu_0.15.dat
+
+    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       2     526      11       10.002033       0  0.0032    0.15           0         1.4        2.3416    0.00022422        2.6233
+
+    results:results/nr/nr_error3.csv
+loading loops from:
+data/highTemp/loops/dim_4/K_11/highTemp_Kappa_0.00206596_T_1.4_rank_0.dat
+Check symmetric max: test(1.13687e-13) > closeness(1e-14)
+position of max symmetric: (499,495)/8195, (j,k) = (124,123), (mu,nu) = (3,3)
+Check negative eigenvalue: test(2.6487e+06) > closeness(0.1)
+Check negative eigenvector: test(47969.7) > closeness(0.1)
+negative eigenvalue = 16.7882
+analytic result     = -0.0129808
+eigenvector test    = 47969.7
+Check gamma: test(1) > closeness(0.1)
+  pl run        len         i0          s        sol       solM      delta     E_cons  dx*kg_max     ic_max     cc_max       dx/a
+  13   1      1.429  -0.009304       1.41    0.05501    0.05375     0.4511     0.3504   0.008297  5.856e-07          0      0.218
+Check x mirror symmetry: test(0.00338126) > closeness(1e-08)
+Check mds rotation symmetry: test(0.24922) > closeness(1e-08)
+Check mds mirror symmetry: test(0.17635) > closeness(1e-08)
+Check delta mirror symmetry: test(0.00840427) > closeness(1e-08)
+avg mds:               -0.000999512
+max mds:               0.0191969
+position of max mds:   2/8195, j = 0, mu = 2
+avg delta:             -4.88043e-07
+max delta:             0.149873
+position of max delta: 2/8195, j = 0, mu = 2
+Check P3 conservation: test(0.0719588) > closeness(0.001)
+Check P4 conservation: test(0.350392) > closeness(0.001)
+  Js       :                data/temp/160616160853Js_run_1.dat
+  P3       :                data/temp/160616160853P3_run_1.dat
+  P4       :                data/temp/160616160853P4_run_1.dat
+Check symmetric max: test(1.13687e-13) > closeness(1e-14)
+position of max symmetric: (979,983)/8195, (j,k) = (244,245), (mu,nu) = (3,3)
+Check negative eigenvalue: test(1.61107e+06) > closeness(0.1)
+Check negative eigenvector: test(21107.9) > closeness(0.1)
+negative eigenvalue = 10.2114
+analytic result     = -0.0129808
+eigenvector test    = 21107.9
+Check gamma: test(1) > closeness(0.1)
+Check delta: test(343.7) > closeness(1)
+
+x.norm():              10.1859
+x_end.norm():          2.0178e-15
+mds.norm():            125.571
+mds.minCoeff():         -6.3855
+mds.maxCoeff():         6.3855
+mds minCoeff  :         4098
+mds maxCoeff  :         0
+max/2 counter :         342
+(mds.tail(zm)).mean(): -7.01033e-14
+(mds.head(N)).mean():  0.00191211
+
+delta info:    
+delta.norm():          3500.91
+delta.maxCoeff():        134.829
+delta.minCoeff():        -134.829
+delta maxCoeff  :        2
+delta minCoeff  :        4098
+(delta.tail(zm)).mean(): -7.10269e-14
+(delta.head(N)).mean():  -0.0906224
+
+dds info:      
+dds.determinant():      inf
+dds.sum():              16384
+dds.prod():             0
+dds.mean():             0.000243902
+dds.minCoeff():         -1043.62
+dds.maxCoeff():         2086.88
+dds minCoeff  :         (4098,0)
+dds maxCoeff  :         (4827,4823)
+max/2 counter :         8200
+dds.trace():            1.70339e+07
+dds.norm():             230484
+
+action info:
+s:                      1.99963
+kinetic:                1.97592
+i0:                     0.0242266
+vr:                     -0.000513794
+  13   2      1.904    0.02423          2      12.33      17.89      343.7     0.2656     0.9516   0.009138          0     0.2904
+Check a*kg_max<<1: test(3.27633) > closeness(0.5)
+Check x mirror symmetry: test(0.00318765) > closeness(1e-08)
+Check mds mirror symmetry: test(0.0118077) > closeness(1e-08)
+Check delta mirror symmetry: test(0.00723983) > closeness(1e-08)
+avg mds:               -1.61607e-14
+max mds:               6.3855
+position of max mds:   4098/8195, j = 1024, mu = 2
+avg delta:             2.20869e-16
+max delta:             134.829
+position of max delta: 2/8195, j = 0, mu = 2
+Check Js conservation: test(0.489596) > closeness(0.001)
+Check P3 conservation: test(0.31351) > closeness(0.001)
+Check P4 conservation: test(0.265584) > closeness(0.001)
+  Js       :                data/temp/160616160853Js_run_2.dat
+  P3       :                data/temp/160616160853P3_run_2.dat
+  P4       :                data/temp/160616160853P4_run_2.dat
+  curvature:data/temp/xCurvature_K_11_kappa_0.00206596_E_0_a_0.00320025_mu_0.15.dat
+
+    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       2     525      11       10.002066       0  0.0032    0.15           0         1.4        1.9036   -0.00051379        1.9996
+
+    results:results/nr/nr_error3.csv
+nrmain error: data/straightDisjoint/loops/dim_4/K_11/loop_Kappa_0.00209883_T_1.4_rank_0.dat doesn't exist
+loading loops from:
+data/highTemp/loops/dim_4/K_11/highTemp_Kappa_0.00196734_T_1.4_rank_0.dat
+Check symmetric max: test(1.13687e-13) > closeness(1e-14)
+position of max symmetric: (195,199)/8195, (j,k) = (48,49), (mu,nu) = (3,3)
+Check negative eigenvalue: test(2.78002e+06) > closeness(0.1)
+Check negative eigenvector: test(47920.3) > closeness(0.1)
+negative eigenvalue = 16.7794
+analytic result     = -0.0123612
+eigenvector test    = 47920.3
+Check gamma: test(1) > closeness(0.1)
+  pl run        len         i0          s        sol       solM      delta     E_cons  dx*kg_max     ic_max     cc_max       dx/a
+  15   1      1.429  -0.009523      1.411    0.05698    0.06389     0.8424     0.3506    0.01682   7.74e-07          0     0.1858
+Check x mirror symmetry: test(0.0033813) > closeness(1e-08)
+Check mds rotation symmetry: test(0.240622) > closeness(1e-08)
+Check mds mirror symmetry: test(0.170287) > closeness(1e-08)
+Check delta mirror symmetry: test(0.00634667) > closeness(1e-08)
+avg mds:               -0.000999512
+max mds:               0.0228162
+position of max mds:   2/8195, j = 0, mu = 2
+avg delta:             -4.88043e-07
+max delta:             0.274707
+position of max delta: 6146/8195, j = 1536, mu = 2
+Check P3 conservation: test(0.0701698) > closeness(0.001)
+Check P4 conservation: test(0.350566) > closeness(0.001)
+  Js       :                data/temp/160616160853Js_run_1.dat
+  P3       :                data/temp/160616160853P3_run_1.dat
+  P4       :                data/temp/160616160853P4_run_1.dat
+Check symmetric max: test(5.68434e-14) > closeness(1e-14)
+position of max symmetric: (2518,2522)/8195, (j,k) = (629,630), (mu,nu) = (2,2)
+Check negative eigenvalue: test(946492) > closeness(0.1)
+Check negative eigenvector: test(9226.54) > closeness(0.1)
+negative eigenvalue = 5.71276
+analytic result     = -0.0123612
+eigenvector test    = 9226.54
+Check gamma: test(1) > closeness(0.1)
+Check delta: test(656.913) > closeness(1)
+
+x.norm():              12.0357
+x_end.norm():          2.84452e-15
+mds.norm():            69.1555
+mds.minCoeff():         -2.73616
+mds.maxCoeff():         2.73616
+mds minCoeff  :         7758
+mds maxCoeff  :         0
+max/2 counter :         1210
+(mds.tail(zm)).mean(): -1.83824e-14
+(mds.head(N)).mean():  0.00662919
+
+delta info:    
+delta.norm():          7906.42
+delta.maxCoeff():        266.101
+delta.minCoeff():        -266.101
+delta maxCoeff  :        6146
+delta minCoeff  :        2050
+(delta.tail(zm)).mean(): -1.03068e-13
+(delta.head(N)).mean():  -2.47469
+
+dds info:      
+dds.determinant():      inf
+dds.sum():              16384
+dds.prod():             0
+dds.mean():             0.000243902
+dds.minCoeff():         -814.337
+dds.maxCoeff():         1628.38
+dds minCoeff  :         (2050,0)
+dds maxCoeff  :         (3223,3219)
+max/2 counter :         8200
+dds.trace():            1.32965e+07
+dds.norm():             179922
+
+action info:
+s:                      2.58794
+kinetic:                2.5305
+i0:                     0.0571147
+vr:                     0.000321937
+  15   2      2.402    0.05711      2.588      5.746      7.667      656.9     0.2236      1.242   0.008837          0     0.3124
+Check a*kg_max<<1: test(3.97706) > closeness(0.5)
+Check x mirror symmetry: test(0.00394118) > closeness(1e-08)
+Check mds mirror symmetry: test(0.0113655) > closeness(1e-08)
+Check delta mirror symmetry: test(0.00587266) > closeness(1e-08)
+avg mds:               3.39964e-14
+max mds:               2.73616
+position of max mds:   3662/8195, j = 915, mu = 2
+avg delta:             -2.11607e-14
+max delta:             266.101
+position of max delta: 2050/8195, j = 512, mu = 2
+Check Js conservation: test(0.523818) > closeness(0.001)
+Check P3 conservation: test(0.351864) > closeness(0.001)
+Check P4 conservation: test(0.223647) > closeness(0.001)
+  Js       :                data/temp/160616160853Js_run_2.dat
+  P3       :                data/temp/160616160853P3_run_2.dat
+  P4       :                data/temp/160616160853P4_run_2.dat
+  curvature:data/temp/xCurvature_K_11_kappa_0.00196734_E_0_a_0.00375406_mu_0.15.dat
+
+    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       2     529      11       10.001967       00.003754    0.15           0         1.4        2.4019    0.00032194        2.5879
+
+    results:results/nr/nr_error3.csv
+loading loops from:
+data/highTemp/loops/dim_4/K_11/highTemp_Kappa_0.00200021_T_1.4_rank_0.dat
+Check symmetric max: test(1.13687e-13) > closeness(1e-14)
+position of max symmetric: (1399,1403)/8195, (j,k) = (349,350), (mu,nu) = (3,3)
+Check negative eigenvalue: test(2.73449e+06) > closeness(0.1)
+Check negative eigenvector: test(47924.8) > closeness(0.1)
+negative eigenvalue = 16.7804
+analytic result     = -0.0125677
+eigenvector test    = 47924.8
+Check gamma: test(1) > closeness(0.1)
+  pl run        len         i0          s        sol       solM      delta     E_cons  dx*kg_max     ic_max     cc_max       dx/a
+  16   1      1.429  -0.009449      1.411    0.04997    0.05402     0.6035     0.3505    0.01451  1.326e-06          0     0.1858
+Check x mirror symmetry: test(0.00338129) > closeness(1e-08)
+Check mds rotation symmetry: test(0.274377) > closeness(1e-08)
+Check mds mirror symmetry: test(0.19414) > closeness(1e-08)
+Check delta mirror symmetry: test(0.00643653) > closeness(1e-08)
+avg mds:               -0.000999512
+max mds:               0.0192928
+position of max mds:   2/8195, j = 0, mu = 2
+avg delta:             -4.88043e-07
+max delta:             0.18692
+position of max delta: 6146/8195, j = 1536, mu = 2
+Check P3 conservation: test(0.0706605) > closeness(0.001)
+Check P4 conservation: test(0.350524) > closeness(0.001)
+  Js       :                data/temp/160616160853Js_run_1.dat
+  P3       :                data/temp/160616160853P3_run_1.dat
+  P4       :                data/temp/160616160853P4_run_1.dat
+Check symmetric max: test(5.68434e-14) > closeness(1e-14)
+position of max symmetric: (455,459)/8195, (j,k) = (113,114), (mu,nu) = (3,3)
+Check negative eigenvalue: test(1.41585e+06) > closeness(0.1)
+Check negative eigenvector: test(17119.2) > closeness(0.1)
+negative eigenvalue = 8.68845
+analytic result     = -0.0125677
+eigenvector test    = 17119.2
+Check gamma: test(1) > closeness(0.1)
+Check delta: test(265.314) > closeness(1)
+
+x.norm():              10.7798
+x_end.norm():          6.48139e-15
+mds.norm():            49.3968
+mds.minCoeff():         -1.80398
+mds.maxCoeff():         1.80398
+mds minCoeff  :         7866
+mds maxCoeff  :         0
+max/2 counter :         1154
+(mds.tail(zm)).mean(): -3.9402e-14
+(mds.head(N)).mean():  0.00406766
+
+delta info:    
+delta.norm():          2860.04
+delta.maxCoeff():        91.6458
+delta.minCoeff():        -91.6458
+delta maxCoeff  :        6146
+delta minCoeff  :        2050
+(delta.tail(zm)).mean(): -1.76533e-13
+(delta.head(N)).mean():  -1.40556
+
+dds info:      
+dds.determinant():      inf
+dds.sum():              16384
+dds.prod():             0
+dds.mean():             0.000243902
+dds.minCoeff():         -992.873
+dds.maxCoeff():         1985.75
+dds minCoeff  :         (2050,0)
+dds maxCoeff  :         (7363,7359)
+max/2 counter :         8192
+dds.trace():            1.62249e+07
+dds.norm():             219534
+
+action info:
+s:                      2.11385
+kinetic:                2.07268
+i0:                     0.0413967
+vr:                     -0.000231927
+  16   2      2.016     0.0414      2.114      4.582      5.054      265.3     0.2595      1.005   0.005768          0     0.2622
+Check a*kg_max<<1: test(3.83401) > closeness(0.5)
+Check x mirror symmetry: test(0.0034321) > closeness(1e-08)
+Check mds mirror symmetry: test(0.00943211) > closeness(1e-08)
+Check delta mirror symmetry: test(0.00599768) > closeness(1e-08)
+avg mds:               -1.60309e-15
+max mds:               1.80398
+position of max mds:   7866/8195, j = 1966, mu = 2
+avg delta:             5.58139e-15
+max delta:             91.6458
+position of max delta: 6146/8195, j = 1536, mu = 2
+Check Js conservation: test(0.421666) > closeness(0.001)
+Check P3 conservation: test(0.321532) > closeness(0.001)
+Check P4 conservation: test(0.259507) > closeness(0.001)
+  Js       :                data/temp/160616160853Js_run_2.dat
+  P3       :                data/temp/160616160853P3_run_2.dat
+  P4       :                data/temp/160616160853P4_run_2.dat
+  curvature:data/temp/xCurvature_K_11_kappa_0.00200021_E_0_a_0.00375406_mu_0.15.dat
+
+    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       2     528      11       1   0.002       00.003754    0.15           0         1.4        2.0156   -0.00023193        2.1138
+
+    results:results/nr/nr_error3.csv
+loading loops from:
+data/highTemp/loops/dim_4/K_11/highTemp_Kappa_0.00203309_T_1.4_rank_0.dat
+Check symmetric max: test(1.13687e-13) > closeness(1e-14)
+position of max symmetric: (995,999)/8195, (j,k) = (248,249), (mu,nu) = (3,3)
+Check negative eigenvalue: test(2.69044e+06) > closeness(0.1)
+Check negative eigenvector: test(47929.2) > closeness(0.1)
+negative eigenvalue = 16.7814
+analytic result     = -0.0127742
+eigenvector test    = 47929.2
+Check gamma: test(1) > closeness(0.1)
+  pl run        len         i0          s        sol       solM      delta     E_cons  dx*kg_max     ic_max     cc_max       dx/a
+  17   1      1.429  -0.009376      1.411    0.04149    0.04298     0.4295     0.3505    0.01179  1.243e-06          0     0.1858
+Check x mirror symmetry: test(0.00338128) > closeness(1e-08)
+Check mds rotation symmetry: test(0.330473) > closeness(1e-08)
+Check mds mirror symmetry: test(0.233779) > closeness(1e-08)
+Check delta mirror symmetry: test(0.00682249) > closeness(1e-08)
+avg mds:               -0.000999512
+max mds:               0.0153503
+position of max mds:   2/8195, j = 0, mu = 2
+avg delta:             -4.88043e-07
+max delta:             0.125379
+position of max delta: 6146/8195, j = 1536, mu = 2
+Check P3 conservation: test(0.0712316) > closeness(0.001)
+Check P4 conservation: test(0.350482) > closeness(0.001)
+  Js       :                data/temp/160616160853Js_run_1.dat
+  P3       :                data/temp/160616160853P3_run_1.dat
+  P4       :                data/temp/160616160853P4_run_1.dat
+Check symmetric max: test(1.13687e-13) > closeness(1e-14)
+position of max symmetric: (587,591)/8195, (j,k) = (146,147), (mu,nu) = (3,3)
+Check negative eigenvalue: test(1.8329e+06) > closeness(0.1)
+Check negative eigenvector: test(25901.4) > closeness(0.1)
+negative eigenvalue = 11.4326
+analytic result     = -0.0127742
+eigenvector test    = 25901.4
+Check gamma: test(1) > closeness(0.1)
+Check delta: test(129.63) > closeness(1)
+
+x.norm():              10.0771
+x_end.norm():          2.18974e-15
+mds.norm():            38.8401
+mds.minCoeff():         -1.62054
+mds.maxCoeff():         1.62054
+mds minCoeff  :         4098
+mds maxCoeff  :         0
+max/2 counter :         494
+(mds.tail(zm)).mean(): 5.71973e-14
+(mds.head(N)).mean():  0.00261463
+
+delta info:    
+delta.norm():          1306.29
+delta.maxCoeff():        39.6698
+delta.minCoeff():        -39.6698
+delta maxCoeff  :        2
+delta minCoeff  :        4098
+(delta.tail(zm)).mean(): -9.79213e-14
+(delta.head(N)).mean():  -0.42428
+
+dds info:      
+dds.determinant():      inf
+dds.sum():              16384
+dds.prod():             0
+dds.mean():             0.000243902
+dds.minCoeff():         -1141.34
+dds.maxCoeff():         2282.97
+dds minCoeff  :         (4098,0)
+dds maxCoeff  :         (3287,3283)
+max/2 counter :         8192
+dds.trace():            1.86594e+07
+dds.norm():             252471
+
+action info:
+s:                      1.8261
+kinetic:                1.8017
+i0:                     0.0251902
+vr:                     -0.000784275
+  17   2      1.776    0.02519      1.826      3.854       4.54      129.6     0.2904     0.8709   0.004268          0      0.231
+Check a*kg_max<<1: test(3.77023) > closeness(0.5)
+Check x mirror symmetry: test(0.00303788) > closeness(1e-08)
+Check mds mirror symmetry: test(0.00949929) > closeness(1e-08)
+Check delta mirror symmetry: test(0.00616982) > closeness(1e-08)
+avg mds:               7.48819e-16
+max mds:               1.62054
+position of max mds:   2/8195, j = 0, mu = 2
+avg delta:             1.33364e-14
+max delta:             39.6698
+position of max delta: 2/8195, j = 0, mu = 2
+Check Js conservation: test(0.32237) > closeness(0.001)
+Check P3 conservation: test(0.283585) > closeness(0.001)
+Check P4 conservation: test(0.290389) > closeness(0.001)
+  Js       :                data/temp/160616160853Js_run_2.dat
+  P3       :                data/temp/160616160853P3_run_2.dat
+  P4       :                data/temp/160616160853P4_run_2.dat
+  curvature:data/temp/xCurvature_K_11_kappa_0.00203309_E_0_a_0.00375406_mu_0.15.dat
+
+    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       2     525      11       10.002033       00.003754    0.15           0         1.4        1.7759   -0.00078428        1.8261
+
+    results:results/nr/nr_error3.csv
+loading loops from:
+data/highTemp/loops/dim_4/K_11/highTemp_Kappa_0.00206596_T_1.4_rank_0.dat
+Check symmetric max: test(1.13687e-13) > closeness(1e-14)
+position of max symmetric: (2823,2819)/8195, (j,k) = (705,704), (mu,nu) = (3,3)
+Check negative eigenvalue: test(2.64779e+06) > closeness(0.1)
+Check negative eigenvector: test(47933.6) > closeness(0.1)
+negative eigenvalue = 16.7824
+analytic result     = -0.0129808
+eigenvector test    = 47933.6
+Check gamma: test(1) > closeness(0.1)
+  pl run        len         i0          s        sol       solM      delta     E_cons  dx*kg_max     ic_max     cc_max       dx/a
+  18   1      1.429  -0.009304      1.411    0.03033    0.02968     0.2758     0.3504   0.008297  5.856e-07          0     0.1858
+Check x mirror symmetry: test(0.00338126) > closeness(1e-08)
+Check mds rotation symmetry: test(0.452001) > closeness(1e-08)
+Check mds mirror symmetry: test(0.319676) > closeness(1e-08)
+Check delta mirror symmetry: test(0.00769554) > closeness(1e-08)
+avg mds:               -0.000999512
+max mds:               0.010601
+position of max mds:   2/8195, j = 0, mu = 2
+avg delta:             -4.88043e-07
+max delta:             0.079035
+position of max delta: 2/8195, j = 0, mu = 2
+Check P3 conservation: test(0.0719591) > closeness(0.001)
+Check P4 conservation: test(0.350441) > closeness(0.001)
+  Js       :                data/temp/160616160853Js_run_1.dat
+  P3       :                data/temp/160616160853P3_run_1.dat
+  P4       :                data/temp/160616160853P4_run_1.dat
+Check symmetric max: test(1.13687e-13) > closeness(1e-14)
+position of max symmetric: (1283,1279)/8195, (j,k) = (320,319), (mu,nu) = (3,3)
+Check negative eigenvalue: test(2.21964e+06) > closeness(0.1)
+Check negative eigenvector: test(35878.1) > closeness(0.1)
+negative eigenvalue = 14.0687
+analytic result     = -0.0129808
+eigenvector test    = 35878.1
+Check gamma: test(1) > closeness(0.1)
+Check delta: test(61.0729) > closeness(1)
+
+x.norm():              9.63726
+x_end.norm():          1.27223e-15
+mds.norm():            26.4713
+mds.minCoeff():         -1.21913
+mds.maxCoeff():         1.21913
+mds minCoeff  :         4098
+mds maxCoeff  :         0
+max/2 counter :         438
+(mds.tail(zm)).mean(): 6.52181e-15
+(mds.head(N)).mean():  0.0017532
+
+delta info:    
+delta.norm():          588.576
+delta.maxCoeff():        20.5229
+delta.minCoeff():        -20.5229
+delta maxCoeff  :        2
+delta minCoeff  :        4098
+(delta.tail(zm)).mean(): 7.10329e-14
+(delta.head(N)).mean():  0.222323
+
+dds info:      
+dds.determinant():      inf
+dds.sum():              16384
+dds.prod():             0
+dds.mean():             0.000243902
+dds.minCoeff():         -1284.38
+dds.maxCoeff():         2569.35
+dds minCoeff  :         (4098,0)
+dds maxCoeff  :         (7326,7322)
+max/2 counter :         8192
+dds.trace():            2.1005e+07
+dds.norm():             284208
+
+action info:
+s:                      1.60722
+kinetic:                1.60013
+i0:                     0.00868401
+vr:                     -0.00160033
+  18   2      1.593   0.008684      1.607      2.747      3.415      61.07     0.3206     0.7545   0.002367          0     0.2072
+Check a*kg_max<<1: test(3.64128) > closeness(0.5)
+Check x mirror symmetry: test(0.00262828) > closeness(1e-08)
+Check mds mirror symmetry: test(0.00958627) > closeness(1e-08)
+Check delta mirror symmetry: test(0.00765146) > closeness(1e-08)
+avg mds:               4.34431e-15
+max mds:               1.21913
+position of max mds:   2/8195, j = 0, mu = 2
+avg delta:             -7.53634e-16
+max delta:             20.5229
+position of max delta: 2/8195, j = 0, mu = 2
+Check Js conservation: test(0.185315) > closeness(0.001)
+Check P3 conservation: test(0.228202) > closeness(0.001)
+Check P4 conservation: test(0.320642) > closeness(0.001)
+  Js       :                data/temp/160616160853Js_run_2.dat
+  P3       :                data/temp/160616160853P3_run_2.dat
+  P4       :                data/temp/160616160853P4_run_2.dat
+  curvature:data/temp/xCurvature_K_11_kappa_0.00206596_E_0_a_0.00375406_mu_0.15.dat
+
+    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       2     523      11       10.002066       00.003754    0.15           0         1.4        1.5931    -0.0016003        1.6072
+
+    results:results/nr/nr_error3.csv
+nrmain error: data/straightDisjoint/loops/dim_4/K_11/loop_Kappa_0.00209883_T_1.4_rank_0.dat doesn't exist
+loading loops from:
+data/highTemp/loops/dim_4/K_11/highTemp_Kappa_0.00196734_T_1.4_rank_0.dat
+position of max symmetric: (1551,1543)/8195, (j,k) = (387,385), (mu,nu) = (3,3)
+Check negative eigenvalue: test(2.77943e+06) > closeness(0.1)
+Check negative eigenvector: test(47898.3) > closeness(0.1)
+negative eigenvalue = 16.7759
+analytic result     = -0.0123612
+eigenvector test    = 47898.3
+Check gamma: test(1) > closeness(0.1)
+Check delta: test(6.79752) > closeness(1)
+
+x.norm():              9.33647
+x_end.norm():          0.002
+mds.norm():            0.315158
+mds.minCoeff():         -0.0133983
+mds.maxCoeff():         0.0113983
+mds minCoeff  :         2
+mds maxCoeff  :         0
+max/2 counter :         763
+(mds.tail(zm)).mean(): -4.66662e-15
+(mds.head(N)).mean():  -0.00096349
+
+delta info:    
+delta.norm():          63.4648
+delta.maxCoeff():        2.06688
+delta.minCoeff():        -2.06688
+delta maxCoeff  :        2050
+delta minCoeff  :        6146
+(delta.tail(zm)).mean(): -0.001
+(delta.head(N)).mean():  -0.0670839
+
+dds info:      
+dds.determinant():      -inf
+dds.sum():              16384
+dds.prod():             0
+dds.mean():             0.000243902
+dds.minCoeff():         -1434.77
+dds.maxCoeff():         2870.3
+dds minCoeff  :         (6146,0)
+dds maxCoeff  :         (650,646)
+max/2 counter :         8192
+dds.trace():            2.35107e+07
+dds.norm():             318118
+
+action info:
+s:                      1.41095
+kinetic:                1.42867
+i0:                     -0.00952265
+vr:                     -0.00819739
+  pl run        len         i0          s        sol       solM      delta     E_cons  dx*kg_max     ic_max     cc_max       dx/a
+  20   1      1.429  -0.009523      1.411    0.03376    0.03752      6.798     0.3506    0.01682   7.74e-07          0     0.1619
+Check x mirror symmetry: test(0.0033813) > closeness(1e-08)
+Check mds rotation symmetry: test(0.406145) > closeness(1e-08)
+Check mds mirror symmetry: test(0.287266) > closeness(1e-08)
+Check delta mirror symmetry: test(0.0101417) > closeness(1e-08)
+avg mds:               -0.000999512
+max mds:               0.0133983
+position of max mds:   2/8195, j = 0, mu = 2
+avg delta:             -4.88043e-07
+max delta:             2.06688
+position of max delta: 2050/8195, j = 512, mu = 2
+Check P3 conservation: test(0.0701706) > closeness(0.001)
+Check P4 conservation: test(0.350639) > closeness(0.001)
+  Js       :                data/temp/160616160853Js_run_1.dat
+  P3       :                data/temp/160616160853P3_run_1.dat
+  P4       :                data/temp/160616160853P4_run_1.dat
+  curvature:data/temp/xCurvature_K_11_kappa_0.00196734_E_0_a_0.00430787_mu_0.15.dat
+
+    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       1     276      11       10.001967       00.004308    0.15           0         1.4        1.4287    -0.0081974        1.4109
+
+    results:results/nr/nr_error3.csv
+loading loops from:
+data/highTemp/loops/dim_4/K_11/highTemp_Kappa_0.00200021_T_1.4_rank_0.dat
+Check symmetric max: test(1.13687e-13) > closeness(1e-14)
+position of max symmetric: (747,751)/8195, (j,k) = (186,187), (mu,nu) = (3,3)
+Check negative eigenvalue: test(2.7339e+06) > closeness(0.1)
+Check negative eigenvector: test(47902.4) > closeness(0.1)
+negative eigenvalue = 16.7768
+analytic result     = -0.0125677
+eigenvector test    = 47902.4
+Check gamma: test(1) > closeness(0.1)
+Check delta: test(1.29861) > closeness(1)
+
+x.norm():              9.33634
+x_end.norm():          0.002
+mds.norm():            0.279113
+mds.minCoeff():         -0.01142
+mds.maxCoeff():         0.00942005
+mds minCoeff  :         2
+mds maxCoeff  :         0
+max/2 counter :         813
+(mds.tail(zm)).mean(): 5.74736e-15
+(mds.head(N)).mean():  -0.000967328
+
+delta info:    
+delta.norm():          12.1243
+delta.maxCoeff():        0.419906
+delta.minCoeff():        -0.419906
+delta maxCoeff  :        6146
+delta minCoeff  :        2050
+(delta.tail(zm)).mean(): -0.001
+(delta.head(N)).mean():  0.00423565
+
+dds info:      
+dds.determinant():      inf
+dds.sum():              16384
+dds.prod():             0
+dds.mean():             0.000243902
+dds.minCoeff():         -1434.82
+dds.maxCoeff():         2870.41
+dds minCoeff  :         (2050,0)
+dds maxCoeff  :         (682,678)
+max/2 counter :         8192
+dds.trace():            2.35114e+07
+dds.norm():             318128
+
+action info:
+s:                      1.41085
+kinetic:                1.42864
+i0:                     -0.00944934
+vr:                     -0.00834218
+  pl run        len         i0          s        sol       solM      delta     E_cons  dx*kg_max     ic_max     cc_max       dx/a
+  21   1      1.429  -0.009449      1.411     0.0299    0.03198      1.299     0.3506    0.01451  1.326e-06          0     0.1619
+Check x mirror symmetry: test(0.00338129) > closeness(1e-08)
+Check mds rotation symmetry: test(0.458595) > closeness(1e-08)
+Check mds mirror symmetry: test(0.324346) > closeness(1e-08)
+Check delta mirror symmetry: test(0.0083178) > closeness(1e-08)
+avg mds:               -0.000999512
+max mds:               0.01142
+position of max mds:   2/8195, j = 0, mu = 2
+avg delta:             -4.88043e-07
+max delta:             0.419906
+position of max delta: 2050/8195, j = 512, mu = 2
+Check P3 conservation: test(0.0706611) > closeness(0.001)
+Check P4 conservation: test(0.350591) > closeness(0.001)
+  Js       :                data/temp/160616160853Js_run_1.dat
+  P3       :                data/temp/160616160853P3_run_1.dat
+  P4       :                data/temp/160616160853P4_run_1.dat
+  curvature:data/temp/xCurvature_K_11_kappa_0.00200021_E_0_a_0.00430787_mu_0.15.dat
+
+    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       1     276      11       1   0.002       00.004308    0.15           0         1.4        1.4286    -0.0083422        1.4109
+
+    results:results/nr/nr_error3.csv
+loading loops from:
+data/highTemp/loops/dim_4/K_11/highTemp_Kappa_0.00203309_T_1.4_rank_0.dat
+Check symmetric max: test(1.13687e-13) > closeness(1e-14)
+position of max symmetric: (2639,2635)/8195, (j,k) = (659,658), (mu,nu) = (3,3)
+Check negative eigenvalue: test(2.68985e+06) > closeness(0.1)
+Check negative eigenvector: test(47906.5) > closeness(0.1)
+negative eigenvalue = 16.7777
+analytic result     = -0.0127742
+eigenvector test    = 47906.5
+Check gamma: test(1) > closeness(0.1)
+  pl run        len         i0          s        sol       solM      delta     E_cons  dx*kg_max     ic_max     cc_max       dx/a
+  22   1      1.429  -0.009376      1.411    0.02525    0.02573     0.5014     0.3505    0.01179  1.243e-06          0     0.1619
+Check x mirror symmetry: test(0.00338128) > closeness(1e-08)
+Check mds rotation symmetry: test(0.543023) > closeness(1e-08)
+Check mds mirror symmetry: test(0.38403) > closeness(1e-08)
+Check delta mirror symmetry: test(0.00753169) > closeness(1e-08)
+avg mds:               -0.000999512
+max mds:               0.00918845
+position of max mds:   2/8195, j = 0, mu = 2
+avg delta:             -4.88043e-07
+max delta:             0.16434
+position of max delta: 6146/8195, j = 1536, mu = 2
+Check P3 conservation: test(0.0712321) > closeness(0.001)
+Check P4 conservation: test(0.350545) > closeness(0.001)
+  Js       :                data/temp/160616160853Js_run_1.dat
+  P3       :                data/temp/160616160853P3_run_1.dat
+  P4       :                data/temp/160616160853P4_run_1.dat
+Check symmetric max: test(1.13687e-13) > closeness(1e-14)
+position of max symmetric: (3054,3058)/8195, (j,k) = (763,764), (mu,nu) = (2,2)
+Check negative eigenvalue: test(1.59863e+06) > closeness(0.1)
+Check negative eigenvector: test(20808.9) > closeness(0.1)
+negative eigenvalue = 9.97133
+analytic result     = -0.0127742
+eigenvector test    = 20808.9
+Check gamma: test(1) > closeness(0.1)
+Check delta: test(113.327) > closeness(1)
+
+x.norm():              10.3553
+x_end.norm():          1.84488e-15
+mds.norm():            28.0506
+mds.minCoeff():         -0.920295
+mds.maxCoeff():         0.920295
+mds minCoeff  :         7562
+mds maxCoeff  :         0
+max/2 counter :         1262
+(mds.tail(zm)).mean(): -3.26246e-15
+(mds.head(N)).mean():  0.00318155
+
+delta info:    
+delta.norm():          1173.53
+delta.maxCoeff():        40.7284
+delta.minCoeff():        -40.7284
+delta maxCoeff  :        6146
+delta minCoeff  :        2050
+(delta.tail(zm)).mean(): -1.83423e-13
+(delta.head(N)).mean():  0.656245
+
+dds info:      
+dds.determinant():      inf
+dds.sum():              16384
+dds.prod():             0
+dds.mean():             0.000243902
+dds.minCoeff():         -1050.54
+dds.maxCoeff():         2101.41
+dds minCoeff  :         (2050,0)
+dds maxCoeff  :         (5215,5211)
+max/2 counter :         8192
+dds.trace():            1.71818e+07
+dds.norm():             232481
+
+action info:
+s:                      1.95053
+kinetic:                1.95594
+i0:                     -0.00494757
+vr:                     -0.000457352
+  22   2      1.909  -0.004948      1.951      2.709      2.579      113.3     0.2617     0.9682   0.004806          0     0.2163
+Check a*kg_max<<1: test(4.47504) > closeness(0.5)
+Check x mirror symmetry: test(0.0030549) > closeness(1e-08)
+Check mds mirror symmetry: test(0.0103409) > closeness(1e-08)
+Check delta mirror symmetry: test(0.00631843) > closeness(1e-08)
+avg mds:               2.81062e-15
+max mds:               0.920295
+position of max mds:   3466/8195, j = 866, mu = 2
+avg delta:             3.86138e-15
+max delta:             40.7284
+position of max delta: 6146/8195, j = 1536, mu = 2
+Check Js conservation: test(0.40242) > closeness(0.001)
+Check P3 conservation: test(0.293193) > closeness(0.001)
+Check P4 conservation: test(0.261681) > closeness(0.001)
+  Js       :                data/temp/160616160853Js_run_2.dat
+  P3       :                data/temp/160616160853P3_run_2.dat
+  P4       :                data/temp/160616160853P4_run_2.dat
+  curvature:data/temp/xCurvature_K_11_kappa_0.00203309_E_0_a_0.00430787_mu_0.15.dat
+
+    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       2     525      11       10.002033       00.004308    0.15           0         1.4        1.9087   -0.00045735        1.9505
+
+    results:results/nr/nr_error3.csv
+loading loops from:
+data/highTemp/loops/dim_4/K_11/highTemp_Kappa_0.00206596_T_1.4_rank_0.dat
+position of max symmetric: (1527,1547)/8195, (j,k) = (381,386), (mu,nu) = (3,3)
+Check negative eigenvalue: test(2.64719e+06) > closeness(0.1)
+Check negative eigenvector: test(47910.5) > closeness(0.1)
+negative eigenvalue = 16.7786
+analytic result     = -0.0129808
+eigenvector test    = 47910.5
+Check gamma: test(1) > closeness(0.1)
+  pl run        len         i0          s        sol       solM      delta     E_cons  dx*kg_max     ic_max     cc_max       dx/a
+  23   1      1.429  -0.009304      1.411    0.01926    0.01814     0.2405     0.3505   0.008297  5.856e-07          0     0.1619
+Check x mirror symmetry: test(0.00338126) > closeness(1e-08)
+Check mds rotation symmetry: test(0.711946) > closeness(1e-08)
+Check mds mirror symmetry: test(0.503456) > closeness(1e-08)
+Check delta mirror symmetry: test(0.00773646) > closeness(1e-08)
+avg mds:               -0.000999512
+max mds:               0.00647706
+position of max mds:   2/8195, j = 0, mu = 2
+avg delta:             -4.88043e-07
+max delta:             0.0771657
+position of max delta: 6146/8195, j = 1536, mu = 2
+Check P3 conservation: test(0.0719594) > closeness(0.001)
+Check P4 conservation: test(0.3505) > closeness(0.001)
+  Js       :                data/temp/160616160853Js_run_1.dat
+  P3       :                data/temp/160616160853P3_run_1.dat
+  P4       :                data/temp/160616160853P4_run_1.dat
+Check symmetric max: test(1.13687e-13) > closeness(1e-14)
+position of max symmetric: (3123,3119)/8195, (j,k) = (780,779), (mu,nu) = (3,3)
+Check negative eigenvalue: test(2.31943e+06) > closeness(0.1)
+Check negative eigenvector: test(38543.3) > closeness(0.1)
+negative eigenvalue = 14.7012
+analytic result     = -0.0129808
+eigenvector test    = 38543.3
+Check gamma: test(1) > closeness(0.1)
+Check delta: test(29.1033) > closeness(1)
+
+x.norm():              9.55856
+x_end.norm():          7.39607e-17
+mds.norm():            11.5655
+mds.minCoeff():         -0.373942
+mds.maxCoeff():         0.373942
+mds minCoeff  :         2050
+mds maxCoeff  :         0
+max/2 counter :         1446
+(mds.tail(zm)).mean(): -1.08842e-14
+(mds.head(N)).mean():  0.00148288
+
+delta info:    
+delta.norm():          278.185
+delta.maxCoeff():        9.40757
+delta.minCoeff():        -9.40757
+delta maxCoeff  :        6146
+delta minCoeff  :        2050
+(delta.tail(zm)).mean(): -3.68385e-15
+(delta.head(N)).mean():  0.0726128
+
+dds info:      
+dds.determinant():      inf
+dds.sum():              16384
+dds.prod():             0
+dds.mean():             0.000243902
+dds.minCoeff():         -1319.43
+dds.maxCoeff():         2639.35
+dds minCoeff  :         (2050,0)
+dds maxCoeff  :         (1062,1058)
+max/2 counter :         8192
+dds.trace():            2.15902e+07
+dds.norm():             292131
+
+action info:
+s:                      1.55111
+kinetic:                1.556
+i0:                     -0.00308913
+vr:                     -0.0018005
+  23   2      1.553  -0.003089      1.551       1.21      1.047       29.1     0.3265      0.683   0.001293          0      0.176
+Check a*kg_max<<1: test(3.88104) > closeness(0.5)
+Check x mirror symmetry: test(0.002593) > closeness(1e-08)
+Check mds mirror symmetry: test(0.00796387) > closeness(1e-08)
+Check delta mirror symmetry: test(0.00841182) > closeness(1e-08)
+avg mds:               8.8598e-15
+max mds:               0.373942
+position of max mds:   2050/8195, j = 512, mu = 2
+avg delta:             -3.23461e-16
+max delta:             9.40757
+position of max delta: 6146/8195, j = 1536, mu = 2
+Check Js conservation: test(0.130595) > closeness(0.001)
+Check P3 conservation: test(0.200535) > closeness(0.001)
+Check P4 conservation: test(0.326541) > closeness(0.001)
+  Js       :                data/temp/160616160853Js_run_2.dat
+  P3       :                data/temp/160616160853P3_run_2.dat
+  P4       :                data/temp/160616160853P4_run_2.dat
+  curvature:data/temp/xCurvature_K_11_kappa_0.00206596_E_0_a_0.00430787_mu_0.15.dat
+
+    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       2     522      11       10.002066       00.004308    0.15           0         1.4        1.5526    -0.0018005        1.5511
+
+    results:results/nr/nr_error3.csv
+nrmain error: data/straightDisjoint/loops/dim_4/K_11/loop_Kappa_0.00209883_T_1.4_rank_0.dat doesn't exist
+8274.38user 11.77system 2:18:06elapsed 99%CPU (0avgtext+0avgdata 1075092maxresident)k
+1496inputs+61696outputs (0major+84780minor)pagefaults 0swaps

@@ -1,0 +1,60 @@
+using inputs file nrinputs/inputs0
+looping over 1 steps
+generating 1 straightDisjoint shaped unit loops each of 1024 points in 4 dimensions
+printing to data/straightDisjoint/loops/dim_4/K_10/loop_Kappa_0.0193765_T_0.8_rank_0.dat, with runs from 0...1
+0.00user 0.00system 0:00.01elapsed 47%CPU (0avgtext+0avgdata 2640maxresident)k
+8inputs+72outputs (0major+734minor)pagefaults 0swaps
+using inputs file nrinputs/inputs0
+timenumber: 160621163708
+looping over 1 steps
+loading loops from:
+data/straightDisjoint/loops/dim_4/K_10/loop_Kappa_0.0193765_T_0.8_rank_0.dat
+position of max symmetric: (2043,3)/4100, (j,k) = (510,0), (mu,nu) = (3,3)
+Check negative eigenvalue: test(80825.4) > closeness(0.1)
+Check negative eigenvector: test(7851.48) > closeness(0.1)
+negative eigenvalue = 9.60943
+analytic result     = -0.121746
+eigenvector test    = 7851.48
+Check gamma: test(1) > closeness(0.1)
+          x:data/temp/160621163708xEarly1_K_10_kappa_0.0193765_E_0_a_0.00842751_mu_0.15_pot_9_T_0.8_run_1.dat
+  pl run        len         i0          s        sol       solM      delta     E_cons  dx*kg_max     ic_max     cc_max       dx/a
+   0   1        2.5   -0.04908      2.403   0.005552   0.001859          1     0.5887          0          0          0     0.2897
+Check mds rotation symmetry: test(1.40972) > closeness(0.001)
+Check mds mirror symmetry: test(0.996822) > closeness(0.001)
+Check delta rotation symmetry: no tests done yet
+Check delta mirror symmetry: no tests done yet
+avg mds:               -0.000998781
+max mds:               0.00115983
+position of max mds:   4094/4100, j = 1023, mu = 2
+avg delta:             0.126575
+Check P3 conservation: test(0.225527) > closeness(0.001)
+Check P4 conservation: test(0.588711) > closeness(0.001)
+  Js       :                data/temp/160621163708Js_run_1.dat
+  P3       :                data/temp/160621163708P3_run_1.dat
+  P4       :                data/temp/160621163708P4_run_1.dat
+calculating eigendecomposition of dds...
+eigenvalues:data/nr/eigenvalues/dim_4/K_10/160621163708eigenvalues_pl_0_run_1.dat
+first 12 eigenvalues are: 
+-0.217061
+-0.153264
+-0.153264
+-2.53715e-12
+-9.84858e-13
+-7.25615e-13
+-4.98794e-13
+-7.33352e-14
+0.0359594
+0.0359594
+0.0595068
+0.0595068
+7 negative eigenvalues found, less than -4.096e-13
+eigenvectors:data/nr/eigenvalues/dim_4/K_10/160621163708eigenvector11_pl_0_run_1.dat
+  curvature:data/temp/xCurvature_K_10_kappa_0.0193765_E_0_a_0.00842751_mu_0.15.dat
+
+    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       1     171      10       1 0.01938       00.008428    0.15           0         0.8           2.5     -0.048036        2.4029
+
+    results: results/nr/nr_pass3.csv
+          x:data/temp/160621163708xEnd_K_10_kappa_0.0193765_E_0_a_0.00842751_mu_0.15_pot_9_T_0.8.dat
+170.58user 0.29system 2:50.94elapsed 99%CPU (0avgtext+0avgdata 397012maxresident)k
+248inputs+2720outputs (0major+2917minor)pagefaults 0swaps

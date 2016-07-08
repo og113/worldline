@@ -8,7 +8,7 @@ oflag=false # is there an outfile?
 mflag=false # do we want to print min or max?
 bflag=false # do we want to print beta?
 kflag=false
-K=11
+K=8
 
 # checking if outFile required and getting filename if so
 options=':o:K:mbc'
@@ -45,7 +45,7 @@ do
 	if $bflag
 	then
 		T=$(echo "$@" | sed -n 's/.*T_\([0-9.]\+\).*.dat/\1/ p');
-		beta=$(bc <<< "scale=5;1.0/$T");
+		beta=$(bc <<< "scale=6;1.0/$T");
 	fi
 	
 	if [ -e "$f" ] && [ -f "$f" ];
@@ -81,12 +81,12 @@ else
 fi
 
 
-# plotting
+# string to plot
 if $single
 then
 	gargs="inFile='$m'"
 else
-	gargs="inFiles='$m'"
+	gargs="inFiles='$m'"	
 fi
 
 if $oflag
@@ -102,4 +102,5 @@ then
 	gargs+="; beta=$beta"
 fi
 
+# plotting
 gnuplot -e "$gargs" $gpFile;

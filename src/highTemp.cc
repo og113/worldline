@@ -53,7 +53,7 @@ double TIntegrand (double x, void* parameters) {
 		cerr << "TIntegrand error: sqrt(" << (-E + 2.0 - x - kappa/4.0/PI/x) << ")" << endl;
 		cerr << "x = "<<  x << endl;
 	}
-	return 2.0/sqrt(-E + 2.0 - x - kappa/4.0/PI/x);
+	return 2.0/2.0/sqrt(-E + 2.0 - x - kappa/4.0/PI/x);
 }
 
 double TIntegral (double E, void* parameters) {
@@ -114,7 +114,7 @@ double LIntegrand (double x, void* parameters) {
 		cerr << "LIntegrand error: sqrt(" << (-E + 2.0 - x - kappa/4.0/PI/x) << ")" << endl;
 		cerr << "x = " << x << endl;
 	}
-	return sqrt(1.0 + 0.25*(2.0 - E - x - kappa/4.0/PI/x))/sqrt(2.0 - E - x - kappa/4.0/PI/x);
+	return sqrt(1.0 + 0.25*4.0*(2.0 - E - x - kappa/4.0/PI/x))/2.0/sqrt(2.0 - E - x - kappa/4.0/PI/x);
 }
 
 double LIntegral (double x, void* parameters) {
@@ -196,7 +196,7 @@ double S0Integrand (double x, void* parameters) {
 		cerr << "S0Integrand error: sqrt(" << (-E + 2.0 - x - kappa/4.0/PI/x) << ")" << endl;
 		cerr << "x = " << x << endl;
 	}
-	return (2.0 - x - kappa/4.0/PI/x)/sqrt(2.0 - E - x - kappa/4.0/PI/x);
+	return 2.0*(2.0 - x - kappa/4.0/PI/x)/2.0/sqrt(2.0 - E - x - kappa/4.0/PI/x);
 }
 
 double S0Integral (double E, void* parameters) {
@@ -326,7 +326,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	number Ethreshold = 2.0*(1.0-sqrt(kappa/4.0/PI));
 	number E = (fixBeta? 1.0: p.P4);
 	number beta = ((p.T)>sqrt(MIN_NUMBER) && fixBeta? 1.0/(p.T): 0.0);
-	number betaMin = sqrt(2.0)*pow(PI,3.0/4.0)*pow(kappa,0.25);
+	number betaMin = sqrt(0.5)*pow(PI,3.0/4.0)*pow(kappa,0.25);
 	if (E>Ethreshold) {
 		cerr << "highTemp error: E(" << E << ") above threshold(" << Ethreshold << ")" << endl;
 		return 1;
@@ -375,10 +375,10 @@ for (uint pl=0; pl<Npl; pl++) {
 	if (verbose) {
 		cout << "E = " << E << ", beta = " << beta << endl;
 		cout << "Ethreshold = " << Ethreshold << ", betaMin = " << betaMin << endl;
-		cout << "Ethreshold-E = " << Ethreshold-E << ", (pow(kappa,0.25)/1.11171)*(beta-betaMin) = " << (pow(kappa,0.25)/2.22341)*(beta-betaMin) << endl;
+		cout << "Ethreshold-E = " << Ethreshold-E << ", (pow(kappa,0.25)/1.11171)*(beta-betaMin) = " << (pow(kappa,0.25)/1.11171)*(beta-betaMin) << endl;
 	}
 
-	file = "data/highTemp/loops/dim_"+nts<uint>(dim)+"/K_"+nts(p.K)+"/highTemp_Kappa_"+nts(kappa)\
+	file = "data/highTemp/loops/dim_"+nts<uint>(dim)+"/K_"+nts(p.K)+"/highTemp_kappa_"+nts(kappa)\
 														+"_T_"+nts(1.0/beta)+"_rank_"+nts(0)+".dat";
 	
 	// calculating length
@@ -427,7 +427,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	}
 	
 	// finding action
-	number S = 4.0*S0Integral(E,&params) - E*beta;
+	number S = 2.0*S0Integral(E,&params) - E*beta;
 	number Sstraight = 2.0*beta*(1.0 - sqrt(kappa/4.0/PI));
 	cout << "S = " << S << ", Sstraight = " << Sstraight << ", Sstraight-S = " << Sstraight - S << endl;
     

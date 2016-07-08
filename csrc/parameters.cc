@@ -95,7 +95,7 @@ void Parameters::step(const ParametersRange& pr, const Parameters::Label& label,
 				P4 += j*stepSize;
 				break;	
 			case lambda:
-				stepSize = ((pr.Max).P4-(pr.Min).P4)/((pr.Steps)[label-1]-1.0);
+				stepSize = ((pr.Max).Lambda-(pr.Min).Lambda)/((pr.Steps)[label-1]-1.0);
 				Lambda += j*stepSize;
 				break;	
 			default:

@@ -48,10 +48,15 @@ if (loop && K==0) {
 	K=log2(v.size()/dim); // the -1 assumes a translation invariance lagrange multiplier (removed as floor result anyway)
 }
 
-if (binaryFile.empty() || asciiFile.empty()) {
-	cerr << "must provide two files as input" << endl;
+if (binaryFile.empty()) {
+	cerr << "must provide binary file as input" << endl;
 	cerr << binaryFile << ", " << asciiFile << endl;
 	return 1;
+}
+
+if (asciiFile.empty()) {
+	asciiFile = binaryFile;
+	asciiFile.Directory = "data/temp";
 }
 
 if (!binaryFile.exists()) {
@@ -67,6 +72,7 @@ if (loop) {
 	Loop<dim> l(K,0);
 	l.load(binaryFile);
 	l.saveAscii(asciiFile);
+	cout << "saving as loop with K=" << K << endl;
 }
 else {
 	vector<number> v;
@@ -74,6 +80,7 @@ else {
 	if (v.size()>pow(2,K) && K!=0)
 		v.resize(pow(2,K));
 	saveVectorAscii< vector<number> >(asciiFile,v);
+	cout << "saving as ascii vector with K=" << K << endl;
 }
 
 cout << "saved binary contents of " << binaryFile << " to " << asciiFile << " in ascii format." << endl;

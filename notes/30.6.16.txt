@@ -1,0 +1,15 @@
+so, the thermalDisjoint potential does not seem to be working.
+
+	- externalDisjoint converges for straight line input
+	- nonrelDisjoint converges for straight line input and for nonrel input (to two different solutions)
+	
+looking at mds and delta on first NR iteration:
+	- nonrelDisjoint (-fixdz 0): when lines are too far apart delta acts to move them closer, and vice versa; optimal distance at exactly sqrt(kappa/4.0/pi); delta also acts to move points very slightly in time, LHS up, RHS down.
+	- thermalDisjoint (-fixdz 0): for lambda from -0.2 to 0.2 mds is such as to correspond to the lines being too far apart (when compared with nonrelDisjoint). mds is smallest (absolutely) for lambda -0.2. unlike above, for small amounts too far apart delta is such as to push them further apart. for larger amounts too far apart delta acts to move them closer. delta also acts to move points slightly in time, LHS up, RHS down.
+	
+	
+	
+
+
+
+using reduced mass rather that total mass in generating nonrel solution makes the solutions curve more. this change has not yet been implemented in highTempParameters.cc. also unsure about whether it has been fully implemented in highTemp. need to look at how quantities like (rR-rL) change with the reduced mass.

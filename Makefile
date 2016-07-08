@@ -35,10 +35,10 @@ all: $(EXE) $(MPIEXE) common
 common: $(COMMONOBJS)
 
 .PHONY: monte
-monte: binaryToAscii circle common floop glmain loop loop2 schwingerRate
+monte: addVectors binaryToAscii circle common floop glmain loop loop2 schwingerRate
 
 .PHONY: nr
-nr: 3dPotentialExtrema binaryToAscii circle common highTemp highTempParameters nrmain perturbativeFiniteTemp
+nr: 3dPotentialExtrema addVectors binaryToAscii circle common highTemp highTempParameters nrmain perturbativeFiniteTemp
 
 #------------------------------------------------------------------------------------------------------------------------
 # targets, dependencies and rules for executables
@@ -46,6 +46,10 @@ nr: 3dPotentialExtrema binaryToAscii circle common highTemp highTempParameters n
 3dPotentialExtrema: $(ODIR)/3dPotentialExtrema.o $(COMMONOBJS) 
 	$(CC) -o $@ $^ $(CFLAGS) $(INCLUDES) $(LIBS)
 	@echo Simple compiler named 3dPotentialExtrema has been compiled
+
+addVectors: $(ODIR)/addVectors.o $(COMMONOBJS) 
+	$(CC) -o $@ $^ $(CFLAGS) $(INCLUDES) $(LIBS)
+	@echo Simple compiler named addVectors has been compiled
 
 binaryToAscii: $(ODIR)/binaryToAscii.o $(COMMONOBJS) 
 	$(CC) -o $@ $^ $(CFLAGS) $(INCLUDES) $(LIBS)

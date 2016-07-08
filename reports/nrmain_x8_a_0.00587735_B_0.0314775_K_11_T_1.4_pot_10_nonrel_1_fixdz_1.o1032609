@@ -1,0 +1,20 @@
+using inputs file nrinputs/highTemp/inputs_K_11_T_1.4
+timenumber: 160707165518
+looping over 1 steps
+loading loops from:
+data/highTemp/loops/dim_4/K_11/highTemp_kappa_0.0314775_T_1.4_rank_0.dat
+  pl run        len         i0          s        sol       solM      delta     E_cons  dx*kg_max     ic_max     cc_max       dx/a
+   0   1       1.43   -0.03809      1.357  0.0008455   0.001955    0.00693     0.4059    0.07027  9.282e-07          0     0.1188
+   0   2       1.43   -0.03675      1.357   1.81e-05  1.459e-05   0.006102      0.406    0.05562  2.031e-06          0     0.1188
+   0   3      1.429   -0.03603      1.357  2.638e-05  3.652e-05   0.002893     0.4062    0.03967  1.444e-06          0     0.1187
+   0   4      1.429   -0.03585      1.357  6.983e-06  9.218e-06  0.0006521     0.4063    0.03177  3.394e-07          0     0.1187
+   0   5      1.429   -0.03593      1.357  2.828e-07  2.959e-07  0.0001261     0.4063    0.03341  2.142e-07          0     0.1187
+   0   6      1.429   -0.03592      1.357  1.232e-08  1.544e-08  1.043e-06     0.4063    0.03307  2.104e-07          0     0.1187
+
+    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       61.11e+03      11       1 0.03148       00.005877     0.1           0         1.4        1.4289     -0.035792        1.3572
+
+    results:      results/nr/nr3.csv
+          x:data/nr/loops/dim_4/K_11/loop_kappa_0.0314775_E_0_a_0.00587735_T_1.4_pot_10.dat
+1113.13user 0.88system 18:33.99elapsed 100%CPU (0avgtext+0avgdata 1075464maxresident)k
+8inputs+160outputs (0major+9794minor)pagefaults 0swaps

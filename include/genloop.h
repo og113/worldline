@@ -131,6 +131,9 @@ uint posNeighDisjoint(const uint& j, const uint& N);
 // negNeighDisjoint
 uint negNeighDisjoint(const uint& j, const uint& N);
 
+// oppNeigh
+uint oppNeigh(const uint& j, const uint& N);
+
 // Distance squared
 template <uint Dim>
 number DistanceSquared(const Point<Dim>&, const Point<Dim>&);

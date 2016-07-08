@@ -315,11 +315,11 @@ T mod(const T& x, const T& min, const T& max) {
 		Max = min;
 	}
 	else {
-		cerr << "mod error, range of size zero" << endl;
+		cerr << "mod error: range of size zero" << endl;
 		return 1.0;
 	}
 		
-	if (x>=Min && x<=Max)
+	if (x>Min && x<=Max)
 		return x;
 	else if (x>Max) {
 		int ranges = (int)((x-Min)/(Max-Min));

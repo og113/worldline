@@ -67,6 +67,14 @@ void I0 (const uint& j, const Loop<Dim>& l, const number& f, number& result);
 template <uint Dim>
 void I0Disjoint (const uint& j, const Loop<Dim>& l, const number& beta, const number& f, number& result);
 
+// In
+template <uint Dim>
+void In (const uint& j, const Loop<Dim>& l, const number& n, const number& f, number& result);
+
+// InDisjoint
+template <uint Dim>
+void InDisjoint (const uint& j, const Loop<Dim>& l, const number& n, const number& beta, const number& f, number& result);
+
 // Angle
 template <uint Dim>
 void Angle (const uint& j, const Loop<Dim>& l, const number& f, number& result);
@@ -106,6 +114,14 @@ void Vthr (const uint& j, const uint& k, const Loop<Dim>& l, const number& beta,
 // VthrDisjoint
 template <uint Dim>
 void VthrDisjoint (const uint& j, const uint& k, const Loop<Dim>& l, const number& beta, const number& a, const number& f, number& result);
+
+// VnonrelDisjoint
+template <uint Dim>
+void VnonrelDisjoint (const uint& j, const Loop<Dim>& l, const number& beta, const number& f, number& result);
+
+// VnonrelrDisjoint
+template <uint Dim>
+void VnonrelrDisjoint (const uint& j, const Loop<Dim>& l, const number& beta, const number& a, const number& f, number& result);
 
 // Gaussian
 template <uint Dim>
@@ -209,21 +225,37 @@ void mdDistPow_nr(const uint& j, const uint& mu, const Loop<Dim>& l, const numbe
 template<uint Dim>
 void ddDistPow_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l, const number& w, const number& f, mat& m);
 
-// mdI_nr
+// mdI0_nr
 template<uint Dim>
-void mdI_nr(const uint& j, const uint& mu, const Loop<Dim>& l, const number& f, vec& v);
+void mdI0_nr(const uint& j, const uint& mu, const Loop<Dim>& l, const number& f, vec& v);
 
-// ddI_nr
+// ddI0_nr
 template<uint Dim>
-void ddI_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l, const number& f, mat& m);
+void ddI0_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l, const number& f, mat& m);
 
-// mdIDisjoint_nr
+// mdI0Disjoint_nr
 template<uint Dim>
-void mdIDisjoint_nr(const uint& j, const uint& mu, const Loop<Dim>& l, const number& beta, const number& f, vec& v);
+void mdI0Disjoint_nr(const uint& j, const uint& mu, const Loop<Dim>& l, const number& beta, const number& f, vec& v);
 
-// ddIDisjoint_nr
+// ddI0Disjoint_nr
 template<uint Dim>
-void ddIDisjoint_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l, const number& beta, const number& f, mat& m);
+void ddI0Disjoint_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l, const number& beta, const number& f, mat& m);
+
+// mdIn_nr
+template<uint Dim>
+void mdIn_nr(const uint& j, const uint& mu, const Loop<Dim>& l, const number& n, const number& f, vec& v);
+
+// ddIn_nr
+template<uint Dim>
+void ddIn_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l, const number& n, const number& f, mat& m);
+
+// mdInDisjoint_nr
+template<uint Dim>
+void mdInDisjoint_nr(const uint& j, const uint& mu, const Loop<Dim>& l, const number& n, const number& beta, const number& f, vec& v);
+
+// ddInDisjoint_nr
+template<uint Dim>
+void ddInDisjoint_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l, const number& n, const number& beta, const number& f, mat& m);
 
 // mdS0_nr
 template<uint Dim>
@@ -305,6 +337,15 @@ void mdVthr_nr(const uint& j, const uint& mu, const uint& i, const Loop<Dim>& l,
 template<uint Dim>
 void mdVthrDisjoint_nr(const uint& j, const uint& mu, const uint& i, const Loop<Dim>& l,\
 					 	const number& beta, const number& a, const number& f, vec& v);
+					 	
+// mdVnonrelDisjoint_nr
+template<uint Dim>
+void mdVnonrelDisjoint_nr(const uint& j, const uint& mu, const Loop<Dim>& l, const number& beta, const number& f, vec& v);
+					 	
+// mdVnonrelrDisjoint_nr
+template<uint Dim>
+void mdVnonrelrDisjoint_nr(const uint& j, const uint& mu, const Loop<Dim>& l, const number& beta, const number& a\
+						, const number& f, vec& v);
 
 // mdGaussian_nr
 template<uint Dim>
@@ -343,6 +384,16 @@ void ddVthr_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, con
 // ddVthrDisjoint_nr
 template<uint Dim>
 void ddVthrDisjoint_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l,\
+						 const number& beta, const number& a, const number& f, mat& m);
+
+// ddVnonrelDisjoint_nr
+template<uint Dim>
+void ddVnonrelDisjoint_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l,\
+						 const number& beta, const number& f, mat& m);
+						 
+// ddVnonrelrDisjoint_nr
+template<uint Dim>
+void ddVnonrelrDisjoint_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l,\
 						 const number& beta, const number& a, const number& f, mat& m);
 
 // ddGaussian_nr
@@ -395,6 +446,14 @@ void PI0_nr(const Loop<Dim>& l, const uint& loc, const uint& mu, const number& f
 template<uint Dim>
 void PI0Disjoint_nr(const Loop<Dim>& l, const uint& loc, const uint& mu, const number& beta, const number& f, vec& v);
 
+// PIn_nr
+template<uint Dim>
+void PIn_nr(const Loop<Dim>& l, const uint& loc, const uint& mu, const number& n, const number& f, vec& v);
+
+// PInDisjoint_nr
+template<uint Dim>
+void PInDisjoint_nr(const Loop<Dim>& l, const uint& loc, const uint& mu, const number& n, const number& beta, const number& f, vec& v);
+
 // PVor_nr
 template<uint Dim>
 void PVor_nr(const Loop<Dim>& l, const uint& j, const uint& mu, const uint& k, const number& a, const number& f, vec& v);
@@ -406,6 +465,14 @@ void PVthr_nr(const Loop<Dim>& l, const uint& j, const uint& mu, const uint& k, 
 // PVthrDisjoint_nr
 template<uint Dim>
 void PVthrDisjoint_nr(const Loop<Dim>& l, const uint& j, const uint& mu, const uint& k, const number& beta, const number& a, const number& f, vec& v);
+
+// PVnonrelDisjoint_nr
+template<uint Dim>
+void PVnonrelDisjoint_nr(const Loop<Dim>& l, const uint& loc, const uint& mu, const number& beta, const number& f, vec& v);
+
+// PVnonrelrDisjoint_nr
+template<uint Dim>
+void PVnonrelrDisjoint_nr(const Loop<Dim>& l, const uint& j, const uint& mu, const number& beta, const number& a, const number& f, vec& v);
 
 // PGaussian_nr
 template<uint Dim>
@@ -440,5 +507,9 @@ void printAsLoop(const string& f, const uint& Dim, const vec& v, const uint len)
 // filenameLoop
 template<uint Dim>
 Filename filenameLoopNR(const Parameters&);
+
+// filenameLoop
+template<uint Dim>
+Filename filenameThermalNR(const Parameters&);
 
 #endif // __NRLOOP_H_INCLUDED__
