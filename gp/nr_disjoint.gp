@@ -6,11 +6,11 @@ set key below
 set autoscale
 set xtic auto
 set ytic auto
-set title "S vs T;  {/Symbol k}=0.933055, a=0.07, K=11"
+set title "z_{max} vs T;  {/Symbol k}=0.933055, a=0.07, K=11"
 set xlabel "T"
-set ylabel "S"
+set ylabel "z_{max}"
 
 
-plot file1 using 1:2 with linespoints lt 1 lc rgb "red"
+plot file1 using 1:3 with linespoints lt 1 lc rgb "red"
 
 pause -1
