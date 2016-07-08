@@ -45,7 +45,7 @@ if (argc % 2 && argc>1) {
 if (loop && K==0) {
 	vector<number> v;
 	loadVectorBinary< vector<number> >(binaryFile,v);
-	K=log2(v.size()/dim); // the -1 assumes a translation invariance lagrange multiplier
+	K=log2(v.size()/dim); // the -1 assumes a translation invariance lagrange multiplier (removed as floor result anyway)
 }
 
 if (binaryFile.empty()) {
