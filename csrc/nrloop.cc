@@ -2062,16 +2062,16 @@ template <> void mdGaussianDisjoint_nr<4>(const uint& j, const uint& mu, const u
 	uint pi = posNeighDisjoint(i,l.size());
 		
 	if (i!=j) {
-		number B_ij = DistanceSquared(l[i],l[j]); // not DistanceSquaredDisjoint(l[i],l[j],beta);
+		number B_ij = DistanceSquared(l[i],l[j]);
 		number T_ij = DotDisjoint(l[pi],l[i],l[pj],l[j],beta);
 		number E_ij = exp(-B_ij/a/a);
-		res += + 2.0*E_ij*DXDisjoint(l,i,pi,mu,beta) \
- 			- (4.0*E_ij*DX(l,j,i,mu)*T_ij)/pow(a,2); // no need for DXDisjoint here
+		res += + 2.0*E_ij*(-DXDisjoint(l,i,mu,beta)) \
+ 			- (4.0*E_ij*DX(l,j,i,mu)*T_ij)/pow(a,2);
 	}
 	if (i!=mj) {
-		number B_imj = DistanceSquared(l[i],l[mj]); // not DistanceSquaredDisjoint(l[i],l[mj],beta);
+		number B_imj = DistanceSquared(l[i],l[mj]);
 		number E_imj = exp(-B_imj/a/a);
-		res += - 2.0*E_imj*DXDisjoint(l,i,pi,mu,beta);
+		res += - 2.0*E_imj*(-DXDisjoint(l,i,mu,beta));
 	}
 		
 	//coincident terms	
@@ -2901,13 +2901,13 @@ template <> void ddGaussian_nr<4> (const uint& j, const uint& mu, const uint& k,
 
 	// terms where mu not nexcessarily equal to nu, without sums
 	if (k!=j)
-		res +=  - (4.0*E_jk*DX(l,j,pj,nu)*DX(l,j,k,mu))/pow(a,2) \
-				 + (4.0*E_jk*DX(l,j,k,nu)*DX(l,k,pk,mu))/pow(a,2) \
+		res +=  - (4.0*E_jk*(-DX(l,j,nu))*DX(l,j,k,mu))/pow(a,2) \
+				 + (4.0*E_jk*DX(l,j,k,nu)*(-DX(l,k,mu)))/pow(a,2) \
 				 - (8.0*E_jk*DX(l,j,k,mu)*DX(l,j,k,nu)*T_jk)/pow(a,4); //
 	if (k!=mj)
-		res +=  - (4.0*E_mjk*DX(l,mj,k,nu)*DX(l,k,pk,mu))/pow(a,2); //
+		res +=  - (4.0*E_mjk*DX(l,mj,k,nu)*(-DX(l,k,mu)))/pow(a,2); //
 	if (k!=pj)
-		res += + (4.0*E_jmk*DX(l,j,pj,nu)*DX(l,j,mk,mu))/pow(a,2); //
+		res += + (4.0*E_jmk*(-DX(l,j,nu))*DX(l,j,mk,mu))/pow(a,2); //
 	
 	// terms with sums
 	if (k==j || k==mj || k==pj) {
@@ -2925,16 +2925,16 @@ template <> void ddGaussian_nr<4> (const uint& j, const uint& mu, const uint& k,
 			T_ij = Dot(l[pi],l[i],l[pj],l[j]);
 			
 			if (k==j && i!=j) {
-				res += - (4.0*E_ij*DX(l,i,pi,nu)*DX(l,j,i,mu))/pow(a,2) \
-						 - (4.0*E_ij*DX(l,i,pi,mu)*DX(l,j,i,nu))/pow(a,2) \
+				res += - (4.0*E_ij*(-DX(l,i,nu))*DX(l,j,i,mu))/pow(a,2) \
+						 - (4.0*E_ij*(-DX(l,i,mu))*DX(l,j,i,nu))/pow(a,2) \
 						 + (8.0*E_ij*DX(l,j,i,mu)*DX(l,j,i,nu)*T_ij)/pow(a,4);
 				if (mu==nu)
 					res +=  - (4.0*E_ij*T_ij)/pow(a,2); //
 			}
 			if (k==mj && i!=mj) 
-				res +=  (4.0*E_imj*DX(l,i,pi,mu)*DX(l,mj,i,nu))/pow(a,2);
+				res +=  (4.0*E_imj*(-DX(l,i,mu))*DX(l,mj,i,nu))/pow(a,2);
 			if (k==pj && i!=j) 
-				res += + (4.0*E_ij*DX(l,i,pi,nu)*DX(l,j,i,mu))/pow(a,2);
+				res += + (4.0*E_ij*(-DX(l,i,nu))*DX(l,j,i,mu))/pow(a,2);
 			
 		}		
 	}
