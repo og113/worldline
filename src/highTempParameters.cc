@@ -87,9 +87,12 @@ for (uint pl=0; pl<Npl; pl++) {
 		number deltaKappa = B*kappaMax/gg; // deltaKappa << B*kappaMax, so that dr<<r (harder than dr<<beta if sqrt(kappa/4.0/PI)<beta)
 		number kappaMin = pow(beta,6)/pow(PI,3); // need to check this result. To unsure only 1 negative eigenvalue.
 		if (kappaMin>kappaMax) {
-			cerr << "highTempParametersError: "////////////////////////////////////////////
+			cerr << "highTempParametersError: kappaMin(" << kappaMin << ") > kappaMax(" << kappaMax << ")" << endl;
+			pass = true;
 		}
 		number kappaMinSoft = kappaMax - deltaKappa;
+		if (kappaMinSoft<kappaMin)
+			kappaMinSoft=kappaMin;
 		(prOut.Min).B = kappaMinSoft;
 		(prOut.Max).B = kappaMax;
 		(prOut.Min).G = 1.0;
