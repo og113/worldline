@@ -241,8 +241,10 @@ for (uint pl=0; pl<Npl; pl++) {
 	// defining some derived parameters	
 	uint N = pow(2,p.K);
 	uint zm = dim;
-	if (disjoint && fixall)
+	if (disjoint)
 		zm += 2;
+	if (fixall)
+		zm += dim;
 	uint NT = N*dim+zm;
 	number R = 1.0; //////////////////////////////////
 	Point<dim> P;
@@ -798,26 +800,36 @@ for (uint pl=0; pl<Npl; pl++) {
 		
 		// lagrange multiplier terms
 		for (mu=0; mu<zm; mu++) {
-			for (j=0; j<N; j++) {	
-				if (mu>(dim-1) && fixall) {
-					if (mu==(dim-1) && j<N/2) {	// fixing average time coord of LHS
-						uint locj = j*dim+(dim-1), locz = N*dim+mu;
+			for (j=0; j<N; j++) {
+				if (mu<dim && !fixall) {
+					uint locj = j*dim+mu, locz = N*dim+mu;
+					mds(locz) -= x[locj];
+					mds(locj) -= x[locz];
+				
+					dds(locj,locz) += 1.0;
+					dds(locz,locj) += 1.0;
+				}
+				else if (mu<2*dim && fixall) {
+					if (j<N/2) {	// fixing average (uint)(mu/2) coord of LHS
+						uint locj = j*dim+(uint)(mu/2), locz = N*dim+mu;
 						mds(locz) -= x[locj];
 						mds(locj) -= x[locz];
 				
 						dds(locj,locz) += 1.0;
 						dds(locz,locj) += 1.0;
 					}
-					else if (mu==dim && j>N/2) {// fixing average time coord of RHS
-						uint locj = j*dim+(dim-1), locz = N*dim+mu;
+					else if (j>N/2) {// fixing average (uint)(mu/2) coord of RHS
+						uint locj = j*dim+(uint)(mu/2), locz = N*dim+mu;
 						mds(locz) -= x[locj];
 						mds(locj) -= x[locz];
 				
 						dds(locj,locz) += 1.0;
 						dds(locz,locj) += 1.0;
 					}
-					/*else if ( (mu==(dim+1) && j==(N/2-1)) || (mu==(dim+2) && j==(N-1)) ) {
-						uint nu = dim-2; // fixing dz=0 at top and bottom of LHS and RHS
+				}
+				else if (disjoint) {
+					if ( (mu==(1+(uint)fixall)*dim && j==(N/2-1)) || (mu==((1+(uint)fixall)*dim+2) && j==(N-1)) ) {
+						uint nu = dim-2; // fixing dz=0 at top and bottom of RHS
 						uint pj = (disjoint? posNeighDisjoint(j,N): posNeigh(j,N));
 						uint locj = j*dim+nu, locpj = pj*dim+nu, locz = N*dim+mu;
 						number ds = 1.0;///(number)N; // using 1/N makes mds large here
@@ -829,8 +841,8 @@ for (uint pl=0; pl<Npl; pl++) {
 						dds(locz,locpj)  	+= 1.0/ds;
 						dds(locj,locz) 		+= -1.0/ds;
 						dds(locz,locj) 		+= -1.0/ds;
-					}*/
-					else if (mu==(dim+1) && j==(N/2-1)) { // fixing relative heights of top and bottom points on both sides
+					}
+					/*else if (mu==(dim+1) && j==(N/2-1)) { // fixing relative heights of top and bottom points on both sides
 						nu = dim-1;
 						uint oj = oppNeigh(j,N);
 						uint locj = j*dim+nu, locoj = oj*dim+nu, locz = N*dim+mu;
@@ -843,15 +855,7 @@ for (uint pl=0; pl<Npl; pl++) {
 						dds(locj,locz) 		+= -1.0;
 						dds(locz,locj) 		+= -1.0;
 						
-					}
-				}
-				else if (mu<dim){
-					uint locj = j*dim+mu, locz = N*dim+mu;
-					mds(locz) -= x[locj];
-					mds(locj) -= x[locz];
-				
-					dds(locj,locz) += 1.0;
-					dds(locz,locj) += 1.0;
+					}*/
 				}
 			}
 		}
