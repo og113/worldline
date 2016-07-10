@@ -533,6 +533,7 @@ for (uint pl=0; pl<Npl; pl++) {
     			
     			(loop[v])[dim-2] = zi;
     			(loop[v])[dim-1] = ti;
+			
     		}
     		params.f *= 0.5;
     	}
