@@ -242,7 +242,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	uint N = pow(2,p.K);
 	uint zm = dim;
 	if (disjoint && fixall)
-		zm += 3;
+		zm += 2;
 	uint NT = N*dim+zm;
 	number R = 1.0; //////////////////////////////////
 	Point<dim> P;
@@ -799,7 +799,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		// lagrange multiplier terms
 		for (mu=0; mu<zm; mu++) {
 			for (j=0; j<N; j++) {	
-				if (mu>=(dim-1) && fixall) {
+				if (mu>(dim-1) && fixall) {
 					if (mu==(dim-1) && j<N/2) {	// fixing average time coord of LHS
 						uint locj = j*dim+(dim-1), locz = N*dim+mu;
 						mds(locz) -= x[locj];
@@ -816,7 +816,7 @@ for (uint pl=0; pl<Npl; pl++) {
 						dds(locj,locz) += 1.0;
 						dds(locz,locj) += 1.0;
 					}
-					else if ( (mu==(dim+1) && j==(N/2-1)) || (mu==(dim+2) && j==(N-1)) ) {
+					/*else if ( (mu==(dim+1) && j==(N/2-1)) || (mu==(dim+2) && j==(N-1)) ) {
 						uint nu = dim-2; // fixing dz=0 at top and bottom of LHS and RHS
 						uint pj = (disjoint? posNeighDisjoint(j,N): posNeigh(j,N));
 						uint locj = j*dim+nu, locpj = pj*dim+nu, locz = N*dim+mu;
@@ -829,8 +829,8 @@ for (uint pl=0; pl<Npl; pl++) {
 						dds(locz,locpj)  	+= 1.0/ds;
 						dds(locj,locz) 		+= -1.0/ds;
 						dds(locz,locj) 		+= -1.0/ds;
-					}
-					/*else if (mu==(dim+1) && j==(N/2-1)) { // fixing relative heights of top and bottom points on both sides
+					}*/
+					else if (mu==(dim+1) && j==(N/2-1)) { // fixing relative heights of top and bottom points on both sides
 						nu = dim-1;
 						uint oj = oppNeigh(j,N);
 						uint locj = j*dim+nu, locoj = oj*dim+nu, locz = N*dim+mu;
@@ -843,7 +843,7 @@ for (uint pl=0; pl<Npl; pl++) {
 						dds(locj,locz) 		+= -1.0;
 						dds(locz,locj) 		+= -1.0;
 						
-					}*/
+					}
 				}
 				else if (mu<dim){
 					uint locj = j*dim+mu, locz = N*dim+mu;
