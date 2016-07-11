@@ -62,6 +62,7 @@ bool nonrelativistic = false;
 bool step = true;
 bool weak = false;
 bool eigen = false;
+bool includeLagrangeMultipliers = false;
 bool curvature = false;
 bool conservation = false;
 bool old = true;
@@ -92,6 +93,7 @@ if (argc % 2 && argc>1) {
 		else if (id.compare("step")==0) step = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("weak")==0) weak = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("eigen")==0) eigen = (stn<uint>(argv[2*j+2])!=0);
+		else if (id.compare("includeLagrangeMultipliers")==0) includeLagrangeMultipliers = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("curvature")==0) curvature = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("conservation")==0) conservation = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("old")==0) old = (stn<uint>(argv[2*j+2])!=0);
@@ -1448,8 +1450,11 @@ for (uint pl=0; pl<Npl; pl++) {
 
 	// eigenvalues, if required
 	if (eigen) {
-		mat dds_wlm = dds.block(0,0,dim*N,dim*N); // dds without Lagrange multipliers
-		//mat dds_wlm = dds;
+		mat dds_wlm;
+		if (includeLagrangeMultipliers)
+			dds_wlm = dds;
+		else
+			dds_wlm = dds.block(0,0,dim*N,dim*N); // dds without Lagrange multipliers
 		number eigenTol = 1.0e-16*pow(dim*N,2);
 		number cos = 0.0;
 		uint negEigs = 0;
@@ -1468,8 +1473,10 @@ for (uint pl=0; pl<Npl; pl++) {
 				negEigs++;
 			if (abs((eigensolver.eigenvalues())[j])<eigenTol)
 				zeroEigs++;
-			//cos = mds.dot((Eigen::VectorXd)(eigensolver.eigenvectors()).col(j))/mds.norm();
-			cos = (mds.head(dim*N)).dot((Eigen::VectorXd)(eigensolver.eigenvectors()).col(j))/(mds.head(dim*N)).norm();
+			if (includeLagrangeMultipliers)
+				cos = mds.dot((Eigen::VectorXd)(eigensolver.eigenvectors()).col(j))/mds.norm();
+			else
+				cos = (mds.head(dim*N)).dot((Eigen::VectorXd)(eigensolver.eigenvectors()).col(j))/(mds.head(dim*N)).norm();
 			cout << (eigensolver.eigenvalues())[j] << " " << cos << endl;
 			eigenFile.ID = "eigenvector"+nts(j);
 			saveVectorBinary(eigenFile,(Eigen::VectorXd)((eigensolver.eigenvectors()).col(j)));
