@@ -818,7 +818,7 @@ for (uint pl=0; pl<Npl; pl++) {
 						dds(locj,locz) += 1.0;
 						dds(locz,locj) += 1.0;
 					}
-					else if (j>N/2) {// fixing average (uint)(mu/2) coord of RHS
+					else if (j>=N/2) {// fixing average (uint)(mu/2) coord of RHS
 						uint locj = j*dim+(uint)(mu/2), locz = N*dim+mu;
 						mds(locz) -= x[locj];
 						mds(locj) -= x[locz];
@@ -828,7 +828,7 @@ for (uint pl=0; pl<Npl; pl++) {
 					}
 				}
 				else if (disjoint) {
-					if ( (mu==(1+(uint)fixall)*dim && j==(N/2-1)) || (mu==((1+(uint)fixall)*dim+2) && j==(N-1)) ) {
+					if ( (mu==(1+(uint)fixall)*dim && j==(N/2-1)) ) { // || (mu==((1+(uint)fixall)*dim+2) && j==(N-1)) ) {
 						uint nu = dim-2; // fixing dz=0 at top and bottom of RHS
 						uint pj = (disjoint? posNeighDisjoint(j,N): posNeigh(j,N));
 						uint locj = j*dim+nu, locpj = pj*dim+nu, locz = N*dim+mu;
@@ -842,7 +842,7 @@ for (uint pl=0; pl<Npl; pl++) {
 						dds(locj,locz) 		+= -1.0/ds;
 						dds(locz,locj) 		+= -1.0/ds;
 					}
-					/*else if (mu==(dim+1) && j==(N/2-1)) { // fixing relative heights of top and bottom points on both sides
+					/*if (mu==(1+(uint)fixall)*dim && j==(N/2-1)) { // fixing relative heights of top points on both sides
 						nu = dim-1;
 						uint oj = oppNeigh(j,N);
 						uint locj = j*dim+nu, locoj = oj*dim+nu, locz = N*dim+mu;
