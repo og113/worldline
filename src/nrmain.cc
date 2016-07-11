@@ -810,7 +810,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		// lagrange multiplier terms
 		for (mu=0; mu<zm; mu++) {
 			for (j=0; j<N; j++) {
-				if ((mu<(dim-1) && !fixall) || (mu=(dim-1) && (!fixtlr && !fixall))){
+				if ((mu<(dim-1) && !fixall) || (mu==(dim-1) && (!fixtlr && !fixall))){
 					uint locj = j*dim+mu, locz = N*dim+mu;
 					mds(locz) -= x[locj];
 					mds(locj) -= x[locz];
