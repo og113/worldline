@@ -62,14 +62,17 @@ bool nonrelativistic = false;
 bool step = true;
 bool weak = false;
 bool eigen = false;
+bool includeLagrangeMultipliers = false;
 bool curvature = false;
 bool conservation = false;
 bool old = true;
 bool gaussian = false;
 bool disjoint = false;
+bool fixdz = false;
 bool fixtlr = false;
 bool fixall = false;
 bool fixodt = false;
+bool fixdislr = false;
 bool extended = false;
 bool mu_a = false;
 bool pass = false;
@@ -91,6 +94,7 @@ if (argc % 2 && argc>1) {
 		else if (id.compare("step")==0) step = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("weak")==0) weak = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("eigen")==0) eigen = (stn<uint>(argv[2*j+2])!=0);
+		else if (id.compare("includeLagrangeMultipliers")==0) includeLagrangeMultipliers = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("curvature")==0) curvature = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("conservation")==0) conservation = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("old")==0) old = (stn<uint>(argv[2*j+2])!=0);
@@ -99,9 +103,11 @@ if (argc % 2 && argc>1) {
 		else if (id.compare("disjoint")==0) disjoint = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("extended")==0) extended = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("pass")==0) pass = (stn<uint>(argv[2*j+2])!=0);
+		else if (id.compare("fixdz")==0) fixdz = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("fixtlr")==0) fixtlr = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("fixall")==0) fixall = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("fixodt")==0) fixodt = (stn<uint>(argv[2*j+2])!=0);
+		else if (id.compare("fixdislr")==0) fixdislr = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("inputs")==0) inputsFile = (string)argv[2*j+2];
 		else if (id.compare("print")==0) printOpts = (string)argv[2*j+2];
 		else if (id.compare("pot")==0 || id.compare("potential")==0) potOpts = (string)argv[2*j+2];
@@ -112,6 +118,10 @@ if (argc % 2 && argc>1) {
 			return 1;
 		}
 	}
+}
+else {
+	cerr << "must provide an even number of arguments after ./nrmain" << endl;
+	return 1;
 }
 
 cout << "using inputs file " << inputsFile << endl;
@@ -248,8 +258,8 @@ for (uint pl=0; pl<Npl; pl++) {
 	// defining some derived parameters	
 	uint N = pow(2,p.K);
 	uint zm = dim;
-	if (disjoint)
-		zm += 1;
+	if (fixdz || fixodt)
+		zm += 1+(uint)fixdislr;
 	if (fixall)
 		zm += dim;
 	else if (fixtlr)
@@ -418,7 +428,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		interpolate(interpOld,interpNew);
 		loopToVector(interpNew,x);
 	}
-	if (x.size()<NT) {
+	if (x.size()<NT || pl==0) {
 		x.conservativeResize(NT);
 		for (uint mu=0; mu<zm; mu++)
 			x[N*dim+mu] = 1.0e-4;
@@ -810,7 +820,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		// lagrange multiplier terms
 		for (mu=0; mu<zm; mu++) {
 			for (j=0; j<N; j++) {
-				if ((mu<(dim-1) && !fixall) || (mu==(dim-1) && (!fixtlr && !fixall))){
+				if ( (mu<(dim-1) && !fixall) || (mu==(dim-1) && !fixtlr && !fixall) ){
 					uint locj = j*dim+mu, locz = N*dim+mu;
 					mds(locz) -= x[locj];
 					mds(locj) -= x[locz];
@@ -819,7 +829,7 @@ for (uint pl=0; pl<Npl; pl++) {
 					dds(locz,locj) += 1.0;
 				}
 				else if (mu<=dim && fixtlr) {
-					if (j<N/2) {	// fixing average (dim-1) coord of LHS
+					if (j<N/2 && mu==(dim-1)) {	// fixing average (dim-1) coord of LHS
 						uint locj = j*dim+(dim-1), locz = N*dim+mu;
 						mds(locz) -= x[locj];
 						mds(locj) -= x[locz];
@@ -827,7 +837,7 @@ for (uint pl=0; pl<Npl; pl++) {
 						dds(locj,locz) += 1.0;
 						dds(locz,locj) += 1.0;
 					}
-					else if (j>=N/2) {// fixing average (dim-1) coord of RHS
+					else if (j>=N/2&& mu==dim) {// fixing average (dim-1) coord of RHS
 						uint locj = j*dim+(dim-1), locz = N*dim+mu;
 						mds(locz) -= x[locj];
 						mds(locj) -= x[locz];
@@ -837,7 +847,7 @@ for (uint pl=0; pl<Npl; pl++) {
 					}
 				}
 				else if (mu<2*dim && fixall) {
-					if (j<N/2) {	// fixing average (uint)(mu/2) coord of LHS
+					if (j<N/2 && !(mu%2)) {	// fixing average (uint)(mu/2) coord of LHS
 						uint locj = j*dim+(uint)(mu/2), locz = N*dim+mu;
 						mds(locz) -= x[locj];
 						mds(locj) -= x[locz];
@@ -845,7 +855,7 @@ for (uint pl=0; pl<Npl; pl++) {
 						dds(locj,locz) += 1.0;
 						dds(locz,locj) += 1.0;
 					}
-					else if (j>=N/2) {// fixing average (uint)(mu/2) coord of RHS
+					else if (j>=N/2 && mu%2) {// fixing average (uint)(mu/2) coord of RHS
 						uint locj = j*dim+(uint)(mu/2), locz = N*dim+mu;
 						mds(locz) -= x[locj];
 						mds(locj) -= x[locz];
@@ -854,9 +864,10 @@ for (uint pl=0; pl<Npl; pl++) {
 						dds(locz,locj) += 1.0;
 					}
 				}
-				else if (disjoint) {
-					uint mucf = (1+(uint)fixall)*dim+(uint)fixodt;
-					if (mu==mucf && j==(N/2-1) && fixodt) { // fixing relative heights of top and bottom points on RHS
+				else if (fixdz || fixodt) {
+					uint mucf = (1+(uint)fixall)*dim+(uint)fixtlr;
+					if ( (mu==mucf && j==(N/2-1) && fixodt) || (mu==(mucf+1) && j==(N-1) && fixodt && fixdislr) ) {
+						// fixing relative heights of top and bottom points
 						nu = dim-1;
 						uint oj = oppNeigh(j,N);
 						uint locj = j*dim+nu, locoj = oj*dim+nu, locz = N*dim+mu;
@@ -870,21 +881,20 @@ for (uint pl=0; pl<Npl; pl++) {
 						dds(locz,locj) 		+= -1.0;
 						
 					}
-					else if ( (mu==mucf && j==(N/2-1))) {// || (mu==((1+(uint)fixall)*dim+2) && j==(N-1)) ) {
+					if ( ( mu==mucf && j==(N/2-1) && fixdz) || ( mu==(mucf+1) && j==(N-1) && fixdz && fixdislr) ){
 						uint nu = dim-2; // fixing dz=0 at top and bottom of RHS
 						uint pj = (disjoint? posNeighDisjoint(j,N): posNeigh(j,N));
 						uint locj = j*dim+nu, locpj = pj*dim+nu, locz = N*dim+mu;
 						number ds = 1.0;///(number)N; // using 1/N makes mds large here
 						mds(locz)  		-= (x[locpj]-x[locj])/ds;
 						mds(locpj)  	-= x[locz]/ds;
-						mds(locj)  		-= -x[locz]/ds;								
+						mds(locj)  		-= -x[locz]/ds;							
 
 						dds(locpj,locz)  	+= 1.0/ds;
 						dds(locz,locpj)  	+= 1.0/ds;
 						dds(locj,locz) 		+= -1.0/ds;
 						dds(locz,locj) 		+= -1.0/ds;
 					}
-					
 				}
 			}
 		}
@@ -1125,16 +1135,18 @@ for (uint pl=0; pl<Npl; pl++) {
 			
 			if (po==PrintOptions::x || po==PrintOptions::all) {
 				printAsLoop(early,dim,x,N*dim);
+				//saveVectorAscii(early,x);
 				printf("%12s%50s\n","x:",((string)early).c_str());
 			}
 			if (po==PrintOptions::mds || po==PrintOptions::all) {
 				early.ID = "mdsEarly1";
 				printAsLoop(early,dim,mds,N*dim);
+				//saveVectorAscii(early,mds);
 				printf("%12s%50s\n","mds:",((string)early).c_str());
 			}
 			if (po==PrintOptions::dds || po==PrintOptions::all) {
 				early.ID = "ddsEarly1";
-				saveMatrixAscii(early,dds); // have stopped this because it just takes up too much space
+				//saveMatrixAscii(early,dds); // have stopped this because it just takes up too much space
 				printf("%12s%50s\n","dds:",((string)early).c_str());
 			}
 			if (po==PrintOptions::curvature || po==PrintOptions::all) {
@@ -1440,8 +1452,11 @@ for (uint pl=0; pl<Npl; pl++) {
 
 	// eigenvalues, if required
 	if (eigen) {
-		mat dds_wlm = dds.block(0,0,dim*N,dim*N); // dds without Lagrange multipliers
-		//mat dds_wlm = dds;
+		mat dds_wlm;
+		if (includeLagrangeMultipliers)
+			dds_wlm = dds;
+		else
+			dds_wlm = dds.block(0,0,dim*N,dim*N); // dds without Lagrange multipliers
 		number eigenTol = 1.0e-16*pow(dim*N,2);
 		number cos = 0.0;
 		uint negEigs = 0;
@@ -1460,8 +1475,10 @@ for (uint pl=0; pl<Npl; pl++) {
 				negEigs++;
 			if (abs((eigensolver.eigenvalues())[j])<eigenTol)
 				zeroEigs++;
-			//cos = mds.dot((Eigen::VectorXd)(eigensolver.eigenvectors()).col(j))/mds.norm();
-			cos = (mds.head(dim*N)).dot((Eigen::VectorXd)(eigensolver.eigenvectors()).col(j))/(mds.head(dim*N)).norm();
+			if (includeLagrangeMultipliers)
+				cos = mds.dot((Eigen::VectorXd)(eigensolver.eigenvectors()).col(j))/mds.norm();
+			else
+				cos = (mds.head(dim*N)).dot((Eigen::VectorXd)(eigensolver.eigenvectors()).col(j))/(mds.head(dim*N)).norm();
 			cout << (eigensolver.eigenvalues())[j] << " " << cos << endl;
 			eigenFile.ID = "eigenvector"+nts(j);
 			saveVectorBinary(eigenFile,(Eigen::VectorXd)((eigensolver.eigenvectors()).col(j)));
