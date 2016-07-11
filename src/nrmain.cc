@@ -799,17 +799,10 @@ for (uint pl=0; pl<Npl; pl++) {
 		// lagrange multiplier terms
 		for (mu=0; mu<zm; mu++) {
 			for (j=0; j<N; j++) {	
-				if (mu>=(dim-1) && fixall) {
-					if (mu==(dim-1) && j<N/2) {	// fixing average time coord of LHS
-						uint locj = j*dim+(dim-1), locz = N*dim+mu;
-						mds(locz) -= x[locj];
-						mds(locj) -= x[locz];
-				
-						dds(locj,locz) += 1.0;
-						dds(locz,locj) += 1.0;
-					}
-					else if (mu==dim && j>N/2) {// fixing average time coord of RHS
-						uint locj = j*dim+(dim-1), locz = N*dim+mu;
+				if (mu>=(dim-1) && fixall && disjoint) {
+					if ((mu==(dim-1) && j<N/2) || (mu==dim && j>=N/2)) {	// fixing average time coord of LHS and RHS
+						uint nu = dim-1;
+						uint locj = j*dim+nu, locz = N*dim+mu;
 						mds(locz) -= x[locj];
 						mds(locj) -= x[locz];
 				
@@ -830,22 +823,8 @@ for (uint pl=0; pl<Npl; pl++) {
 						dds(locj,locz) 		+= -1.0/ds;
 						dds(locz,locj) 		+= -1.0/ds;
 					}
-					/*else if (mu==(dim+1) && j==(N/2-1)) { // fixing relative heights of top and bottom points on both sides
-						nu = dim-1;
-						uint oj = oppNeigh(j,N);
-						uint locj = j*dim+nu, locoj = oj*dim+nu, locz = N*dim+mu;
-						mds(locz)  		-= x[locoj]-x[locj];
-						mds(locoj)  	-= x[locz];
-						mds(locj)  		-= -x[locz];								
-
-						dds(locoj,locz)  	+= 1.0;
-						dds(locz,locoj)  	+= 1.0;
-						dds(locj,locz) 		+= -1.0;
-						dds(locz,locj) 		+= -1.0;
-						
-					}*/
 				}
-				else if (mu<dim){
+				else if (mu<dim) {
 					uint locj = j*dim+mu, locz = N*dim+mu;
 					mds(locz) -= x[locj];
 					mds(locj) -= x[locz];
