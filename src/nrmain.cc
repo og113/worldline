@@ -68,6 +68,7 @@ bool conservation = false;
 bool old = true;
 bool gaussian = false;
 bool disjoint = false;
+bool fixdz = false;
 bool fixtlr = false;
 bool fixall = false;
 bool fixodt = false;
@@ -102,6 +103,7 @@ if (argc % 2 && argc>1) {
 		else if (id.compare("disjoint")==0) disjoint = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("extended")==0) extended = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("pass")==0) pass = (stn<uint>(argv[2*j+2])!=0);
+		else if (id.compare("fixdz")==0) fixdz = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("fixtlr")==0) fixtlr = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("fixall")==0) fixall = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("fixodt")==0) fixodt = (stn<uint>(argv[2*j+2])!=0);
@@ -256,7 +258,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	// defining some derived parameters	
 	uint N = pow(2,p.K);
 	uint zm = dim;
-	if (disjoint)
+	if (fixdz || fixodt)
 		zm += 1+(uint)fixdislr;
 	if (fixall)
 		zm += dim;
@@ -862,7 +864,7 @@ for (uint pl=0; pl<Npl; pl++) {
 						dds(locz,locj) += 1.0;
 					}
 				}
-				else if (disjoint) {
+				else if (fixdz || fixodt) {
 					uint mucf = (1+(uint)fixall)*dim+(uint)fixtlr;
 					if ( (mu==mucf && j==(N/2-1) && fixodt) || (mu==(mucf+1) && j==(N-1) && fixodt && fixdislr) ) {
 						// fixing relative heights of top and bottom points
@@ -879,7 +881,7 @@ for (uint pl=0; pl<Npl; pl++) {
 						dds(locz,locj) 		+= -1.0;
 						
 					}
-					else if ( ( mu==mucf && j==(N/2-1) ) || ( mu==(mucf+1) && j==(N-1) && fixdislr) ){
+					if ( ( mu==mucf && j==(N/2-1) && fixdz) || ( mu==(mucf+1) && j==(N-1) && fixdz && fixdislr) ){
 						uint nu = dim-2; // fixing dz=0 at top and bottom of RHS
 						uint pj = (disjoint? posNeighDisjoint(j,N): posNeigh(j,N));
 						uint locj = j*dim+nu, locpj = pj*dim+nu, locz = N*dim+mu;
