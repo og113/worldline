@@ -1767,7 +1767,7 @@ void VthrDisjoint<4> (const uint& j, const uint& k, const Loop<4>& l, const numb
 		uint pk = posNeighDisjoint(k,l.size());
 		
 		number r = SpatialDistance(l[j],l[k]);
-		number t = DX(l,k,j,3);//DXDisjoint(l,k,j,3,beta);
+		number t = DXDisjoint(l,k,j,3,beta);
 	
 		result += f*(-pow(2.0*PI,2))*(1.0+(number)(k<j))*DotDisjoint(l[pj],l[j],l[pk],l[k],beta)*FThermal(r,t,beta,a);	
 	}
@@ -1958,7 +1958,7 @@ template <> void mdVthrDisjoint_nr<4>(const uint& j, const uint& mu, const uint&
 		
 	if (i!=j) {
 		number r_ij = SpatialDistance(l[i],l[j]);
-		number t_ij = DX(l,j,i,3); // checked order
+		number t_ij = DXDisjoint(l,j,i,3,beta); // checked order
 		number FThermal_ij = FThermal(r_ij,t_ij,beta,a);
 		number DFThermalDrOnr_ij = DFThermalDrOnr(r_ij,t_ij,beta,a);
 		number DFThermalDt_ij = DFThermalDt(r_ij,t_ij,beta,a);
@@ -1966,14 +1966,14 @@ template <> void mdVthrDisjoint_nr<4>(const uint& j, const uint& mu, const uint&
 		
 		res += 2.0*FThermal_ij*(-DXDisjoint(l,i,mu,beta));
 		if (mu<3)
-			res += 2.0*DFThermalDrOnr_ij*DX(l,j,i,mu)*T_ij;
+			res += 2.0*DFThermalDrOnr_ij*DXDisjoint(l,j,i,mu,beta)*T_ij;
 		else
 			res += 2.0*DFThermalDt_ij*T_ij;
 	}
 	
 	if (i!=mj) {
 		number r_imj = SpatialDistance(l[i],l[mj]);
-		number t_imj = DX(l,mj,i,3); // checked order
+		number t_imj = DXDisjoint(l,mj,i,3,beta); // checked order
 		number FThermal_imj = FThermal(r_imj,t_imj,beta,a);
 		res +=  -2.0*FThermal_imj*(-DXDisjoint(l,i,mu,beta)); //
 	}
@@ -2062,14 +2062,14 @@ template <> void mdGaussianDisjoint_nr<4>(const uint& j, const uint& mu, const u
 	uint pi = posNeighDisjoint(i,l.size());
 		
 	if (i!=j) {
-		number B_ij = DistanceSquared(l[i],l[j]);
+		number B_ij = DistanceSquaredDisjoint(l[i],l[j],beta);
 		number T_ij = DotDisjoint(l[pi],l[i],l[pj],l[j],beta);
 		number E_ij = exp(-B_ij/a/a);
 		res += + 2.0*E_ij*(-DXDisjoint(l,i,mu,beta)) \
- 			- (4.0*E_ij*DX(l,j,i,mu)*T_ij)/pow(a,2);
+ 			- (4.0*E_ij*DXDisjoint(l,j,i,mu,beta)*T_ij)/pow(a,2);
 	}
 	if (i!=mj) {
-		number B_imj = DistanceSquared(l[i],l[mj]);
+		number B_imj = DistanceSquaredDisjoint(l[i],l[mj],beta);
 		number E_imj = exp(-B_imj/a/a);
 		res += - 2.0*E_imj*(-DXDisjoint(l,i,mu,beta));
 	}
@@ -2667,10 +2667,10 @@ template <> void ddVthrDisjoint_nr<4>(const uint& j, const uint& mu, const uint&
 	number r_jmk = SpatialDistance(l[j],l[mk]);
 	number r_mjmk = SpatialDistance(l[mj],l[mk]);
 	
-	number t_jk = DX(l,k,j,3);
-	number t_mjk = DX(l,k,mj,3);
-	number t_jmk = DX(l,mk,j,3);
-	number t_mjmk = DX(l,mk,mj,3);
+	number t_jk = DXDisjoint(l,k,j,3,beta);
+	number t_mjk = DXDisjoint(l,k,mj,3,beta);
+	number t_jmk = DXDisjoint(l,mk,j,3,beta);
+	number t_mjmk = DXDisjoint(l,mk,mj,3,beta);
 		
 	number T_jk = DotDisjoint(l[pj],l[j],l[pk],l[k],beta);
 	
@@ -2695,17 +2695,17 @@ template <> void ddVthrDisjoint_nr<4>(const uint& j, const uint& mu, const uint&
 			if (mu==3) {
 				res += - 2.0*DFThermalDt_jk*(-DXDisjoint(l,j,nu,beta)); //
 				if (nu<3)
-					res += (2.0*DDFThermalDrDtOnr_jk*DX(l,j,k,nu)*T_jk); //
+					res += (2.0*DDFThermalDrDtOnr_jk*DXDisjoint(l,j,k,nu,beta)*T_jk); //
 				else
 					res += -2.0*DDFThermalDtDt_jk*T_jk;//
 			}
 			else {
-				res += + 2.0*DFThermalDrOnr_jk*(-DXDisjoint(l,j,nu,beta))*DX(l,j,k,mu); //
+				res += + 2.0*DFThermalDrOnr_jk*(-DXDisjoint(l,j,nu,beta))*DXDisjoint(l,j,k,mu,beta); //
 				if (nu==3) 
-					res += + 2.0*DDFThermalDrDtOnr_jk*DX(l,j,k,mu)*T_jk; //
+					res += + 2.0*DDFThermalDrDtOnr_jk*DXDisjoint(l,j,k,mu,beta)*T_jk; //
 				else if (r_jk>MIN_NUMBER) //as -DFThermalDrOnr+DDFThermalDrDr->0 as r->0
-					res += (2.0*DFThermalDrOnr_jk*DX(l,j,k,mu)*DX(l,j,k,nu)*T_jk)/pow(r_jk,2) \
-							- (2.0*DDFThermalDrDr_jk*DX(l,j,k,mu)*DX(l,j,k,nu)*T_jk)/pow(r_jk,2); //
+					res += (2.0*DFThermalDrOnr_jk*DXDisjoint(l,j,k,mu,beta)*DXDisjoint(l,j,k,nu,beta)*T_jk)/pow(r_jk,2) \
+							- (2.0*DDFThermalDrDr_jk*DXDisjoint(l,j,k,mu,beta)*DXDisjoint(l,j,k,nu,beta)*T_jk)/pow(r_jk,2); //
 				if (nu==mu)
 					res += - (2.0*DFThermalDrOnr_jk*T_jk);//
 			}
@@ -2714,7 +2714,7 @@ template <> void ddVthrDisjoint_nr<4>(const uint& j, const uint& mu, const uint&
 				res += 2.0*DFThermalDt_jk*(-DXDisjoint(l,k,mu,beta)); //
 			}
 			else {
-				res += - 2.0*DFThermalDrOnr_jk*DX(l,j,k,nu)*(-DXDisjoint(l,k,mu,beta)); //
+				res += - 2.0*DFThermalDrOnr_jk*DXDisjoint(l,j,k,nu,beta)*(-DXDisjoint(l,k,mu,beta)); //
 			}
 			
 		}
@@ -2722,13 +2722,13 @@ template <> void ddVthrDisjoint_nr<4>(const uint& j, const uint& mu, const uint&
 			if (nu==3)
 				res += - 2.0*DFThermalDt(r_mjk,t_mjk,beta,a)*(-DXDisjoint(l,k,mu,beta)); //
 			else
-				res += 2.0*DFThermalDrOnr(r_mjk,t_mjk,beta,a)*DX(l,mj,k,nu)*(-DXDisjoint(l,k,mu,beta)); //
+				res += 2.0*DFThermalDrOnr(r_mjk,t_mjk,beta,a)*DXDisjoint(l,mj,k,nu,beta)*(-DXDisjoint(l,k,mu,beta)); //
 		}
 		if (j!=mk) {
 			if (mu==3)
 				res += 2.0*DFThermalDt(r_jmk,t_jmk,beta,a)*(-DXDisjoint(l,j,nu,beta));//
 			else
-				res += -(2.0*DFThermalDrOnr(r_jmk,t_jmk,beta,a)*(-DXDisjoint(l,j,nu,beta))*DX(l,j,mk,mu)); //
+				res += -(2.0*DFThermalDrOnr(r_jmk,t_jmk,beta,a)*(-DXDisjoint(l,j,nu,beta))*DXDisjoint(l,j,mk,mu,beta)); //
 		}
 	
 	// terms with sums
@@ -2750,8 +2750,8 @@ template <> void ddVthrDisjoint_nr<4>(const uint& j, const uint& mu, const uint&
 			T_ij = DotDisjoint(l[pi],l[i],l[pj],l[j],beta);			
 			r_ij = SpatialDistance(l[j],l[i]);
 			r_imj = SpatialDistance(l[i],l[mj]);	
-			t_ij = DX(l,j,i,3);
-			t_imj = DX(l,mj,i,3);
+			t_ij = DXDisjoint(l,j,i,3,beta);
+			t_imj = DXDisjoint(l,mj,i,3,beta);
 
 			if (k==j && i!=j) {
 				DFThermalDrOnr_ij = DFThermalDrOnr(r_ij,t_ij,beta,a);
@@ -2764,15 +2764,15 @@ template <> void ddVthrDisjoint_nr<4>(const uint& j, const uint& mu, const uint&
 					if (nu==3) 
 						res += 2.0*DDFThermalDtDt_ij*T_ij; //
 					else
-						res += 2.0*DDFThermalDrDtOnr_ij*DX(l,j,i,nu)*T_ij; //
+						res += 2.0*DDFThermalDrDtOnr_ij*DXDisjoint(l,j,i,nu,beta)*T_ij; //
 				}
 				else {
-					res += 2.0*DFThermalDrOnr_ij*(-DXDisjoint(l,i,nu,beta))*DX(l,j,i,mu); //
+					res += 2.0*DFThermalDrOnr_ij*(-DXDisjoint(l,i,nu,beta))*DXDisjoint(l,j,i,mu,beta); //
 					if (nu==3)
-						res += 2.0*DDFThermalDrDtOnr_ij*DX(l,j,i,mu)*T_ij; //
+						res += 2.0*DDFThermalDrDtOnr_ij*DXDisjoint(l,j,i,mu,beta)*T_ij; //
 					else if (r_ij>MIN_NUMBER) { // as -DFThermalDrOnr+DDFThermalDrDr->0 as r->0
-						res += - (2.0*DFThermalDrOnr_ij*DX(l,j,i,mu)*DX(l,j,i,nu)*T_ij)/pow(r_ij,2) \
-							+ (2.0*DDFThermalDrDr_ij*DX(l,j,i,mu)*DX(l,j,i,nu)*T_ij)/pow(r_ij,2);  //
+						res += - (2.0*DFThermalDrOnr_ij*DXDisjoint(l,j,i,mu,beta)*DXDisjoint(l,j,i,nu,beta)*T_ij)/pow(r_ij,2) \
+							+ (2.0*DDFThermalDrDr_ij*DXDisjoint(l,j,i,mu,beta)*DXDisjoint(l,j,i,nu,beta)*T_ij)/pow(r_ij,2);  //
 					}
 					if (nu==mu)
 						res += 2.0*DFThermalDrOnr_ij*T_ij; //
@@ -2781,20 +2781,20 @@ template <> void ddVthrDisjoint_nr<4>(const uint& j, const uint& mu, const uint&
 					res += 2.0*DFThermalDt_ij*(-DXDisjoint(l,i,mu,beta)); //
 				}
 				else {
-					res += - 2.0*DFThermalDrOnr_ij*(-DXDisjoint(l,i,mu,beta))*DX(l,i,j,nu); //
+					res += - 2.0*DFThermalDrOnr_ij*(-DXDisjoint(l,i,mu,beta))*DXDisjoint(l,i,j,nu,beta); //
 				}
 			} 
 			if (j==pk && i!=mj) {
 				if (nu==3)
 					res += - 2.0*DFThermalDt(r_imj,t_imj,beta,a)*(-DXDisjoint(l,i,mu,beta));//
 				else
-					res += 2.0*DFThermalDrOnr(r_imj,t_imj,beta,a)*(-DXDisjoint(l,i,mu,beta))*DX(l,i,k,nu);//
+					res += 2.0*DFThermalDrOnr(r_imj,t_imj,beta,a)*(-DXDisjoint(l,i,mu,beta))*DXDisjoint(l,i,k,nu,beta);//
 			} 
 			if (j==mk && i!=j) {
 				if (mu==3)
 					res += - 2.0*DFThermalDt(r_ij,t_ij,beta,a)*(-DXDisjoint(l,i,nu,beta));//
 				else
-					res += - 2.0*DFThermalDrOnr(r_ij,t_ij,beta,a)*(-DXDisjoint(l,i,nu,beta))*DX(l,j,i,mu);//
+					res += - 2.0*DFThermalDrOnr(r_ij,t_ij,beta,a)*(-DXDisjoint(l,i,nu,beta))*DXDisjoint(l,j,i,mu,beta);//
 			}	
 		}		
 	}
@@ -2961,14 +2961,10 @@ template <> void ddGaussianDisjoint_nr<4> (const uint& j, const uint& mu, const 
 	uint mk = negNeighDisjoint(k,l.size());
 	uint pk = posNeighDisjoint(k,l.size());
 	
-	number B_jk = DistanceSquared(l[j],l[k]);
-	number B_mjk = DistanceSquared(l[mj],l[k]);
-	number B_jmk = DistanceSquared(l[j],l[mk]);
-	number B_mjmk = DistanceSquared(l[mj],l[mk]);
-	/*number B_jk = DistanceSquaredDisjoint(l[j],l[k],beta);
+	number B_jk = DistanceSquaredDisjoint(l[j],l[k],beta);
 	number B_mjk = DistanceSquaredDisjoint(l[mj],l[k],beta);
 	number B_jmk = DistanceSquaredDisjoint(l[j],l[mk],beta);
-	number B_mjmk = DistanceSquaredDisjoint(l[mj],l[mk],beta);*/
+	number B_mjmk = DistanceSquaredDisjoint(l[mj],l[mk],beta);
 	
 	number E_jk = exp(-B_jk/a/a);
 	number E_mjk = exp(-B_mjk/a/a);
@@ -2991,13 +2987,13 @@ template <> void ddGaussianDisjoint_nr<4> (const uint& j, const uint& mu, const 
 
 	// terms where mu not nexcessarily equal to nu, without sums
 	if (k!=j)
-		res +=  - (4.0*E_jk*DXDisjoint(l,j,pj,nu,beta)*DX(l,j,k,mu))/pow(a,2) \
-						 + (4.0*E_jk*DX(l,j,k,nu)*DXDisjoint(l,k,pk,mu,beta))/pow(a,2) \
-				 - (8.0*E_jk*DX(l,j,k,mu)*DX(l,j,k,nu)*T_jk)/pow(a,4); //
+		res +=  - (4.0*E_jk*(-DXDisjoint(l,j,nu,beta))*DXDisjoint(l,j,k,mu,beta))/pow(a,2) \
+				 + (4.0*E_jk*DXDisjoint(l,j,k,nu,beta)*(-DXDisjoint(l,k,mu,beta)))/pow(a,2) \
+				 - (8.0*E_jk*DXDisjoint(l,j,k,mu,beta)*DXDisjoint(l,j,k,nu,beta)*T_jk)/pow(a,4); //
 	if (k!=mj)
-		res +=  - (4.0*E_mjk*DX(l,mj,k,nu)*DXDisjoint(l,k,pk,mu,beta))/pow(a,2); //
+		res +=  - (4.0*E_mjk*DXDisjoint(l,mj,k,nu,beta)*(-DXDisjoint(l,k,mu,beta)))/pow(a,2); //
 	if (k!=pj)
-		res += + (4.0*E_jmk*DXDisjoint(l,j,pj,nu,beta)*DX(l,j,mk,mu))/pow(a,2); //
+		res += + (4.0*E_jmk*(-DXDisjoint(l,j,nu,beta))*DXDisjoint(l,j,mk,mu,beta))/pow(a,2); //
 	
 	// terms with sums
 	if (k==j || k==mj || k==pj) {
@@ -3008,28 +3004,36 @@ template <> void ddGaussianDisjoint_nr<4> (const uint& j, const uint& mu, const 
 		for (uint i=0; i<l.size(); i++) {
 		
 			pi = posNeighDisjoint(i,l.size());
-			B_ij = DistanceSquared(l[i],l[j]);
-			B_imj = DistanceSquared(l[i],l[mj]);
-			/*B_ij = DistanceSquaredDisjoint(l[i],l[j],beta);
-			B_imj = DistanceSquaredDisjoint(l[i],l[mj],beta);*/
+			B_ij = DistanceSquaredDisjoint(l[i],l[j],beta);
+			B_imj = DistanceSquaredDisjoint(l[i],l[mj],beta);
 			E_ij = exp(-B_ij/a/a);
 			E_imj = exp(-B_imj/a/a);
 			T_ij = DotDisjoint(l[pi],l[i],l[pj],l[j],beta);
 			
 			if (k==j && i!=j) {
-				res += - (4.0*E_ij*DXDisjoint(l,i,pi,nu,beta)*DX(l,j,i,mu))/pow(a,2) \
-						 - (4.0*E_ij*DXDisjoint(l,i,pi,mu,beta)*DX(l,j,i,nu))/pow(a,2) \
-						 + (8.0*E_ij*DX(l,j,i,mu)*DX(l,j,i,nu)*T_ij)/pow(a,4);
+				res += - (4.0*E_ij*(-DXDisjoint(l,i,nu,beta))*DXDisjoint(l,j,i,mu,beta))/pow(a,2) \
+						 - (4.0*E_ij*(-DXDisjoint(l,i,mu,beta))*DXDisjoint(l,j,i,nu,beta))/pow(a,2) \
+						 + (8.0*E_ij*DXDisjoint(l,j,i,mu,beta)*DXDisjoint(l,j,i,nu,beta)*T_ij)/pow(a,4);
 				if (mu==nu)
 					res +=  - (4.0*E_ij*T_ij)/pow(a,2); //
 			}
 			if (k==mj && i!=mj) 
-				res +=  (4.0*E_imj*DXDisjoint(l,i,pi,mu,beta)*DX(l,mj,i,nu))/pow(a,2);
+				res +=  (4.0*E_imj*(-DXDisjoint(l,i,mu,beta))*DXDisjoint(l,mj,i,nu,beta))/pow(a,2);
 			if (k==pj && i!=j) 
-				res += + (4.0*E_ij*DXDisjoint(l,i,pi,nu,beta)*DX(l,j,i,mu))/pow(a,2);
+				res += + (4.0*E_ij*(-DXDisjoint(l,i,nu,beta))*DXDisjoint(l,j,i,mu,beta))/pow(a,2);
 			
 		}		
 	}
+	
+	//coincident terms
+	if (k==j && mu==nu)
+		res += 2.0;
+	if (k==mj && mu==nu)
+		res += -1.0;
+	if (k==pj && mu==nu)
+		res += -1.0;
+	
+	m(4*j+mu,4*k+nu) += f*res;
 	
 	//coincident terms
 	if (k==j && mu==nu)
