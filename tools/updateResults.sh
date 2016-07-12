@@ -38,6 +38,11 @@ sed -i "s/$/,$resultsFileID/" $tempResultsFile
 touch $databaseResultsFile
 comm -23 <(sort $tempResultsFile) <(sort $databaseResultsFile) > $deltaResultsFile
 
+deltaLines=$(wc -l < $deltaResultsFile)
+
+if [ "$deltaLines" -gt 0 ]
+then
+
 # a "here document" follows. note that there must be no trailing space after the last "HERE"
 # this iports results to the sqlite database
 sqlite3 $databaseFile <<HERE
@@ -46,3 +51,7 @@ sqlite3 $databaseFile <<HERE
 HERE
 
 cat $deltaResultsFile >> $databaseResultsFile
+
+fi
+
+
