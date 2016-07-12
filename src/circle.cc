@@ -216,11 +216,11 @@ for (uint pl=0; pl<Npl; pl++) {
 			for (uint k=0; k<N; k++) {
 				point = p0;
 				if (k<N/2) {
-					point[2] += (r/2.0)*(1.0 + p.Mu*cos(w*k) + p.Lambda*cos(2.0*w*k));
+					point[2] += (r/2.0)*(1.0 + p.Mu*cos(w*(k+0.5)) + p.Lambda*cos(2.0*w*(k+0.5)));
 					point[3] += -beta/2.0 + dt/2.0 + dt*k;
 				}
 				else {
-					point[2] += -(r/2.0)*(1.0 + p.Mu*cos(w*k) + p.Lambda*cos(2.0*w*k));
+					point[2] += -(r/2.0)*(1.0 + p.Mu*cos(w*(k+0.5)) + p.Lambda*cos(2.0*w*(k+0.5)));
 					point[3] += beta/2.0 - dt/2.0 - dt*(k-N/2);
 				}
 				loop[k] = point;
