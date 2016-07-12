@@ -258,13 +258,8 @@ for (uint pl=0; pl<Npl; pl++) {
 	// defining some derived parameters	
 	uint N = pow(2,p.K);
 	uint zm = dim;
-<<<<<<< HEAD
-	if (disjoint)
-		zm += 1;
-=======
 	if (fixdz || fixodt)
 		zm += 1+(uint)fixdislr;
->>>>>>> 8dcc14ce52f15bfa16a5f577830fda04aa05d627
 	if (fixall)
 		zm += dim;
 	else if (fixtlr)
