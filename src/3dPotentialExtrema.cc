@@ -141,7 +141,7 @@ else {
 
 if (verbose) {
 	printf("\n");
-	printf("%6s%6s%6s%20s%20s%20s%20s%20s%20s\n","run","pot","kappa","a","max approx","max","min","Vmax","Vmin");
+	printf("%6s%6s%6s%18s%18s%18s%18s%18s%18s\n","run","pot","kappa","a","max approx","max","min","Vmax","Vmin");
 }
 
 uint run = 0;
@@ -228,14 +228,14 @@ while((test>tol || run<minRuns) && run<Npl) {
 		min_guess = min_vec[run];
 	}
 	
-	os << setw(25) << pot << setw(25) << params.kappa << setw(25) << params.a;
-	os << setw(25) << max_vec[run] << setw(25) << min_vec[run];
-	os << setw(25) << Vmax_vec[run] << setw(25) << Vmin_vec[run] << endl;
+	os << setw(22) << pot << setw(22) << params.kappa << setw(22) << params.a;
+	os << setw(22) << max_vec[run] << setw(22) << min_vec[run];
+	os << setw(22) << Vmax_vec[run] << setw(22) << Vmin_vec[run] << endl;
 	
 	number rGuess = sqrt(params.kappa/4.0/PI) - 3.0*sqrt(PI/4.0/params.kappa)*pow(params.a,2)\
 						 - 15.0*pow(PI/params.kappa,3.0/2.0)*pow(params.a,4)/4.0;
 	if (verbose)
-		printf("%6i%6i%6.2g%20.12g%20.12g%20.12g%20.12g%20.12g%20.12g\n",run,pot,params.kappa,params.a,\
+		printf("%6i%6i%6.2g%18.10g%18.10g%18.10g%18.10g%18.10g%18.10g\n",run,pot,params.kappa,params.a,\
 			rGuess,max_vec[run],min_vec[run],Vmax_vec[run],Vmin_vec[run]);
 		
 	run++;
