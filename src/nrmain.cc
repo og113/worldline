@@ -80,6 +80,7 @@ bool alltests = false; // doing alltests
 string printOpts = "";
 string potOpts = "";
 string kinOpts = "";
+string xIn = "";
 string inputsFile = "inputs4";
 
 // getting argv
@@ -112,6 +113,7 @@ if (argc % 2 && argc>1) {
 		else if (id.compare("print")==0) printOpts = (string)argv[2*j+2];
 		else if (id.compare("pot")==0 || id.compare("potential")==0) potOpts = (string)argv[2*j+2];
 		else if (id.compare("kin")==0 || id.compare("kinetic")==0) kinOpts = (string)argv[2*j+2];
+		else if (id.compare("xIn")==0) xIn = (string)argv[2*j+2];
 		else if (id.compare("alltests")==0 || id.compare("allTests")==0) alltests = (stn<uint>(argv[2*j+2])!=0);
 		else {
 			cerr << "argv id " << id << " not understood" << endl;
@@ -332,7 +334,10 @@ for (uint pl=0; pl<Npl; pl++) {
 	
 	// x file
 	if (pl==0 || !step || pass) {
-		if (guess) {
+		if (!xIn.empty()) {
+			loadFile = xIn;
+		}
+		else if (guess) {
 			if (!disjoint) {
 				loadFile = "data/lemon/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_R_"+nts(R)+"_E_"+nts(E)+"_rank_0.dat";
 				if (!loadFile.exists())
@@ -706,10 +711,14 @@ for (uint pl=0; pl<Npl; pl++) {
 						else if (poto==PotentialOptions::thermalDisjoint)
 							VthrDisjoint(j, k, xLoop, beta, p.Epsi, g, v);
 							
-						if (gaussian && disjoint)
+						if (gaussian && !disjoint && poto!=PotentialOptions::thermal)
 							Gaussian(j, k, xLoop, p.Epsi, repulsion_scale, repulsion);
-						else if (gaussian)
+						else if (gaussian && disjoint && poto!=PotentialOptions::thermalDisjoint)
 							GaussianDisjoint(j, k, xLoop, beta, p.Epsi, repulsion_scale, repulsion);
+						else if (gaussian && poto==PotentialOptions::thermal)
+							GaussianThermal(j, k, xLoop, beta, p.Epsi, repulsion_scale, repulsion);
+						else if (gaussian && poto==PotentialOptions::thermalDisjoint)
+							GaussianThermalDisjoint(j, k, xLoop, beta, p.Epsi, repulsion_scale, repulsion);
 							
 						MaxXn(j, k, xLoop, 2, 1.0, z);
 						MaxXn(j, k, xLoop, 3, 1.0, t);
@@ -736,13 +745,21 @@ for (uint pl=0; pl<Npl; pl++) {
 							PVthrDisjoint_nr(xLoop, j, mu, k, beta, p.Epsi, g, Pmu);
 						}
 							
-						if (gaussian && !disjoint) {
+						if (gaussian && !disjoint && poto!=PotentialOptions::thermal) {
 							mdGaussian_nr(j, mu, k, xLoop, p.Epsi, repulsion_scale, mds);
 							PGaussian_nr(xLoop, j, mu, k, p.Epsi, repulsion_scale, Pmu);
 						}
-						else if (gaussian) {
+						else if (gaussian && disjoint && poto!=PotentialOptions::thermalDisjoint) {
 							mdGaussianDisjoint_nr(j, mu, k, xLoop, beta, p.Epsi, repulsion_scale, mds);
 							PGaussianDisjoint_nr(xLoop, j, mu, k, beta, p.Epsi, repulsion_scale, Pmu);
+						}
+						else if (gaussian && poto==PotentialOptions::thermal) {
+							mdGaussianThermal_nr(j, mu, k, xLoop, beta, p.Epsi, repulsion_scale, mds);
+							PGaussianThermal_nr(xLoop, j, mu, k, beta, p.Epsi, repulsion_scale, Pmu);
+						}
+						else if (gaussian && poto==PotentialOptions::thermalDisjoint) {
+							mdGaussianThermalDisjoint_nr(j, mu, k, xLoop, beta, p.Epsi, repulsion_scale, mds);
+							PGaussianThermalDisjoint_nr(xLoop, j, mu, k, beta, p.Epsi, repulsion_scale, Pmu);
 						}
 					}
 				
@@ -798,16 +815,20 @@ for (uint pl=0; pl<Npl; pl++) {
 								
 							// self-energy regularisation
 							if (!disjoint) {
-								if (gaussian)
+								if (gaussian && poto!=PotentialOptions::thermal)
 									ddGaussian_nr(j, mu, k, nu, xLoop, p.Epsi, repulsion_scale, dds);
+								else if (gaussian && poto==PotentialOptions::thermal)
+									ddGaussianThermal_nr(j, mu, k, nu, xLoop, beta, p.Epsi, repulsion_scale, dds);
 								else if (poto!=PotentialOptions::dimreg)
 									ddL_nr(j,mu,k,nu,xLoop,dm,dds);
 								else
 									ddDistPow_nr(j,mu,k,nu,xLoop,p.Epsi,dim_reg_scale,dds);
 							}
 							else {
-								if (gaussian)
+								if (gaussian && poto!=PotentialOptions::thermalDisjoint)
 									ddGaussianDisjoint_nr(j, mu, k, nu, xLoop, beta , p.Epsi, repulsion_scale, dds);
+								else if (gaussian && poto==PotentialOptions::thermalDisjoint)
+									ddGaussianThermalDisjoint_nr(j, mu, k, nu, xLoop, beta , p.Epsi, repulsion_scale, dds);
 								else
 									ddLDisjoint_nr(j,mu,k,nu,xLoop,beta,dm,dds);
 							}

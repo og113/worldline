@@ -34,7 +34,7 @@ deltaResultsFile=$(echo "$databaseResultsFile" | sed 's/\([^\/]\+\)$/delta_\1/')
 echo "input     : $resultsFile";
 echo "updating  : $databaseResultsFile";
 echo "          : $deltaResultsFile";
-echo "          : $databaseFile";
+echo "          : $databaseFile - $table";
 
 # copying results into temp file
 cat $resultsFile > $tempResultsFile
