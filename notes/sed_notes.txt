@@ -8,6 +8,7 @@ sed -ne '/^\([ ]*\)160208165923/ p' results/nr/nrmain_cosmos_4.dat>results/nr/nr
 
 using sed to remove some bogus results with a specific timenumber:
 sed -i '/^\([ ]*\)160422115649/d' results/nr/nrmain_cosmos_7.dat
+sed -i '/^\([ ]*\)160712001141/d' results/nr/nr3.csv
 
 to convert space or tab separated file to csv
 

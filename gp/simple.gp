@@ -65,7 +65,7 @@ set ylabel yLabel
 colours="blue red green orange cyan pink yellow black"
 
 if (exists("inFile")) {
-	plot inFile using 0:1 with lines ls 1 title inFile noenhanced;
+	plot inFile using 1:2 with lines ls 1 title inFile noenhanced;
 }
 else {
 	set for [i=1:words(colours)] lt 1 lc rgb word(colours, i);
