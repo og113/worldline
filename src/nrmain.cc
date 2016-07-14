@@ -313,7 +313,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	Check checkDeltaRotation("delta rotation symmetry",1.0e-16*NT*NT);
 	
 	// defining scalar quantities
-	number len, i0, s, sm, v, vr, fgamma, gamma, angle_neigh, z, t, ic_max, cc_max, kg_max;
+	number len, i0, s, sm, v, vr, fgamma, gamma, angle_neigh, zmax, zmin, tmax, ic_max, cc_max, kg_max;
 	
 	// defining vector and matrix quantities
 	vec x(N*dim);
@@ -460,7 +460,8 @@ for (uint pl=0; pl<Npl; pl++) {
 		dds = Eigen::MatrixXd::Zero(NT,NT);
 		Js = Eigen::VectorXd::Zero(N);
 		Pmu = Eigen::VectorXd::Zero(N*dim);
-		len = 0.0, i0 = 0.0, v = 0.0, fgamma = 0.0, gamma = 0.0, angle_neigh = 0.0, z = 0.0, t = 0.0;//, s0 = 0.0;
+		len = 0.0, i0 = 0.0, v = 0.0, fgamma = 0.0, gamma = 0.0, angle_neigh = 0.0, zmax = 0.0, tmax = 0.0;//, s0 = 0.0;
+		zmin = 1.0e16;
 		ic_max = 0.0, cc_max = 0.0, kg_max = 0.0;
 		if (curvature || alltests) {
 			sc_vec = Eigen::VectorXd::Zero(N);
@@ -720,8 +721,9 @@ for (uint pl=0; pl<Npl; pl++) {
 						else if (gaussian && poto==PotentialOptions::thermalDisjoint)
 							GaussianThermalDisjoint(j, k, xLoop, beta, p.Epsi, repulsion_scale, repulsion);
 							
-						MaxXn(j, k, xLoop, 2, 1.0, z);
-						MaxXn(j, k, xLoop, 3, 1.0, t);
+						MaxXn(j, k, xLoop, 2, 1.0, zmax);
+						MinXnDisjoint(j, k, xLoop, 2, 1.0, zmin);
+						MaxXn(j, k, xLoop, 3, 1.0, tmax);
 					}
 					
 					// dynamical field
@@ -1282,7 +1284,7 @@ for (uint pl=0; pl<Npl; pl++) {
 											nts(E,16),\
 											nts(p.T,16),\
 											nts(s,16),\
-											nts(z,16),\
+											nts(zmax,16),\
 											nts(dsdz_RmL,16),\
 											nts(deltaz_RmL,16),\
 											nts(checkSol.back(),16),\
@@ -1523,7 +1525,7 @@ for (uint pl=0; pl<Npl; pl++) {
 									nts(E,16),\
 									nts(p.T,16),\
 									nts(s,16),\
-									nts(z,16),\
+									nts(zmax,16),\
 									nts(negEigs),\
 									nts(zeroEigs),\
 									nts(checkSol.back(),16),\
@@ -1568,8 +1570,8 @@ for (uint pl=0; pl<Npl; pl++) {
 	
 	if ((checkDelta.good() && checkSol.good() && checkSolMax.good()) || pass) {
 		// printing good results to file	
-		string resFile = (pass? "results/nr/nr_pass3.csv":"results/nr/nr3.csv");
-		#define numRes 24
+		string resFile = (pass? "results/nr/nr_pass4.csv":"results/nr/nr4.csv");
+		#define numRes 25
 		vector<string> results(numRes);
 		string results_array[numRes] = {timenumber,\
 									nts(pl),\
@@ -1588,8 +1590,9 @@ for (uint pl=0; pl<Npl; pl++) {
 									nts(len,16),\
 									nts(i0,16),\
 									nts(vr,16),\
-									nts(z,16),\
-									nts(t,16),\
+									nts(zmax,16),\
+									nts(zmin,16),\
+									nts(tmax,16),\
 									nts(checkSol.back(),16),\
 									nts(checkDX.back(),16),\
 									nts(checkICMax.back(),16),\
@@ -1602,7 +1605,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	}
 	else {
 		// printing error results to file	
-		string resFile = "results/nr/nr_error3.csv";
+		string resFile = "results/nr/nr_error4.csv";
 		#define numResErr 23
 		vector<string> results(numResErr);
 		string results_array[numRes] = {timenumber,\

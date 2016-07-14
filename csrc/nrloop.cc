@@ -267,11 +267,23 @@ void FGamma (const uint& j,const Loop<Dim>& l,  const number& f, number& result)
 template <uint Dim>
 void MaxXn (const uint& j, const uint& k, const Loop<Dim>& l, const uint& n, const number& f, number& result) {
 	if (n>=Dim) {
-		cerr << "MaxXn error: " << n << ">" << Dim << endl;
+		cerr << "MaxXn error: " << n << ">=" << Dim << endl;
 	}
 	if (k<j) {
 		number temp = abs((l[j])[n]-(l[k])[n]);
 		result = (temp*f>result? temp*f: result);
+	}
+}
+
+// MinXnDisjoint
+template <uint Dim>
+void MinXnDisjoint (const uint& j, const uint& k, const Loop<Dim>& l, const uint& n, const number& f, number& result) {
+	if (n>=Dim) {
+		cerr << "MinXnDisjoint error: " << n << ">=" << Dim << endl;
+	}
+	if (k<(l.size()/2) && j>=(l.size()/2)) {
+		number temp = abs((l[j])[n]-(l[k])[n]);
+		result = (temp*f<result? temp*f: result);
 	}
 }
 
@@ -1739,6 +1751,7 @@ template void GaussianDisjoint<4>(const uint& j, const uint& k, const Loop<4>& l
 template void GaussianThermal<4>(const uint& j, const uint& k, const Loop<4>& l, const number& beta, const number& a, const number& f, number& result);
 template void GaussianThermalDisjoint<4>(const uint& j, const uint& k, const Loop<4>& l, const number& beta, const number& a, const number& f, number& result);
 template void MaxXn<4>(const uint& j, const uint& k, const Loop<4>& l, const uint& n, const number& f, number& result);
+template void MinXnDisjoint<4>(const uint& j, const uint& k, const Loop<4>& l, const uint& n, const number& f, number& result);
 template void InlineCurvatureMax<4>(const uint& j, const Loop<4>& l, const number& f, number& result);
 template void InlineCurvatureMax<4>(const uint& j, const Loop<4>& l, const uint& ex1, const uint& ex2, const number& f, number& result);
 template void InlineCurvatureMaxDisjoint<4>(const uint& j, const Loop<4>& l, const number& beta, const number& f, number& result);
