@@ -8,9 +8,9 @@ set key below
 set autoscale
 set xtic auto
 set ytic auto
-set title "Z_{max} versus a"
+set title "Z_{max} and Z_{min} versus a"
 set xlabel "a"
-set ylabel "Z_{max}"
+set ylabel "Z"
 
 plot file1 using 1:2 with points ls 1  lt 4 lc rgb "orange" t "N-R z_{max}, from nr3", \
 	file3 using 1:2 with points ls 1  lt 1 lc rgb "red" t "N-R z_{min}", \
