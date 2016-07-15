@@ -3,36 +3,36 @@
 # program to add all the usual suspects to git
 
 # adding pics
-git add pics/*/*.png
-git add pics/*/*.svg
-git add pics/*/*/*.png
-git add pics/*/*/*.svg
+git add --all pics/*/*.png
+git add --all pics/*/*.svg
+git add --all pics/*/*/*.png
+git add --all pics/*/*/*.svg
 
 # adding .cc and .h files
-git add mpisrc/*.cc
-git add csrc/*.cc
-git add src/*.cc
-git add tests/*.cc
-git add include/*.h
+git add --all mpisrc/*.cc
+git add --all csrc/*.cc
+git add --all src/*.cc
+git add --all tests/*.cc
+git add --all include/*.h
 
 # adding .sh files
-git add tools/*.sh
+git add --all tools/*.sh
 
 # adding notes
-git add notes/*.txt
+git add --all notes/*.txt
 
 # adding reports
-git add reports/*
+git add --all reports/*
 
 # adding gp files
-git add gp/*.gp
+git add --all gp/*.gp
 
 # adding mout files
-git add mout/*.txt
+git add --all mout/*.txt
 
 # adding database outputs
-git add db/nr/plots/*.csv
-git add db/nr/plots/*/*.csv
+git add --all db/nr/plots/*.csv
+git add --all db/nr/plots/*/*.csv
 
 # adding results
-git add results/*/*.csv
+git add --all results/*/*.csv
