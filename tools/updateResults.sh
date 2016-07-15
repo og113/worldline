@@ -31,10 +31,10 @@ tempResultsFile=$(echo "$resultsFile" | sed 's/results\/nr/temp/');
 databaseResultsFile=$(echo "$resultsFile" | sed 's/results/db/');
 deltaResultsFile=$(echo "$databaseResultsFile" | sed 's/\([^\/]\+\)$/delta_\1/');
 
-echo "input     : $resultsFile";
-echo "updating  : $databaseResultsFile";
-echo "          : $deltaResultsFile";
-echo "          : $databaseFile - $table";
+echo "input      : $resultsFile";
+echo "updating   : $databaseResultsFile";
+echo "           : $deltaResultsFile";
+echo "           : $databaseFile - $table";
 
 # copying results into temp file
 cat $resultsFile > $tempResultsFile
@@ -50,6 +50,7 @@ touch $databaseResultsFile
 comm -23 <(sort $tempResultsFile) <(sort $databaseResultsFile) > $deltaResultsFile
 
 deltaLines=$(wc -l < $deltaResultsFile)
+echo "new results: $deltaLines";
 
 if [ "$deltaLines" -gt 0 ]
 then
