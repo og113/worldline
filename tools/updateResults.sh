@@ -62,7 +62,10 @@ sqlite3 $databaseFile <<HERE
 .import "$deltaResultsFile" "$table"
 HERE
 
-cat $deltaResultsFile >> $databaseResultsFile
+if [ "$?" -eq 0 ]
+then
+	cat $deltaResultsFile >> $databaseResultsFile
+fi
 
 fi
 

@@ -144,6 +144,10 @@ void GaussianThermal (const uint& j, const uint& k, const Loop<Dim>& l, const nu
 template <uint Dim>
 void GaussianThermalDisjoint (const uint& j, const uint& k, const Loop<Dim>& l, const number& beta, const number& a,const number& f, number& result);
 
+// GaussianThermalLRDisjoint
+template <uint Dim>
+void GaussianThermalLRDisjoint (const uint& j, const uint& k, const Loop<Dim>& l, const number& beta, const number& a,const number& f, number& result);
+
 // InlineCurvatureMax
 template <uint Dim>
 void InlineCurvatureMax (const uint& j, const Loop<Dim>& l, const number& f, number& result);
@@ -376,6 +380,11 @@ void mdGaussianThermal_nr(const uint& j, const uint& mu, const uint& i, const Lo
 // mdGaussianThermalDisjoint_nr
 template<uint Dim>
 void mdGaussianThermalDisjoint_nr(const uint& j, const uint& mu, const uint& i, const Loop<Dim>& l,\
+			const number& beta, const number& a, const number& f, vec& v);
+			
+// mdGaussianThermalLRDisjoint_nr
+template<uint Dim>
+void mdGaussianThermalLRDisjoint_nr(const uint& j, const uint& mu, const uint& i, const Loop<Dim>& l,\
 			const number& beta, const number& a, const number& f, vec& v);
 
 // ddVor_nr

@@ -1,12 +1,12 @@
 # gnuplot program to plot parameter space explored for thermal calc
 
-file="results/nr/kta.dat"
+file="db/nr/plotsHand/pot_11_kta.dat"
 
 set key below
 set autoscale
 set xtic auto
 set ytic auto
-set title "Kappa, Temperature, a"
+set title "Potential 11: Kappa, Temperature, a"
 set xlabel "Kappa"
 set ylabel "Temperature"
 set zlabel "a"
