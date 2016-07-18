@@ -410,6 +410,14 @@ void GaussianThermalDisjoint (const uint& j, const uint& k, const Loop<Dim>& l, 
 	}
 }
 
+// GaussianThermalLRDisjoint
+template <uint Dim>
+void GaussianThermalLRDisjoint (const uint& j, const uint& k, const Loop<Dim>& l, const number& beta, const number& a,const number& f, number& result) {
+	uint N = l.size();
+	if ((j<N/2 && k<N/2) || (j>=N/2 && k>=N/2))
+		GaussianThermalDisjoint(j,k,l,beta,a,f,result);
+}
+
 // InlineCurvatureMax
 template <uint Dim>
 void InlineCurvatureMax (const uint& j, const Loop<Dim>& l, const number& f, number& result) {
@@ -1248,6 +1256,14 @@ template<uint Dim>
 void mdGaussianThermalDisjoint_nr(const uint& j, const uint& mu, const uint& i, const Loop<Dim>& l,\
 			const number& beta, const number& a, const number& f, vec& v) {
 	cerr << "mdGaussianThermalDisjoint_nr Error: no script written for dim = " << Dim << endl;
+}
+
+			
+// mdGaussianThermalLRDisjoint_nr
+template<uint Dim>
+void mdGaussianThermalLRDisjoint_nr(const uint& j, const uint& mu, const uint& i, const Loop<Dim>& l,\
+			const number& beta, const number& a, const number& f, vec& v) {
+##########################################################################################################################			
 }
 						 
 // ddGaussianDisjoint_nr

@@ -30,9 +30,12 @@ git add --all gp/*.gp
 # adding mout files
 git add --all mout/*.txt
 
-# adding database outputs
+# adding database stuff
+git add --all db/nr/*.sqlite
+git add --all db/nr/*.csv
 git add --all db/nr/plots/*.csv
 git add --all db/nr/plots/*/*.csv
 
 # adding results
 git add --all results/*/*.csv
+
