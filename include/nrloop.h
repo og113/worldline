@@ -136,6 +136,10 @@ void Gaussian (const uint& j, const uint& k, const Loop<Dim>& l, const number& a
 template <uint Dim>
 void GaussianDisjoint (const uint& j, const uint& k, const Loop<Dim>& l, const number& beta, const number& a,const number& f, number& result);
 
+// GaussianLRDisjoint
+template <uint Dim>
+void GaussianLRDisjoint (const uint& j, const uint& k, const Loop<Dim>& l, const number& beta, const number& a,const number& f, number& result);
+
 // GaussianThermal
 template <uint Dim>
 void GaussianThermal (const uint& j, const uint& k, const Loop<Dim>& l, const number& beta, const number& a, const number& f, number& result);
@@ -143,6 +147,10 @@ void GaussianThermal (const uint& j, const uint& k, const Loop<Dim>& l, const nu
 // GaussianThermalDisjoint
 template <uint Dim>
 void GaussianThermalDisjoint (const uint& j, const uint& k, const Loop<Dim>& l, const number& beta, const number& a,const number& f, number& result);
+
+// GaussianThermalLRDisjoint
+template <uint Dim>
+void GaussianThermalLRDisjoint (const uint& j, const uint& k, const Loop<Dim>& l, const number& beta, const number& a,const number& f, number& result);
 
 // InlineCurvatureMax
 template <uint Dim>
@@ -369,6 +377,11 @@ template<uint Dim>
 void mdGaussianDisjoint_nr(const uint& j, const uint& mu, const uint& i, const Loop<Dim>& l,\
 			const number& beta, const number& a, const number& f, vec& v);
 			
+// mdGaussianLRDisjoint_nr
+template<uint Dim>
+void mdGaussianLRDisjoint_nr(const uint& j, const uint& mu, const uint& i, const Loop<Dim>& l,\
+			const number& beta, const number& a, const number& f, vec& v);
+			
 // mdGaussianThermal_nr
 template<uint Dim>
 void mdGaussianThermal_nr(const uint& j, const uint& mu, const uint& i, const Loop<Dim>& l, const number& beta, const number& a, const number& f, vec& v);
@@ -376,6 +389,11 @@ void mdGaussianThermal_nr(const uint& j, const uint& mu, const uint& i, const Lo
 // mdGaussianThermalDisjoint_nr
 template<uint Dim>
 void mdGaussianThermalDisjoint_nr(const uint& j, const uint& mu, const uint& i, const Loop<Dim>& l,\
+			const number& beta, const number& a, const number& f, vec& v);
+			
+// mdGaussianThermalLRDisjoint_nr
+template<uint Dim>
+void mdGaussianThermalLRDisjoint_nr(const uint& j, const uint& mu, const uint& i, const Loop<Dim>& l,\
 			const number& beta, const number& a, const number& f, vec& v);
 
 // ddVor_nr
@@ -428,6 +446,11 @@ template<uint Dim>
 void ddGaussianDisjoint_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l,\
 						 const number& beta, const number& a, const number& f, mat& m); 
 
+// ddGaussianLRDisjoint_nr
+template<uint Dim>
+void ddGaussianLRDisjoint_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l,\
+						 const number& beta, const number& a, const number& f, mat& m); 
+
 // ddGaussianThermal_nr
 template<uint Dim>
 void ddGaussianThermal_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l,\
@@ -438,6 +461,11 @@ template<uint Dim>
 void ddGaussianThermalDisjoint_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l,\
 						 const number& beta, const number& a, const number& f, mat& m);
 						 
+// ddGaussianThermalLRDisjoint_nr
+template<uint Dim>
+void ddGaussianThermalLRDisjoint_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l,\
+						 const number& beta, const number& a, const number& f, mat& m);
+					 
 // mdFGamma_nr
 template<uint Dim>
 void mdFGamma_nr(const Loop<Dim>& l, const uint& loc, const number& f, vec& v);
@@ -514,6 +542,10 @@ void PGaussian_nr(const Loop<Dim>& l, const uint& loc, const uint& mu, const uin
 template<uint Dim>
 void PGaussianDisjoint_nr(const Loop<Dim>& l, const uint& j, const uint& mu, const uint& k, const number& beta, const number& a, const number& f, vec& v);
 
+// PGaussianLRDisjoint_nr
+template<uint Dim>
+void PGaussianLRDisjoint_nr(const Loop<Dim>& l, const uint& j, const uint& mu, const uint& k, const number& beta, const number& a, const number& f, vec& v);
+
 // PGaussianThermal_nr
 template<uint Dim>
 void PGaussianThermal_nr(const Loop<Dim>& l, const uint& loc, const uint& mu, const uint& k, const number& beta, const number& a, const number& f, vec& v);
@@ -521,6 +553,10 @@ void PGaussianThermal_nr(const Loop<Dim>& l, const uint& loc, const uint& mu, co
 // PGaussianThermalDisjoint_nr
 template<uint Dim>
 void PGaussianThermalDisjoint_nr(const Loop<Dim>& l, const uint& j, const uint& mu, const uint& k, const number& beta, const number& a, const number& f, vec& v);
+
+// PGaussianThermalLRDisjoint_nr
+template<uint Dim>
+void PGaussianThermalLRDisjoint_nr(const Loop<Dim>& l, const uint& j, const uint& mu, const uint& k, const number& beta, const number& a, const number& f, vec& v);
 
 /*----------------------------------------------------------------------------------------------------------------------------
 	2 - loopToVector, vectorToLoop
