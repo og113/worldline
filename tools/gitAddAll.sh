@@ -32,7 +32,7 @@ git add --all mout/*.txt
 
 # adding database stuff
 git add --all db/nr/*.sqlite
-git add --all db/nr/*.csv
+git add --all db/nr/nr*.csv
 git add --all db/nr/plots/*.csv
 git add --all db/nr/plots/*/*.csv
 
