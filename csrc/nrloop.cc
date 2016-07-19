@@ -1263,7 +1263,8 @@ void mdGaussianThermalDisjoint_nr(const uint& j, const uint& mu, const uint& i, 
 template<uint Dim>
 void mdGaussianThermalLRDisjoint_nr(const uint& j, const uint& mu, const uint& i, const Loop<Dim>& l,\
 			const number& beta, const number& a, const number& f, vec& v) {
-##########################################################################################################################			
+##########################################################################################################################	
+
 }
 						 
 // ddGaussianDisjoint_nr
