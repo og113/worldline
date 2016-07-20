@@ -8,6 +8,7 @@ set output outFile; \
 
 # files
 file2="results/nr/nr2.dat"
+file4="results/nr/nr4.dat"
 
 # approximate analytic results
 pi=3.1415926535897932
@@ -30,16 +31,19 @@ set ylabel "S"
 Napprox=100
 K=10
 pot=8
-kappa=1.0
+kappa=0.01
 
 # before mu was a choice, mu=1
 ST2l='file2 u 11:($3==pot? ($4==K? ($7=='
 ST2m='? ($8=='
 ST2r='? $12: 1/0): 1/0): 1/0): 1/0)'
+ST4l='file4 u 11:($3==11? ($4==11? ($7=='
+ST4r='? $12: 1/0): 1/0): 1/0)'
 
-set xrange [0:0.8]
+set xrange [0:2]
 set yrange [1:4]
-plot @ST2l 0.1 @ST2m 0.1 @ST2r t "Finite temperature calculation" with points lc rgb "blue", \
+plot @ST2l 0.1 @ST2m 0.1 @ST2r t "Finite temperature calculation, closed topology, a=0.1, K=10" with points lc rgb "blue", \
+	@ST4l 0.005 @ST4r t "Finite temperature calculation, open topology, a=0.005, K=11" with points lc rgb "magenta", \
 	ptemp(x,Napprox) title "low temperature result" with lines lc rgb "red", \
 	pweak(x) title "weak coupling result" with lines lc rgb "green", \
 	phightemp(x,kappa) title "high temperature result" with lines lc rgb "orange"
