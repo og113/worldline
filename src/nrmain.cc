@@ -782,21 +782,9 @@ for (uint pl=0; pl<Npl; pl++) {
 									PGaussianDisjoint_nr(xLoop, j, mu, k, beta, p.Epsi, repulsion_scale, Pmu);
 								}
 							}
-<<<<<<< HEAD
-						}
-						else if (gaussian && poto==PotentialOptions::thermal) {
-							mdGaussianThermal_nr(j, mu, k, xLoop, beta, p.Epsi, repulsion_scale, mds);
-							PGaussianThermal_nr(xLoop, j, mu, k, beta, p.Epsi, repulsion_scale, Pmu);
-						}
-						else if (gaussian && poto==PotentialOptions::thermalDisjoint) {
-							if (gaussianLR) {
-								mdGaussianThermalLRDisjoint_nr(j, mu, k, xLoop, beta, p.Epsi, repulsion_scale, mds);
-								PGaussianThermalLRDisjoint_nr(xLoop, j, mu, k, beta, p.Epsi, repulsion_scale, Pmu);
-=======
 							else if (poto==PotentialOptions::thermal) {
 								mdGaussianThermal_nr(j, mu, k, xLoop, beta, p.Epsi, repulsion_scale, mds);
 								PGaussianThermal_nr(xLoop, j, mu, k, beta, p.Epsi, repulsion_scale, Pmu);
->>>>>>> f19954a8f28f89493f904bee141243015e63b0ef
 							}
 							else if (poto==PotentialOptions::thermalDisjoint) {
 								if (gaussianLR) {
