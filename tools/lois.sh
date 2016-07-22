@@ -19,7 +19,7 @@ Bstart=$(tail -n 1 "$resultsFile" | sed -n "s/^\([0-9.-]\+\),\([0-9.-]\+\),\([0-
 echo "Bstart = $Bstart"
 
 # defining Bend as 10% higher
-#Bend=$(bc <<< "scale=6;$Bstart*1.1");
+#Bend=$(bc <<< "scale=8;$Bstart*1.1");
 Bend=$(python -c "print $Bstart*1.1");
 
 # echoing B_end
