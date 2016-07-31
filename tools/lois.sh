@@ -30,5 +30,5 @@ sed -i "s/^B\([^0-9.-]\+\)\([0-9.-]\+\) /B\1$Bstart/" $inputsFile
 sed -i "s/^B\([^0-9.-]\+\)\([0-9.-]\+\)\([^0-9.-]\+\)\([0-9.-]\+\) /B\1\2\3$Bend/" $inputsFile
 
 # submitting job
-echo "submitting job"
-msub $jobfile
+#echo "submitting job"
+#msub $jobfile
