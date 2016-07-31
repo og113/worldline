@@ -8,6 +8,9 @@ inputsFile="nrinputs/highTemp/inputs0"
 #inputsFile=inputs4
 jobFile="subs/nrmain0.sub"
 
+# defining amount to step by
+increase=1.2
+
 echo "results file = $resultsFile"
 echo "inputs file = $inputsFile"
 echo "job file = $jobFile"
@@ -19,8 +22,8 @@ Bstart=$(tail -n 1 "$resultsFile" | sed -n "s/^\([0-9.-]\+\),\([0-9.-]\+\),\([0-
 echo "Bstart = $Bstart"
 
 # defining Bend as 10% higher
-#Bend=$(bc <<< "scale=8;$Bstart*1.1");
-Bend=$(python -c "print $Bstart*1.1");
+#Bend=$(bc <<< "scale=8;$Bstart*$increase");
+Bend=$(python -c "print $Bstart*$increase");
 
 # echoing B_end
 echo "Bend = $Bend"
@@ -29,8 +32,6 @@ echo "Bend = $Bend"
 sed -i "s/^B\([^0-9.-]\+\)\([0-9.-]\+\) /B\1$Bstart/" $inputsFile
 sed -i "s/^B\([^0-9.-]\+\)\([0-9.-]\+\)\([^0-9.-]\+\)\([0-9.-]\+\) /B\1\2\3$Bend/" $inputsFile
 
-# submitting job
-echo "submitting job"
-msub $jobfile
-
-echo "done - thank you lois xxx"
+#echo "submitting job"
+#msub $jobfile
+#echo "done - thank you lois xxx"
