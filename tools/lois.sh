@@ -32,3 +32,5 @@ sed -i "s/^B\([^0-9.-]\+\)\([0-9.-]\+\)\([^0-9.-]\+\)\([0-9.-]\+\) /B\1\2\3$Bend
 # submitting job
 echo "submitting job"
 msub $jobfile
+
+echo "done - thank you lois xxx"
