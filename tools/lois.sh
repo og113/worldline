@@ -29,8 +29,8 @@ Bend=$(python -c "print $Bstart*$increase");
 echo "Bend = $Bend"
 
 # writing B_start and B_end to inputs file
-sed -i "s/^B\([^0-9.-]\+\)\([0-9.-]\+\) /B\1$Bstart/" $inputsFile
-sed -i "s/^B\([^0-9.-]\+\)\([0-9.-]\+\)\([^0-9.-]\+\)\([0-9.-]\+\) /B\1\2\3$Bend/" $inputsFile
+sed -i "s/^B\([^0-9.-]\+\)\([0-9.-]\+\)/B\1$Bstart/" $inputsFile
+sed -i "s/^B\([^0-9.-]\+\)\([0-9.-]\+\)\([^0-9.-]\+\)\([0-9.-]\+\)/B\1\2\3$Bend/" $inputsFile
 
 #echo "submitting job"
 #msub $jobfile
