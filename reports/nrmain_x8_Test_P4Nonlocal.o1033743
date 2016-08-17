@@ -1,0 +1,148 @@
+using inputs file inputs4
+timenumber: 160817110116
+looping over 1 steps
+loading loops from:
+data/nr/loops/dim_4/K_11/loop_kappa_0.0316228_E_0_a_0.003_T_1.2_pot_12.dat
+Check symmetric max: test(2.27374e-13) > closeness(1e-14)
+position of max symmetric: (714,710)/8198, (j,k) = (178,177), (mu,nu) = (2,2)
+Check negative eigenvalue: test(144499) > closeness(0.1)
+Check negative eigenvector: test(34962.1) > closeness(0.1)
+negative eigenvalue = 14.0188
+analytic result     = -0.198692
+eigenvector test    = 34962.1
+Check gamma: test(1) > closeness(0.1)
+ dz summary:                              results/nr/nr_dz.csv
+
+x.norm():              11.1093
+x_end.norm():          0.000264575
+mds.norm():            0.00906849
+mds.minCoeff():         -0.000463425
+mds.maxCoeff():         0.000263425
+mds minCoeff  :         4098
+mds maxCoeff  :         0
+max/2 counter :         3
+(mds.tail(zm)).mean(): -1.72531e-15
+(mds.head(N)).mean():  -9.99205e-05
+
+delta info:    
+delta.norm():          0.000456931
+delta.maxCoeff():        0.000163425
+delta.minCoeff():        -0.000363425
+delta maxCoeff  :        8197
+delta minCoeff  :        8198
+max/2 counter :         1
+(delta.tail(zm)).mean(): -0.0001
+(delta.head(N)).mean():  6.32083e-15
+
+dds info:      
+dds.determinant():      inf
+dds.sum():              16384
+dds.prod():             0
+dds.mean():             0.000243724
+dds.minCoeff():         -1270.52
+dds.maxCoeff():         2555.75
+dds minCoeff  :         (8198,0)
+dds maxCoeff  :         (90,86)
+max/2 counter :         8192
+dds.trace():            2.082e+07
+dds.norm():             281348
+
+action info:
+s:                      1.57996
+kinetic:                1.68506
+i0:                     -0.0712353
+vr:                     -0.0338675
+  pl run        len         i0          s        sol       solM      delta     E_cons  dx*kg_max     ic_max     cc_max       dx/a
+   0   1      1.685   -0.07124       1.58  0.0008163   0.001113  4.113e-05     0.7193     0.2565  5.466e-05          0     0.2743
+Check a*kg_max<<1: test(0.93519) > closeness(0.5)
+Check mds rotation symmetry: test(0.0441088) > closeness(6.72236e-09)
+Check mds mirror symmetry: test(0.116194) > closeness(0.01)
+avg mds:               -9.99146e-05
+max mds:               0.000463425
+position of max mds:   4098/8198, j = 1024, mu = 2
+avg delta:             -8.53763e-08
+max delta:             0.000363425
+position of max delta: 8198/8198, j = 2049, mu = 2
+Check P3 conservation: test(0.0487753) > closeness(0.001)
+Check P4 conservation: test(0.377399) > closeness(0.001)
+Check P4 endpoint (nonlocal) conservation: test(0.719261) > closeness(0.001)
+  Js       :                data/temp/160817110116Js_run_1.dat
+  P3       :                data/temp/160817110116P3_run_1.dat
+  P4       :                data/temp/160817110116P4_run_1.dat
+Check symmetric max: test(2.27374e-13) > closeness(1e-14)
+position of max symmetric: (7567,7571)/8198, (j,k) = (1891,1892), (mu,nu) = (3,3)
+Check negative eigenvalue: test(144499) > closeness(0.1)
+Check negative eigenvector: test(34962.1) > closeness(0.1)
+negative eigenvalue = 14.0188
+analytic result     = -0.198692
+eigenvector test    = 34962.1
+Check gamma: test(1) > closeness(0.1)
+ dz summary:                              results/nr/nr_dz.csv
+
+x.norm():              11.1093
+x_end.norm():          0.00037254
+mds.norm():            1.74257e-12
+mds.minCoeff():         -1.48011e-13
+mds.maxCoeff():         1.60449e-13
+mds minCoeff  :         4099
+mds maxCoeff  :         0
+max/2 counter :         98
+(mds.tail(zm)).mean(): 9.30452e-15
+(mds.head(N)).mean():  -1.0731e-17
+
+delta info:    
+delta.norm():          1.09457e-12
+delta.maxCoeff():        2.35381e-14
+delta.minCoeff():        -5.96891e-13
+delta maxCoeff  :        3618
+delta minCoeff  :        8198
+max/2 counter :         2
+(delta.tail(zm)).mean(): -1.69768e-13
+(delta.head(N)).mean():  -3.82106e-15
+
+dds info:      
+dds.determinant():      inf
+dds.sum():              16384
+dds.prod():             0
+dds.mean():             0.000243724
+dds.minCoeff():         -1270.52
+dds.maxCoeff():         2555.75
+dds minCoeff  :         (8198,0)
+dds maxCoeff  :         (4186,4182)
+max/2 counter :         8192
+dds.trace():            2.082e+07
+dds.norm():             281348
+
+action info:
+s:                      1.57996
+kinetic:                1.68506
+i0:                     -0.0712353
+vr:                     -0.0338675
+   0   2      1.685   -0.07124       1.58  1.569e-13  3.854e-13  9.853e-14     0.7193     0.2565  5.466e-05          0     0.2743
+Check solution zero modes: test(867.068) > closeness(0.001)
+Check a*kg_max<<1: test(0.93519) > closeness(0.5)
+Check mds rotation symmetry: test(1.39078) > closeness(6.72236e-09)
+Check mds mirror symmetry: test(1.43175) > closeness(0.01)
+Check delta rotation symmetry: test(1.27499) > closeness(6.72236e-09)
+Check delta mirror symmetry: test(0.0724873) > closeness(0.01)
+avg mds:               7.79055e-18
+max mds:               1.60449e-13
+position of max mds:   7991/8198, j = 1997, mu = 3
+avg delta:             -1.36998e-16
+max delta:             5.96891e-13
+position of max delta: 8198/8198, j = 2049, mu = 2
+Check P3 conservation: test(0.0487753) > closeness(0.001)
+Check P4 conservation: test(0.377399) > closeness(0.001)
+Check P4 endpoint (nonlocal) conservation: test(0.719261) > closeness(0.001)
+  Js       :                data/temp/160817110116Js_run_2.dat
+  P3       :                data/temp/160817110116P3_run_2.dat
+  P4       :                data/temp/160817110116P4_run_2.dat
+  curvature:data/temp/160817110116xCurvature_K_11_kappa_0.0316228_E_0_a_0.003_T_1.2.dat
+
+    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       2     980      11       1 0.03162       0   0.003     0.1           0         1.2        1.6851     -0.033867          1.58
+
+    results:      results/nr/nr4.csv
+          x:data/nr/loops/dim_4/K_11/loop_kappa_0.0316228_E_0_a_0.003_T_1.2_pot_12.dat
+978.95user 0.89system 16:19.84elapsed 100%CPU (0avgtext+0avgdata 1075900maxresident)k
+0inputs+3408outputs (0major+10051minor)pagefaults 0swaps
