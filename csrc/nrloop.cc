@@ -1546,6 +1546,25 @@ void PVthr_nr(const Loop<Dim>& l, const uint& j, const uint& mu, const uint& k, 
 	v[Dim*j+mu] += f*(-pow(2.0*PI,2))*2.0*DX(l,pk,k,mu)*FThermal(r,t,beta,a);	
 }
 
+// PRVthr_nr
+template<uint Dim>
+void PRVthr_nr(const Loop<Dim>& l, const uint& j, const uint& mu, const uint& k, const uint& nu, const number& beta, const number& a, const number& f, vec& v) {
+	uint pk = posNeigh(k,l.size());
+	number res = 0.0, r, t;
+	for (uint i=0; i<=j; i++) {
+		r = SpatialDistance(l[i],l[k]);
+		t = DX(l,k,i,Dim-1);
+		if (mu<(Dim-1)) {
+			res += (-pow(2.0*PI,2))*DX(l,pk,k,nu)*DX(l,pi,i,nu)*DX(l,k,i,mu)*DFThermalDrOnR(r,t,beta,a);
+		}
+		else {
+			res += (-pow(2.0*PI,2))*DX(l,pk,k,nu)*DX(l,pi,i,nu)*DFThermalDt(r,t,beta,a);
+		}			
+	}
+	
+	v[Dim*j+mu] += f*res;
+}
+
 // PVthrDisjoint_nr
 template<uint Dim>
 void PVthrDisjoint_nr(const Loop<Dim>& l, const uint& j, const uint& mu, const uint& k, const number& beta, const number& a, const number& f, vec& v) {
@@ -1555,6 +1574,25 @@ void PVthrDisjoint_nr(const Loop<Dim>& l, const uint& j, const uint& mu, const u
 	number t = DX(l,k,j,Dim-1); // intentionally not DXDisjoint(l,k,j,Dim-1,beta);
 
 	v[Dim*j+mu] += f*(-pow(2.0*PI,2))*2.0*DXDisjoint(l,pk,k,mu,beta)*FThermal(r,t,beta,a);	
+}
+
+// PRVthrDisjoint_nr
+template<uint Dim>
+void PRVthrDisjoint_nr(const Loop<Dim>& l, const uint& j, const uint& mu, const uint& k, const uint& nu, const number& beta, const number& a, const number& f, vec& v) {
+	uint pk = posNeighDisjoint(k,l.size());
+	number res = 0.0, r, t;
+	for (uint i=0; i<=j; i++) {
+		r = SpatialDistance(l[i],l[k]);
+		t = DX(l,k,i,Dim-1);
+		if (mu<(Dim-1)) {
+			res += (-pow(2.0*PI,2))*DXDisjoint(l,pk,k,nu,beta)*DXDisjoint(l,pi,i,nu,beta)*DX(l,k,i,mu)*DFThermalDrOnR(r,t,beta,a);
+		}
+		else {
+			res += (-pow(2.0*PI,2))*DXDisjoint(l,pk,k,nu,beta)*DXDisjoint(l,pi,i,nu,beta)*DFThermalDt(r,t,beta,a);
+		}			
+	}
+	
+	v[Dim*j+mu] += f*res;
 }
 
 // PVnonrelDisjoint_nr
