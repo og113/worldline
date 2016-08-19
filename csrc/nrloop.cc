@@ -1549,13 +1549,14 @@ void PVthr_nr(const Loop<Dim>& l, const uint& j, const uint& mu, const uint& k, 
 // PRVthr_nr
 template<uint Dim>
 void PRVthr_nr(const Loop<Dim>& l, const uint& j, const uint& mu, const uint& k, const uint& nu, const number& beta, const number& a, const number& f, vec& v) {
-	uint pk = posNeigh(k,l.size());
+	uint pk = posNeigh(k,l.size()), pi;
 	number res = 0.0, r, t;
 	for (uint i=0; i<=j; i++) {
+		pi = posNeigh(i,l.size());
 		r = SpatialDistance(l[i],l[k]);
 		t = DX(l,k,i,Dim-1);
 		if (mu<(Dim-1)) {
-			res += (-pow(2.0*PI,2))*DX(l,pk,k,nu)*DX(l,pi,i,nu)*DX(l,k,i,mu)*DFThermalDrOnR(r,t,beta,a);
+			res += (-pow(2.0*PI,2))*DX(l,pk,k,nu)*DX(l,pi,i,nu)*DX(l,k,i,mu)*DFThermalDrOnr(r,t,beta,a);
 		}
 		else {
 			res += (-pow(2.0*PI,2))*DX(l,pk,k,nu)*DX(l,pi,i,nu)*DFThermalDt(r,t,beta,a);
@@ -1579,13 +1580,14 @@ void PVthrDisjoint_nr(const Loop<Dim>& l, const uint& j, const uint& mu, const u
 // PRVthrDisjoint_nr
 template<uint Dim>
 void PRVthrDisjoint_nr(const Loop<Dim>& l, const uint& j, const uint& mu, const uint& k, const uint& nu, const number& beta, const number& a, const number& f, vec& v) {
-	uint pk = posNeighDisjoint(k,l.size());
+	uint pk = posNeighDisjoint(k,l.size()), pi;
 	number res = 0.0, r, t;
 	for (uint i=0; i<=j; i++) {
+		pi = posNeighDisjoint(i,l.size());
 		r = SpatialDistance(l[i],l[k]);
 		t = DX(l,k,i,Dim-1);
 		if (mu<(Dim-1)) {
-			res += (-pow(2.0*PI,2))*DXDisjoint(l,pk,k,nu,beta)*DXDisjoint(l,pi,i,nu,beta)*DX(l,k,i,mu)*DFThermalDrOnR(r,t,beta,a);
+			res += (-pow(2.0*PI,2))*DXDisjoint(l,pk,k,nu,beta)*DXDisjoint(l,pi,i,nu,beta)*DX(l,k,i,mu)*DFThermalDrOnr(r,t,beta,a);
 		}
 		else {
 			res += (-pow(2.0*PI,2))*DXDisjoint(l,pk,k,nu,beta)*DXDisjoint(l,pi,i,nu,beta)*DFThermalDt(r,t,beta,a);
@@ -1916,7 +1918,9 @@ template void PIn_nr<4>(const Loop<4>& l, const uint& loc, const uint& mu, const
 template void PInDisjoint_nr<4>(const Loop<4>& l, const uint& loc, const uint& mu, const number& n, const number& beta, const number& f, vec& v);
 template void PVor_nr<4>(const Loop<4>& l, const uint& j, const uint& mu, const uint& k, const number& a, const number& f, vec& v);
 template void PVthr_nr<4>(const Loop<4>& l, const uint& j, const uint& mu, const uint& k, const number& beta, const number& a, const number& f, vec& v);
+template void PRVthr_nr<4>(const Loop<4>& l, const uint& j, const uint& mu, const uint& k, const uint& nu, const number& beta, const number& a, const number& f, vec& v);
 template void PVthrDisjoint_nr<4>(const Loop<4>& l, const uint& j, const uint& mu, const uint& k, const number& beta, const number& a, const number& f, vec& v);
+template void PRVthrDisjoint_nr<4>(const Loop<4>& l, const uint& j, const uint& mu, const uint& k, const uint& nu, const number& beta, const number& a, const number& f, vec& v);
 template void PVnonrelDisjoint_nr<4>(const Loop<4>& l, const uint& loc, const uint& mu, const number& beta, const number& f, vec& v);
 template void PVnonrelrDisjoint_nr<4>(const Loop<4>& l, const uint& loc, const uint& mu, const number& beta, const number& a, const number& f, vec& v);
 template void PGaussian_nr<4>(const Loop<4>& l, const uint& loc, const uint& mu, const uint& k, const number& a, const number& f, vec& v);
