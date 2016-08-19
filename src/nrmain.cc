@@ -836,20 +836,29 @@ for (uint pl=0; pl<Npl; pl++) {
 						
 						if (!weak) {
 							// dynamical field	
-							if (poto==PotentialOptions::original)
+							if (poto==PotentialOptions::original) {
 								ddVor_nr(j, mu, k, nu, xLoop, p.Epsi, g, dds);
-							else if (poto==PotentialOptions::link)
+							}
+							else if (poto==PotentialOptions::link) {
 								ddVlr_nr(j, mu, k, nu, xLoop, p.Epsi, g, dds);
-							else if (poto==PotentialOptions::exponential)
+							}
+							else if (poto==PotentialOptions::exponential) {
 								ddVer_nr(j, mu, k, nu, xLoop, p.Epsi, g, dds);
-							else if (poto==PotentialOptions::dimreg)
+							}
+							else if (poto==PotentialOptions::dimreg) {
 								ddVdr_nr(j, mu, k, nu, xLoop, p.Epsi, g, dds);	
-							else if (poto==PotentialOptions::thermal)
+							}
+							else if (poto==PotentialOptions::thermal) {
 								ddVthr_nr(j, mu, k, nu, xLoop, beta, p.Epsi, g, dds);
-							else if (poto==PotentialOptions::thermalDisjoint)
+								PRVthr_nr(xLoop, j, mu, k, nu, beta, p.Epsi, g, Pmu);
+							}
+							else if (poto==PotentialOptions::thermalDisjoint) {
 								ddVthrDisjoint_nr(j, mu, k, nu, xLoop, beta, p.Epsi, g, dds);
-							else if (poto==PotentialOptions::nonrelDisjoint)
+								PRVthrDisjoint_nr(xLoop, j, mu, k, nu, beta, p.Epsi, g, Pmu);
+							}
+							else if (poto==PotentialOptions::nonrelDisjoint) {
 								ddVnonrelrDisjoint_nr(j, mu, k, nu, xLoop, beta, p.Epsi, g, dds);		
+							}
 								
 							// self-energy regularisation
 							if (!disjoint) {
