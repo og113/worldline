@@ -1,0 +1,27 @@
+using inputs file nrinputs/highTemp/inputs8
+timenumber: 160819132926
+looping over 2 steps
+loading loops from:
+data/nr/loops/dim_4/K_11/loop_kappa_1_E_0_a_0.0148_T_0.2_pot_9.dat
+  pl run        len         i0          s        sol       solM      delta     E_cons  dx*kg_max     ic_max     cc_max       dx/a
+   0   1      7.261     -4.196      2.813  0.0001731  8.651e-05  3.893e-06   0.001702       1.21  1.881e-05          0     0.2396
+   0   2      7.261     -4.196      2.813  4.447e-13  1.459e-12  9.245e-07   0.001702       1.21  1.881e-05          0     0.2396
+
+    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       21.38e+03      11       1       1       0  0.0148     0.1           0         0.2        7.2611      -0.25262        2.8129
+
+    results:      results/nr/nr4.csv
+          x:data/nr/loops/dim_4/K_11/loop_kappa_1_E_0_a_0.0148_T_0.2_pot_9.dat
+loading loops from:
+data/nr/loops/dim_4/K_11/loop_kappa_1_E_0_a_0.0148_T_0.2_pot_9.dat
+  pl run        len         i0          s        sol       solM      delta     E_cons  dx*kg_max     ic_max     cc_max       dx/a
+   1   1      7.261     -4.196      2.813  1.115e-05  1.116e-05   0.004157   0.001702       1.21  1.881e-05          0     0.2364
+   1   2      7.231     -4.161      2.818  8.613e-10   1.51e-09  4.694e-07   0.001667       1.21  1.881e-05          0     0.2354
+
+    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       21.38e+03      11       1       1       0   0.015     0.1           0         0.2        7.2309      -0.25252        2.8176
+
+    results:      results/nr/nr4.csv
+          x:data/nr/loops/dim_4/K_11/loop_kappa_1_E_0_a_0.015_T_0.2_pot_9.dat
+2760.75user 1.25system 46:01.57elapsed 100%CPU (0avgtext+0avgdata 1074996maxresident)k
+0inputs+312outputs (0major+7944minor)pagefaults 0swaps
