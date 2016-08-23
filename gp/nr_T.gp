@@ -32,10 +32,10 @@ wavyTitle(kappa) = sprintf("{/Symbol k}=%g, wavy",kappa)
 straightTitle(kappa) = sprintf("{/Symbol k}=%g, straight",kappa)
 
 plot file1 using 1:2 with points title wavyTitle(kappa1) lt 1 lc rgb "red", \
-	Sstraight(x,kappa1)with lines title straightTitle(kappa1) lt 1 lc rgb "red", \
+	file1 using 1:(Sstraight($1,kappa1)) with lines title straightTitle(kappa1) lt 1 lc rgb "red", \
 	file2 using 1:2 with points title wavyTitle(kappa2) lt 1 lc rgb "blue", \
-	Sstraight(x,kappa2) with lines title straightTitle(kappa2) lt 1 lc rgb "blue", \
+	file2 using 1:(Sstraight($1,kappa2)) with lines title straightTitle(kappa2) lt 1 lc rgb "blue", \
 	file3 using 1:2 with points title wavyTitle(kappa3) lt 1 lc rgb "green", \
-	Sstraight(x,kappa3) with lines title straightTitle(kappa3) lt 1 lc rgb "green"
+	file3 using 1:(Sstraight($1,kappa3)) with lines title straightTitle(kappa3) lt 1 lc rgb "green"
 
 pause -1
