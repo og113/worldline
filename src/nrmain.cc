@@ -759,8 +759,8 @@ for (uint pl=0; pl<Npl; pl++) {
 					if (!weak) {
 						if (poto==PotentialOptions::original) {
 							mdVor_nr(j, mu, k, xLoop, p.Epsi, g, mds);
-							PVor_nr(xLoop, j, mu, k, p.Epsi, g, Pmu);
-							PVor_nr(xLoop, j, mu, k, p.Epsi, g, PQVmu); //#############################
+							PVor_nr(xLoop, j, mu, k, p.Epsi, 2.0*g, Pmu);
+							PVor_nr(xLoop, j, mu, k, p.Epsi, 2.0*g, PQVmu); //#############################
 						}
 						else if (poto==PotentialOptions::link)
 							mdVlr_nr(j, mu, k, xLoop, p.Epsi, g, mds);
@@ -770,8 +770,8 @@ for (uint pl=0; pl<Npl; pl++) {
 							mdVdr_nr(j, mu, k, xLoop, p.Epsi, g, mds);
 						else if (poto==PotentialOptions::thermal) {
 							mdVthr_nr(j, mu, k, xLoop, beta, p.Epsi, g, mds);
-							PVthr_nr(xLoop, j, mu, k, beta, p.Epsi, g, Pmu);
-							PVthr_nr(xLoop, j, mu, k, beta, p.Epsi, g, PQVmu); //#############################
+							PVthr_nr(xLoop, j, mu, k, beta, p.Epsi, 2.0*g, Pmu);
+							PVthr_nr(xLoop, j, mu, k, beta, p.Epsi, 2.0*g, PQVmu); //#############################
 						}
 						else if (poto==PotentialOptions::thermalDisjoint) {
 							mdVthrDisjoint_nr(j, mu, k, xLoop, beta, p.Epsi, g, mds);
@@ -781,8 +781,8 @@ for (uint pl=0; pl<Npl; pl++) {
 						if (gaussian) {	
 							if (!disjoint && poto!=PotentialOptions::thermal) {
 								mdGaussian_nr(j, mu, k, xLoop, p.Epsi, repulsion_scale, mds);
-								PGaussian_nr(xLoop, j, mu, k, p.Epsi, repulsion_scale, Pmu);
-								PGaussian_nr(xLoop, j, mu, k, p.Epsi, repulsion_scale, PQVmu); //##################
+								PGaussian_nr(xLoop, j, mu, k, p.Epsi, 2.0*repulsion_scale, Pmu);
+								PGaussian_nr(xLoop, j, mu, k, p.Epsi, 2.0*repulsion_scale, PQVmu); //##################
 							}
 							else if (disjoint && poto!=PotentialOptions::thermalDisjoint) {
 								if (gaussianLR) {
@@ -797,8 +797,8 @@ for (uint pl=0; pl<Npl; pl++) {
 							else if (poto==PotentialOptions::thermal) {
 								//mdGaussian_nr(j, mu, k, xLoop, p.Epsi, repulsion_scale, mds);
 								mdGaussianThermal_nr(j, mu, k, xLoop, beta, p.Epsi, repulsion_scale, mds);
-								PGaussianThermal_nr(xLoop, j, mu, k, beta, p.Epsi, repulsion_scale, Pmu);
-								PGaussianThermal_nr(xLoop, j, mu, k, beta, p.Epsi, repulsion_scale, PQVmu); //##################
+								PGaussianThermal_nr(xLoop, j, mu, k, beta, p.Epsi, 2.0*repulsion_scale, Pmu);
+								PGaussianThermal_nr(xLoop, j, mu, k, beta, p.Epsi, 2.0*repulsion_scale, PQVmu); //##################
 							}
 							else if (poto==PotentialOptions::thermalDisjoint) {
 								if (gaussianLR) {
@@ -850,8 +850,8 @@ for (uint pl=0; pl<Npl; pl++) {
 							// dynamical field	
 							if (poto==PotentialOptions::original) {
 								ddVor_nr(j, mu, k, nu, xLoop, p.Epsi, g, dds);
-								PRVor_nr(xLoop, j, mu, k, nu, p.Epsi, g, Pmu);
-								PRVor_nr(xLoop, j, mu, k, nu, p.Epsi, g, PRmu); //#######################
+								PRVor_nr(xLoop, j, mu, k, nu, p.Epsi, 2.0*g, Pmu);
+								PRVor_nr(xLoop, j, mu, k, nu, p.Epsi, 2.0*g, PRmu); //#######################
 							}
 							else if (poto==PotentialOptions::link) {
 								ddVlr_nr(j, mu, k, nu, xLoop, p.Epsi, g, dds);
@@ -864,8 +864,8 @@ for (uint pl=0; pl<Npl; pl++) {
 							}
 							else if (poto==PotentialOptions::thermal) {
 								ddVthr_nr(j, mu, k, nu, xLoop, beta, p.Epsi, g, dds);
-								PRVthr_nr(xLoop, j, mu, k, nu, beta, p.Epsi, g, Pmu);
-								PRVthr_nr(xLoop, j, mu, k, nu, beta, p.Epsi, g, PRmu); //#######################
+								PRVthr_nr(xLoop, j, mu, k, nu, beta, p.Epsi, 2.0*g, Pmu);
+								PRVthr_nr(xLoop, j, mu, k, nu, beta, p.Epsi, 2.0*g, PRmu); //#######################
 							}
 							else if (poto==PotentialOptions::thermalDisjoint) {
 								ddVthrDisjoint_nr(j, mu, k, nu, xLoop, beta, p.Epsi, g, dds);
@@ -879,14 +879,14 @@ for (uint pl=0; pl<Npl; pl++) {
 							if (!disjoint) {
 								if (gaussian && poto!=PotentialOptions::thermal) {
 									ddGaussian_nr(j, mu, k, nu, xLoop, p.Epsi, repulsion_scale, dds);
-									PRGaussian_nr(xLoop, j, mu, k, nu, p.Epsi, repulsion_scale, Pmu);
-									PRGaussian_nr(xLoop, j, mu, k, nu, p.Epsi, repulsion_scale, PRmu);
+									PRGaussian_nr(xLoop, j, mu, k, nu, p.Epsi, 2.0*repulsion_scale, Pmu);
+									PRGaussian_nr(xLoop, j, mu, k, nu, p.Epsi, 2.0*repulsion_scale, PRmu);
 								}
 								else if (gaussian && poto==PotentialOptions::thermal) {
 									ddGaussianThermal_nr(j, mu, k, nu, xLoop, beta, p.Epsi, repulsion_scale, dds);
 									//ddGaussian_nr(j, mu, k, nu, xLoop, p.Epsi, repulsion_scale, dds);
-									PRGaussianThermal_nr(xLoop, j, mu, k, nu, beta, p.Epsi, repulsion_scale, Pmu);
-									PRGaussianThermal_nr(xLoop, j, mu, k, nu, beta, p.Epsi, repulsion_scale, PRmu); //################
+									PRGaussianThermal_nr(xLoop, j, mu, k, nu, beta, p.Epsi, 2.0*repulsion_scale, Pmu);
+									PRGaussianThermal_nr(xLoop, j, mu, k, nu, beta, p.Epsi, 2.0*repulsion_scale, PRmu); //################
 								}
 								else if (poto!=PotentialOptions::dimreg)
 									ddL_nr(j,mu,k,nu,xLoop,dm,dds);
