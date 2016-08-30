@@ -54,6 +54,15 @@ int main(int argc, char** argv) {
 	1 - argv, parameters etc
 ----------------------------------------------------------------------------------------------------------------------------*/
 
+// printing argv
+for (int j=0; j<argc; j++) {
+	cout << argv[j];
+	if (j<(argc-1))
+		cout << " ";
+	else
+		cout << endl;
+}
+
 // argv options
 bool verbose = true;
 bool guess = false;
@@ -1585,6 +1594,7 @@ for (uint pl=0; pl<Npl; pl++) {
 			checkP4.checkMessage();
 			checkP4Nonlocal.checkMessage();
 			checkEAgree.checkMessage();
+			cout << "erg = " << erg << ", ergNoether = " << ergNoether << endl;
 			string consFile = "data/temp/"+timenumber+"Js_run_"+nts(runsCount)+".dat";
 			saveVectorAscii(consFile,Js);
 			printf("%12s%50s\n","Js       :",consFile.c_str());
