@@ -62,7 +62,7 @@ set ytic auto
 set xlabel xLabel
 set ylabel yLabel
 
-colours="blue red green orange cyan pink yellow black"
+colours="blue red green black cyan pink orange purple"
 
 if (exists("inFile")) {
 	if (exists("zero")) {

@@ -44,3 +44,6 @@ for i in {1..9}; do sed -i "s/inputs0/inputs$i/g" "subs/nrmain$i.sub"; done;
 
 to send of subs
 for i in {0..9}; do msub "subs/nrmain$i.sub"; done;
+
+for getting a specific number from the last line of results
+tail -n 1 results/nr/nr4.csv | sed -n 's/^\([0-9.+-]\+\),\([0-9.+-]\+\),\([0-9.+-]\+\),\([0-9.+-]\+\),\([0-9.+-]\+\),\([0-9.+-]\+\),\([0-9.+-]\+\),\([0-9.+-]\+\),\([0-9.+-]\+\),\([0-9.+-]\+\),.*/\10/p'
