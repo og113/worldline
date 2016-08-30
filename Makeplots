@@ -5,6 +5,7 @@
 DDIR			= db/nr/plots
 PDIR			= pics/nr/db
 PLOTTER			= tools/plotSimple.sh
+PLOTTERDEPEND	= gp/simple.gp
 EXE				= bash $(PLOTTER)
 
 #------------------------------------------------------------------------------------------------------------------------
@@ -66,20 +67,20 @@ $(DDIR)/%.dat: $(DDIR)/%.csv
 	sed -n 's/"\([0-9.-]*\)"/\1/pg' $< >$@
 	sed -i 's/,/ /g' $@
 
-$(PDIR)/%.png: $(DDIR)/%.dat $(PLOTTER)
+$(PDIR)/%.png: $(DDIR)/%.dat $(PLOTTER) $(PLOTTERDEPEND)
 	$(EXE) -o $@ $<
 	
-$(PDIR)/%.svg: $(DDIR)/%.dat $(PLOTTER)
+$(PDIR)/%.svg: $(DDIR)/%.dat $(PLOTTER) $(PLOTTERDEPEND)
 	$(EXE) -o $@ $<
 	
 $(DDIR)/*/%.dat: $(DDIR)/*/%.csv
 	sed -n 's/"\([0-9.-]*\)"/\1/pg' $< >$@
 	sed -i 's/,/ /g' $@
 	
-$(PDIR)/%.png: $(DDIR)/%/*.dat $(PLOTTER)
+$(PDIR)/%.png: $(DDIR)/%/*.dat $(PLOTTER) $(PLOTTERDEPEND)
 	$(EXE) -o $@ $$(dirname "$$(echo $< | head -n1 | awk '{print $$1;}')" )
 
-$(PDIR)/%.svg: $(DDIR)/%/*.dat $(PLOTTER)
+$(PDIR)/%.svg: $(DDIR)/%/*.dat $(PLOTTER) $(PLOTTERDEPEND)
 	$(EXE) -o $@ $$(dirname "$$(echo $< | head -n1 | awk '{print $$1;}')" )
 
 #------------------------------------------------------------------------------------------------------------------------

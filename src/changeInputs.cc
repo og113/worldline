@@ -42,9 +42,6 @@ if (argc % 2 && argc>1) {
 }
 if (fo.empty()) fo = fi;
 
-Parameters p;
-p.load(fi);                   
-
 // getting parameters
 if (argc % 2 && argc>1) {
 	for (uint j=0; j<(uint)(argc/2); j++) {
@@ -60,6 +57,12 @@ if (argc % 2 && argc>1) {
 		else if (id.compare("B")==0) p.B = stringToNumber<number>(argv[2*j+2]);
 		else if (id.compare("T")==0) p.T = stringToNumber<number>(argv[2*j+2]);
 		else if (id.compare("Epsi")==0) p.Epsi = stringToNumber<number>(argv[2*j+2]);
+		else if (id.compare("Mu")==0) p.Mu = stringToNumber<number>(argv[2*j+2]);
+		else if (id.compare("P1")==0) p.P1 = stringToNumber<number>(argv[2*j+2]);
+		else if (id.compare("P2")==0) p.P2 = stringToNumber<number>(argv[2*j+2]);
+		else if (id.compare("P3")==0) p.P3 = stringToNumber<number>(argv[2*j+2]);
+		else if (id.compare("P4")==0) p.P4 = stringToNumber<number>(argv[2*j+2]);
+		else if (id.compare("Lambda")==0) p.Lambda = stringToNumber<number>(argv[2*j+2]);
 		else if (id.compare("f")==0 || id.compare("fi")==0 || id.compare("fileIn")==0);
 		else if (id.compare("fo")==0 || id.compare("fileOut")==0);
 		else {
