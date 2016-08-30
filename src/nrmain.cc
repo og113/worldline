@@ -254,8 +254,13 @@ for (uint pl=0; pl<Npl; pl++) {
 			p.Mu = p.Epsi;
 			pold.Mu = pold.Epsi;
 		}
-		if (poto==PotentialOptions::thermal || disjoint)
+		if (poto==PotentialOptions::thermal || disjoint) {
+			if (p.T==0) {
+				cerr << "must have T!=0 for thermal runs" << endl;
+				return 1;
+			}
 			stepFile = filenameThermalNR<dim>(pold);
+		}
 		else
 			stepFile = filenameLoopNR<dim>(pold);
 		if (weak)
@@ -322,9 +327,10 @@ for (uint pl=0; pl<Npl; pl++) {
 	Check checkMDSRotation("mds rotation symmetry",1.0e-16*NT*NT);
 	Check checkDeltaMirror("delta mirror symmetry",1.0e-2);
 	Check checkDeltaRotation("delta rotation symmetry",1.0e-16*NT*NT);
+	Check checkEAgree("energies agree",1.0e-3);
 	
 	// defining scalar quantities
-	number len, i0, s, sm, v, vr, erg, fgamma, gamma, angle_neigh, zmax, zmin, tmax, ic_max, cc_max, kg_max;
+	number len, i0, s, sm, v, vr, erg, ergNoether, fgamma, gamma, angle_neigh, zmax, zmin, tmax, ic_max, cc_max, kg_max;
 	
 	// defining vector and matrix quantities
 	vec x(N*dim);
@@ -1086,6 +1092,7 @@ for (uint pl=0; pl<Npl; pl++) {
 			erg = p.T*(sqrt4s0-2.0*i0);
 		else 
 			erg = E;
+		ergNoether = 0.5*(Pmu[dim-1]+Pmu[(N-1)*dim+(dim-1)]);
 	
 /*----------------------------------------------------------------------------------------------------------------------------
 	6 - some checks
@@ -1114,9 +1121,9 @@ for (uint pl=0; pl<Npl; pl++) {
 		Js += Eigen::VectorXd::Constant(N,Js_mean);
 		
 		// energy normalization
-		number Enorm = 0.0;
+		number Enorm = 1.0;
 		if (poto==PotentialOptions::thermal || disjoint)
-			Enorm = p.T*2.0;
+			Enorm = ergNoether/2.0;
 		else
 			Enorm = p.P4/2.0;
 			
@@ -1154,6 +1161,9 @@ for (uint pl=0; pl<Npl; pl++) {
 		else
 			checkP4.add(P4.norm()/P4_norm);
 		P4 += Eigen::VectorXd::Constant(N,P4_mean);
+		
+		// check energies agree
+		checkEAgree.add(2.0*abs(erg-ergNoether)/(abs(erg)+abs(ergNoether)));
 				
 		if (alltests) {
 			// checking if dds is symmetric
@@ -1574,6 +1584,7 @@ for (uint pl=0; pl<Npl; pl++) {
 			checkP3.checkMessage();
 			checkP4.checkMessage();
 			checkP4Nonlocal.checkMessage();
+			checkEAgree.checkMessage();
 			string consFile = "data/temp/"+timenumber+"Js_run_"+nts(runsCount)+".dat";
 			saveVectorAscii(consFile,Js);
 			printf("%12s%50s\n","Js       :",consFile.c_str());
