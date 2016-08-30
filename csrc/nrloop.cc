@@ -1681,7 +1681,7 @@ template<uint Dim>
 void PGaussianThermal_nr(const Loop<Dim>& l, const uint& j, const uint& mu, const uint& k, const number& beta, const number& a, const number& f, vec& v) {
 	uint pk = posNeigh(k,l.size());
 	number r = SpatialDistance(l[j],l[k]);
-	number t = DX(l,k,j,3);
+	number t = DX(l,k,j,Dim-1);
 	v[Dim*j+mu] += f*2.0*DX(l,pk,k,mu)*GThermal(r,t,beta,a);
 }
 
@@ -1710,7 +1710,7 @@ template<uint Dim>
 void PGaussianThermalDisjoint_nr(const Loop<Dim>& l, const uint& j, const uint& mu, const uint& k, const number& beta, const number& a, const number& f, vec& v) {
 	uint pk = posNeighDisjoint(k,l.size());
 	number r = SpatialDistance(l[j],l[k]);
-	number t = DX(l,k,j,3);
+	number t = DX(l,k,j,Dim-1);
 	v[Dim*j+mu] += f*2.0*DXDisjoint(l,pk,k,mu,beta)*GThermal(r,t,beta,a);
 }
 
