@@ -1,0 +1,36 @@
+using inputs file inputs4
+looping over 2 steps
+generating 1 circle shaped unit loops each of 2048 points in 4 dimensions
+printing to data/circle/loops/dim_4/K_11/loop_R_1_rank_0.dat, with runs from 0...1
+generating 1 circle shaped unit loops each of 2048 points in 4 dimensions
+printing to data/circle/loops/dim_4/K_11/loop_R_1_rank_0.dat, with runs from 0...1
+0.00user 0.00system 0:00.27elapsed 2%CPU (0avgtext+0avgdata 2800maxresident)k
+2544inputs+264outputs (0major+773minor)pagefaults 0swaps
+using inputs file inputs4
+timenumber: 160819074009
+looping over 2 steps
+loading loops from:
+data/lemon/loops/dim_4/K_11/loop_R_1_E_0_rank_0.dat
+  pl run        len         i0          s        sol       solM      delta     E_cons  dx*kg_max     ic_max     cc_max       dx/a
+   0   1      6.283     -3.142      2.894  0.0004647  0.0005194     0.1585   0.006053       1.21  1.412e-05          0     0.2073
+   0   2      7.279     -4.217      2.814  2.373e-07  2.637e-07  4.427e-05    0.01739       1.21  1.856e-05          0     0.2402
+   0   3      7.279     -4.216      2.814  4.528e-11  1.574e-10  6.666e-09    0.01739       1.21  1.882e-05          0     0.2402
+
+    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       32.05e+03      11       1       1       0  0.0148     0.1           0        0.02        7.2791      -0.24821        2.8145
+
+    results:      results/nr/nr4.csv
+          x:data/nr/loops/dim_4/K_11/loop_kappa_1_E_0_a_0.0148_T_0.02_pot_9.dat
+loading loops from:
+data/nr/loops/dim_4/K_11/loop_kappa_1_E_0_a_0.0148_T_0.02_pot_9.dat
+  pl run        len         i0          s        sol       solM      delta     E_cons  dx*kg_max     ic_max     cc_max       dx/a
+   1   1      7.279     -4.216      2.814  1.114e-05  1.114e-05   0.004194    0.01739       1.21  1.882e-05          0     0.2369
+   1   2      7.249     -4.181      2.819  4.778e-11  1.212e-10  3.873e-08    0.01704       1.21  1.882e-05          0      0.236
+
+    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       21.37e+03      11       1       1       0   0.015     0.1           0        0.02        7.2485      -0.24818        2.8193
+
+    results:      results/nr/nr4.csv
+          x:data/nr/loops/dim_4/K_11/loop_kappa_1_E_0_a_0.015_T_0.02_pot_9.dat
+3412.76user 0.79system 56:52.98elapsed 100%CPU (0avgtext+0avgdata 1075016maxresident)k
+36696inputs+312outputs (1major+8848minor)pagefaults 0swaps

@@ -6,15 +6,17 @@ single=true
 oflag=false
 lflag=false
 tflag=false
+zflag=false
 
 # checking if outFile required and getting filename if so
-options=':o:t:l'
+options=':o:t:lz'
 OPTIND=1
 while getopts $options option
 do
 	case $option in
 		o  ) o=$OPTARG; oflag=true;;
 		l  ) lflag=true;;
+		z  ) zflag=true;;
 		t  ) t=$OPTARG; tflag=true;;
 		\? ) echo "Unknown option argument -$OPTARG" >&2; exit 1;;
 		:  )
@@ -64,6 +66,10 @@ fi
 if $tflag
 then
 	gargs+="; Title='$t'"
+fi
+if $zflag
+then
+	gargs+="; zero='1'"
 fi
 if $lflag
 then
