@@ -8,8 +8,8 @@ then
 	exit 1;
 elif [ "$#" -eq 1 ]
 then
-	resultsFile=$1;	
-	table="nrtemp";
+	echo "must supply table in database";
+	exit 1;
 	databaseFile="db/nr/nr.sqlite";
 elif [ "$#" -eq 2 ]
 then
