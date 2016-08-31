@@ -1718,7 +1718,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	if ((checkDelta.good() && checkSol.good() && checkSolMax.good()) || pass) {
 		// printing good results to file	
 		string resFile = (pass? "results/nr/nr_pass5.csv":"results/nr/nr5.csv");
-		#define numRes 26
+		#define numRes 27
 		vector<string> results(numRes);
 		string results_array[numRes] = {timenumber,\
 									nts(pl),\
@@ -1734,6 +1734,7 @@ for (uint pl=0; pl<Npl; pl++) {
 									nts(p.T,16),\
 									nts(s,16),\
 									nts(erg,16),\
+									nts(ergNoether,16),\
 									nts(gamma,16),\
 									nts(len,16),\
 									nts(i0,16),\
@@ -1754,7 +1755,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	else {
 		// printing error results to file	
 		string resFile = "results/nr/nr_error5.csv";
-		#define numResErr 24
+		#define numResErr 25
 		vector<string> results(numResErr);
 		string results_array[numRes] = {timenumber,\
 									nts(pl),\
@@ -1771,6 +1772,7 @@ for (uint pl=0; pl<Npl; pl++) {
 									nts(p.T,16),\
 									nts(s,16),\
 									nts(erg,16),\
+									nts(ergNoether,16),\
 									nts(checkSol.back(),16),\
 									nts(checkSolMax.back(),16),\
 									nts(checkDelta.back(),16),\
