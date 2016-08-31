@@ -667,6 +667,30 @@ number DXDisjoint(const Loop<Dim>& loop, const uint& i, const uint& j, const uin
 		return (loop[i])[mu]-(loop[j])[mu];
 }
 
+// PosMinDXMu
+template <uint Dim>
+void PosMinDXMu(const Loop<Dim>& l, const uint& i, const uint& mu, uint& posMin, number& currentMin) {
+	if (i<l.size()/2) {
+		number DXmu = DX(l,i,mu);
+		if (abs(DXmu)<currentMin) {
+			currentMin = abs(DXmu);
+			posMin = i;
+		}
+	}
+}
+
+// PosMinDXMuDisjoint
+template <uint Dim>
+void PosMinDXMuDisjoint(const Loop<Dim>& l, const uint& i, const uint& mu, uint& posMin, number& currentMin, const number& beta) {
+	if (i<l.size()/2) {
+		number DXmu = DXDisjoint(l,i,mu,beta);
+		if (abs(DXmu)<currentMin) {
+			currentMin = abs(DXmu);
+			posMin = i;
+		}
+	}
+}
+
 // L
 template <uint Dim>
 number L (const Loop<Dim>& l) {
@@ -1257,6 +1281,8 @@ template number DX<4>(const Loop<4>&, const uint&, const uint&);
 template number DX<4>(const Loop<4>&, const uint&, const uint&, const uint&);
 template number DXDisjoint<4>(const Loop<4>&, const uint&, const uint&, const number&);
 template number DXDisjoint<4>(const Loop<4>&, const uint&, const uint&, const uint&, const number&);
+template void PosMinDXMu<4>(const Loop<4>& loop, const uint& i, const uint& mu, uint& posMin, number& currentMin);
+template void PosMinDXMuDisjoint<4>(const Loop<4>& loop, const uint& i, const uint& mu, uint& posMin, number& currentMin, const number& beta);
 template class Loop<4>;
 template number L<4> (const Loop<4>& l);
 template number DL<4> (const Loop<4>& l, const Point<4>& p, const uint& loc);
