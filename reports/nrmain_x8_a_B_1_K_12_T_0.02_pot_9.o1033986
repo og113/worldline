@@ -1,0 +1,82 @@
+using inputs file nrinputs/highTemp/inputs5
+timenumber: 160830000801
+looping over 6 steps
+loading loops from:
+data/nr/loops/dim_4/K_12/loop_kappa_1_E_0_a_0.006_T_0.02_pot_9.dat
+  pl run        len         i0          s        sol       solM      delta     E_cons  dx*kg_max     ic_max     cc_max       dx/a
+   0   1      10.78      -9.24      1.286  0.0001166  5.831e-05  1.822e-06  6.424e-06      1.208  4.706e-06          0     0.4385
+   0   2      10.78      -9.24      1.286  4.683e-10  1.486e-09  7.125e-09  6.451e-06      1.208  4.706e-06          0     0.4385
+
+    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       25.95e+03      12       1       1       0   0.006     0.1           0        0.02        10.776      -0.24943        1.2861
+
+    results:      results/nr/nr4.csv
+          x:data/nr/loops/dim_4/K_12/loop_kappa_1_E_0_a_0.006_T_0.02_pot_9.dat
+loading loops from:
+data/nr/loops/dim_4/K_12/loop_kappa_1_E_0_a_0.006_T_0.02_pot_9.dat
+  pl run        len         i0          s        sol       solM      delta     E_cons  dx*kg_max     ic_max     cc_max       dx/a
+   1   1      10.78      -9.24      1.287  0.0002825  0.0002825      0.471  6.358e-06      1.208  4.706e-06          0     0.5262
+   1   2      15.85     -19.99     -4.318  2.119e-05   2.12e-05    0.05005  1.812e-05      1.208  4.676e-06          0      0.774
+   1   3      16.64     -22.05     -5.535  1.173e-06  1.173e-06   0.003141  2.106e-05      1.208  4.571e-06          0     0.8127
+   1   4       16.7     -22.18     -5.618  5.171e-09  5.406e-09  1.389e-05  2.115e-05      1.208  4.569e-06          0     0.8153
+
+    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       4 1.2e+04      12       1       1       0   0.005     0.1           0        0.02        16.697      -0.13028       -5.6183
+
+    results:      results/nr/nr4.csv
+          x:data/nr/loops/dim_4/K_12/loop_kappa_1_E_0_a_0.005_T_0.02_pot_9.dat
+loading loops from:
+data/nr/loops/dim_4/K_12/loop_kappa_1_E_0_a_0.005_T_0.02_pot_9.dat
+Check delta: test(1.19104) > closeness(1)
+
+x.norm():              170.074
+x_end.norm():          1.01728e-14
+mds.norm():            0.108588
+mds.minCoeff():         -0.00169668
+mds.maxCoeff():         0.00169668
+mds minCoeff  :         4099
+mds maxCoeff  :         0
+max/2 counter :         5460
+(mds.tail(zm)).mean(): 7.20987e-13
+(mds.head(N)).mean():  -0.000539847
+
+delta info:    
+delta.norm():          202.566
+delta.maxCoeff():        3.16509
+delta.minCoeff():        -3.16509
+delta maxCoeff  :        12291
+delta minCoeff  :        4099
+max/2 counter :         5460
+(delta.tail(zm)).mean(): 4.56085e-13
+(delta.head(N)).mean():  -1.00706
+
+dds info:      
+dds.determinant():      -inf
+dds.sum():              32768
+dds.prod():             0
+dds.mean():             0.000122011
+dds.minCoeff():         -1602.97
+dds.maxCoeff():         2078.93
+dds minCoeff  :         (4099,0)
+dds maxCoeff  :         (6152,6148)
+max/2 counter :         44624
+dds.trace():            2.10946e+07
+dds.norm():             374186
+
+action info:
+s:                      -5.06366
+kinetic:                16.697
+i0:                     -22.1854
+vr:                     0.424744
+  pl run        len         i0          s        sol       solM      delta     E_cons  dx*kg_max     ic_max     cc_max       dx/a
+   2   1       16.7     -22.19     -5.064  0.0006385  0.0006385      1.191  1.286e-05      1.208   4.57e-06          0      1.019
+
+    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       13.36e+03      12       1       1       0   0.004     0.1           0        0.02        16.697       0.42474       -5.0637
+
+    results:results/nr/nr_error4.csv
+nrmain error: data/nr/loops/dim_4/K_12/loop_kappa_1_E_0_a_0.004_T_0.02_pot_9.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_12/loop_kappa_1_E_0_a_0.003_T_0.02_pot_9.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_12/loop_kappa_1_E_0_a_0.002_T_0.02_pot_9.dat doesn't exist, moving to next parameter loop
+21248.87user 9.30system 5:54:17elapsed 100%CPU (0avgtext+0avgdata 4238112maxresident)k
+8inputs+608outputs (0major+23057minor)pagefaults 0swaps

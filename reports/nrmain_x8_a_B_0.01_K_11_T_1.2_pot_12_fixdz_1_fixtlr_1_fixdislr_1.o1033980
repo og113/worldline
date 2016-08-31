@@ -1,0 +1,75 @@
+using inputs file nrinputs/highTemp/inputs4
+timenumber: 160829140644
+looping over 9 steps
+loading loops from:
+data/nr/loops/dim_4/K_11/loop_kappa_0.01_E_0_a_0.01_T_1.2_pot_12.dat
+  pl run        len         i0          s        sol       solM      delta     E_cons  dx*kg_max     ic_max     cc_max       dx/a
+   0   1      1.675   -0.02807      1.616  0.0008288  0.0004979  2.424e-05     0.7671     0.1815  7.768e-06          0    0.08177
+   0   2      1.675   -0.02807      1.616  1.368e-13   5.17e-13  4.241e-13     0.7671     0.1815  7.768e-06          0    0.08177
+
+    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       2     855      11       1    0.01       0    0.01     0.1           0         1.2        1.6746      -0.03064        1.6159
+
+    results:      results/nr/nr4.csv
+          x:data/nr/loops/dim_4/K_11/loop_kappa_0.01_E_0_a_0.01_T_1.2_pot_12.dat
+loading loops from:
+data/nr/loops/dim_4/K_11/loop_kappa_0.01_E_0_a_0.01_T_1.2_pot_12.dat
+  pl run        len         i0          s        sol       solM      delta     E_cons  dx*kg_max     ic_max     cc_max       dx/a
+   1   1      1.675   -0.02807      1.623   0.002638   0.003631     0.3714     0.7887     0.1815  7.768e-06          0    0.05451
+   1   2      1.731    0.09897      1.826    0.01206    0.01422     0.3485     0.7965     0.5933   0.002623          0    0.05634
+Check delta: test(11.9692) > closeness(1)
+
+x.norm():              12.6288
+x_end.norm():          0.000866083
+mds.norm():            0.177473
+mds.minCoeff():         -0.0113982
+mds.maxCoeff():         0.0113982
+mds minCoeff  :         7922
+mds maxCoeff  :         0
+max/2 counter :         320
+(mds.tail(zm)).mean(): -7.06181e-14
+(mds.head(N)).mean():  0.000298952
+
+delta info:    
+delta.norm():          151.156
+delta.maxCoeff():        3.39156
+delta.minCoeff():        -3.39156
+delta maxCoeff  :        6142
+delta minCoeff  :        2046
+max/2 counter :         2048
+(delta.tail(zm)).mean(): -2.19608e-11
+(delta.head(N)).mean():  -0.83118
+
+dds info:      
+dds.determinant():      inf
+dds.sum():              16384
+dds.prod():             0
+dds.mean():             0.000243724
+dds.minCoeff():         -1192.42
+dds.maxCoeff():         2384.97
+dds minCoeff  :         (2046,0)
+dds maxCoeff  :         (7986,7982)
+max/2 counter :         8192
+dds.trace():            1.95362e+07
+dds.norm():             264352
+
+action info:
+s:                      1.91198
+kinetic:                1.71828
+i0:                     0.196916
+vr:                     -0.00322099
+   1   3      1.711     0.1969      1.912    0.01405    0.02737      11.97     0.7836     0.4648   0.005111          0    0.05571
+
+    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       31.32e+03      11       1    0.01       0   0.015     0.1           0         1.2        1.7113     -0.003221         1.912
+
+    results:results/nr/nr_error4.csv
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.01_E_0_a_0.015_T_1.2_pot_12.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.01_E_0_a_0.02_T_1.2_pot_12.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.01_E_0_a_0.025_T_1.2_pot_12.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.01_E_0_a_0.03_T_1.2_pot_12.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.01_E_0_a_0.035_T_1.2_pot_12.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.01_E_0_a_0.04_T_1.2_pot_12.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.01_E_0_a_0.045_T_1.2_pot_12.dat doesn't exist, moving to next parameter loop
+2169.33user 1.00system 36:10.32elapsed 100%CPU (0avgtext+0avgdata 1075756maxresident)k
+8inputs+192outputs (0major+10518minor)pagefaults 0swaps
