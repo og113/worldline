@@ -468,6 +468,20 @@ for (uint pl=0; pl<Npl; pl++) {
 	}
 	else if (x.size()>NT)
 		x.conservativeResize(NT);
+		
+	// inverting lhs for disjoint topology, if necessary
+	if (disjoint) {
+		if (x[(N-1)*dim+dim-1]<x[(N-2)*dim+dim-1]) {
+			number tempx;
+			for (uint j=0; j<N/4; j++) {
+				for (uint mu=0; mu<dim; mu++) {
+					tempx = x[(N/2+j)*dim+mu];
+					x[(N/2+j)*dim+mu] = x[(N-1-j)*dim+mu];
+					x[(N-1-j)*dim+mu] = tempx;
+				}
+			}
+		}
+	}
 	
 	//defining some quantities used to stop n-r loop
 	uint runsCount = 0;
@@ -1116,14 +1130,14 @@ for (uint pl=0; pl<Npl; pl++) {
 			erg = E;
 		
 		// offset for noether energy
-		number offsetPmu = PRVmu[posHorizontal*dim+(dim-1)]+PRGmu[posHorizontal*dim+(dim-1)];
+		/*number offsetPmu = PRVmu[posHorizontal*dim+(dim-1)]+PRGmu[posHorizontal*dim+(dim-1)];
 		number offsetPRVmu = PRVmu[posHorizontal*dim+(dim-1)];
 		number offsetPRGmu = PRGmu[posHorizontal*dim+(dim-1)];
 		for (uint j=0; j<N; j++) {
 			Pmu[j*dim+(dim-1)] -= offsetPmu;
 			PRVmu[j*dim+(dim-1)] -= offsetPRVmu;
 			PRGmu[j*dim+(dim-1)] -= offsetPRGmu;
-		}
+		}*/
 		ergNoether = 0.5*(Pmu[dim-1]+Pmu[(N-1)*dim+(dim-1)]);
 	
 /*----------------------------------------------------------------------------------------------------------------------------
