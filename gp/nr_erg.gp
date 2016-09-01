@@ -1,20 +1,21 @@
 # gnuplot program to plot erg conservation stuff
 
-file1="data/temp/160831134310P4_run_2.dat"
+file1="data/temp/160901101526P4_run_1.dat"
 
 set key below
 set autoscale
 set xtic auto
 set ytic auto
-set title "E vs j"
+set title "E vs j, fit with f=a+b*sin(2*{/Symbol p}*j/N)"
 set xlabel "j"
 set ylabel "E"
 
 # fitting function
 pi=3.1415926535897932
-w=(2.0*pi/64.0);
+K=10
+w=(2.0*pi/(2.0**K));
 offset=0.01
-f(x)= a + b*cos(w*(0.5+x)) + offset; # the offset helps the fitting process for some reason
+f(x)= a + b*sin(w*(0.5+x)) + offset; # the offset helps the fitting process for some reason
 
 # fitting data
 fit f(x) file1 using 0:1 via a, b;

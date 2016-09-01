@@ -29,56 +29,72 @@
 	0 - some static functions
 ----------------------------------------------------------------------------------------------------------------------------*/
 
-// sinch
-static number sinch(const number& x) {
-	return (abs(x)<MIN_NUMBER? 1.0: sinh(x)/x);
-}
-
-// coshsinhc
-/*static number coshsinhc(const number& x) {
-	return (abs(x)<MIN_NUMBER? 0.0: cosh(x)/x - sinh(x)/pow(x,2));
-}*/
-
-// coshsinhcc
-static number coshsinhcc(const number& x) {
-	return (abs(x)<MIN_NUMBER? 1.0/3.0: cosh(x)/pow(x,2) - sinh(x)/pow(x,3));
-}
-
 // FThermal
 static number FThermal(const number& r, const number& t, const number& beta, const number& a) {
-	return sinch((2.0*r*PI)/beta)/(2.0*pow(beta,2)*((-2.0*pow(a,2)*pow(PI,2))/pow(beta,2) + cos((2.0*PI*t)/beta) - cosh((2.0*r*PI)/beta)));
+	number ra = sqrt(pow(a,2) + pow(r,2));
+	return  sinh((2.0*PI*ra)/beta)/(4.0*PI*ra*beta*(cos((2.0*PI*t)/beta) - cosh((2.0*PI*ra)/beta))); //
 }
 
 // DFThermalDr - use Onr version instead as finite at r=0
 /*static number DFThermalDr(const number& r, const number& t, const number& beta, const number& a) {
-	return (PI*coshsinhc((2.0*PI*r)/beta))/\
- (pow(beta,3)*((-2.0*pow(a,2)*pow(PI,2))/pow(beta,2) + cos((2.0*PI*t)/beta) - cosh((2.0*PI*r)/beta))) \
- + (2.0*pow(PI,2)*r*pow(sinch((2.0*PI*r)/beta),2))/\
- (pow(beta,4)*pow((-2.0*pow(a,2)*pow(PI,2))/pow(beta,2) + cos((2.0*PI*t)/beta) - cosh((2.0*PI*r)/beta),2));
+	number ra = sqrt(pow(a,2) + pow(r,2));
+	return (r*cosh((2.0*PI*ra)/beta))/\
+ (2.0*(pow(a,2) + pow(r,2))*pow(beta,2)*(cos((2.0*PI*t)/beta) - cosh((2.0*PI*ra)/beta))) \
+ - (r*sinh((2.0*PI*ra)/beta))/\
+ (4.0*PI*pow(ra,2*1.5)*beta*(cos((2.0*PI*t)/beta) - cosh((2.0*PI*ra)/beta))) \
+ + (r*pow(sinh((2.0*PI*ra)/beta),2))/\
+ (2.0*(pow(a,2) + pow(r,2))*pow(beta,2)*pow(cos((2.0*PI*t)/beta) - cosh((2.0*PI*ra)/beta),2));
 }*/
 
 // DFThermalDrOnr
 static number DFThermalDrOnr(const number& r, const number& t, const number& beta, const number& a) {
-	return (2.0*pow(PI,2)*coshsinhcc((2.0*PI*r)/beta))/\
- (pow(beta,4)*((-2.0*pow(a,2)*pow(PI,2))/pow(beta,2) + cos((2.0*PI*t)/beta) - cosh((2.0*PI*r)/beta))) \
- + (2.0*pow(PI,2)*pow(sinch((2.0*PI*r)/beta),2))/\
- (pow(beta,4)*pow((-2.0*pow(a,2)*pow(PI,2))/pow(beta,2) + cos((2.0*PI*t)/beta) - cosh((2.0*PI*r)/beta),2));
+	number ra = sqrt(pow(a,2) + pow(r,2));
+	return cosh((2.0*PI*ra)/beta)/\
+ (2.0*(pow(a,2) + pow(r,2))*pow(beta,2)*(cos((2.0*PI*t)/beta) - cosh((2.0*PI*ra)/beta))) \
+ - sinh((2.0*PI*ra)/beta)/\
+ (4.0*PI*pow(ra,3)*beta*(cos((2.0*PI*t)/beta) - cosh((2.0*PI*ra)/beta))) \
+ + pow(sinh((2.0*PI*ra)/beta),2)/\
+ (2.0*(pow(a,2) + pow(r,2))*pow(beta,2)*pow(cos((2.0*PI*t)/beta) - cosh((2.0*PI*ra)/beta),2));
  }
 
 // DFThermalDt
 static number DFThermalDt(const number& r, const number& t, const number& beta, const number& a) {
-	return (PI*sin((2.0*PI*t)/beta)*sinch((2.0*PI*r)/beta))/\
- (pow(beta,3)*pow((-2.0*pow(a,2)*pow(PI,2))/pow(beta,2) + cos((2.0*PI*t)/beta) - cosh((2.0*PI*r)/beta),2));
+	number ra = sqrt(pow(a,2) + pow(r,2));
+	return (sin((2.0*PI*t)/beta)*sinh((2.0*PI*ra)/beta))/\
+ (2.0*ra*pow(beta,2)*pow(cos((2.0*PI*t)/beta) - cosh((2.0*PI*ra)/beta),2));
 }
+// DDFThermalDtDr - use Onr version instead as finite at r=0
+/*static number DDFThermalDtDr(const number& r, const number& t, const number& beta, const number& a) {
+	number ra = sqrt(pow(a,2) + pow(r,2));
+	return (PI*r*cosh((2.0*PI*ra)/beta)*sin((2.0*PI*t)/beta))/\
+ ((pow(a,2) + pow(r,2))*pow(beta,3)*pow(cos((2.0*PI*t)/beta) - cosh((2.0*PI*ra)/beta),2)) \
+ - (r*sin((2.0*PI*t)/beta)*sinh((2.0*PI*ra)/beta))/\
+ (2.0*pow(ra,3)*pow(beta,2)*pow(cos((2.0*PI*t)/beta) - cosh((2.0*PI*ra)/beta),2))\
+ + (2.0*PI*r*sin((2.0*PI*t)/beta)*pow(sinh((2.0*PI*ra)/beta),2))/\
+ ((pow(a,2) + pow(r,2))*pow(beta,3)*pow(cos((2.0*PI*t)/beta) - cosh((2.0*PI*ra)/beta),3));
+}*/
 
 // DDFThermalDrDr
 static number DDFThermalDrDr(const number& r, const number& t, const number& beta, const number& a) {
-	return  (2.0*pow(PI,2)*(-((2.0*pow(a,2)*pow(PI,2) - pow(beta,2)*cos((2.0*PI*t)/beta) + pow(beta,2)*cosh((2.0*PI*r)/beta))*
- (3.0*cosh((2.0*PI*r)/beta) - 2.0*sinch((2.0*PI*r)/beta))*sinch((2.0*PI*r)/beta)) \
- + 8.0*pow(PI,2)*pow(r,2)*pow(sinch((2.0*PI*r)/beta),3) \
- + (pow(2.0*pow(a,2)*pow(PI,2) - pow(beta,2)*cos((2.0*PI*t)/beta) + pow(beta,2)*cosh((2.0*PI*r)/beta),2)*
- (-2.0*coshsinhcc((2.0*PI*r)/beta) + sinch((2.0*PI*r)/beta)))/pow(beta,2)))/\
- pow(-2.0*pow(a,2)*pow(PI,2) + pow(beta,2)*cos((2.0*PI*t)/beta) - pow(beta,2)*cosh((2.0*PI*r)/beta),3);
+	number ra = sqrt(pow(a,2) + pow(r,2));
+	return (-3.0*pow(r,2)*cosh((2.0*PI*ra)/beta))/\
+ (2.0*pow(ra,4)*pow(beta,2)*(cos((2.0*PI*t)/beta) - cosh((2.0*PI*ra)/beta))) \
+ + cosh((2.0*PI*ra)/beta)/\
+ (2.0*(pow(a,2) + pow(r,2))*pow(beta,2)*(cos((2.0*PI*t)/beta) - cosh((2.0*PI*ra)/beta))) \
+ + (PI*pow(r,2)*sinh((2.0*PI*ra)/beta))/\
+ (pow(ra,3)*pow(beta,3)*(cos((2.0*PI*t)/beta) - cosh((2.0*PI*ra)/beta))) \
+ + (3.0*pow(r,2)*sinh((2.0*PI*ra)/beta))/\
+ (4.0*PI*pow(ra,5)*beta*(cos((2.0*PI*t)/beta) - cosh((2.0*PI*ra)/beta))) \
+ - sinh((2.0*PI*ra)/beta)/\
+ (4.0*PI*pow(ra,3)*beta*(cos((2.0*PI*t)/beta) - cosh((2.0*PI*ra)/beta))) \
+ + (3.0*PI*pow(r,2)*cosh((2.0*PI*ra)/beta)*sinh((2.0*PI*ra)/beta))/\
+ (pow(ra,3)*pow(beta,3)*pow(cos((2.0*PI*t)/beta) - cosh((2.0*PI*ra)/beta),2)) \
+ - (3.0*pow(r,2)*pow(sinh((2.0*PI*ra)/beta),2))/\
+ (2.0*pow(ra,4)*pow(beta,2)*pow(cos((2.0*PI*t)/beta) - cosh((2.0*PI*ra)/beta),2)) \
+ + pow(sinh((2.0*PI*ra)/beta),2)/\
+ (2.0*(pow(a,2) + pow(r,2))*pow(beta,2)*pow(cos((2.0*PI*t)/beta) - cosh((2.0*PI*ra)/beta),2)) \
+ + (2.0*PI*pow(r,2)*pow(sinh((2.0*PI*ra)/beta),3))/\
+ (pow(ra,3)*pow(beta,3)*pow(cos((2.0*PI*t)/beta) - cosh((2.0*PI*ra)/beta),3));
 }
 
 // DDFThermalDtDr - use Onr version instead as finite at r=0
@@ -90,16 +106,22 @@ static number DDFThermalDrDr(const number& r, const number& t, const number& bet
 
  // DDFThermalDtDrOnr
 static number DDFThermalDtDrOnr(const number& r, const number& t, const number& beta, const number& a) {
-	return (4.0*pow(PI,3)*sin((2.0*PI*t)/beta)*((-2.0*pow(a,2)*pow(PI,2) + pow(beta,2)*cos((2.0*PI*t)/beta) - pow(beta,2)*cosh((2.0*PI*r)/beta))*\
- coshsinhcc((2.0*PI*r)/beta) + 2.0*pow(beta,2)*pow(sinch((2.0*PI*r)/beta),2)))/\
- (beta*pow(-2.0*pow(a,2)*pow(PI,2) + pow(beta,2)*cos((2.0*PI*t)/beta) - pow(beta,2)*cosh((2.0*PI*r)/beta),3));
+	number ra = sqrt(pow(a,2) + pow(r,2));
+	return (PI*cosh((2.0*PI*ra)/beta)*sin((2.0*PI*t)/beta))/\
+ ((pow(a,2) + pow(r,2))*pow(beta,3)*pow(cos((2.0*PI*t)/beta) - cosh((2.0*PI*ra)/beta),2)) \
+ - (sin((2.0*PI*t)/beta)*sinh((2.0*PI*ra)/beta))/\
+ (2.0*pow(ra,2*1.5)*pow(beta,2)*pow(cos((2.0*PI*t)/beta) - cosh((2.0*PI*ra)/beta),2))\
+ + (2.0*PI*sin((2.0*PI*t)/beta)*pow(sinh((2.0*PI*ra)/beta),2))/\
+ ((pow(a,2) + pow(r,2))*pow(beta,3)*pow(cos((2.0*PI*t)/beta) - cosh((2.0*PI*ra)/beta),3));
 }
 
 // DDFThermalDtDt
 static number DDFThermalDtDt(const number& r, const number& t, const number& beta, const number& a) {
-	return  (pow(PI,2)*(-3.0*pow(beta,2) + pow(beta,2)*cos((4.0*PI*t)/beta) \
- + 2.0*cos((2.0*PI*t)/beta)*(2.0*pow(a,2)*pow(PI,2) + pow(beta,2)*cosh((2.0*PI*r)/beta)))*sinch((2.0*PI*r)/beta))/\
- pow(2.0*pow(a,2)*pow(PI,2) - pow(beta,2)*cos((2.0*PI*t)/beta) + pow(beta,2)*cosh((2.0*PI*r)/beta),3);
+	number ra = sqrt(pow(a,2) + pow(r,2));
+	return  (PI*cos((2.0*PI*t)/beta)*sinh((2.0*PI*ra)/beta))/\
+ (ra*pow(beta,3)*pow(cos((2.0*PI*t)/beta) - cosh((2.0*PI*ra)/beta),2)) \
+ + (2.0*PI*pow(sin((2.0*PI*t)/beta),2)*sinh((2.0*PI*ra)/beta))/\
+ (ra*pow(beta,3)*pow(cos((2.0*PI*t)/beta) - cosh((2.0*PI*ra)/beta),3));
 }
 
 // GThermal
