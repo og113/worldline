@@ -1104,7 +1104,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		if (!(P^=P0))
 			s -= Dot(xLoop[N/2-1]-xLoop[0],P);
 		if (poto==PotentialOptions::thermal || poto==PotentialOptions::thermalDisjoint)
-			erg = p.T*(sqrt4s0-2.0*i0);
+			erg = p.T*(sqrt4s0+2.0*i0);
 		else 
 			erg = E;
 		ergNoether = 0.5*(Pmu[dim-1]+Pmu[(N-1)*dim+(dim-1)]);
@@ -1138,7 +1138,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		// energy normalization
 		number Enorm = 1.0;
 		if (poto==PotentialOptions::thermal || disjoint)
-			Enorm = ergNoether/2.0;
+			Enorm = p.T;
 		else
 			Enorm = p.P4/2.0;
 			
