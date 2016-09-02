@@ -51,6 +51,8 @@ else
 	sed -i 's/^\(\s*\)/ /g' $1
 	sed -i 's/\/$/\/\\/g' $1
 	sed -i 's/\*$/\*\\/g' $1
+	sed -i 's/sqrt(pow(a,2) + pow(r,2))/ra/g' $1
+	sed -i 's/pow(pow(a,2) + pow(r,2),\([0-9.-]\+\))/pow(ra,2*\1)/g' $1
 	# specific changes, for worldline n-r calculations
 	if $wflag
 	then echo "making specific changes, for worldline n-r calculations"

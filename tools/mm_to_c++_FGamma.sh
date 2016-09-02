@@ -24,6 +24,10 @@ else
 	sed -i 's/pow(E,/exp(/g' $1
 	sed -i 's/Sqrt(/sqrt(/g' $1
 	sed -i 's/ArcCos/acos/g' $1
+	sed -i 's/Cos(/cos(/g' $1
+	sed -i 's/Sin(/sin(/g' $1
+	sed -i 's/Cosh(/cosh(/g' $1
+	sed -i 's/Sinh(/sinh(/g' $1
 	sed -i 's/EllipticTheta(3,(PI\*t)/jbdtheta3(t/g' $1
 	sed -i 's/EllipticThetaPrime(3,(PI\*t)/jbderivutheta3(t/g' $1
 	sed -i 's/Derivative(0,1,0)(EllipticThetaPrime)(3,(PI\*t)/jbderiv2utheta3(t/g' $1

@@ -296,6 +296,14 @@ number DXDisjoint(const Loop<Dim>& loop, const uint& i, const uint& mu, const nu
 template <uint Dim>
 number DXDisjoint(const Loop<Dim>& loop, const uint& i, const uint& j, const uint& mu, const number& beta);
 
+// PosMinDXMu
+template <uint Dim>
+void PosMinDXMu(const Loop<Dim>& loop, const uint& i, const uint& mu, uint& posMin, number& currentMin);
+
+// PosMinDXMuDisjoint
+template <uint Dim>
+void PosMinDXMuDisjoint(const Loop<Dim>& loop, const uint& i, const uint& mu, uint& posMin, number& currentMin, const number& beta);
+
 // L
 template <uint Dim>
 number L (const Loop<Dim>& l);

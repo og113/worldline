@@ -331,7 +331,6 @@ for (uint pl=0; pl<Npl; pl++) {
 	Check checkJs("Js conservation",1.0e-3);
 	Check checkP3("P3 conservation",1.0e-3);
 	Check checkP4("P4 conservation",1.0e-3);
-	Check checkP4Nonlocal("P4 endpoint (nonlocal) conservation",1.0e-3);
 	Check checkXMirror("x mirror symmetry",1.0e-2);
 	Check checkXRotation("x rotation symmetry",1.0e-16*NT*NT);
 	Check checkMDSMirror("mds mirror symmetry",1.0e-2);
@@ -468,6 +467,20 @@ for (uint pl=0; pl<Npl; pl++) {
 	}
 	else if (x.size()>NT)
 		x.conservativeResize(NT);
+		
+	// inverting lhs for disjoint topology, if necessary
+	if (disjoint) {
+		if (x[(N-1)*dim+dim-1]<x[(N-2)*dim+dim-1]) {
+			number tempx;
+			for (uint j=0; j<N/4; j++) {
+				for (uint mu=0; mu<dim; mu++) {
+					tempx = x[(N/2+j)*dim+mu];
+					x[(N/2+j)*dim+mu] = x[(N-1-j)*dim+mu];
+					x[(N-1-j)*dim+mu] = tempx;
+				}
+			}
+		}
+	}
 	
 	//defining some quantities used to stop n-r loop
 	uint runsCount = 0;
@@ -504,7 +517,8 @@ for (uint pl=0; pl<Npl; pl++) {
 ----------------------------------------------------------------------------------------------------------------------------*/
 		
 		// scalar coefficients
-		uint j, k, mu, nu;
+		uint j, k, mu, nu, posHorizontal=0;
+		number minDXt = 1.0e16;
 		number mgb = -1.0; // not -p.G*p.B as scaled loops
 		number kinetic = 0.0;
 		number g, dm, cusp_scale;
@@ -601,6 +615,12 @@ for (uint pl=0; pl<Npl; pl++) {
 		// bulk
 		for (j=0; j<N; j++) {
 		
+			// vertical position
+			if (!disjoint)
+				PosMinDXMu(xLoop, j, dim-1, posHorizontal, minDXt);
+			else
+				PosMinDXMuDisjoint(xLoop, j, dim-1, posHorizontal, minDXt, beta);
+			
 			//S0(j, xLoop, s0norm, s0norm);
 			if (!disjoint) {
 				L		(j, xLoop, 1.0, len);
@@ -1107,7 +1127,16 @@ for (uint pl=0; pl<Npl; pl++) {
 			erg = p.T*(sqrt4s0+2.0*i0);
 		else 
 			erg = E;
-		ergNoether = 0.5*(Pmu[dim-1]+Pmu[(N-1)*dim+(dim-1)]);
+		
+		// offset for noether energy
+		/*number offsetPmu = PRVmu[posHorizontal*dim+(dim-1)]+PRGmu[posHorizontal*dim+(dim-1)];
+		number offsetPRVmu = PRVmu[posHorizontal*dim+(dim-1)];
+		number offsetPRGmu = PRGmu[posHorizontal*dim+(dim-1)];
+		for (uint j=0; j<N; j++) {
+			Pmu[j*dim+(dim-1)] -= offsetPmu;
+			PRVmu[j*dim+(dim-1)] -= offsetPRVmu;
+			PRGmu[j*dim+(dim-1)] -= offsetPRGmu;
+		}*/
 	
 /*----------------------------------------------------------------------------------------------------------------------------
 	6 - some checks
@@ -1159,16 +1188,12 @@ for (uint pl=0; pl<Npl; pl++) {
 			checkP3.add(P3.norm()/P3_norm);
 		P3 += Eigen::VectorXd::Constant(N,P3_mean);
 
-		// conservation, P4 enpoints
-		number P4_A = P4[0];
-		number P4_B = P4[N-1];
-		if (Enorm>MIN_NUMBER)
-			checkP4Nonlocal.add(abs(P4_B-P4_A)/Enorm);
-		else
-			checkP4Nonlocal.add(abs(P4_B-P4_A)/(P4.norm()/sqrt((number)N)));
+		// noether energy
+		number P4_mean = P4.sum()/(number)N;
+		ergNoether = 2.0*P4_mean;
 		
 		// conservation, P4
-		number P4_mean = P4.sum()/(number)N;
+		
 		number P4_norm = P4.norm();
 		P4 = P4 - Eigen::VectorXd::Constant(N,P4_mean);
 		if (Enorm>MIN_NUMBER)
@@ -1570,7 +1595,7 @@ for (uint pl=0; pl<Npl; pl++) {
 				printf("%4s%4s%11s%11s%11s%11s%11s%11s%11s%11s%11s%11s%11s\n","pl","run","len","i0","s","sol","solM","delta","E_cons","dx*kg_max","ic_max","cc_max","dx/a");
 			}
 			printf("%4i%4i%11.4g%11.4g%11.4g%11.4g%11.4g%11.4g%11.4g%11.4g%11.4g%11.4g%11.4g\n",pl,runsCount,len,i0,s,checkSol.back(),\
-				checkSolMax.back(),checkDelta.back(),checkP4Nonlocal.back(),checkKgDxMax.back(),\
+				checkSolMax.back(),checkDelta.back(),checkP4.back(),checkKgDxMax.back(),\
 				checkICMax.back(),checkCCMax.back(),checkDX.back());
 		}
 		if (alltests) {
@@ -1598,7 +1623,6 @@ for (uint pl=0; pl<Npl; pl++) {
 			checkJs.checkMessage();
 			checkP3.checkMessage();
 			checkP4.checkMessage();
-			checkP4Nonlocal.checkMessage();
 			checkEAgree.checkMessage();
 			cout << "erg = " << erg << ", ergNoether = " << ergNoether << endl;
 			string consFile = "data/temp/"+timenumber+"Js_run_"+nts(runsCount)+".dat";
