@@ -85,6 +85,7 @@ bool fixodt = false;
 bool fixdislr = false;
 bool extended = false;
 bool mu_a = false;
+bool auto_a = false;
 bool pass = false;
 bool sometests = false;
 bool alltests = false; // doing alltests
@@ -113,6 +114,7 @@ if (argc % 2 && argc>1) {
 		else if (id.compare("gaussian")==0 || id.compare("repulsion")==0) gaussian = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("gaussianLR")==0) gaussianLR = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("mu_a")==0) mu_a = (stn<uint>(argv[2*j+2])!=0);
+		else if (id.compare("auto_a")==0) auto_a = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("disjoint")==0) disjoint = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("extended")==0) extended = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("pass")==0) pass = (stn<uint>(argv[2*j+2])!=0);
@@ -478,6 +480,23 @@ for (uint pl=0; pl<Npl; pl++) {
 					x[(N/2+j)*dim+mu] = x[(N-1-j)*dim+mu];
 					x[(N-1-j)*dim+mu] = tempx;
 				}
+			}
+		}
+	}
+	
+	// if auto_a, checking "a" is small enough
+	if (auto_a) {
+		vectorToLoop(x,xLoop);
+		len = L(xLoop);
+		number dx = len/(number)N;
+		if ((dx/p.Epsi)>p.Lambda && abs(p.Lambda)>MIN_NUMBER) {
+			number a_new = sigFig(dx/p.Lambda,2.0);
+			if (abs(a_new-p.Epsi)>MIN_NUMBER) {
+				cout << "changed a: a_old = " << p.Epsi << ", a_new = " << a_new << ", using Lambda = " << p.Lambda << endl;
+				(pr.Min).Epsi 	= a_new;
+				(pr.Min).Epsi 	= a_new;
+				p.Epsi 			= a_new;
+				pold.Epsi 		= a_new;
 			}
 		}
 	}
