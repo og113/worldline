@@ -331,7 +331,6 @@ for (uint pl=0; pl<Npl; pl++) {
 	Check checkJs("Js conservation",1.0e-3);
 	Check checkP3("P3 conservation",1.0e-3);
 	Check checkP4("P4 conservation",1.0e-3);
-	Check checkP4Nonlocal("P4 endpoint (nonlocal) conservation",1.0e-3);
 	Check checkXMirror("x mirror symmetry",1.0e-2);
 	Check checkXRotation("x rotation symmetry",1.0e-16*NT*NT);
 	Check checkMDSMirror("mds mirror symmetry",1.0e-2);
@@ -1189,14 +1188,6 @@ for (uint pl=0; pl<Npl; pl++) {
 		else
 			checkP3.add(P3.norm()/P3_norm);
 		P3 += Eigen::VectorXd::Constant(N,P3_mean);
-
-		// conservation, P4 enpoints
-		number P4_A = P4[0];
-		number P4_B = P4[N-1];
-		if (Enorm>MIN_NUMBER)
-			checkP4Nonlocal.add(abs(P4_B-P4_A)/Enorm);
-		else
-			checkP4Nonlocal.add(abs(P4_B-P4_A)/(P4.norm()/sqrt((number)N)));
 		
 		// conservation, P4
 		number P4_mean = P4.sum()/(number)N;
@@ -1601,7 +1592,7 @@ for (uint pl=0; pl<Npl; pl++) {
 				printf("%4s%4s%11s%11s%11s%11s%11s%11s%11s%11s%11s%11s%11s\n","pl","run","len","i0","s","sol","solM","delta","E_cons","dx*kg_max","ic_max","cc_max","dx/a");
 			}
 			printf("%4i%4i%11.4g%11.4g%11.4g%11.4g%11.4g%11.4g%11.4g%11.4g%11.4g%11.4g%11.4g\n",pl,runsCount,len,i0,s,checkSol.back(),\
-				checkSolMax.back(),checkDelta.back(),checkP4Nonlocal.back(),checkKgDxMax.back(),\
+				checkSolMax.back(),checkDelta.back(),checkP4.back(),checkKgDxMax.back(),\
 				checkICMax.back(),checkCCMax.back(),checkDX.back());
 		}
 		if (alltests) {
@@ -1629,16 +1620,15 @@ for (uint pl=0; pl<Npl; pl++) {
 			checkJs.checkMessage();
 			checkP3.checkMessage();
 			checkP4.checkMessage();
-			checkP4Nonlocal.checkMessage();
 			checkEAgree.checkMessage();
 			cout << "erg = " << erg << ", ergNoether = " << ergNoether << endl;
-			string consFile = "data/temp/"+timenumber+"Js_run_"+nts(runsCount)+".dat";
+			string consFile = "data/temp/"+timenumber+"Js_pl_"+nts(pl)+"_run_"+nts(runsCount)+".dat";
 			saveVectorAscii(consFile,Js);
 			printf("%12s%50s\n","Js       :",consFile.c_str());
-			consFile = "data/temp/"+timenumber+"P3_run_"+nts(runsCount)+".dat";
+			consFile = "data/temp/"+timenumber+"P3_pl_"+nts(pl)+"_run_"+nts(runsCount)+".dat";
 			saveVectorAscii(consFile,P3);
 			printf("%12s%50s\n","P3       :",consFile.c_str());
-			consFile = "data/temp/"+timenumber+"P4_run_"+nts(runsCount)+".dat";
+			consFile = "data/temp/"+timenumber+"P4_pl_"+nts(pl)+"_run_"+nts(runsCount)+".dat";
 			saveVectorAscii(consFile,P4);
 			printf("%12s%50s\n","P4       :",consFile.c_str());
 			
