@@ -99,7 +99,7 @@ schwingerRate: $(ODIR)/schwingerRate.o $(COMMONOBJS)
 	$(CC) -o $@ $^ $(CFLAGS) $(INCLUDES) $(LIBS)
 	@echo Simple compiler named schwingerRate has been compiled
 	
-testMpi: $(MPIODIR)/testMpi.o $(COMMONOBJS)
+testMpi: $(MPIODIR)/testMpi.o
 	$(MPICC) -o $@ $^ $(MPICFLAGS) $(INCLUDES) $(MPILIBS)
 	@echo Simple compiler named testMpi has been compiled
 	

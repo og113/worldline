@@ -64,6 +64,7 @@ sign(x,x0) = x<x0 ? 1 : -1;
 # titles
 titleErg(t0,a0,b0) = sprintf("%s, a=%g, b=%g",t0,a0,b0)
 
+
 if (gaussian==1) \
 plot file1 using 0:1 with lines lt 1 lc rgb "blue" title titleErg("Total",a1+offset,b1), \
 	file1 using 0:2 with lines lt 1 lc rgb "red" title titleErg("Q S0",a2+offset,b2), \
