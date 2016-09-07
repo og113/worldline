@@ -1692,7 +1692,7 @@ for (uint pl=0; pl<Npl; pl++) {
 			checkEAgree.checkMessage();
 			cout << "erg = " << erg << ", ergNoether = " << ergNoether << ", ergThermal = " << ergThermal << endl;
 			if (p.T<0.5) {
-				cout << "ergLowTemp = " << pow(PI,4)*(pow(p.G,3)*p.B)*pow(p.T,5)/90.0 << endl;
+				cout << "ergLowTemp = " << 2.0*pow(PI,4)*(pow(p.G,3)*p.B)*pow(p.T,5)/45.0 << endl;
 			}
 			else {
 				cout << "ergHighTemp = " << p.T*2.0*(1.0-sqrt((pow(p.G,3)*p.B)/4.0/PI)) << endl;
