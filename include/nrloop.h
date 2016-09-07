@@ -474,6 +474,82 @@ void mdFGamma_nr(const Loop<Dim>& l, const uint& loc, const number& f, vec& v);
 template<uint Dim>
 void ddFGamma_nr(const Loop<Dim>& l, const uint& loc, const number& f, mat& m);
 
+// ErgS0_nr
+template<uint Dim>
+void ErgS0_nr(const Loop<Dim>& l, const uint& loc, const uint& mu, const number& f, number& erg);
+
+// ErgS0Disjoint_nr
+template<uint Dim>
+void ErgS0Disjoint_nr(const Loop<Dim>& l, const uint& loc, const uint& mu, const number& beta, const number& f, number& erg);
+
+// ErgL_nr
+template<uint Dim>
+void ErgL_nr(const Loop<Dim>& l, const uint& loc, const uint& mu, const number& f, number& erg);
+
+// ErgLDisjoint_nr
+template<uint Dim>
+void ErgLDisjoint_nr(const Loop<Dim>& l, const uint& loc, const uint& mu, const number& beta, const number& f, number& erg);
+
+// ErgsqrtS0_nr
+template<uint Dim>
+void ErgsqrtS0_nr(const Loop<Dim>& l, const uint& loc, const uint& mu, const number& sqrt4s0, const number& f, number& erg);
+
+// ErgsqrtS0Disjoint_nr
+template<uint Dim>
+void ErgsqrtS0Disjoint_nr(const Loop<Dim>& l, const uint& loc, const uint& mu, const number& sqrt4s0, const number& beta, const number& f, number& erg);
+
+// ErgI0_nr
+template<uint Dim>
+void ErgI0_nr(const Loop<Dim>& l, const uint& loc, const uint& mu, const number& f, number& erg);
+
+// ErgI0Disjoint_nr
+template<uint Dim>
+void ErgI0Disjoint_nr(const Loop<Dim>& l, const uint& loc, const uint& mu, const number& beta, const number& f, number& erg);
+
+// ErgIn_nr
+template<uint Dim>
+void ErgIn_nr(const Loop<Dim>& l, const uint& loc, const uint& mu, const number& n, const number& f, number& erg);
+
+// ErgInDisjoint_nr
+template<uint Dim>
+void ErgInDisjoint_nr(const Loop<Dim>& l, const uint& loc, const uint& mu, const number& n, const number& beta, const number& f, number& erg);
+
+// ErgVor_nr
+template<uint Dim>
+void ErgVor_nr(const Loop<Dim>& l, const uint& j, const uint& mu, const uint& k, const number& a, const number& f, number& erg);
+
+// ErgVthr_nr
+template<uint Dim>
+void ErgVthr_nr(const Loop<Dim>& l, const uint& j, const uint& mu, const uint& k, const number& beta, const number& a, const number& f, number& erg);
+
+// ErgVthrDisjoint_nr
+template<uint Dim>
+void ErgVthrDisjoint_nr(const Loop<Dim>& l, const uint& j, const uint& mu, const uint& k, const number& beta, const number& a, const number& f, number& erg);
+
+// ErgGaussian_nr
+template<uint Dim>
+void ErgGaussian_nr(const Loop<Dim>& l, const uint& loc, const uint& mu, const uint& k, const number& a, const number& f, number& erg);
+
+// ErgGaussianDisjoint_nr
+template<uint Dim>
+void ErgGaussianDisjoint_nr(const Loop<Dim>& l, const uint& j, const uint& mu, const uint& k, const number& beta, const number& a, const number& f, number& erg);
+
+// ErgGaussianLRDisjoint_nr
+template<uint Dim>
+void ErgGaussianLRDisjoint_nr(const Loop<Dim>& l, const uint& j, const uint& mu, const uint& k, const number& beta, const number& a, const number& f, number& erg);
+
+// ErgGaussianThermal_nr
+template<uint Dim>
+void ErgGaussianThermal_nr(const Loop<Dim>& l, const uint& loc, const uint& mu, const uint& k, const number& beta, const number& a, const number& f, number& erg);
+
+// ErgGaussianThermalDisjoint_nr
+template<uint Dim>
+void ErgGaussianThermalDisjoint_nr(const Loop<Dim>& l, const uint& j, const uint& mu, const uint& k, const number& beta, const number& a, const number& f, number& erg);
+
+// ErgGaussianThermalLRDisjoint_nr
+template<uint Dim>
+void ErgGaussianThermalLRDisjoint_nr(const Loop<Dim>& l, const uint& j, const uint& mu, const uint& k, const number& beta, const number& a, const number& f, number& erg);
+
 // PS0_nr
 template<uint Dim>
 void PS0_nr(const Loop<Dim>& l, const uint& loc, const uint& mu, const number& f, vec& v);
@@ -537,14 +613,6 @@ void PVthrDisjoint_nr(const Loop<Dim>& l, const uint& j, const uint& mu, const u
 // PRVthrDisjoint_nr
 template<uint Dim>
 void PRVthrDisjoint_nr(const Loop<Dim>& l, const uint& j, const uint& mu, const uint& k, const uint& nu, const number& beta, const number& a, const number& f, vec& v);
-
-// PVnonrelDisjoint_nr
-template<uint Dim>
-void PVnonrelDisjoint_nr(const Loop<Dim>& l, const uint& loc, const uint& mu, const number& beta, const number& f, vec& v);
-
-// PVnonrelrDisjoint_nr
-template<uint Dim>
-void PVnonrelrDisjoint_nr(const Loop<Dim>& l, const uint& j, const uint& mu, const number& beta, const number& a, const number& f, vec& v);
 
 // PGaussian_nr
 template<uint Dim>

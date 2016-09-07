@@ -691,6 +691,50 @@ void PosMinDXMuDisjoint(const Loop<Dim>& l, const uint& i, const uint& mu, uint&
 	}
 }
 
+// atRHS
+template <uint Dim>
+bool atRHS(const Loop<Dim>& l, const uint& j) {
+	uint nj = negNeigh(j,l.size());
+	number dzp = DX(l,j,Dim-2);
+	number dzn = DX(l,nj,Dim-2);
+	number dtp = DX(l,j,Dim-1);
+	number dtn = DX(l,nj,Dim-1);
+	return (dzp<0.0 && dzn>0.0 && dtp>0.0 && dtn>0.0);
+}
+
+// atLHS
+template <uint Dim>
+bool atLHS(const Loop<Dim>& l, const uint& j) {
+	uint nj = negNeigh(j,l.size());
+	number dzp = DX(l,j,Dim-2);
+	number dzn = DX(l,nj,Dim-2);
+	number dtp = DX(l,j,Dim-1);
+	number dtn = DX(l,nj,Dim-1);
+	return (dzp>0.0 && dzn<0.0 && dtp<0.0 && dtn<0.0);
+}
+
+// atRHSDisjoint
+template <uint Dim>
+bool atRHSDisjoint(const Loop<Dim>& l, const uint& j, const number& beta) {
+	uint nj = negNeighDisjoint(j,l.size());
+	number dzp = DXDisjoint(l,j,Dim-2,beta);
+	number dzn = DXDisjoint(l,nj,Dim-2,beta);
+	number dtp = DXDisjoint(l,j,Dim-1,beta);
+	number dtn = DXDisjoint(l,nj,Dim-1,beta);
+	return (dzp<0.0 && dzn>0.0 && dtp>0.0 && dtn>0.0);
+}
+
+// atLHSDisjoint
+template <uint Dim>
+bool atLHSDisjoint(const Loop<Dim>& l, const uint& j, const number& beta) {
+	uint nj = negNeighDisjoint(j,l.size());
+	number dzp = DXDisjoint(l,j,Dim-2,beta);
+	number dzn = DXDisjoint(l,nj,Dim-2,beta);
+	number dtp = DXDisjoint(l,j,Dim-1,beta);
+	number dtn = DXDisjoint(l,nj,Dim-1,beta);
+	return (dzp>0.0 && dzn<0.0 && dtp<0.0 && dtn<0.0);
+}
+
 // L
 template <uint Dim>
 number L (const Loop<Dim>& l) {
@@ -1283,6 +1327,10 @@ template number DXDisjoint<4>(const Loop<4>&, const uint&, const uint&, const nu
 template number DXDisjoint<4>(const Loop<4>&, const uint&, const uint&, const uint&, const number&);
 template void PosMinDXMu<4>(const Loop<4>& loop, const uint& i, const uint& mu, uint& posMin, number& currentMin);
 template void PosMinDXMuDisjoint<4>(const Loop<4>& loop, const uint& i, const uint& mu, uint& posMin, number& currentMin, const number& beta);
+template bool atRHS<4>(const Loop<4>& loop, const uint& i);
+template bool atLHS<4>(const Loop<4>& loop, const uint& i);
+template bool atRHSDisjoint<4>(const Loop<4>& loop, const uint& i, const number& beta);
+template bool atLHSDisjoint<4>(const Loop<4>& loop, const uint& i, const number& beta);
 template class Loop<4>;
 template number L<4> (const Loop<4>& l);
 template number DL<4> (const Loop<4>& l, const Point<4>& p, const uint& loc);

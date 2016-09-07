@@ -304,6 +304,22 @@ void PosMinDXMu(const Loop<Dim>& loop, const uint& i, const uint& mu, uint& posM
 template <uint Dim>
 void PosMinDXMuDisjoint(const Loop<Dim>& loop, const uint& i, const uint& mu, uint& posMin, number& currentMin, const number& beta);
 
+// atRHS
+template <uint Dim>
+bool atRHS(const Loop<Dim>& loop, const uint& j);
+
+// atLHS
+template <uint Dim>
+bool atLHS(const Loop<Dim>& loop, const uint& j);
+
+// atRHSDisjoint
+template <uint Dim>
+bool atRHSDisjoint(const Loop<Dim>& loop, const uint& j, const number& beta);
+
+// atLHSDisjoint
+template <uint Dim>
+bool atLHSDisjoint(const Loop<Dim>& loop, const uint& j, const number& beta);
+
 // L
 template <uint Dim>
 number L (const Loop<Dim>& l);
