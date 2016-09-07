@@ -85,6 +85,7 @@ bool fixodt = false;
 bool fixdislr = false;
 bool extended = false;
 bool mu_a = false;
+bool auto_a = false;
 bool pass = false;
 bool sometests = false;
 bool alltests = false; // doing alltests
@@ -113,6 +114,7 @@ if (argc % 2 && argc>1) {
 		else if (id.compare("gaussian")==0 || id.compare("repulsion")==0) gaussian = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("gaussianLR")==0) gaussianLR = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("mu_a")==0) mu_a = (stn<uint>(argv[2*j+2])!=0);
+		else if (id.compare("auto_a")==0) auto_a = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("disjoint")==0) disjoint = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("extended")==0) extended = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("pass")==0) pass = (stn<uint>(argv[2*j+2])!=0);
@@ -340,7 +342,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	Check checkEAgree("energies agree",1.0e-3);
 	
 	// defining scalar quantities
-	number len, i0, s, sm, v, vr, erg, ergNoether, fgamma, gamma, angle_neigh, zmax, zmin, tmax, ic_max, cc_max, kg_max;
+	number len, i0, s, sm, v, vr, erg, ergNoether, ergThermal, fgamma, gamma, angle_neigh, zmax, zmin, tmax, ic_max, cc_max, kg_max;
 	
 	// defining vector and matrix quantities
 	vec x(N*dim);
@@ -469,8 +471,8 @@ for (uint pl=0; pl<Npl; pl++) {
 		x.conservativeResize(NT);
 		
 	// inverting lhs for disjoint topology, if necessary
-	if (disjoint) {
-		if (x[(N-1)*dim+dim-1]<x[(N-2)*dim+dim-1]) {
+	/*if (disjoint) {
+		if (x[(N-1)*dim+dim-1]>x[(N-2)*dim+dim-1]) { // switched again
 			number tempx;
 			for (uint j=0; j<N/4; j++) {
 				for (uint mu=0; mu<dim; mu++) {
@@ -478,6 +480,23 @@ for (uint pl=0; pl<Npl; pl++) {
 					x[(N/2+j)*dim+mu] = x[(N-1-j)*dim+mu];
 					x[(N-1-j)*dim+mu] = tempx;
 				}
+			}
+		}
+	}*/
+	
+	// if auto_a, checking "a" is small enough
+	if (auto_a) {
+		vectorToLoop(x,xLoop);
+		len = L(xLoop);
+		number dx = len/(number)N;
+		if ((dx/p.Epsi)>p.Lambda && abs(p.Lambda)>MIN_NUMBER) {
+			number a_new = sigFig(dx/p.Lambda,2.0);
+			if (abs(a_new-p.Epsi)>MIN_NUMBER) {
+				cout << "changed a: a_old = " << p.Epsi << ", a_new = " << a_new << ", using Lambda = " << p.Lambda << endl;
+				(pr.Min).Epsi 	= a_new;
+				(pr.Min).Epsi 	= a_new;
+				p.Epsi 			= a_new;
+				pold.Epsi 		= a_new;
 			}
 		}
 	}
@@ -501,7 +520,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		dds = Eigen::MatrixXd::Zero(NT,NT);
 		Js = Eigen::VectorXd::Zero(N);
 		Pmu = Eigen::VectorXd::Zero(N*dim);
-		len = 0.0, i0 = 0.0, v = 0.0, fgamma = 0.0, gamma = 0.0, angle_neigh = 0.0, zmax = 0.0, tmax = 0.0;//, s0 = 0.0;
+		len = 0.0, i0 = 0.0, v = 0.0, fgamma = 0.0, gamma = 0.0, angle_neigh = 0.0, zmax = 0.0, tmax = 0.0, erg = 0.0;
 		zmin = 1.0e16;
 		ic_max = 0.0, cc_max = 0.0, kg_max = 0.0;
 		if (curvature || alltests) {
@@ -517,8 +536,7 @@ for (uint pl=0; pl<Npl; pl++) {
 ----------------------------------------------------------------------------------------------------------------------------*/
 		
 		// scalar coefficients
-		uint j, k, mu, nu, posHorizontal=0;
-		number minDXt = 1.0e16;
+		uint j, k, mu, nu, jrhs;
 		number mgb = -1.0; // not -p.G*p.B as scaled loops
 		number kinetic = 0.0;
 		number g, dm, cusp_scale;
@@ -532,6 +550,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		number s0, sqrt4s0; 
 		number s0_scale = (abs(p.T)>MIN_NUMBER? 1.0/p.T: 1.0);
 		number beta = ((p.T)>sqrt(MIN_NUMBER)? 1.0/(p.T): 1.0/sqrt(MIN_NUMBER)); // this is 1/eta
+		number sigma = 1.0;
 		if (poto==PotentialOptions::original) {
 			s0 = S0(xLoop);
 			sqrt4s0 = 2.0*sqrt(s0);
@@ -603,23 +622,11 @@ for (uint pl=0; pl<Npl; pl++) {
 		
 		Point<dim> P0;
 		
-		// quick test vectors ##################################################################################
-		vec PQS0mu = Eigen::VectorXd::Zero(N*dim);
-		vec PQI0mu = Eigen::VectorXd::Zero(N*dim);
-		vec PQVmu = Eigen::VectorXd::Zero(N*dim);
-		vec PQLmu = Eigen::VectorXd::Zero(N*dim);
-		vec PQGmu = Eigen::VectorXd::Zero(N*dim);
-		vec PRVmu = Eigen::VectorXd::Zero(N*dim);
-		vec PRGmu = Eigen::VectorXd::Zero(N*dim);
+		// vector carrying nonlocal remainder in noether charge
+		vec PRmu = Eigen::VectorXd::Zero(N*dim);
 		
 		// bulk
 		for (j=0; j<N; j++) {
-		
-			// vertical position
-			if (!disjoint)
-				PosMinDXMu(xLoop, j, dim-1, posHorizontal, minDXt);
-			else
-				PosMinDXMuDisjoint(xLoop, j, dim-1, posHorizontal, minDXt, beta);
 			
 			//S0(j, xLoop, s0norm, s0norm);
 			if (!disjoint) {
@@ -683,34 +690,53 @@ for (uint pl=0; pl<Npl; pl++) {
 					if (kino==KineticOptions::saddle) {
 						mdsqrtS0_nr(j,mu,xLoop,sqrt4s0,1.0,mds);
 						PsqrtS0_nr(xLoop, j, mu, sqrt4s0, 1.0, Pmu);
-						PsqrtS0_nr(xLoop, j, mu, sqrt4s0, 1.0, PQS0mu);
+						if (mu==(dim-1) && (atRHS(xLoop,j) || atLHS(xLoop,j))) {
+							jrhs = j;
+							sigma = (atLHS(xLoop,j)?-1.0:1.0);
+							ErgsqrtS0_nr(xLoop, j, mu, sqrt4s0, sigma*1.0, erg);
+						}
 					}
 					else if (kino==KineticOptions::s0) {
 						mdS0_nr(j,mu,xLoop,s0_scale,mds);
 						PS0_nr(xLoop, j, mu, s0_scale, Pmu);
-						PS0_nr(xLoop, j, mu, s0_scale, PQS0mu);
+						if (mu==(dim-1) && (atRHS(xLoop,j) || atLHS(xLoop,j))) {
+							sigma = (atLHS(xLoop,j)?-1.0:1.0);
+							ErgS0_nr(xLoop, j, mu, sigma*s0_scale, erg);
+						}
 					}
 					else if (kino==KineticOptions::len) {
 						mdL_nr(j,mu,xLoop,1.0,mds);
 						PL_nr(xLoop, j, mu, 1.0, Pmu);
-						PL_nr(xLoop, j, mu, 1.0, PQS0mu);
+						if (mu==(dim-1) && (atRHS(xLoop,j) || atLHS(xLoop,j))) {
+							sigma = (atLHS(xLoop,j)?-1.0:1.0);
+							ErgL_nr(xLoop, j, mu, sigma*1.0, erg);
+						}
 					}
 				}
 				else {
 					if (kino==KineticOptions::saddle) {
 						mdsqrtS0Disjoint_nr(j,mu,xLoop,sqrt4s0,beta,1.0,mds);
 						PsqrtS0Disjoint_nr(xLoop, j, mu, sqrt4s0, beta, 1.0, Pmu);
-						PsqrtS0Disjoint_nr(xLoop, j, mu, sqrt4s0, beta, 1.0, PQS0mu);
+						if (mu==(dim-1) && (atRHSDisjoint(xLoop,j,beta) || atLHSDisjoint(xLoop,j,beta))) {
+							sigma = (atLHS(xLoop,j)?-1.0:1.0);
+							ErgsqrtS0Disjoint_nr(xLoop, j, mu, sqrt4s0, beta, sigma*1.0, erg);
+						}
 					}
 					else if (kino==KineticOptions::s0) {
 						mdS0Disjoint_nr(j,mu,xLoop,beta,s0_scale,mds);
 						PS0Disjoint_nr(xLoop, j, mu, beta, s0_scale, Pmu);
-						PS0Disjoint_nr(xLoop, j, mu, beta, s0_scale, PQS0mu);
+						if (mu==(dim-1) && (atRHSDisjoint(xLoop,j,beta) || atLHSDisjoint(xLoop,j,beta))) {
+							sigma = (atLHS(xLoop,j)?-1.0:1.0);
+							ErgS0Disjoint_nr(xLoop, j, mu, beta, sigma*s0_scale, erg);
+						}
 					}
 					else if (kino==KineticOptions::len) {
 						mdLDisjoint_nr(j,mu,xLoop,beta,1.0,mds);
 						PLDisjoint_nr(xLoop, j, mu, beta, 1.0, Pmu);
-						PLDisjoint_nr(xLoop, j, mu, beta, 1.0, PQS0mu);
+						if (mu==(dim-1) && (atRHSDisjoint(xLoop,j,beta) || atLHSDisjoint(xLoop,j,beta))) {
+							sigma = (atLHS(xLoop,j)?-1.0:1.0);
+							ErgLDisjoint_nr(xLoop, j, mu, beta, sigma*1.0, erg);
+						}
 					}
 				}
 				
@@ -718,27 +744,38 @@ for (uint pl=0; pl<Npl; pl++) {
 				if (!disjoint) {
 					mdI0_nr(j, mu, xLoop, mgb, mds);
 					PI0_nr(xLoop, j, mu, mgb, Pmu);
-					PI0_nr(xLoop, j, mu, mgb, PQI0mu);
+					if (mu==(dim-1) && (atRHS(xLoop,j) || atLHS(xLoop,j))) {
+						sigma = (atLHS(xLoop,j)?-1.0:1.0);
+						ErgI0_nr(xLoop, j, mu, sigma*mgb, erg);
+					}
 					if (poto==PotentialOptions::external) {
 						mdIn_nr(j, mu, xLoop, n, g, mds);
 						PIn_nr(xLoop, j, mu, n, g, Pmu);
-						PIn_nr(xLoop, j, mu, n, g, PQI0mu);
+						if (mu==(dim-1) && (atRHS(xLoop,j) || atLHS(xLoop,j))) {
+							sigma = (atLHS(xLoop,j)?-1.0:1.0);
+							ErgIn_nr(xLoop, j, mu, n, sigma*g, erg);
+						}
 					}
 				}
 				else {
 					mdI0Disjoint_nr(j,mu,xLoop,beta,mgb,mds);
 					PI0Disjoint_nr(xLoop, j, mu, beta, mgb, Pmu);
-					PI0Disjoint_nr(xLoop, j, mu, beta, mgb, PQI0mu);
+					if (mu==(dim-1) && (atRHS(xLoop,j) || atLHS(xLoop,j))) {
+						sigma = (atLHS(xLoop,j)?-1.0:1.0);
+						ErgI0Disjoint_nr(xLoop, j, mu, beta, sigma*mgb, erg);
+					}
 					if (poto==PotentialOptions::externalDisjoint) {
 						mdInDisjoint_nr(j, mu, xLoop, n, beta, g, mds);
 						PInDisjoint_nr(xLoop, j, mu, n, beta, g, Pmu);
-						PInDisjoint_nr(xLoop, j, mu, n, beta, g, PQI0mu);
+						if (mu==(dim-1) && (atRHSDisjoint(xLoop,j,beta) || atLHSDisjoint(xLoop,j,beta))) {
+							sigma = (atLHS(xLoop,j)?-1.0:1.0);
+							ErgInDisjoint_nr(xLoop, j, mu, n, beta, sigma*g, erg);
+						}
 					}
 					else if (poto==PotentialOptions::nonrelDisjoint) {
 						VnonrelrDisjoint(j, xLoop, beta, p.Epsi, g, v); //
 						mdVnonrelrDisjoint_nr(j, mu, xLoop, beta, p.Epsi, g, mds);
-						PVnonrelrDisjoint_nr(xLoop, j, mu, beta, p.Epsi, g, Pmu);
-						PVnonrelrDisjoint_nr(xLoop, j, mu, beta, p.Epsi, g, PQI0mu);
+						// no Pmu for nonrel
 					}
 				}
 				
@@ -746,7 +783,6 @@ for (uint pl=0; pl<Npl; pl++) {
 				if (!(P^=P0)) {
 					if (j>=(N/2-1)) {
 						Pmu[j*dim+mu] += P[mu];
-						PQS0mu[j*dim+mu] += P[mu];
 					}
 				}
 				
@@ -755,12 +791,18 @@ for (uint pl=0; pl<Npl; pl++) {
 					if (poto!=PotentialOptions::dimreg && !disjoint) {
 						mdL_nr(j,mu,xLoop,dm,mds);
 						PL_nr(xLoop, j, mu, dm, Pmu);
-						PL_nr(xLoop, j, mu, dm, PQLmu);
+						if (mu==(dim-1) && (atRHS(xLoop,j) || atLHS(xLoop,j))) {
+							sigma = (atLHS(xLoop,j)?-1.0:1.0);
+							ErgL_nr(xLoop, j, mu, sigma*dm, erg);
+						}
 					}
 					else if (disjoint) {
 						mdLDisjoint_nr(j,mu,xLoop,beta,dm,mds);
 						PLDisjoint_nr(xLoop, j, mu, beta, dm, Pmu);
-						PLDisjoint_nr(xLoop, j, mu, beta, dm, PQLmu);
+						if (mu==(dim-1) && (atRHSDisjoint(xLoop,j,beta) || atLHSDisjoint(xLoop,j,beta))) {
+							sigma = (atLHS(xLoop,j)?-1.0:1.0);
+							ErgLDisjoint_nr(xLoop, j, mu, beta, sigma*dm, erg);
+						}
 					}
 					else {
 						mdDistPow_nr(j, mu, xLoop, p.Epsi, dim_reg_scale, mds);
@@ -813,7 +855,10 @@ for (uint pl=0; pl<Npl; pl++) {
 						if (poto==PotentialOptions::original) {
 							mdVor_nr(j, mu, k, xLoop, p.Epsi, g, mds);
 							PVor_nr(xLoop, j, mu, k, p.Epsi, g, Pmu);
-							PVor_nr(xLoop, j, mu, k, p.Epsi, g, PQVmu);
+							if (mu==(dim-1) && (atRHS(xLoop,j) || atLHS(xLoop,j))) {
+								sigma = (atLHS(xLoop,j)?-1.0:1.0);
+								ErgVor_nr(xLoop, j, mu, k, p.Epsi, sigma*g, erg);
+							}
 						}
 						else if (poto==PotentialOptions::link)
 							mdVlr_nr(j, mu, k, xLoop, p.Epsi, g, mds);
@@ -824,48 +869,72 @@ for (uint pl=0; pl<Npl; pl++) {
 						else if (poto==PotentialOptions::thermal) {
 							mdVthr_nr(j, mu, k, xLoop, beta, p.Epsi, g, mds);
 							PVthr_nr(xLoop, j, mu, k, beta, p.Epsi, g, Pmu);
-							PVthr_nr(xLoop, j, mu, k, beta, p.Epsi, g, PQVmu);
+							if (mu==(dim-1) && (atRHS(xLoop,j) || atLHS(xLoop,j))) {
+								sigma = (atLHS(xLoop,j)?-1.0:1.0);
+								ErgVthr_nr(xLoop, j, mu, k, beta, p.Epsi, sigma*g, erg);
+							}
 						}
 						else if (poto==PotentialOptions::thermalDisjoint) {
 							mdVthrDisjoint_nr(j, mu, k, xLoop, beta, p.Epsi, g, mds);
 							PVthrDisjoint_nr(xLoop, j, mu, k, beta, p.Epsi, g, Pmu);
-							PVthrDisjoint_nr(xLoop, j, mu, k, beta, p.Epsi, g, PQVmu);
+							if (mu==(dim-1) && (atRHSDisjoint(xLoop,j,beta) || atLHSDisjoint(xLoop,j,beta))) {
+								sigma = (atLHS(xLoop,j)?-1.0:1.0);
+								ErgVthrDisjoint_nr(xLoop, j, mu, k, beta, p.Epsi, sigma*g, erg);
+							}
 						}
 						
 						if (gaussian) {	
 							if (!disjoint && poto!=PotentialOptions::thermal) {
 								mdGaussian_nr(j, mu, k, xLoop, p.Epsi, repulsion_scale, mds);
 								PGaussian_nr(xLoop, j, mu, k, p.Epsi, repulsion_scale, Pmu);
-								PGaussian_nr(xLoop, j, mu, k, p.Epsi, repulsion_scale, PQGmu);
+								if (mu==(dim-1) && (atRHS(xLoop,j) || atLHS(xLoop,j))) {
+									sigma = (atLHS(xLoop,j)?-1.0:1.0);
+									ErgGaussian_nr(xLoop, j, mu, k, p.Epsi, sigma*repulsion_scale, erg);
+								}
 							}
 							else if (disjoint && poto!=PotentialOptions::thermalDisjoint) {
 								if (gaussianLR) {
 									mdGaussianLRDisjoint_nr(j, mu, k, xLoop, beta, p.Epsi, repulsion_scale, mds);
 									PGaussianLRDisjoint_nr(xLoop, j, mu, k, beta, p.Epsi, repulsion_scale, Pmu);
-									PGaussianLRDisjoint_nr(xLoop, j, mu, k, beta, p.Epsi, repulsion_scale, PQGmu);
+									if (mu==(dim-1) && (atRHSDisjoint(xLoop,j,beta) || atLHSDisjoint(xLoop,j,beta))) {
+										sigma = (atLHS(xLoop,j)?-1.0:1.0);
+										ErgGaussianLRDisjoint_nr(xLoop, j, mu, k, beta, p.Epsi, sigma*repulsion_scale, erg);
+									}
 								}
 								else {
 									mdGaussianDisjoint_nr(j, mu, k, xLoop, beta, p.Epsi, repulsion_scale, mds);
 									PGaussianDisjoint_nr(xLoop, j, mu, k, beta, p.Epsi, repulsion_scale, Pmu);
-									PGaussianDisjoint_nr(xLoop, j, mu, k, beta, p.Epsi, repulsion_scale, PQGmu);
+									if (mu==(dim-1) && (atRHSDisjoint(xLoop,j,beta) || atLHSDisjoint(xLoop,j,beta))) {
+										sigma = (atLHS(xLoop,j)?-1.0:1.0);
+										ErgGaussianDisjoint_nr(xLoop, j, mu, k, beta, p.Epsi, sigma*repulsion_scale, erg);
+									}
 								}
 							}
 							else if (poto==PotentialOptions::thermal) {
 								//mdGaussian_nr(j, mu, k, xLoop, p.Epsi, repulsion_scale, mds);
 								mdGaussianThermal_nr(j, mu, k, xLoop, beta, p.Epsi, repulsion_scale, mds);
 								PGaussianThermal_nr(xLoop, j, mu, k, beta, p.Epsi, repulsion_scale, Pmu);
-								PGaussianThermal_nr(xLoop, j, mu, k, beta, p.Epsi, repulsion_scale, PQGmu);
+								if (mu==(dim-1) && (atRHS(xLoop,j) || atLHS(xLoop,j))) {
+									sigma = (atLHS(xLoop,j)?-1.0:1.0);
+									ErgGaussianThermal_nr(xLoop, j, mu, k, beta, p.Epsi, sigma*repulsion_scale, erg);
+								}
 							}
 							else if (poto==PotentialOptions::thermalDisjoint) {
 								if (gaussianLR) {
 									mdGaussianThermalLRDisjoint_nr(j, mu, k, xLoop, beta, p.Epsi, repulsion_scale, mds);
 									PGaussianThermalLRDisjoint_nr(xLoop, j, mu, k, beta, p.Epsi, repulsion_scale, Pmu);
-									PGaussianThermalLRDisjoint_nr(xLoop, j, mu, k, beta, p.Epsi, repulsion_scale, PQGmu);
+									if (mu==(dim-1) && (atRHSDisjoint(xLoop,j,beta) || atLHSDisjoint(xLoop,j,beta))) {
+										sigma = (atLHS(xLoop,j)?-1.0:1.0);
+										ErgGaussianThermalLRDisjoint_nr(xLoop, j, mu, k, beta, p.Epsi, sigma*repulsion_scale, erg);
+									}
 								}
 								else {
 									mdGaussianThermalDisjoint_nr(j, mu, k, xLoop, beta, p.Epsi, repulsion_scale, mds);
 									PGaussianThermalDisjoint_nr(xLoop, j, mu, k, beta, p.Epsi, repulsion_scale, Pmu);
-									PGaussianThermalDisjoint_nr(xLoop, j, mu, k, beta, p.Epsi, repulsion_scale, PQGmu);
+									if (mu==(dim-1) && (atRHSDisjoint(xLoop,j,beta) || atLHSDisjoint(xLoop,j,beta))) {
+										sigma = (atLHS(xLoop,j)?-1.0:1.0);
+										ErgGaussianThermalDisjoint_nr(xLoop, j, mu, k, beta, p.Epsi, sigma*repulsion_scale, erg);
+									}
 								}
 							}
 						}
@@ -908,8 +977,8 @@ for (uint pl=0; pl<Npl; pl++) {
 							// dynamical field	
 							if (poto==PotentialOptions::original) {
 								ddVor_nr(j, mu, k, nu, xLoop, p.Epsi, g, dds);
-								//PRVor_nr(xLoop, j, mu, k, nu, p.Epsi, g, Pmu);
-								//PRVor_nr(xLoop, j, mu, k, nu, p.Epsi, g, PRVmu);
+								PRVor_nr(xLoop, j, mu, k, nu, p.Epsi, g, Pmu);
+								PRVor_nr(xLoop, j, mu, k, nu, p.Epsi, g, PRmu);
 							}
 							else if (poto==PotentialOptions::link) {
 								ddVlr_nr(j, mu, k, nu, xLoop, p.Epsi, g, dds);
@@ -922,30 +991,21 @@ for (uint pl=0; pl<Npl; pl++) {
 							}
 							else if (poto==PotentialOptions::thermal) {
 								ddVthr_nr(j, mu, k, nu, xLoop, beta, p.Epsi, g, dds);
-								//PRVthr_nr(xLoop, j, mu, k, nu, beta, p.Epsi, g, Pmu);
-								//PRVthr_nr(xLoop, j, mu, k, nu, beta, p.Epsi, g, PRVmu);
+								PRVthr_nr(xLoop, j, mu, k, nu, beta, p.Epsi, g, Pmu);
+								PRVthr_nr(xLoop, j, mu, k, nu, beta, p.Epsi, g, PRmu);
 							}
 							else if (poto==PotentialOptions::thermalDisjoint) {
 								ddVthrDisjoint_nr(j, mu, k, nu, xLoop, beta, p.Epsi, g, dds);
-								//PRVthrDisjoint_nr(xLoop, j, mu, k, nu, beta, p.Epsi, g, Pmu);
-								//PRVthrDisjoint_nr(xLoop, j, mu, k, nu, beta, p.Epsi, g, PRVmu);
-							}
-							else if (poto==PotentialOptions::nonrelDisjoint) {
-								ddVnonrelrDisjoint_nr(j, mu, k, nu, xLoop, beta, p.Epsi, g, dds);		
-							}
-								
-							// self-energy regularisation
-							if (!disjoint) {
-								if (gaussian && poto!=PotentialOptions::thermal) {
-									ddGaussian_nr(j, mu, k, nu, xLoop, p.Epsi, repulsion_scale, dds);
-									//PRGaussian_nr(xLoop, j, mu, k, nu, p.Epsi, repulsion_scale, Pmu);
-									//PRGaussian_nr(xLoop, j, mu, k, nu, p.Epsi, repulsion_scale, PRGmu);
+								PRVthrDisjoint_nr(xLoop, j, mu, k, nu, beta, p.Epsi, g, Pmu);
+								PRVthrDisjoint_nr(xLoop, j, mu, k, nu, beta, p.Epsi, g, PRmu);
+									PRGaussian_nr(xLoop, j, mu, k, nu, p.Epsi, repulsion_scale, Pmu);
+									PRGaussian_nr(xLoop, j, mu, k, nu, p.Epsi, repulsion_scale, PRmu);
 								}
 								else if (gaussian && poto==PotentialOptions::thermal) {
 									ddGaussianThermal_nr(j, mu, k, nu, xLoop, beta, p.Epsi, repulsion_scale, dds);
 									//ddGaussian_nr(j, mu, k, nu, xLoop, p.Epsi, repulsion_scale, dds);
-									//PRGaussianThermal_nr(xLoop, j, mu, k, nu, beta, p.Epsi, repulsion_scale, Pmu);
-									//PRGaussianThermal_nr(xLoop, j, mu, k, nu, beta, p.Epsi, repulsion_scale, PRGmu);
+									PRGaussianThermal_nr(xLoop, j, mu, k, nu, beta, p.Epsi, repulsion_scale, Pmu);
+									PRGaussianThermal_nr(xLoop, j, mu, k, nu, beta, p.Epsi, repulsion_scale, PRmu);
 								}
 								else if (poto!=PotentialOptions::dimreg)
 									ddL_nr(j,mu,k,nu,xLoop,dm,dds);
@@ -956,25 +1016,25 @@ for (uint pl=0; pl<Npl; pl++) {
 								if (gaussian && poto!=PotentialOptions::thermalDisjoint) {
 									if (gaussianLR) {
 										ddGaussianLRDisjoint_nr(j, mu, k, nu, xLoop, beta , p.Epsi, repulsion_scale, dds);
-										//PRGaussianLRDisjoint_nr(xLoop, j, mu, k, nu, beta, p.Epsi, repulsion_scale, Pmu);
-										//PRGaussianLRDisjoint_nr(xLoop, j, mu, k, nu, beta, p.Epsi, repulsion_scale, PRGmu);
+										PRGaussianLRDisjoint_nr(xLoop, j, mu, k, nu, beta, p.Epsi, repulsion_scale, Pmu);
+										PRGaussianLRDisjoint_nr(xLoop, j, mu, k, nu, beta, p.Epsi, repulsion_scale, PRmu);
 									}
 									else {
 										ddGaussianDisjoint_nr(j, mu, k, nu, xLoop, beta , p.Epsi, repulsion_scale, dds);
-										//PRGaussianDisjoint_nr(xLoop, j, mu, k, nu, beta, p.Epsi, repulsion_scale, Pmu);
-										//PRGaussianDisjoint_nr(xLoop, j, mu, k, nu, beta, p.Epsi, repulsion_scale, PRGmu);
+										PRGaussianDisjoint_nr(xLoop, j, mu, k, nu, beta, p.Epsi, repulsion_scale, Pmu);
+										PRGaussianDisjoint_nr(xLoop, j, mu, k, nu, beta, p.Epsi, repulsion_scale, PRmu);
 									}
 								}
 								else if (gaussian && poto==PotentialOptions::thermalDisjoint) {
 									if (gaussianLR) {
 										ddGaussianThermalLRDisjoint_nr(j, mu, k, nu, xLoop, beta , p.Epsi, repulsion_scale, dds);
-										//PRGaussianThermalLRDisjoint_nr(xLoop, j, mu, k, nu, beta, p.Epsi, repulsion_scale, Pmu);
-										//PRGaussianThermalLRDisjoint_nr(xLoop, j, mu, k, nu, beta, p.Epsi, repulsion_scale, PRGmu);
+										PRGaussianThermalLRDisjoint_nr(xLoop, j, mu, k, nu, beta, p.Epsi, repulsion_scale, Pmu);
+										PRGaussianThermalLRDisjoint_nr(xLoop, j, mu, k, nu, beta, p.Epsi, repulsion_scale, PRmu);
 									}
 									else {
 										ddGaussianThermalDisjoint_nr(j, mu, k, nu, xLoop, beta , p.Epsi, repulsion_scale, dds);
-										//PRGaussianThermalDisjoint_nr(xLoop, j, mu, k, nu, beta, p.Epsi, repulsion_scale, Pmu);
-										//PRGaussianThermalDisjoint_nr(xLoop, j, mu, k, nu, beta, p.Epsi, repulsion_scale, PRGmu);
+										PRGaussianThermalDisjoint_nr(xLoop, j, mu, k, nu, beta, p.Epsi, repulsion_scale, Pmu);
+										PRGaussianThermalDisjoint_nr(xLoop, j, mu, k, nu, beta, p.Epsi, repulsion_scale, PRmu);
 									}
 								}
 								else
@@ -1123,22 +1183,22 @@ for (uint pl=0; pl<Npl; pl++) {
 		if (!weak) s += vr;
 		if (!(P^=P0))
 			s -= Dot(xLoop[N/2-1]-xLoop[0],P);
-		if (poto==PotentialOptions::thermal || poto==PotentialOptions::thermalDisjoint)
-			erg = p.T*(sqrt4s0+2.0*i0);
-		else 
-			erg = E;
 		
 		// offset for noether energy
-		/*number offsetPmu = PRVmu[posHorizontal*dim+(dim-1)]+PRGmu[posHorizontal*dim+(dim-1)];
-		number offsetPRVmu = PRVmu[posHorizontal*dim+(dim-1)];
-		number offsetPRGmu = PRGmu[posHorizontal*dim+(dim-1)];
+		number offsetPmu = PRmu[jrhs*dim+(dim-1)];
 		for (uint j=0; j<N; j++) {
 			Pmu[j*dim+(dim-1)] -= offsetPmu;
-			PRVmu[j*dim+(dim-1)] -= offsetPRVmu;
-			PRGmu[j*dim+(dim-1)] -= offsetPRGmu;
-		}*/
-		ergNoether = 0.5*(Pmu[dim-1]+Pmu[(N-1)*dim+(dim-1)]);
-	
+		}
+			
+		if (poto==PotentialOptions::thermal || disjoint) {
+			ergThermal = p.T*(sqrt4s0+2.0*i0);
+			ergNoether = Pmu[(N/4-1)*dim+(dim-1)]-Pmu[(3*N/4-1)*dim+(dim-1)];
+		}
+		else {
+			ergThermal = E;
+			ergNoether = Pmu[dim-1]-Pmu[(N/2-1)*dim+(dim-1)];
+		}
+		
 /*----------------------------------------------------------------------------------------------------------------------------
 	6 - some checks
 ----------------------------------------------------------------------------------------------------------------------------*/	
@@ -1168,7 +1228,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		// energy normalization
 		number Enorm = 1.0;
 		if (poto==PotentialOptions::thermal || disjoint)
-			Enorm = ergNoether/2.0;
+			Enorm = ergThermal/2.0;
 		else
 			Enorm = p.P4/2.0;
 			
@@ -1200,7 +1260,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		P4 += Eigen::VectorXd::Constant(N,P4_mean);
 		
 		// check energies agree
-		checkEAgree.add(2.0*abs(erg-ergNoether)/(abs(erg)+abs(ergNoether)));
+		checkEAgree.add(2.0*abs(erg-ergThermal)/(abs(erg)+abs(ergThermal)));
 				
 		if (alltests) {
 			// checking if dds is symmetric
@@ -1621,7 +1681,13 @@ for (uint pl=0; pl<Npl; pl++) {
 			checkP3.checkMessage();
 			checkP4.checkMessage();
 			checkEAgree.checkMessage();
-			cout << "erg = " << erg << ", ergNoether = " << ergNoether << endl;
+			cout << "erg = " << erg << ", ergNoether = " << ergNoether << ", ergThermal = " << ergThermal << endl;
+			if (p.T<0.5) {
+				cout << "ergLowTemp = " << pow(PI,4)*(pow(p.G,3)*p.B)*pow(p.T,5)/90.0 << endl;
+			}
+			else {
+				cout << "ergHighTemp = " << p.T*2.0*(1.0-sqrt((pow(p.G,3)*p.B)/4.0/PI)) << endl;
+			}
 			string consFile = "data/temp/"+timenumber+"Js_pl_"+nts(pl)+"_run_"+nts(runsCount)+".dat";
 			saveVectorAscii(consFile,Js);
 			printf("%12s%50s\n","Js       :",consFile.c_str());
@@ -1631,26 +1697,6 @@ for (uint pl=0; pl<Npl; pl++) {
 			consFile = "data/temp/"+timenumber+"P4_pl_"+nts(pl)+"_run_"+nts(runsCount)+".dat";
 			saveVectorAscii(consFile,P4);
 			printf("%12s%50s\n","P4       :",consFile.c_str());
-			
-			// ################################
-			// getting P3 and P4
-			vec PQS04(N), PQI04(N), PQV4(N), PQL4(N), PQG4(N), PRV4(N), PRG4(N);
-			for (uint j=0; j<N; j++) {
-				PQS04[j] = PQS0mu[dim*j+(dim-1)];
-				PQI04[j] = PQI0mu[dim*j+(dim-1)];
-				PQV4[j] = PQVmu[dim*j+(dim-1)];
-				PQL4[j] = PQLmu[dim*j+(dim-1)];
-				PQG4[j] = PQGmu[dim*j+(dim-1)];
-				PRV4[j] = PRVmu[dim*j+(dim-1)];
-				PRG4[j] = PRGmu[dim*j+(dim-1)];
-			}
-			saveVectorAsciiAppend(consFile,PQS04);
-			saveVectorAsciiAppend(consFile,PQI04);
-			saveVectorAsciiAppend(consFile,PQV4);
-			saveVectorAsciiAppend(consFile,PQL4);
-			saveVectorAsciiAppend(consFile,PQG4);
-			saveVectorAsciiAppend(consFile,PRV4);
-			saveVectorAsciiAppend(consFile,PRG4);
 		}
 	
 	}
@@ -1757,7 +1803,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	if ((checkDelta.good() && checkSol.good() && checkSolMax.good()) || pass) {
 		// printing good results to file	
 		string resFile = (pass? "results/nr/nr_pass5.csv":"results/nr/nr5.csv");
-		#define numRes 27
+		#define numRes 28
 		vector<string> results(numRes);
 		string results_array[numRes] = {timenumber,\
 									nts(pl),\
@@ -1774,6 +1820,7 @@ for (uint pl=0; pl<Npl; pl++) {
 									nts(s,16),\
 									nts(erg,16),\
 									nts(ergNoether,16),\
+									nts(ergThermal,16),\
 									nts(gamma,16),\
 									nts(len,16),\
 									nts(i0,16),\
@@ -1794,7 +1841,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	else {
 		// printing error results to file	
 		string resFile = "results/nr/nr_error5.csv";
-		#define numResErr 25
+		#define numResErr 26
 		vector<string> results(numResErr);
 		string results_array[numRes] = {timenumber,\
 									nts(pl),\
@@ -1812,6 +1859,7 @@ for (uint pl=0; pl<Npl; pl++) {
 									nts(s,16),\
 									nts(erg,16),\
 									nts(ergNoether,16),\
+									nts(ergThermal,16),\
 									nts(checkSol.back(),16),\
 									nts(checkSolMax.back(),16),\
 									nts(checkDelta.back(),16),\
