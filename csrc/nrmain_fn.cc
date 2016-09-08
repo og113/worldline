@@ -1201,7 +1201,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		
 		ergNoether = Pmu[jrhs*dim+(dim-1)]+Pmu[jlhs*dim+(dim-1)];
 		if (poto==PotentialOptions::thermal || disjoint)
-			ergThermal = p.T*(sqrt4s0+2.0*i0);
+			ergThermal = p.T*(kinetic+2.0*i0);
 		else
 			ergThermal = E;
 		
@@ -1692,7 +1692,7 @@ for (uint pl=0; pl<Npl; pl++) {
 				cout << "ergLowTemp = " << 2.0*pow(PI,4)*(pow(p.G,3)*p.B)*pow(p.T,5)/45.0 << endl;
 			}
 			else {
-				cout << "ergHighTemp = " << p.T*2.0*(1.0-sqrt((pow(p.G,3)*p.B)/4.0/PI)) << endl;
+				cout << "ergHighTemp = " << 2.0*(1.0-sqrt((pow(p.G,3)*p.B)/4.0/PI)) << endl;
 			}
 			string consFile = "data/temp/"+timenumber+"Js_pl_"+nts(pl)+"_run_"+nts(runsCount)+".dat";
 			saveVectorAscii(consFile,Js);
@@ -1809,7 +1809,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	if ((checkDelta.good() && checkSol.good() && checkSolMax.good()) || pass) {
 		// printing good results to file	
 		string resFile = (pass? "results/nr/nr_pass5.csv":"results/nr/nr5.csv");
-		#define numRes 28
+		#define numRes 29
 		vector<string> results(numRes);
 		string results_array[numRes] = {timenumber,\
 									nts(pl),\
@@ -1818,7 +1818,7 @@ for (uint pl=0; pl<Npl; pl++) {
 									nts(p.K),\
 									nts(pow(p.G,3)*p.B,16),\
 									nts(p.Ng),\
-									nts(p.Epsi,16),\
+					erg				nts(p.Epsi,16),\
 									nts(p.Mu,16),\
 									nts(p.Lambda,16),\
 									nts(E,16),\
@@ -1829,6 +1829,7 @@ for (uint pl=0; pl<Npl; pl++) {
 									nts(ergThermal,16),\
 									nts(gamma,16),\
 									nts(len,16),\
+									nts(kinetic,16),\
 									nts(i0,16),\
 									nts(vr,16),\
 									nts(zmax,16),\
