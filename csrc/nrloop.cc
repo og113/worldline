@@ -1553,7 +1553,7 @@ void ErgInDisjoint_nr(const Loop<Dim>& l, const uint& j, const uint& mu, const n
 // ErgVor_nr
 template<uint Dim>
 void ErgVor_nr(const Loop<Dim>& l, const uint& j, const uint& mu, const uint& k, const number& a, const number& f, number& erg) {
-	erg += f*DX(l,k,mu)/(DistanceSquared(l[j],l[k]) + a*a);
+	erg += f*2.0*DX(l,k,mu)/(DistanceSquared(l[j],l[k]) + a*a);
 }
 
 // ErgVthr_nr
@@ -1562,7 +1562,7 @@ void ErgVthr_nr(const Loop<Dim>& l, const uint& j, const uint& mu, const uint& k
 	number r = SpatialDistance(l[j],l[k]);
 	number t = DX(l,k,j,Dim-1);
 
-	erg += f*(-pow(2.0*PI,2))*DX(l,k,mu)*FThermal(r,t,beta,a);
+	erg += f*2.0*(-pow(2.0*PI,2))*DX(l,k,mu)*FThermal(r,t,beta,a);
 }
 
 // ErgVthrDisjoint_nr
@@ -1571,19 +1571,19 @@ void ErgVthrDisjoint_nr(const Loop<Dim>& l, const uint& j, const uint& mu, const
 	number r = SpatialDistance(l[j],l[k]);
 	number t = DX(l,k,j,Dim-1); // intentionally not DXDisjoint(l,k,j,Dim-1,beta);
 
-	erg += f*(-pow(2.0*PI,2))*DXDisjoint(l,k,mu,beta)*FThermal(r,t,beta,a);	
+	erg += f*2.0*(-pow(2.0*PI,2))*DXDisjoint(l,k,mu,beta)*FThermal(r,t,beta,a);	
 }
 
 // ErgGaussian_nr
 template<uint Dim>
 void ErgGaussian_nr(const Loop<Dim>& l, const uint& j, const uint& mu, const uint& k, const number& a, const number& f, number& erg) {
-	erg += f*DX(l,k,mu)*exp(-DistanceSquared(l[j],l[k])/a/a);
+	erg += f*2.0*DX(l,k,mu)*exp(-DistanceSquared(l[j],l[k])/a/a);
 }
 
 // ErgGaussianDisjoint_nr
 template<uint Dim>
 void ErgGaussianDisjoint_nr(const Loop<Dim>& l, const uint& j, const uint& mu, const uint& k, const number& beta, const number& a, const number& f, number& erg) {
-	erg += f*DXDisjoint(l,k,mu,beta)*exp(-DistanceSquared(l[j],l[k])/a/a); //intentionally not disjoint
+	erg += f*2.0*DXDisjoint(l,k,mu,beta)*exp(-DistanceSquared(l[j],l[k])/a/a); //intentionally not disjoint
 }
 
 // ErgGaussianLRDisjoint_nr
@@ -1599,7 +1599,7 @@ template<uint Dim>
 void ErgGaussianThermal_nr(const Loop<Dim>& l, const uint& j, const uint& mu, const uint& k, const number& beta, const number& a, const number& f, number& erg) {
 	number r = SpatialDistance(l[j],l[k]);
 	number t = DX(l,k,j,Dim-1);
-	erg += f*DX(l,k,mu)*GThermal(r,t,beta,a);
+	erg += f*2.0*DX(l,k,mu)*GThermal(r,t,beta,a);
 }
 
 // ErgGaussianThermalDisjoint_nr
@@ -1607,7 +1607,7 @@ template<uint Dim>
 void ErgGaussianThermalDisjoint_nr(const Loop<Dim>& l, const uint& j, const uint& mu, const uint& k, const number& beta, const number& a, const number& f, number& erg) {
 	number r = SpatialDistance(l[j],l[k]);
 	number t = DX(l,k,j,Dim-1);
-	erg += f*DXDisjoint(l,k,mu,beta)*GThermal(r,t,beta,a);
+	erg += f*2.0*DXDisjoint(l,k,mu,beta)*GThermal(r,t,beta,a);
 }
 
 // ErgGaussianThermalLRDisjoint_nr
@@ -1681,7 +1681,7 @@ void PInDisjoint_nr(const Loop<Dim>& l, const uint& j, const uint& mu, const num
 // PVor_nr
 template<uint Dim>
 void PVor_nr(const Loop<Dim>& l, const uint& j, const uint& mu, const uint& k, const number& a, const number& f, vec& v) {
-	ErgVor_nr(l,j,mu,k,a,2.0*f,v[Dim*j+mu]);
+	ErgVor_nr(l,j,mu,k,a,f,v[Dim*j+mu]);
 }
 
 // PRVor_nr
@@ -1692,13 +1692,13 @@ void PRVor_nr(const Loop<Dim>& l, const uint& j, const uint& mu, const uint& k, 
 		res += DX(l,k,nu)*DX(l,i,nu)*(-2.0*DX(l,k,i,mu))/pow(DistanceSquared(l[i],l[k]) + a*a,2);		
 	}
 	
-	v[Dim*j+mu] += f*2.0*res;
+	v[Dim*j+mu] += f*res;
 }
 
 // PVthr_nr
 template<uint Dim>
 void PVthr_nr(const Loop<Dim>& l, const uint& j, const uint& mu, const uint& k, const number& beta, const number& a, const number& f, vec& v) {	
-	ErgVthr_nr(l,j,mu,k,beta,a,2.0*f,v[Dim*j+mu]);
+	ErgVthr_nr(l,j,mu,k,beta,a,f,v[Dim*j+mu]);
 }
 
 // PRVthr_nr
@@ -1718,13 +1718,13 @@ void PRVthr_nr(const Loop<Dim>& l, const uint& j, const uint& mu, const uint& k,
 		}			
 	}
 	
-	v[Dim*j+mu] += f*2.0*res;
+	v[Dim*j+mu] += f*res;
 }
 
 // PVthrDisjoint_nr
 template<uint Dim>
 void PVthrDisjoint_nr(const Loop<Dim>& l, const uint& j, const uint& mu, const uint& k, const number& beta, const number& a, const number& f, vec& v) {	
-	ErgVthrDisjoint_nr(l,j,mu,k,beta,a,2.0*f,v[Dim*j+mu]);
+	ErgVthrDisjoint_nr(l,j,mu,k,beta,a,f,v[Dim*j+mu]);
 }
 
 // PRVthrDisjoint_nr
@@ -1744,13 +1744,13 @@ void PRVthrDisjoint_nr(const Loop<Dim>& l, const uint& j, const uint& mu, const 
 		}		
 	}
 	
-	v[Dim*j+mu] += f*2.0*res;
+	v[Dim*j+mu] += f*res;
 }
 
 // PGaussian_nr
 template<uint Dim>
 void PGaussian_nr(const Loop<Dim>& l, const uint& j, const uint& mu, const uint& k, const number& a, const number& f, vec& v) {
-	ErgGaussian_nr(l,j,mu,k,a,2.0*f,v[Dim*j+mu]);
+	ErgGaussian_nr(l,j,mu,k,a,f,v[Dim*j+mu]);
 }
 
 // PRGaussian_nr
@@ -1763,13 +1763,13 @@ void PRGaussian_nr(const Loop<Dim>& l, const uint& j, const uint& mu, const uint
 		res += (-2.0/a/a)*DX(l,pk,k,nu)*DX(l,pi,i,nu)*DX(l,k,i,mu)*exp(-DistanceSquared(l[i],l[k])/a/a);
 	}
 	
-	v[Dim*j+mu] += f*2.0*res;
+	v[Dim*j+mu] += f*res;
 }
 
 // PGaussianDisjoint_nr
 template<uint Dim>
 void PGaussianDisjoint_nr(const Loop<Dim>& l, const uint& j, const uint& mu, const uint& k, const number& beta, const number& a, const number& f, vec& v) {
-	ErgGaussianDisjoint_nr(l,j,mu,k,beta,a,2.0*f,v[Dim*j+mu]);
+	ErgGaussianDisjoint_nr(l,j,mu,k,beta,a,f,v[Dim*j+mu]);
 }
 
 // PRGaussianDisjoint_nr
@@ -1782,7 +1782,7 @@ void PRGaussianDisjoint_nr(const Loop<Dim>& l, const uint& j, const uint& mu, co
 		res += (-2.0/a/a)*DXDisjoint(l,pk,k,nu,beta)*DXDisjoint(l,pi,i,nu,beta)*DX(l,k,i,mu)*exp(-DistanceSquared(l[i],l[k])/a/a);
 	}
 	
-	v[Dim*j+mu] += f*2.0*res;
+	v[Dim*j+mu] += f*res;
 }
 
 // PGaussianLRDisjoint_nr
@@ -1804,7 +1804,7 @@ void PRGaussianLRDisjoint_nr(const Loop<Dim>& l, const uint& j, const uint& mu, 
 // PGaussianThermal_nr
 template<uint Dim>
 void PGaussianThermal_nr(const Loop<Dim>& l, const uint& j, const uint& mu, const uint& k, const number& beta, const number& a, const number& f, vec& v) {
-	ErgGaussianThermal_nr(l,j,mu,k,beta,a,2.0*f,v[Dim*j+mu]);
+	ErgGaussianThermal_nr(l,j,mu,k,beta,a,f,v[Dim*j+mu]);
 }
 
 // PRGaussianThermal_nr
@@ -1824,13 +1824,13 @@ void PRGaussianThermal_nr(const Loop<Dim>& l, const uint& j, const uint& mu, con
 		}	
 	}
 	
-	v[Dim*j+mu] += f*2.0*res;
+	v[Dim*j+mu] += f*res;
 }
 
 // PGaussianThermalDisjoint_nr
 template<uint Dim>
 void PGaussianThermalDisjoint_nr(const Loop<Dim>& l, const uint& j, const uint& mu, const uint& k, const number& beta, const number& a, const number& f, vec& v) {
-	ErgGaussianThermalDisjoint_nr(l,j,mu,k,beta,a,2.0*f,v[Dim*j+mu]);
+	ErgGaussianThermalDisjoint_nr(l,j,mu,k,beta,a,f,v[Dim*j+mu]);
 }
 
 // PRGaussianThermalDisjoint_nr
@@ -1850,7 +1850,7 @@ void PRGaussianThermalDisjoint_nr(const Loop<Dim>& l, const uint& j, const uint&
 		}	
 	}
 	
-	v[Dim*j+mu] += f*2.0*res;
+	v[Dim*j+mu] += f*res;
 }
 
 // PGaussianThermalLRDisjoint_nr

@@ -1201,11 +1201,11 @@ for (uint pl=0; pl<Npl; pl++) {
 			
 		if (poto==PotentialOptions::thermal || disjoint) {
 			ergThermal = p.T*(sqrt4s0+2.0*i0);
-			ergNoether = Pmu[(N/4-1)*dim+(dim-1)]-Pmu[(3*N/4-1)*dim+(dim-1)];
+			ergNoether = Pmu[(N/4-1)*dim+(dim-1)]+Pmu[(3*N/4-1)*dim+(dim-1)];
 		}
 		else {
 			ergThermal = E;
-			ergNoether = Pmu[dim-1]-Pmu[(N/2-1)*dim+(dim-1)];
+			ergNoether = Pmu[dim-1]+Pmu[(N/2-1)*dim+(dim-1)];
 		}
 		
 /*----------------------------------------------------------------------------------------------------------------------------
