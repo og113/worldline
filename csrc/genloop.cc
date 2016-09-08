@@ -743,7 +743,7 @@ bool atCoord(const Loop<Dim>& l, const uint& mu, const uint& coord, const uint& 
 	uint pj = posNeigh(j,l.size());
 	number dxp = (l[pj])[mu]-coord;
 	number dxn = coord-(l[nj])[mu];
-	return (dxp*dxn>0.0);
+	return (dxp*dxn>=0.0);
 }
 
 // atCoordDisjoint
@@ -753,7 +753,7 @@ bool atCoordDisjoint(const Loop<Dim>& l, const uint& mu, const uint& coord, cons
 	uint pj = posNeighDisjoint(j,l.size());
 	number dxp = (l[pj])[mu]-coord;
 	number dxn = coord-(l[nj])[mu];
-	return (dxp*dxn>0.0);
+	return (dxp*dxn>=0.0);
 }
 
 // L
