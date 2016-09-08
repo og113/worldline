@@ -320,6 +320,14 @@ bool atRHSDisjoint(const Loop<Dim>& loop, const uint& j, const number& beta);
 template <uint Dim>
 bool atLHSDisjoint(const Loop<Dim>& loop, const uint& j, const number& beta);
 
+// atCoord
+template <uint Dim>
+bool atCoord(const Loop<Dim>& loop, const uint& mu, const uint& coord, const uint& j);
+
+// atCoordDisjoint
+template <uint Dim>
+bool atCoordDisjoint(const Loop<Dim>& loop, const uint& mu, const uint& coord, const uint& j);
+
 // L
 template <uint Dim>
 number L (const Loop<Dim>& l);
