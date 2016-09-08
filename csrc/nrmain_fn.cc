@@ -536,7 +536,7 @@ for (uint pl=0; pl<Npl; pl++) {
 ----------------------------------------------------------------------------------------------------------------------------*/
 		
 		// scalar coefficients
-		uint j, k, mu, nu, jrhs;
+		uint j, k, mu, nu, jrhs = 0;
 		number mgb = -1.0; // not -p.G*p.B as scaled loops
 		number kinetic = 0.0;
 		number g, dm, cusp_scale;
@@ -998,6 +998,15 @@ for (uint pl=0; pl<Npl; pl++) {
 								ddVthrDisjoint_nr(j, mu, k, nu, xLoop, beta, p.Epsi, g, dds);
 								PRVthrDisjoint_nr(xLoop, j, mu, k, nu, beta, p.Epsi, g, Pmu);
 								PRVthrDisjoint_nr(xLoop, j, mu, k, nu, beta, p.Epsi, g, PRmu);
+							}
+							else if (poto==PotentialOptions::nonrelDisjoint) {
+								ddVnonrelrDisjoint_nr(j, mu, k, nu, xLoop, beta, p.Epsi, g, dds);		
+							}
+								
+							// self-energy regularisation
+							if (!disjoint) {
+								if (gaussian && poto!=PotentialOptions::thermal) {
+									ddGaussian_nr(j, mu, k, nu, xLoop, p.Epsi, repulsion_scale, dds);
 									PRGaussian_nr(xLoop, j, mu, k, nu, p.Epsi, repulsion_scale, Pmu);
 									PRGaussian_nr(xLoop, j, mu, k, nu, p.Epsi, repulsion_scale, PRmu);
 								}
@@ -1181,8 +1190,7 @@ for (uint pl=0; pl<Npl; pl++) {
 			kinetic = len;
 		s = kinetic + i0;
 		if (!weak) s += vr;
-		if (!(P^=P0))
-			s -= Dot(xLoop[N/2-1]-xLoop[0],P);
+		if (!(P^=P0)) s -= Dot(xLoop[N/2-1]-xLoop[0],P);
 		
 		// offset for noether energy
 		number offsetPmu = PRmu[jrhs*dim+(dim-1)];
