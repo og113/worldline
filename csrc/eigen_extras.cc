@@ -67,8 +67,8 @@ void printErrorInformation(const mat& m, const string& name) {
 	cout << name <<".norm()    :         " << m.norm() << endl;
 	cout << name <<".minCoeff():         " << min << endl;
 	cout << name <<".maxCoeff():         " << max << endl;
-	cout << name <<" minCoeff  :         " << maxCoeff1 << endl;
-	cout << name <<" maxCoeff  :         " << minCoeff1 << endl;
+	cout << name <<" minCoeff  :         (" << maxCoeff1 << "," << maxCoeff2 << ")" <<endl;
+	cout << name <<" maxCoeff  :         (" << minCoeff1 << "," << minCoeff2 << ")" <<endl;
 	cout << name <<" absmax/2 counter :  " << largeCounter << endl;
 	cout << name <<".trace():            " << m.trace() << endl;
 	cout << name <<".determinant():      " << m.determinant() << endl;
