@@ -1,0 +1,40 @@
+using inputs file inputs4
+looping over 1 steps
+generating 1 circle shaped unit loops each of 1024 points in 4 dimensions
+printing to data/circle/loops/dim_4/K_10/loop_R_1_rank_0.dat, with runs from 0...1
+0.00user 0.00system 0:00.42elapsed 2%CPU (0avgtext+0avgdata 2728maxresident)k
+8inputs+72outputs (0major+747minor)pagefaults 0swaps
+./nrmain -inputs inputs4 -guess 0 -step 1 -old 0 -pot original -gaussian 0 -mu_a 0 -pass 0 -nonrel 0 -allTests 0 -fixdz 0 -fixtlr 0 -fixdislr 0 -print none -eigen 0 -conservation 1
+using inputs file inputs4
+timenumber: 160831181225
+looping over 1 steps
+loading loops from:
+data/lemon/loops/dim_4/K_10/loop_R_1_E_0_rank_0.dat
+  pl run        len         i0          s        sol       solM      delta     E_cons  dx*kg_max     ic_max     cc_max       dx/a
+   0   1      6.283     -3.142      2.901  0.0002088  0.0001598   0.009362   0.003494      1.213  5.647e-05          0    0.06136
+Check P3 conservation: test(0.00746513) > closeness(0.001)
+Check P4 conservation: test(0.924939) > closeness(0.001)
+Check P4 endpoint (nonlocal) conservation: test(0.00349368) > closeness(0.001)
+Check energies agree: test(2) > closeness(0.001)
+erg = 0, ergNoether = 0.00207767
+  Js       :                data/temp/160831181225Js_run_1.dat
+  P3       :                data/temp/160831181225P3_run_1.dat
+  P4       :                data/temp/160831181225P4_run_1.dat
+   0   2      6.225     -3.084      2.901  6.882e-08  7.431e-08  6.098e-06     0.0083      1.212  7.535e-05          0    0.06079
+Check Js conservation: test(0.00217446) > closeness(0.001)
+Check P3 conservation: test(0.0168971) > closeness(0.001)
+Check P4 conservation: test(0.956258) > closeness(0.001)
+Check P4 endpoint (nonlocal) conservation: test(0.00829971) > closeness(0.001)
+Check energies agree: test(2) > closeness(0.001)
+erg = 0, ergNoether = -0.0016896
+  Js       :                data/temp/160831181225Js_run_2.dat
+  P3       :                data/temp/160831181225P3_run_2.dat
+  P4       :                data/temp/160831181225P4_run_2.dat
+
+    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       21.23e+03      10       1       1       0     0.1     0.1           0        0.02        6.2253      -0.24055        2.9008
+
+    results:      results/nr/nr5.csv
+          x:data/nr/loops/dim_4/K_10/loop_kappa_1_E_0_a_0.1_mu_0.1.dat
+1228.54user 0.17system 20:29.24elapsed 99%CPU (0avgtext+0avgdata 279300maxresident)k
+184inputs+8896outputs (0major+4319minor)pagefaults 0swaps

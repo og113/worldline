@@ -1,0 +1,44 @@
+./nrmain -inputs inputs4 -guess 0 -step 1 -old 0 -pot thermal -gaussian 0 -mu_a 0 -pass 0 -nonrel 0 -allTests 0 -fixdz 0 -fixtlr 0 -fixdislr 0 -print none -eigen 0 -conservation 1
+using inputs file inputs4
+timenumber: 160901103022
+looping over 5 steps
+loading loops from:
+data/nr/loops/dim_4/K_10/loop_kappa_1_E_0_a_0.1_mu_0.1.dat
+  pl run        len         i0          s        sol       solM      delta     E_cons  dx*kg_max     ic_max     cc_max       dx/a
+   0   1      6.225     -3.084      2.901  0.0002019   0.000101  8.585e-06   0.002358      1.212  7.527e-05          0    0.06079
+Check Js conservation: test(0.00216599) > closeness(0.001)
+Check P3 conservation: test(0.272172) > closeness(0.001)
+Check P4 conservation: test(0.271896) > closeness(0.001)
+Check P4 endpoint (nonlocal) conservation: test(0.00235816) > closeness(0.001)
+Check energies agree: test(2) > closeness(0.001)
+erg = 0.247864, ergNoether = -0.00168715
+  Js       :                data/temp/160901103022Js_run_1.dat
+  P3       :                data/temp/160901103022P3_run_1.dat
+  P4       :                data/temp/160901103022P4_run_1.dat
+   0   2      6.225     -3.084      2.901  2.238e-13  4.367e-13  4.051e-09   0.002362      1.212  7.527e-05          0    0.06079
+Check Js conservation: test(0.00216601) > closeness(0.001)
+Check P3 conservation: test(0.27222) > closeness(0.001)
+Check P4 conservation: test(0.272221) > closeness(0.001)
+Check P4 endpoint (nonlocal) conservation: test(0.00236219) > closeness(0.001)
+Check energies agree: test(2) > closeness(0.001)
+erg = 0.247862, ergNoether = -0.00168718
+  Js       :                data/temp/160901103022Js_run_2.dat
+  P3       :                data/temp/160901103022P3_run_2.dat
+  P4       :                data/temp/160901103022P4_run_2.dat
+
+    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       24.49e+03      10       1       1       0     0.1     0.1     0.24786        0.02        6.2252      -0.24058        2.9007
+
+    results:      results/nr/nr5.csv
+          x:data/nr/loops/dim_4/K_10/loop_kappa_1_E_0_a_0.1_T_0.02_pot_8.dat
+loading loops from:
+data/nr/loops/dim_4/K_10/loop_kappa_1_E_0_a_0.1_T_0.02_pot_8.dat
+  pl run        len         i0          s        sol       solM      delta     E_cons  dx*kg_max     ic_max     cc_max       dx/a
+   1   1      6.225     -3.084      2.901  1.484e-07  2.522e-07  1.868e-05   0.001175      1.212  7.527e-05          0    0.06079
+Check Js conservation: test(0.00216601) > closeness(0.001)
+Check P3 conservation: test(0.136012) > closeness(0.001)
+Check P4 conservation: test(0.135598) > closeness(0.001)
+Check P4 endpoint (nonlocal) conservation: test(0.00117485) > closeness(0.001)
+Check energies agree: test(2) > closeness(0.001)
+erg = 0.495723, ergNoether = -0.00168721
+=>> PBS: job killed: walltime 7206 exceeded limit 7200
