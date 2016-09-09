@@ -1221,10 +1221,10 @@ for (uint pl=0; pl<Npl; pl++) {
 			if (abs(E)>MIN_NUMBER && abs(E)<2.0) {
 				number gamma_free = 2.0*asin(E/2.0);
 				gamma_ratio = gamma/gamma_free;
+				checkGamma.add(gamma_ratio-1.0);
+				checkGamma.checkMessage();
 			}
-			checkGamma.add(gamma_ratio-1.0);
-			checkGamma.checkMessage();
-			
+
 			// check rotation and check mirror
 			number xRotationTest = 0.0, xMirrorTest = 0.0;
 			number mdsRotationTest = 0.0, mdsMirrorTest = 0.0;
