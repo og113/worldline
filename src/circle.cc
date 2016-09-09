@@ -36,7 +36,7 @@ int main(int argc, char** argv) {
 // data to print
 string inputsFile = "inputs4";
 bool extend = false;
-bool higherOrder = true;
+bool higherOrder = false;
 bool circle = false;
 bool lemon = false;
 bool straightDisjoint = false;
