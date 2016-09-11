@@ -1,0 +1,253 @@
+using inputs file inputs4
+looping over 11 steps
+generating 1 straightDisjoint shaped unit loops each of 2048 points in 4 dimensions
+printing to data/straightDisjoint/loops/dim_4/K_11/loop_kappa_0.1_T_0.8_rank_0.dat, with runs from 0...1
+generating 1 straightDisjoint shaped unit loops each of 2048 points in 4 dimensions
+printing to data/straightDisjoint/loops/dim_4/K_11/loop_kappa_0.1_T_0.8_rank_0.dat, with runs from 0...1
+generating 1 straightDisjoint shaped unit loops each of 2048 points in 4 dimensions
+printing to data/straightDisjoint/loops/dim_4/K_11/loop_kappa_0.1_T_0.8_rank_0.dat, with runs from 0...1
+generating 1 straightDisjoint shaped unit loops each of 2048 points in 4 dimensions
+printing to data/straightDisjoint/loops/dim_4/K_11/loop_kappa_0.1_T_0.8_rank_0.dat, with runs from 0...1
+generating 1 straightDisjoint shaped unit loops each of 2048 points in 4 dimensions
+printing to data/straightDisjoint/loops/dim_4/K_11/loop_kappa_0.1_T_0.8_rank_0.dat, with runs from 0...1
+generating 1 straightDisjoint shaped unit loops each of 2048 points in 4 dimensions
+printing to data/straightDisjoint/loops/dim_4/K_11/loop_kappa_0.1_T_0.8_rank_0.dat, with runs from 0...1
+generating 1 straightDisjoint shaped unit loops each of 2048 points in 4 dimensions
+printing to data/straightDisjoint/loops/dim_4/K_11/loop_kappa_0.1_T_0.8_rank_0.dat, with runs from 0...1
+generating 1 straightDisjoint shaped unit loops each of 2048 points in 4 dimensions
+printing to data/straightDisjoint/loops/dim_4/K_11/loop_kappa_0.1_T_0.8_rank_0.dat, with runs from 0...1
+generating 1 straightDisjoint shaped unit loops each of 2048 points in 4 dimensions
+printing to data/straightDisjoint/loops/dim_4/K_11/loop_kappa_0.1_T_0.8_rank_0.dat, with runs from 0...1
+generating 1 straightDisjoint shaped unit loops each of 2048 points in 4 dimensions
+printing to data/straightDisjoint/loops/dim_4/K_11/loop_kappa_0.1_T_0.8_rank_0.dat, with runs from 0...1
+generating 1 straightDisjoint shaped unit loops each of 2048 points in 4 dimensions
+printing to data/straightDisjoint/loops/dim_4/K_11/loop_kappa_0.1_T_0.8_rank_0.dat, with runs from 0...1
+0.00user 0.01system 0:00.03elapsed 43%CPU (0avgtext+0avgdata 2800maxresident)k
+8inputs+1416outputs (0major+773minor)pagefaults 0swaps
+./nrmain -inputs inputs4 -guess 1 -step 1 -old 0 -pot thermalDisjoint -gaussian 0 -mu_a 0 -pass 0 -nonrel 0 -allTests 0 -fixdz 1 -fixtlr 1 -fixdislr 1 -print none -eigen 0 -conservation 1
+using inputs file inputs4
+timenumber: 160911102152
+looping over 11 steps
+loading loops from:
+data/straightDisjoint/loops/dim_4/K_11/loop_kappa_0.1_T_0.8_rank_0.dat
+  pl run        len         i0          s          E        sol       solM      delta  dx*kg_max     ic_max     cc_max       dx/a
+   0   1        2.5    -0.1115      2.278      1.822  0.0005537  0.0003566   0.001182          0          0          0     0.1221
+  Js       :           data/temp/160911102152Js_pl_0_run_1.dat
+   0   2        2.5    -0.1104      2.278      1.822  8.891e-07  5.177e-07  1.639e-05  2.274e-14  1.819e-13          0     0.1221
+  Js       :           data/temp/160911102152Js_pl_0_run_2.dat
+   0   3        2.5    -0.1104      2.278      1.822  1.753e-10  1.021e-10  3.234e-09  1.137e-14  4.547e-14          0     0.1221
+  Js       :           data/temp/160911102152Js_pl_0_run_3.dat
+
+    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       3     495      11       1     0.1       0    0.01     0.1      1.8222         0.8           2.5      -0.11186        2.2777
+
+    results:      results/nr/nr5.csv
+          x:data/nr/loops/dim_4/K_11/loop_kappa_0.1_E_0_a_0.01_T_0.8_pot_10.dat
+loading loops from:
+data/nr/loops/dim_4/K_11/loop_kappa_0.1_E_0_a_0.01_T_0.8_pot_10.dat
+  pl run        len         i0          s          E        sol       solM      delta  dx*kg_max     ic_max     cc_max       dx/a
+   1   1        2.5    -0.1104      2.278      1.823  6.023e-05  3.507e-05   0.001152  1.705e-14  2.274e-14          0    0.08719
+  Js       :           data/temp/160911102152Js_pl_1_run_1.dat
+   1   2        2.5    -0.1094      2.278      1.823  8.243e-07  4.799e-07  1.535e-05  1.705e-14  4.547e-14          0    0.08719
+Check energies agree: test(0.00123997) > closeness(0.001)
+erg = 1.8227, ergThermal = 1.82496, ergHighTemp = 1.82159
+  Js       :           data/temp/160911102152Js_pl_1_run_2.dat
+   1   3        2.5    -0.1094      2.278      1.823  1.497e-10  8.714e-11  2.787e-09  1.137e-14  2.274e-14          0    0.08719
+Check energies agree: test(0.00122775) > closeness(0.001)
+erg = 1.8227, ergThermal = 1.82494, ergHighTemp = 1.82159
+  Js       :           data/temp/160911102152Js_pl_1_run_3.dat
+
+    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       3     497      11       1     0.1       0   0.014     0.1      1.8227         0.8           2.5      -0.11221        2.2784
+
+    results:      results/nr/nr5.csv
+          x:data/nr/loops/dim_4/K_11/loop_kappa_0.1_E_0_a_0.014_T_0.8_pot_10.dat
+loading loops from:
+data/nr/loops/dim_4/K_11/loop_kappa_0.1_E_0_a_0.014_T_0.8_pot_10.dat
+  pl run        len         i0          s          E        sol       solM      delta  dx*kg_max     ic_max     cc_max       dx/a
+   2   1        2.5    -0.1094      2.279      1.823  8.042e-05  4.681e-05   0.001573  1.705e-14  2.274e-14          0    0.06782
+  Js       :           data/temp/160911102152Js_pl_2_run_1.dat
+   2   2        2.5     -0.108      2.279      1.823  1.469e-06  8.553e-07  2.772e-05  1.705e-14  4.547e-14          0    0.06782
+Check energies agree: test(0.0020763) > closeness(0.001)
+erg = 1.82343, ergThermal = 1.82722, ergHighTemp = 1.82159
+  Js       :           data/temp/160911102152Js_pl_2_run_2.dat
+   2   3        2.5     -0.108      2.279      1.823  4.706e-10  2.739e-10  8.883e-09  1.137e-14  2.274e-14          0    0.06782
+Check energies agree: test(0.00205424) > closeness(0.001)
+erg = 1.82343, ergThermal = 1.82718, ergHighTemp = 1.82159
+  Js       :           data/temp/160911102152Js_pl_2_run_3.dat
+
+    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       3     497      11       1     0.1       0   0.018     0.1      1.8234         0.8           2.5       -0.1127        2.2793
+
+    results:      results/nr/nr5.csv
+          x:data/nr/loops/dim_4/K_11/loop_kappa_0.1_E_0_a_0.018_T_0.8_pot_10.dat
+loading loops from:
+data/nr/loops/dim_4/K_11/loop_kappa_0.1_E_0_a_0.018_T_0.8_pot_10.dat
+  pl run        len         i0          s          E        sol       solM      delta  dx*kg_max     ic_max     cc_max       dx/a
+   3   1        2.5     -0.108       2.28      1.824  0.0001009  5.872e-05   0.002026  1.137e-14  1.137e-14          0    0.05549
+Check energies agree: test(0.00155431) > closeness(0.001)
+erg = 1.82434, ergThermal = 1.82718, ergHighTemp = 1.82159
+  Js       :           data/temp/160911102152Js_pl_3_run_1.dat
+   3   2        2.5    -0.1062       2.28      1.824  2.303e-06   1.34e-06  4.421e-05  2.274e-14  9.095e-14          0    0.05549
+Check energies agree: test(0.00315256) > closeness(0.001)
+erg = 1.82437, ergThermal = 1.83013, ergHighTemp = 1.82159
+  Js       :           data/temp/160911102152Js_pl_3_run_2.dat
+   3   3        2.5    -0.1062       2.28      1.824  1.139e-09  6.629e-10  2.189e-08  1.137e-14  2.274e-14          0    0.05549
+Check energies agree: test(0.00311744) > closeness(0.001)
+erg = 1.82437, ergThermal = 1.83006, ergHighTemp = 1.82159
+  Js       :           data/temp/160911102152Js_pl_3_run_3.dat
+
+    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       3     498      11       1     0.1       0   0.022     0.1      1.8244         0.8           2.5      -0.11333        2.2805
+
+    results:      results/nr/nr5.csv
+          x:data/nr/loops/dim_4/K_11/loop_kappa_0.1_E_0_a_0.022_T_0.8_pot_10.dat
+loading loops from:
+data/nr/loops/dim_4/K_11/loop_kappa_0.1_E_0_a_0.022_T_0.8_pot_10.dat
+  pl run        len         i0          s          E        sol       solM      delta  dx*kg_max     ic_max     cc_max       dx/a
+   4   1        2.5    -0.1062      2.282      1.825  0.0001218  7.088e-05   0.002523  1.137e-14  5.684e-15          0    0.04695
+Check energies agree: test(0.00250965) > closeness(0.001)
+erg = 1.82548, ergThermal = 1.83006, ergHighTemp = 1.82159
+  Js       :           data/temp/160911102152Js_pl_4_run_1.dat
+   4   2        2.5    -0.1039      2.282      1.826  3.325e-06  1.934e-06  6.528e-05  1.705e-14  1.819e-13          0    0.04695
+Check energies agree: test(0.00449363) > closeness(0.001)
+erg = 1.82551, ergThermal = 1.83373, ergHighTemp = 1.82159
+  Js       :           data/temp/160911102152Js_pl_4_run_2.dat
+   4   3        2.5     -0.104      2.282      1.826  2.324e-09  1.352e-09  4.569e-08  1.137e-14  2.274e-14          0    0.04695
+Check energies agree: test(0.00444189) > closeness(0.001)
+erg = 1.82551, ergThermal = 1.83363, ergHighTemp = 1.82159
+  Js       :           data/temp/160911102152Js_pl_4_run_3.dat
+
+    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       3     512      11       1     0.1       0   0.026     0.1      1.8255         0.8           2.5      -0.11414        2.2819
+
+    results:      results/nr/nr5.csv
+          x:data/nr/loops/dim_4/K_11/loop_kappa_0.1_E_0_a_0.026_T_0.8_pot_10.dat
+loading loops from:
+data/nr/loops/dim_4/K_11/loop_kappa_0.1_E_0_a_0.026_T_0.8_pot_10.dat
+  pl run        len         i0          s          E        sol       solM      delta  dx*kg_max     ic_max     cc_max       dx/a
+   5   1        2.5     -0.104      2.284      1.827  0.0001434   8.34e-05   0.003084  1.137e-14  1.137e-14          0    0.04069
+Check energies agree: test(0.00372047) > closeness(0.001)
+erg = 1.82683, ergThermal = 1.83363, ergHighTemp = 1.82159
+  Js       :           data/temp/160911102152Js_pl_5_run_1.dat
+   5   2        2.5    -0.1012      2.284      1.827  4.523e-06   2.63e-06  9.144e-05  2.274e-14  9.095e-14          0    0.04069
+Check energies agree: test(0.00613527) > closeness(0.001)
+erg = 1.82687, ergThermal = 1.83811, ergHighTemp = 1.82159
+  Js       :           data/temp/160911102152Js_pl_5_run_2.dat
+   5   3        2.5    -0.1013      2.284      1.827  4.169e-09  2.424e-09  8.444e-08  1.137e-14  2.274e-14          0    0.04069
+Check energies agree: test(0.00606299) > closeness(0.001)
+erg = 1.82687, ergThermal = 1.83798, ergHighTemp = 1.82159
+  Js       :           data/temp/160911102152Js_pl_5_run_3.dat
+
+    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       3     511      11       1     0.1       0    0.03     0.1      1.8269         0.8           2.5      -0.11515        2.2836
+
+    results:      results/nr/nr5.csv
+          x:data/nr/loops/dim_4/K_11/loop_kappa_0.1_E_0_a_0.03_T_0.8_pot_10.dat
+loading loops from:
+data/nr/loops/dim_4/K_11/loop_kappa_0.1_E_0_a_0.03_T_0.8_pot_10.dat
+  pl run        len         i0          s          E        sol       solM      delta  dx*kg_max     ic_max     cc_max       dx/a
+   6   1        2.5    -0.1013      2.286      1.828  0.0001659  9.645e-05   0.003733  1.137e-14  1.137e-14          0     0.0359
+Check energies agree: test(0.00522002) > closeness(0.001)
+erg = 1.82841, ergThermal = 1.83798, ergHighTemp = 1.82159
+  Js       :           data/temp/160911102152Js_pl_6_run_1.dat
+   6   2        2.5   -0.09787      2.286      1.828  5.858e-06  3.405e-06  0.0001231  1.705e-13  1.819e-13          0     0.0359
+Check energies agree: test(0.00813001) > closeness(0.001)
+erg = 1.82848, ergThermal = 1.8434, ergHighTemp = 1.82159
+  Js       :           data/temp/160911102152Js_pl_6_run_2.dat
+   6   3        2.5   -0.09798      2.286      1.828  6.673e-09  3.879e-09  1.405e-07  1.137e-14  9.095e-14          0     0.0359
+Check energies agree: test(0.00803304) > closeness(0.001)
+erg = 1.82848, ergThermal = 1.84323, ergHighTemp = 1.82159
+  Js       :           data/temp/160911102152Js_pl_6_run_3.dat
+
+    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       3     512      11       1     0.1       0   0.034     0.1      1.8285         0.8           2.5      -0.11642        2.2856
+
+    results:      results/nr/nr5.csv
+          x:data/nr/loops/dim_4/K_11/loop_kappa_0.1_E_0_a_0.034_T_0.8_pot_10.dat
+loading loops from:
+data/nr/loops/dim_4/K_11/loop_kappa_0.1_E_0_a_0.034_T_0.8_pot_10.dat
+  pl run        len         i0          s          E        sol       solM      delta  dx*kg_max     ic_max     cc_max       dx/a
+   7   1        2.5   -0.09798      2.288       1.83  0.0001896  0.0001102   0.004515  1.137e-14  9.095e-14          0    0.03212
+Check energies agree: test(0.00705752) > closeness(0.001)
+erg = 1.83026, ergThermal = 1.84323, ergHighTemp = 1.82159
+  Js       :           data/temp/160911102152Js_pl_7_run_1.dat
+   7   2        2.5   -0.09389      2.288       1.83  7.222e-06  4.196e-06  0.0001597  5.684e-14  1.819e-13          0    0.03212
+Check energies agree: test(0.0105581) > closeness(0.001)
+erg = 1.83035, ergThermal = 1.84978, ergHighTemp = 1.82159
+  Js       :           data/temp/160911102152Js_pl_7_run_2.dat
+   7   3        2.5   -0.09403      2.288       1.83  9.393e-09  5.458e-09  2.082e-07  1.137e-14  4.547e-14          0    0.03212
+Check energies agree: test(0.0104328) > closeness(0.001)
+erg = 1.83035, ergThermal = 1.84955, ergHighTemp = 1.82159
+  Js       :           data/temp/160911102152Js_pl_7_run_3.dat
+
+    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       3     512      11       1     0.1       0   0.038     0.1      1.8304         0.8           2.5      -0.11803        2.2879
+
+    results:      results/nr/nr5.csv
+          x:data/nr/loops/dim_4/K_11/loop_kappa_0.1_E_0_a_0.038_T_0.8_pot_10.dat
+loading loops from:
+data/nr/loops/dim_4/K_11/loop_kappa_0.1_E_0_a_0.038_T_0.8_pot_10.dat
+  pl run        len         i0          s          E        sol       solM      delta  dx*kg_max     ic_max     cc_max       dx/a
+   8   1        2.5   -0.09403      2.291      1.832  0.0002152   0.000125   0.005504  1.137e-14  1.137e-14          0    0.02906
+Check energies agree: test(0.00930909) > closeness(0.001)
+erg = 1.83241, ergThermal = 1.84955, ergHighTemp = 1.82159
+  Js       :           data/temp/160911102152Js_pl_8_run_1.dat
+   8   2        2.5   -0.08904      2.291      1.833  8.313e-06  4.827e-06  0.0001973  6.253e-14  1.819e-13          0    0.02906
+Check energies agree: test(0.0135505) > closeness(0.001)
+erg = 1.83253, ergThermal = 1.85754, ergHighTemp = 1.82159
+  Js       :           data/temp/160911102152Js_pl_8_run_2.dat
+   8   3        2.5   -0.08922      2.291      1.833  1.077e-08  6.252e-09  2.562e-07  1.137e-14  4.547e-14          0    0.02906
+Check energies agree: test(0.0133963) > closeness(0.001)
+erg = 1.83253, ergThermal = 1.85725, ergHighTemp = 1.82159
+  Js       :           data/temp/160911102152Js_pl_8_run_3.dat
+
+    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       3     511      11       1     0.1       0   0.042     0.1      1.8325         0.8           2.5      -0.12011        2.2907
+
+    results:      results/nr/nr5.csv
+          x:data/nr/loops/dim_4/K_11/loop_kappa_0.1_E_0_a_0.042_T_0.8_pot_10.dat
+loading loops from:
+data/nr/loops/dim_4/K_11/loop_kappa_0.1_E_0_a_0.042_T_0.8_pot_10.dat
+  pl run        len         i0          s          E        sol       solM      delta  dx*kg_max     ic_max     cc_max       dx/a
+   9   1        2.5   -0.08922      2.294      1.835  0.0002435  0.0001414   0.006854  1.137e-14  2.274e-14          0    0.02654
+Check energies agree: test(0.0121011) > closeness(0.001)
+erg = 1.83491, ergThermal = 1.85725, ergHighTemp = 1.82159
+  Js       :           data/temp/160911102152Js_pl_9_run_1.dat
+   9   2        2.5   -0.08301      2.294      1.835  8.209e-06  4.764e-06  0.0002168  5.684e-14  9.095e-14          0    0.02654
+Check energies agree: test(0.0173431) > closeness(0.001)
+erg = 1.83509, ergThermal = 1.86719, ergHighTemp = 1.82159
+  Js       :           data/temp/160911102152Js_pl_9_run_2.dat
+   9   3        2.5    -0.0832      2.294      1.835  7.279e-09  4.225e-09  1.926e-07  1.137e-14  4.547e-14          0    0.02654
+Check energies agree: test(0.0171747) > closeness(0.001)
+erg = 1.83509, ergThermal = 1.86688, ergHighTemp = 1.82159
+  Js       :           data/temp/160911102152Js_pl_9_run_3.dat
+
+    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       3     510      11       1     0.1       0   0.046     0.1      1.8351         0.8           2.5      -0.12294        2.2939
+
+    results:      results/nr/nr5.csv
+          x:data/nr/loops/dim_4/K_11/loop_kappa_0.1_E_0_a_0.046_T_0.8_pot_10.dat
+loading loops from:
+data/nr/loops/dim_4/K_11/loop_kappa_0.1_E_0_a_0.046_T_0.8_pot_10.dat
+  pl run        len         i0          s          E        sol       solM      delta  dx*kg_max     ic_max     cc_max       dx/a
+  10   1        2.5    -0.0832      2.297      1.838  0.0002761  0.0001602   0.008932  1.137e-14  5.684e-15          0    0.02441
+Check energies agree: test(0.0156698) > closeness(0.001)
+erg = 1.83785, ergThermal = 1.86688, ergHighTemp = 1.82159
+  Js       :          data/temp/160911102152Js_pl_10_run_1.dat
+  10   2        2.5   -0.07511      2.298      1.838  3.497e-06  2.028e-06  0.0001113  4.405e-13  1.819e-13          0    0.02441
+Check energies agree: test(0.0224374) > closeness(0.001)
+erg = 1.83811, ergThermal = 1.87982, ergHighTemp = 1.82159
+  Js       :          data/temp/160911102152Js_pl_10_run_2.dat
+  10   3        2.5   -0.07521      2.298      1.838  2.392e-10  1.387e-10  7.612e-09  5.116e-14  9.095e-14          0    0.02441
+Check energies agree: test(0.0223517) > closeness(0.001)
+erg = 1.83811, ergThermal = 1.87966, ergHighTemp = 1.82159
+  Js       :          data/temp/160911102152Js_pl_10_run_3.dat
+
+    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       3     511      11       1     0.1       0    0.05     0.1      1.8381         0.8           2.5      -0.12715        2.2976
+
+    results:      results/nr/nr5.csv
+          x:data/nr/loops/dim_4/K_11/loop_kappa_0.1_E_0_a_0.05_T_0.8_pot_10.dat
+5559.05user 4.84system 1:32:44elapsed 99%CPU (0avgtext+0avgdata 1075712maxresident)k
+0inputs+5296outputs (0major+41616minor)pagefaults 0swaps
