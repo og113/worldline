@@ -1471,13 +1471,13 @@ void ddFGamma_nr(const Loop<Dim>& l, const uint& j, const number& f, mat& m) {
 // ErgS0_nr
 template<uint Dim>
 void ErgS0_nr(const Loop<Dim>& l, const uint& j, const uint& mu, const number& f, number& erg) {
-	erg += f*DX(l,posNeigh(j,l.size()),j,mu)*(number)l.size()/2.0;
+	erg += f*DX(l,j,mu)*(number)l.size()/2.0;
 }
 
 // ErgS0Disjoint_nr
 template<uint Dim>
 void ErgS0Disjoint_nr(const Loop<Dim>& l, const uint& j, const uint& mu, const number& beta, const number& f, number& erg) {
-	erg += f*DXDisjoint(l,posNeighDisjoint(j,l.size()),j,mu,beta)*(number)l.size()/2.0;
+	erg += f*DXDisjoint(l,j,mu,beta)*(number)l.size()/2.0;
 }
 
 // ErgL_nr
