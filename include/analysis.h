@@ -1,6 +1,6 @@
 /*
 	analysis
-		for analysis of monte carlo data
+		for analysis of monte carlo data, and newton-raphson data
 */
 
 #ifndef __ANALYSIS_H_INCLUDED__
@@ -11,10 +11,12 @@
 #include <vector>
 #include <gsl/gsl_rng.h> 	// random number generators
 #include "simple.h"
+#include "parameters.h"
 
 /*-------------------------------------------------------------------------------------------------------------------------
 CONTENTS
 	1. MonteCarloData class
+	2. NewtonRaphsonDatum and NewtonRaphsonData classes
 	
 -------------------------------------------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------------------------------------------*/
@@ -67,4 +69,69 @@ private:
 	vector<number> 		Correlator;
 	void			zeroNums();
 };
+
+/*-------------------------------------------------------------------------------------------------------------------------
+	2. NewtonRaphsonDatum and NewtonRaphsonDatum classes
+-------------------------------------------------------------------------------------------------------------------------*/
+/*
+// operator==
+bool operator==(const NewtonRaphsonDatum& lhs, const NewtonRaphsonDatum& rhs);
+
+// operator<<
+ostream& operator<<(ostream&, const NewtonRaphsonDatum&);
+
+class NewtonRaphsonDatum {
+public:
+	// constructors, destructor
+	NewtonRaphsonDatum(const vector<string>&, const Parameters&, const vector<number>&);
+	~NewtonRaphsonDatum();
+	
+	// save and load ascii
+	void save(const string&) const;
+	void load(const string&);
+	
+	// get
+	vector<string> id() const;
+	Parameters parameters() const;
+	vecor<number> datum() const;
+	
+	// checks
+	bool checkID(const vector<string>&) const;
+	bool checkParameters(const Parameters&) const;
+	
+	// ==
+	//friend bool operator==(const NewtonRaphsonDatum& lhs, const NewtonRaphsonDatum& rhs);
+	
+	// operator<<
+	//friend ostream& operator<<(ostream&, const NewtonRaphsonDatum&);
+	
+private:
+	uint IDSize;
+	uint DatumSize;
+	vector<string> ID;
+	Parameters P;
+	vector<number> Datum;
+};
+
+class NewtonRaphsonData {
+public:
+	// constructors, destructor
+	NewtonRaphsonData();
+	NewtonRaphsonData(const string&);
+	NewtonRaphsonData(const vector<NewtonRaphsonDatum>&);
+	~NewtonRaphsonData();
+	
+	// save and load ascii
+	void save(const string&) const;
+	void load(const string&);
+	
+	// search
+	bool find(const Paramters&);
+	bool find(const Paramters&, NewtonRaphsonDatum&);
+	
+private:
+	uint Size;
+	vector<NewtonRaphsonDatum> DataArray;
+};
+*/
 #endif // __ANALYSIS_H_INCLUDED__

@@ -261,6 +261,42 @@ void loadVectorAsciiColumn(const string& f, T& v, const uint& col) {
 	}
 }
 
+// loadVectorCsvAppend
+template <class T>
+void loadVectorCsvAppend(const string& f,  T& v) {
+	uint columns = countColumns(f,',');
+	v.resize(columns);
+	ifstream is;
+	is.open(f.c_str());
+	string line;
+	if (is.good()) {
+	
+		is.seekg(0,ios_base::end);      	//Start at end of file
+        char ch = ' ';                      //Init ch not equal to '\n'
+        while(ch != '\n'){
+            is.seekg(-2,ios_base::cur); 	//Two steps back, this means we
+                                            //will NOT check the last character
+            if((int)is.tellg() <= 0){       //If passed the start of the file,
+                is.seekg(0);                //this is the start of the line
+                break;
+            }
+            is.get(ch);                     //Check the next character
+        }
+        
+		getline(is,line);
+		stringstream ss(line);
+		for (uint k=0; k<columns; k++)
+			getline(ss,v[k],',');
+			
+		is.close();
+	}
+	else {
+		cerr << "loadVectorCsvAppend error: cannot read from " << f << endl;
+		is.close();
+		return;
+	}
+}
+
 /*-------------------------------------------------------------------------------------------------------------------------
 	3. explicit instantiation
 -------------------------------------------------------------------------------------------------------------------------*/
@@ -285,3 +321,4 @@ template void loadVectorAsciiColumn< vector<number> >(const string& f, vector<nu
 template void loadVectorBinary< Eigen::VectorXd >(const string& f, Eigen::VectorXd& v);
 template void loadVectorAscii< Eigen::VectorXd >(const string& f, Eigen::VectorXd& v);
 template void loadVectorAsciiColumn< Eigen::VectorXd >(const string& f, Eigen::VectorXd& v, const uint& col);
+template void loadVectorCsvAppend< vector<string> >(const string& f, vector<string>& v);

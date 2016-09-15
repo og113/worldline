@@ -66,4 +66,8 @@ void loadVectorAscii(const string& f, T& v);
 template <class T>
 void loadVectorAsciiColumn(const string& f, T& v, const uint& col);
 
+// loadVectorCsvAppend
+template <class T>
+void loadVectorCsvAppend(const string& f,  T& v);
+
 #endif // __PRINT_H_INCLUDED__
