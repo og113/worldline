@@ -126,6 +126,7 @@ istream& operator>>(istream&, NewtonRaphsonDatum&);
 class NewtonRaphsonData {
 public:
 	// constructors, destructor
+	NewtonRaphsonData(const uint& idsize, const uint& datumsize);
 	NewtonRaphsonData(const string&, const uint& idsize, const uint& datumsize);
 	NewtonRaphsonData(const vector<NewtonRaphsonDatum>&);
 	~NewtonRaphsonData();
@@ -133,10 +134,13 @@ public:
 	// save and load ascii
 	void save(const string&) const;
 	void saveAppend(const string&) const;
-	void load(const string&, const uint& idsize, const uint& datumsize);
+	void load(const string&);
 	
 	// get
 	uint size() const;
+	
+	// add
+	void add(const NewtonRaphsonDatum&);
 	
 	// search
 	bool find(const vector<string>& id) const;
@@ -145,7 +149,9 @@ public:
 	bool find(NewtonRaphsonDatum&) const;
 	
 private:
-	uint Size;
+	uint IDSize;
+	uint DatumSize;
+	uint DataSize;
 	vector<NewtonRaphsonDatum> DataArray;
 };
 

@@ -6,6 +6,7 @@
 #include <gsl/gsl_sf_zeta.h>
 #include <gsl/gsl_sf_gamma.h>
 #include <vector>
+#include "analysis.h"
 #include "check.h"
 #include "folder.h"
 #include "genloop.h"
@@ -90,6 +91,8 @@ bool auto_a = false;
 bool pass = false;
 bool sometests = false;
 bool alltests = false; // doing alltests
+bool redo = true;
+bool redoErrors = true;
 string printOpts = "";
 string potOpts = "";
 string kinOpts = "";
@@ -131,6 +134,8 @@ if (argc % 2 && argc>1) {
 		else if (id.compare("xIn")==0) xIn = (string)argv[2*j+2];
 		else if (id.compare("sometests")==0 || id.compare("someTests")==0) sometests = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("alltests")==0 || id.compare("allTests")==0) alltests = (stn<uint>(argv[2*j+2])!=0);
+		else if (id.compare("redo")==0) redo = (stn<uint>(argv[2*j+2])!=0);
+		else if (id.compare("redoErrors")==0) redoErrors = (stn<uint>(argv[2*j+2])!=0);
 		else {
 			cerr << "argv id " << id << " not understood" << endl;
 			return 1;
@@ -170,7 +175,6 @@ if (!printOpts.empty()) {
 }
 
 PotentialOptions::Option poto = PotentialOptions::original;
-StringPair potExtras("pot",nts((int)poto));
 if (!potOpts.empty()) {
 	if (potOpts.compare("original")==0)
 		poto = PotentialOptions::original;
@@ -205,12 +209,12 @@ if (!disjoint)
 	gaussianLR = false;
 if (gaussianLR)
 	gaussian = true;
-if (poto!=PotentialOptions::original || gaussian) {
-	if ((int)poto<5)
-		potExtras.second = nts(2*(int)poto + (int)gaussian);
-	else
-		potExtras.second = nts(10 + 3*((int)poto-5) + (int)gaussian + (int)gaussianLR);
-}
+
+StringPair potExtras("pot",nts((int)poto));
+if ((int)poto<5)
+	potExtras.second = nts(2*(int)poto + (int)gaussian);
+else
+	potExtras.second = nts(10 + 3*((int)poto-5) + (int)gaussian + (int)gaussianLR);
 	
 KineticOptions::Option kino = KineticOptions::saddle;
 StringPair kinExtras("kin",nts((int)kino));
@@ -225,6 +229,7 @@ if (!kinOpts.empty()) {
 		cerr << "potential options not understood/available: " << kinOpts << endl;
 		return 1;
 	}
+	kinExtras.second = nts((int)kino);
 }
 
 if (fixall)
@@ -245,6 +250,18 @@ if (p.empty()) {
 // timenumber
 string timenumber = currentDateTime();
 cout << "timenumber: " << timenumber << endl;
+
+// results
+string resultsFile = (pass? "results/nr/nr_pass6.csv":"results/nr/nr6.csv");
+uint idSizeResults = 3, dataSizeResults = 17;
+vector<string> idCheck(idSizeResults);
+idCheck[idSizeResults-1] = nts<uint>(poto);
+NewtonRaphsonData results(resultsFile,idSizeResults,dataSizeResults);
+
+// errors
+string errorsFile = "results/nr/nr_error6.csv";
+uint idSizeErrors = 4, dataSizeErrors = 12;
+NewtonRaphsonData errors(errorsFile,idSizeErrors,dataSizeErrors);
 
 /*----------------------------------------------------------------------------------------------------------------------------
 	2 - beginning parameter loop
@@ -268,6 +285,20 @@ for (uint pl=0; pl<Npl; pl++) {
 			p.Mu = p.Epsi;
 			pold.Mu = pold.Epsi;
 		}
+	}
+	
+	// checking if have results already
+	if (!redo && !results.find(idCheck,p)) {
+		cout << "result found in " << resultsFile << " for pl = " << pl << endl;
+		continue; // CONTINUE STATEMENT!!!!!!
+	}
+	if (!redoErrors && !errors.find(idCheck,p)) {
+		cout << "result found in " << errorsFile << " for pl = " << pl << endl;
+		continue; // CONTINUE STATEMENT!!!!!!
+	}
+	
+	// getting step file
+	if (pl>0) {	
 		if (poto==PotentialOptions::thermal || disjoint) {
 			if (p.T==0) {
 				cerr << "must have T!=0 for thermal runs" << endl;
@@ -1654,7 +1685,11 @@ for (uint pl=0; pl<Npl; pl++) {
 	
 	if ((checkDelta.good() && checkSol.good() && checkSolMax.good()) || pass) {
 		// printing good results to file	
-		string resFile = (pass? "results/nr/nr_pass5.csv":"results/nr/nr5.csv");
+		string resFile = (pass? "results/nr/nr_pass6.csv":"results/nr/nr6.csv");
+		
+		
+		
+		
 		#define numRes 28
 		vector<string> results(numRes);
 		string results_array[numRes] = {timenumber,\
