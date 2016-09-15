@@ -16,7 +16,8 @@
 /*-------------------------------------------------------------------------------------------------------------------------
 CONTENTS
 	1. MonteCarloData class
-	2. NewtonRaphsonDatum and NewtonRaphsonData classes
+	2. NewtonRaphsonDatum class
+	3. NewtonRaphsonData class
 	
 -------------------------------------------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------------------------------------------*/
@@ -71,7 +72,7 @@ private:
 };
 
 /*-------------------------------------------------------------------------------------------------------------------------
-	2. NewtonRaphsonDatum and NewtonRaphsonDatum classes
+	2. NewtonRaphsonDatum class
 -------------------------------------------------------------------------------------------------------------------------*/
 
 class NewtonRaphsonDatum {
@@ -85,8 +86,10 @@ public:
 	void save(const string&) const;
 	void load(const string&);
 	void load(const vector<string>&);
+	void load(const vector<string>&, const Parameters&, const vector<number>&);
 	
 	// get
+	uint size() const;
 	vector<string> id() const;
 	Parameters parameters() const;
 	vector<number> datum() const;
@@ -112,25 +115,38 @@ bool operator==(const NewtonRaphsonDatum& lhs, const NewtonRaphsonDatum& rhs);
 // operator<<
 ostream& operator<<(ostream&, const NewtonRaphsonDatum&);
 
-/*class NewtonRaphsonData {
+// operator>>
+istream& operator>>(istream&, NewtonRaphsonDatum&);
+
+/*-------------------------------------------------------------------------------------------------------------------------
+	3. NewtonRaphsonData class
+		
+-------------------------------------------------------------------------------------------------------------------------*/
+
+class NewtonRaphsonData {
 public:
 	// constructors, destructor
-	NewtonRaphsonData();
-	NewtonRaphsonData(const string&);
+	NewtonRaphsonData(const string&, const uint& idsize, const uint& datumsize);
 	NewtonRaphsonData(const vector<NewtonRaphsonDatum>&);
 	~NewtonRaphsonData();
 	
 	// save and load ascii
 	void save(const string&) const;
-	void load(const string&);
+	void saveAppend(const string&) const;
+	void load(const string&, const uint& idsize, const uint& datumsize);
+	
+	// get
+	uint size() const;
 	
 	// search
-	bool find(const Paramters&);
-	bool find(const Paramters&, NewtonRaphsonDatum&);
+	bool find(const vector<string>& id) const;
+	bool find(const Parameters&) const;
+	bool find(const vector<string>& id, const Parameters&) const;
+	bool find(NewtonRaphsonDatum&) const;
 	
 private:
 	uint Size;
 	vector<NewtonRaphsonDatum> DataArray;
-};*/
+};
 
 #endif // __ANALYSIS_H_INCLUDED__

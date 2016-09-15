@@ -16,7 +16,8 @@
 /*-------------------------------------------------------------------------------------------------------------------------
 CONTENTS
 	1. MonteCarloData class
-	2. NewtonRaphsonDatum and NewtonRaphsonDatum classes
+	2. NewtonRaphsonDatum class
+	3. NewtonRaphsonDatum classes
 	
 -------------------------------------------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------------------------------------------*/
@@ -269,7 +270,7 @@ number MonteCarloData::calcBootstrap(uint N, const uint& Seed) {
 }
 
 /*-------------------------------------------------------------------------------------------------------------------------
-	2. NewtonRaphsonDatum and NewtonRaphsonDatum classes
+	2. NewtonRaphsonDatum class
 		
 -------------------------------------------------------------------------------------------------------------------------*/
 
@@ -335,6 +336,20 @@ void NewtonRaphsonDatum::load(const string& f) {
 	load(v);
 }
 
+// load
+void NewtonRaphsonDatum::load(const vector<string>& id, const Parameters& p, const vector<number>& d) {
+	ID = id;
+	P = p;
+	Datum = d;
+	IDSize = ID.size();
+	DatumSize = Datum.size();
+}
+
+// size
+uint NewtonRaphsonDatum::size() const {
+	return IDSize+Parameters::Size+DatumSize;
+}
+
 // id
 vector<string> NewtonRaphsonDatum::id() const {
 	return ID;
@@ -380,19 +395,33 @@ bool operator==(const NewtonRaphsonDatum& lhs, const NewtonRaphsonDatum& rhs) {
 ostream& operator<<(ostream& os, const NewtonRaphsonDatum& d) {
 	vector<string> toPrint = d.strings();
 	for (uint j=0; j<toPrint.size(); j++) {
-		os << setw(25) << toPrint[j];
+		os << toPrint[j];
+		if (j<(toPrint.size()-1))
+			os << ",";
 	}
 	return os;
 }
 
-/*
-// constructor
-NewtonRaphsonData::NewtonRaphsonData(): Size(), DatArray() {
+// operator>>
+istream& operator>>(istream& is, NewtonRaphsonDatum& d) {
+	string line;
+	getline(is,line);
+	stringstream ss(line);
+	vector<string> v(d.size());
+	for (uint k=0; k<d.size(); k++)
+		getline(ss,v[k],',');
+	d.load(v);
+	return is;
 }
 
+/*-------------------------------------------------------------------------------------------------------------------------
+	3. NewtonRaphsonData class
+		
+-------------------------------------------------------------------------------------------------------------------------*/
+
 // constructor
-NewtonRaphsonData::NewtonRaphsonData(const string& f): Size(), DatArray() {
-	load(f);
+NewtonRaphsonData::NewtonRaphsonData(const string& f, const uint& idsize, const uint& datumsize): Size(), DataArray() {
+	load(f,idsize,datumsize);
 }
 
 // constructor
@@ -406,14 +435,95 @@ NewtonRaphsonData::~NewtonRaphsonData() {}
 
 // save
 void NewtonRaphsonData::save(const string& f) const {
-	
+	ofstream os;
+	os.open(f.c_str());
+	if (os.good()) {
+		for (uint j=0; j<Size; j++) {
+			os << DataArray[j] << endl;
+		}
+		os.close();
+	}
+	else {
+		cerr << "NewtonRaphsonData::save error: cannot write to " << f << endl;
+		os.close();
+		return;
+	}
+}
+
+// saveAppend
+void NewtonRaphsonData::saveAppend(const string& f) const {
+	ofstream os;
+	os.open(f.c_str());
+	if (os.good()) {
+		for (uint j=0; j<Size; j++) {
+			os << DataArray[j] << endl;
+		}
+		os.close();
+	}
+	else {
+		cerr << "NewtonRaphsonData::save error: cannot write to " << f << endl;
+		os.close();
+		return;
+	}
 }
 
 // load
-void NewtonRaphsonData::load(const string& f);
+void NewtonRaphsonData::load(const string& f, const uint& idsize, const uint& datumsize) {
+	Size = countLines(f);
+	ifstream is;
+	is.open(f.c_str());
+	if (is.good()) {
+		NewtonRaphsonDatum temp(idsize,datumsize);
+		for (uint j=0; j<Size; j++) {
+			is >> temp;
+			DataArray.push_back(temp);
+		}
+		is.close();
+	}
+	else {
+		cerr << "NewtonRaphsonData::load error: cannot write to " << f << endl;
+		is.close();
+		return;
+	}
+}
+
+// size
+uint NewtonRaphsonData::size() const {
+	return Size;
+}
 
 // find
-bool find(const Paramters&);
+bool NewtonRaphsonData::find(const vector<string>& id) const {
+	for (uint j=0; j<Size; j++) {
+		if ((DataArray[j]).checkID(id))
+			return true;
+	}
+	return false;
+}
 
 // find
-bool find(const Paramters&, NewtonRaphsonDatum&);*/
+bool NewtonRaphsonData::find(const Parameters& p) const {
+	for (uint j=0; j<Size; j++) {
+		if ((DataArray[j]).checkParameters(p))
+			return true;
+	}
+	return false;
+}
+
+// find
+bool NewtonRaphsonData::find(const vector<string>& id, const Parameters& p) const {
+	for (uint j=0; j<Size; j++) {
+		if ((DataArray[j]).checkID(id) && (DataArray[j]).checkParameters(p))
+			return true;
+	}
+	return false;
+}
+
+// find
+bool NewtonRaphsonData::find(NewtonRaphsonDatum& d) const {
+	for (uint j=0; j<Size; j++) {
+		if (DataArray[j]==d)
+			return true;
+	}
+	return false;
+}
