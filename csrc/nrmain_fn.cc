@@ -252,16 +252,16 @@ string timenumber = currentDateTime();
 cout << "timenumber: " << timenumber << endl;
 
 // results
-string resultsFile = (pass? "results/nr/nr_pass6.csv":"results/nr/nr6.csv");
-uint idSizeResults = 3, dataSizeResults = 17;
+string resultsFile = (pass? "results/nr/nr6pass.csv":"results/nr/nr6.csv");
+uint idSizeResults = 3, datumSizeResults = 17;
 vector<string> idCheck(idSizeResults);
-idCheck[idSizeResults-1] = nts<uint>(poto);
-NewtonRaphsonData results(resultsFile,idSizeResults,dataSizeResults);
+idCheck[idSizeResults-1] = potExtras.second;
+NewtonRaphsonData results(resultsFile,idSizeResults,datumSizeResults);
 
 // errors
-string errorsFile = "results/nr/nr_error6.csv";
-uint idSizeErrors = 4, dataSizeErrors = 12;
-NewtonRaphsonData errors(errorsFile,idSizeErrors,dataSizeErrors);
+string errorsFile = "results/nr/nr6error.csv";
+uint idSizeErrors = 4, datumSizeErrors = 13;
+NewtonRaphsonData errors(errorsFile,idSizeErrors,datumSizeErrors);
 
 /*----------------------------------------------------------------------------------------------------------------------------
 	2 - beginning parameter loop
@@ -288,12 +288,14 @@ for (uint pl=0; pl<Npl; pl++) {
 	}
 	
 	// checking if have results already
-	if (!redo && !results.find(idCheck,p)) {
-		cout << "result found in " << resultsFile << " for pl = " << pl << endl;
+	if (!redo && results.find(idCheck,p)) {
+		cout << "result found in " << resultsFile << " for pl = " << pl << ", ";
+		cout << "continuing to next step" << endl;
 		continue; // CONTINUE STATEMENT!!!!!!
 	}
-	if (!redoErrors && !errors.find(idCheck,p)) {
-		cout << "result found in " << errorsFile << " for pl = " << pl << endl;
+	if (!redoErrors && errors.find(idCheck,p)) {
+		cout << "result found in " << errorsFile << " for pl = " << pl << ", ";
+		cout << "continuing to next step" << endl;
 		continue; // CONTINUE STATEMENT!!!!!!
 	}
 	
@@ -1684,80 +1686,69 @@ for (uint pl=0; pl<Npl; pl++) {
 	printf("\n");
 	
 	if ((checkDelta.good() && checkSol.good() && checkSolMax.good()) || pass) {
-		// printing good results to file	
-		string resFile = (pass? "results/nr/nr_pass6.csv":"results/nr/nr6.csv");
+		// printing good results to file
 		
+		// id
+		vector<string> idResult(idSizeResults);
+		idResult[0] = timenumber;
+		idResult[1] = nts(pl);
+		idResult[2] = potExtras.second;
 		
+		// actual results
+		vector<number> datumResult(datumSizeResults);
+		datumResult[0] = s;
+		datumResult[1] = erg;
+		datumResult[2] = ergThermal;
+		datumResult[3] = gamma;
+		datumResult[4] = len;
+		datumResult[5] = kinetic;
+		datumResult[6] = i0;
+		datumResult[7] = vr;
+		datumResult[8] = zmax;
+		datumResult[9] = zmin;
+		datumResult[10] = tmax;
+		datumResult[11] = checkSol.back();
+		datumResult[12] = checkDX.back();
+		datumResult[13] = checkICMax.back();
+		datumResult[14] = checkKgAMax.back();
+		datumResult[15] = checkCCMax.back();
+		datumResult[16] = checkStraight.back();
 		
-		
-		#define numRes 28
-		vector<string> results(numRes);
-		string results_array[numRes] = {timenumber,\
-									nts(pl),\
-									potExtras.second,\
-/*									nts((int)kino),\*/
-									nts(p.K),\
-									nts(pow(p.G,3)*p.B,16),\
-									nts(p.Ng),\
-									nts(p.Epsi,16),\
-									nts(p.Mu,16),\
-									nts(p.Lambda,16),\
-									nts(E,16),\
-									nts(p.T,16),\
-									nts(s,16),\
-									nts(erg,16),\
-									nts(ergThermal,16),\
-									nts(gamma,16),\
-									nts(len,16),\
-									nts(kinetic,16),\
-									nts(i0,16),\
-									nts(vr,16),\
-									nts(zmax,16),\
-									nts(zmin,16),\
-									nts(tmax,16),\
-									nts(checkSol.back(),16),\
-									nts(checkDX.back(),16),\
-									nts(checkICMax.back(),16),\
-									nts(checkKgAMax.back(),16),\
-									nts(checkCCMax.back(),16),\
-									nts(checkStraight.back(),16)};									
-		results.assign(results_array,results_array+numRes);							
-		saveVectorCsvAppend(resFile,results);
-		printf("%12s%24s\n","results:",resFile.c_str());
+		// saving
+		NewtonRaphsonDatum result(idResult,p,datumResult);
+		result.save(resultsFile);
+		printf("%12s%24s\n","results:",resultsFile.c_str());
 	}
 	else {
 		// printing error results to file	
-		string resFile = "results/nr/nr_error5.csv";
-		#define numResErr 23
-		vector<string> results(numResErr);
-		string results_array[numRes] = {timenumber,\
-									nts(pl),\
-									nts(runsCount),\
-									potExtras.second,\
-/*									nts((int)kino),\*/
-									nts(p.K),\
-									nts(pow(p.G,3)*p.B,16),\
-									nts(p.Ng),\
-									nts(p.Epsi,16),\
-									nts(p.Mu,16),\
-									nts(p.Lambda,16),\
-									nts(E,16),\
-									nts(p.T,16),\
-									nts(s,16),\
-									nts(erg,16),\
-									nts(ergThermal,16),\
-									nts(checkSol.back(),16),\
-									nts(checkSolMax.back(),16),\
-									nts(checkDelta.back(),16),\
-									nts(checkDX.back(),16),\
-									nts(checkICMax.back(),16),\
-									nts(checkKgAMax.back(),16),\
-									nts(checkCCMax.back(),16),\
-									nts(checkStraight.back(),16),\
-									nts(checkJs.back(),16)};									
-		results.assign(results_array,results_array+numRes);							
-		saveVectorCsvAppend(resFile,results);
-		printf("%12s%24s\n","results:",resFile.c_str());
+		
+		// id
+		vector<string> idError(idSizeErrors);
+		idError[0] = timenumber;
+		idError[1] = nts(pl);
+		idError[2] = nts(runsCount);
+		idError[3] = potExtras.second;
+		
+		// actual results
+		vector<number> datumError(datumSizeErrors);
+		datumError[0] = s;
+		datumError[1] = erg;
+		datumError[2] = ergThermal;
+		datumError[3] = len;
+		datumError[4] = checkSol.back();
+		datumError[5] = checkSolMax.back();
+		datumError[6] = checkDelta.back();
+		datumError[7] = checkDX.back();
+		datumError[8] = checkICMax.back();
+		datumError[9] = checkKgAMax.back();
+		datumError[10] = checkCCMax.back();
+		datumError[11] = checkStraight.back();
+		datumError[12] = checkJs.back();
+		
+		// saving
+		NewtonRaphsonDatum error(idError,p,datumError);
+		error.save(errorsFile);
+		printf("%12s%24s\n","results:",errorsFile.c_str());
 	}
 	
 	if (checkDelta.good() && checkSol.good() && checkSolMax.good()) {		

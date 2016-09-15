@@ -10,6 +10,7 @@
 #include <vector>
 #include <gsl/gsl_sf_log.h>
 #include "analysis.h"
+#include "folder.h"
 #include "print.h"
 #include "simple.h"
 
@@ -474,28 +475,35 @@ void NewtonRaphsonData::saveAppend(const string& f) const {
 
 // load
 void NewtonRaphsonData::load(const string& f) {
-	uint rows = countColumns(f,',');
-	if (rows!=(IDSize+Parameters::Size+DatumSize)) {
-		cerr << "NewtonRaphsonData::load error: wrong number of rows in " << f << ", "\
-		 << rows << "!=" << (IDSize+Parameters::Size+DatumSize) << endl;
-		return;
-	}
-	uint dataSize = countLines(f);
-	ifstream is;
-	is.open(f.c_str());
-	if (is.good()) {
-		NewtonRaphsonDatum temp(IDSize,DatumSize);
-		for (uint j=0; j<dataSize; j++) {
-			is >> temp;
-			DataArray.push_back(temp);
+	Filename filename = f;
+	bool fexists = filename.exists();
+	if (fexists) {
+		uint rows = countColumns(f,',');
+		if (rows!=(IDSize+Parameters::Size+DatumSize)) {
+			cerr << "NewtonRaphsonData::load error: wrong number of rows in " << f << ", "\
+			 << rows << "!=" << (IDSize+Parameters::Size+DatumSize) << endl;
+			return;
 		}
-		is.close();
-		DataSize = dataSize;
+		uint dataSize = countLines(f);
+		ifstream is;
+		is.open(f.c_str());
+		if (is.good()) {
+			NewtonRaphsonDatum temp(IDSize,DatumSize);
+			for (uint j=0; j<dataSize; j++) {
+				is >> temp;
+				DataArray.push_back(temp);
+			}
+			is.close();
+			DataSize = dataSize;
+		}
+		else {
+			cerr << "NewtonRaphsonData::load error: cannot write to " << f << endl;
+			is.close();
+			return;
+		}
 	}
 	else {
-		cerr << "NewtonRaphsonData::load error: cannot write to " << f << endl;
-		is.close();
-		return;
+		return; // file doesn't exist
 	}
 }
 
