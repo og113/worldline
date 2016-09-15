@@ -272,9 +272,91 @@ number MonteCarloData::calcBootstrap(uint N, const uint& Seed) {
 	2. NewtonRaphsonDatum and NewtonRaphsonDatum classes
 		
 -------------------------------------------------------------------------------------------------------------------------*/
-/*
-// checks
-bool checkID(const vector<string>& id) const {
+
+// constructor
+NewtonRaphsonDatum::NewtonRaphsonDatum(const uint& idsize, const uint& datumsize): 
+	IDSize(idsize), ID(), P(), DatumSize(datumsize), Datum() {
+	ID.resize(IDSize);
+	Datum.resize(DatumSize);
+	}
+
+// constructor
+NewtonRaphsonDatum::NewtonRaphsonDatum(const vector<string>& id, const Parameters& p, const vector<number>& d): 
+	ID(id), P(p), Datum(d) {
+	IDSize = ID.size();
+	DatumSize = Datum.size();
+}
+
+// destructor
+NewtonRaphsonDatum::~NewtonRaphsonDatum() {}
+
+// stringVector
+vector<string> NewtonRaphsonDatum::stringVector() const {
+	uint totalSize = IDSize + Parameters::Size + DatumSize;
+	vector<string> PVector = P.valueVector();
+	vector<string> v(totalSize);
+	
+	for (uint j=0; j<IDSize; j++)
+		v[j] = ID[j]; 
+	for (uint j=0; j<Parameters::Size; j++)
+		v[IDSize+j] = PVector[j]; 
+	for (uint j=0; j<DatumSize; j++)
+		v[IDSize+Parameters::Size+j] = nts(Datum[j],16);
+		
+	return v;
+}
+
+// save
+void NewtonRaphsonDatum::save(const string& f) const {	
+	saveVectorCsvAppend(f,stringVector());
+}
+
+// load
+void NewtonRaphsonDatum::load(const vector<string>& v) {
+	uint totalSize = IDSize + Parameters::Size + DatumSize;
+	if (v.size()!=totalSize) {
+		cerr << "NewtonRaphsonDatum::load error: vector of wrong length, " << v.size() << "!=" << totalSize << endl;
+		return;
+	}
+	for (uint j=0; j<IDSize; j++)
+		ID[j] = v[j];
+	vector<string> PVector(Parameters::Size);
+	for (uint j=0; j<Parameters::Size; j++)
+		PVector[j] = v[j+IDSize];
+	P.load(PVector);
+	for (uint j=0; j<DatumSize; j++)
+		Datum[j] = stn<number>(v[IDSize+Parameters::Size+j]);
+}
+
+// load
+void NewtonRaphsonDatum::load(const string& f) {
+	vector<string> v;
+	loadVectorCsvAppend(f,v);
+	load(v);
+}
+
+// id
+vector<string> NewtonRaphsonDatum::id() const {
+	return ID;
+}
+
+// parameters
+Parameters NewtonRaphsonDatum::parameters() const {
+	return P;
+}
+
+// datum
+vector<number> NewtonRaphsonDatum::datum() const {
+	return Datum;
+}
+
+// strings
+vector<string> NewtonRaphsonDatum::strings() const {
+	return stringVector();
+}
+
+// checkID
+bool NewtonRaphsonDatum::checkID(const vector<string>& id) const {
 	for (uint j=0; j<IDSize; j++) {
 		if (!(id[j].empty())) {
 			if ((id[j]).compare(ID[j])!=0)
@@ -285,7 +367,7 @@ bool checkID(const vector<string>& id) const {
 }
 
 // checkParameters
-bool checkParameters(const Parameters& p) const {
+bool NewtonRaphsonDatum::checkParameters(const Parameters& p) const {
 	return P==p;
 }
 
@@ -294,53 +376,16 @@ bool operator==(const NewtonRaphsonDatum& lhs, const NewtonRaphsonDatum& rhs) {
 	return (lhs.checkID(rhs.id()) && lhs.checkParameters(rhs.parameters()));
 }
 
-// constructor
-NewtonRaphsonDatum::NewtonRaphsonDatum(const string& id, const Parameters& p, const vector<number>& d): 
-	ID(id), P(p), Datum(d) {
-	IDSize = ID.size();
-	DatumSize = Datum.size();
-}
-
-// destructor
-NewtonRaphsonDatum::~NewtonRaphsonDatum() {}
-
-// save
-void NewtonRaphsonDatum::save(const string& f) const {
-	uint totalSize = IDSize + Parameters::Size + DatumSize;
-	vector<string> PVector = P.valueVector();
-	vector<string> toSave(totalSize);
-	
-	for (uint j=0; j<IDSize; j++)
-		toSave[j] = ID[j]; 
-	for (uint j=0; j<Parameters::Size; j++)
-		toSave[IDSize+j] = PVector[j]; 
-	for (uint j=0; j<DatumSize; j++)
-		toSave[IDSize+Parameters::Size+j] = nts(Datum[j],16);
-		
-	saveVectorCsvAppend(f,toSave);
-}
-
-// load
-void NewtonRaphsonDatum::load(const string& f) {
-	uint totalSize = IDSize + Parameters::Size + DatumSize;
-	vector<string> totalVector, pVector;
-	loadVectorCsvAppend(f,totalVector);
-	pVector = vector(totalVector.begin()+1,totalVector.begin()+1+Parameters::Size);
-	ID = totalVector[0];
-	P.load(pVector);
-	for (uint j=0; j<DatumSize; j++)
-		Datum[j] = stn(totalVector[IDSize+Parameters::Size+j]);
-}
-
-// parameters
-Parameters NewtonRaphsonDatum::parameters() const {
-	return P;
-}
-
 // operator<<
-ostream& operator<<(ostream& os, const NewtonRaphsonDatum& d);
+ostream& operator<<(ostream& os, const NewtonRaphsonDatum& d) {
+	vector<string> toPrint = d.strings();
+	for (uint j=0; j<toPrint.size(); j++) {
+		os << setw(25) << toPrint[j];
+	}
+	return os;
+}
 
-
+/*
 // constructor
 NewtonRaphsonData::NewtonRaphsonData(): Size(), DatArray() {
 }

@@ -183,6 +183,9 @@ void Parameters::save(const string& filename) const {
 
 //load
 void Parameters::load(const vector<string>& v) {
+	if (v.size()!=Size) {
+		cerr << "Parameters::load error: vector of size " << v.size() << "!=" << Size << endl;
+	}
 		
 	Nl = stn<uint>(v[0]);
 	Ng = stn<uint>(v[1]);

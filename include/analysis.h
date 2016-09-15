@@ -73,47 +73,46 @@ private:
 /*-------------------------------------------------------------------------------------------------------------------------
 	2. NewtonRaphsonDatum and NewtonRaphsonDatum classes
 -------------------------------------------------------------------------------------------------------------------------*/
-/*
-// operator==
-bool operator==(const NewtonRaphsonDatum& lhs, const NewtonRaphsonDatum& rhs);
-
-// operator<<
-ostream& operator<<(ostream&, const NewtonRaphsonDatum&);
 
 class NewtonRaphsonDatum {
 public:
 	// constructors, destructor
+	NewtonRaphsonDatum(const uint& idsize, const uint& datumsize);
 	NewtonRaphsonDatum(const vector<string>&, const Parameters&, const vector<number>&);
 	~NewtonRaphsonDatum();
 	
 	// save and load ascii
 	void save(const string&) const;
 	void load(const string&);
+	void load(const vector<string>&);
 	
 	// get
 	vector<string> id() const;
 	Parameters parameters() const;
-	vecor<number> datum() const;
+	vector<number> datum() const;
+	vector<string> strings() const;
 	
 	// checks
 	bool checkID(const vector<string>&) const;
 	bool checkParameters(const Parameters&) const;
 	
-	// ==
-	//friend bool operator==(const NewtonRaphsonDatum& lhs, const NewtonRaphsonDatum& rhs);
-	
-	// operator<<
-	//friend ostream& operator<<(ostream&, const NewtonRaphsonDatum&);
-	
 private:
 	uint IDSize;
-	uint DatumSize;
 	vector<string> ID;
 	Parameters P;
+	uint DatumSize;
 	vector<number> Datum;
+	
+	vector<string> stringVector() const;
 };
 
-class NewtonRaphsonData {
+// operator==
+bool operator==(const NewtonRaphsonDatum& lhs, const NewtonRaphsonDatum& rhs);
+
+// operator<<
+ostream& operator<<(ostream&, const NewtonRaphsonDatum&);
+
+/*class NewtonRaphsonData {
 public:
 	// constructors, destructor
 	NewtonRaphsonData();
@@ -132,6 +131,6 @@ public:
 private:
 	uint Size;
 	vector<NewtonRaphsonDatum> DataArray;
-};
-*/
+};*/
+
 #endif // __ANALYSIS_H_INCLUDED__
