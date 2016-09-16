@@ -14,6 +14,7 @@
 #include "print.h"
 #include "simple.h"
 #include "eigen_extras.h"
+#include "stepper.h"
 
 using namespace std;
 
@@ -49,6 +50,10 @@ uint NumberPotentialOptions = 9;
 
 struct KineticOptions {
 	enum Option { saddle, s0, len};
+};
+
+struct StepperArgv {
+	enum Option { none, action, entropy};
 };
 
 int nrmain_fn(int argc, vector<string> argv) {
@@ -97,7 +102,9 @@ string printOpts = "";
 string potOpts = "";
 string kinOpts = "";
 string xIn = "";
-string inputsFile = "inputs4";
+string stepperArgv = "";
+string stepperInputsFile = "inputs4";
+string inputsFile = "stepper4";
 
 // getting argv
 if (argc % 2 && argc>1) {
@@ -131,6 +138,8 @@ if (argc % 2 && argc>1) {
 		else if (id.compare("print")==0) printOpts = (string)argv[2*j+2];
 		else if (id.compare("pot")==0 || id.compare("potential")==0) potOpts = (string)argv[2*j+2];
 		else if (id.compare("kin")==0 || id.compare("kinetic")==0) kinOpts = (string)argv[2*j+2];
+		else if (id.compare("stepper")==0 || id.compare("step")==0) stepperArgv = (string)argv[2*j+2];
+		else if (id.compare("stepperInputs")==0 || id.compare("stepInputs")==0) stepperInputsFile = (string)argv[2*j+2];
 		else if (id.compare("xIn")==0) xIn = (string)argv[2*j+2];
 		else if (id.compare("sometests")==0 || id.compare("someTests")==0) sometests = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("alltests")==0 || id.compare("allTests")==0) alltests = (stn<uint>(argv[2*j+2])!=0);
@@ -226,10 +235,25 @@ if (!kinOpts.empty()) {
 	else if (kinOpts.compare("len")==0 || potOpts.compare("length")==0)
 		kino = KineticOptions::len;
 	else {
-		cerr << "potential options not understood/available: " << kinOpts << endl;
+		cerr << "kinetic options not understood/available: " << kinOpts << endl;
 		return 1;
 	}
 	kinExtras.second = nts((int)kino);
+}
+
+// stepper
+StepperArgv::Option stepargv = StepperArgv::none;
+if (!stepperArgv.empty()) {
+	if (stepperArgv.compare("action")==0 || stepperArgv.compare("s")==0 || stepperArgv.compare("S")==0)
+		stepargv = StepperArgv::action;
+	else if (stepperArgv.compare("entropy")==0 || stepperArgv.compare("sigma")==0)
+		stepargv = StepperArgv::entropy;
+	else if (stepperArgv.compare("none")==0)
+		stepargv = StepperArgv::none;
+	else {
+		cerr << "stepper options not understood/available: " << stepperArgv << endl;
+		return 1;
+	}
 }
 
 if (fixall)
@@ -246,6 +270,37 @@ if (p.empty()) {
 	cerr << "Parameters empty: nothing in inputs file: " << inputsFile << endl;
 	return 1;
 }
+
+// initializing stepper
+StepperOptions stepOpts;
+Point2d point;
+if (stepargv != StepperArgv::none) {
+	{
+		ifstream is;
+		is.open(stepperInputsFile.c_str());
+		if (is.good()) {
+			is >> stepOpts.epsi_x >> stepOpts.epsi_y >> stepOpts.angle0 >> stepOpts.closeness;
+			is.close();
+		}
+		else {
+			cerr << "Error: cannot open stepper inputs file, " << stepperInputsFile << endl;
+			return 1;
+		}
+	}
+	stepOpts.stepType = StepperOptions::constPlane;
+	stepOpts.directed = StepperOptions::local;
+	if (poto==PotentialOptions::thermal || disjoint) {
+		point(p.B,p.T);
+		stepOpts.epsi_x *= (abs(p.B)>MIN_NUMBER? p.B: 1.0);
+		stepOpts.epsi_y *= (abs(p.T)>MIN_NUMBER? p.T: 1.0);
+	}
+	else {
+		point(p.B,p.P4);
+		stepOpts.epsi_x *= (abs(p.B)>MIN_NUMBER? p.B: 1.0);
+		stepOpts.epsi_y *= (abs(p.P4)>MIN_NUMBER? p.P4: 1.0);
+	}
+}
+Stepper stepper(step_opts,point);
 
 // timenumber
 string timenumber = currentDateTime();
@@ -279,8 +334,13 @@ for (uint pl=0; pl<Npl; pl++) {
 	
 	// stepping parameters
 	if (pl>0) {
-		p = pr.position(pl);
-		pold = pr.neigh(pl);
+		if (stepargv != StepperArgv::none) {
+			p = pr.position(pl);
+			pold = pr.neigh(pl);
+		}
+		else {
+			////////////////////////////////////////////////////////////////////////////////
+		}
 		if (mu_a) {
 			p.Mu = p.Epsi;
 			pold.Mu = pold.Epsi;

@@ -106,9 +106,11 @@ public:
 	void 		addResult(const double& f);
 	void		addResult(const double& f, const double& e, const double& n);
 	Point2d 	point() const;
+	Point2d 	point()(const uint&) const;
 	double		x() const;
 	double		y() const;
 	double		result() const;
+	double		result(const uint&) const;
 	uint		local() const;
 	uint		steps() const;
 	bool		keep() const;

@@ -322,6 +322,11 @@ double Stepper::result() const {
 	return (f_xy_local.back()).second;
 }
 
+// result(uint)
+double Stepper::result(const uint& j) const {
+	return (f_xy_local[j]).second;
+}
+
 // closeness()
 double Stepper::closeness() const {
 	return opts.closeness;
@@ -348,6 +353,11 @@ bool Stepper::keep() const {
 // point()
 Point2d Stepper::point() const{
 	return (f_xy_local.back()).first;
+}
+
+// point(uint)
+Point2d Stepper::point(const uint& j) const {
+	return (f_xy_local[j]).first;
 }
 
 // steps()
