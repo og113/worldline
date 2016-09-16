@@ -128,8 +128,6 @@ argcSerial += 2;
 	2. running nrmain
 ----------------------------------------------------------------------------------------------------------------------------*/
 
-cout << "rank " << rank << ":" << endl << prSerial << endl;
-
 uint returnValue = 0;
 returnValue = nrmain_fn(argcSerial,argvSerial);
 
