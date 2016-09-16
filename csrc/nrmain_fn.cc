@@ -339,6 +339,17 @@ for (uint pl=0; pl<Npl; pl++) {
 			pold = pr.neigh(pl);
 		}
 		else {
+			uint sigma = (stepper.steps()>0? 1:0);
+			uint last = pl-stepper.local()+1+sigma;
+			point = stepper.point(last);
+			if (poto==PotentialOptions::thermal || disjoint) {
+				pold.B = point.X;
+				pold.T = point.Y;
+			}
+			else {
+				pold.B = point.X;
+				pold.P4 = point.Y;
+			}
 			////////////////////////////////////////////////////////////////////////////////
 		}
 		if (mu_a) {
