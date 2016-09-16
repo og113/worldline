@@ -169,6 +169,41 @@ static number DDGThermalDtDt(const number& r, const number& t, const number& bet
    (exp(pow(r,2)/pow(a,2))*pow(beta,3));
 }
 
+// HThermal
+static number HThermal(const number& r, const number& t, const number& beta, const number& a) {
+	return  exp(-(pow(r,2)/pow(a,2)) + (pow(beta,2)*(-1 + cos((2.0*PI*t)/beta)))/(2.0*pow(a,2)*pow(PI,2)));
+}
+
+// DHThermalDrOnr
+static number DHThermalDrOnr(const number& r, const number& t, const number& beta, const number& a) {
+	return (-2.0*exp(-(pow(r,2)/pow(a,2)) + (pow(beta,2)*(-1 + cos((2.0*PI*t)/beta)))/(2.0*pow(a,2)*pow(PI,2))))/pow(a,2);
+}
+
+// DHThermalDt
+static number DHThermalDt(const number& r, const number& t, const number& beta, const number& a) {
+	return - ((exp(-(pow(r,2)/pow(a,2)) + (pow(beta,2)*(-1 + cos((2.0*PI*t)/beta)))/(2.0*pow(a,2)*pow(PI,2)))*beta*sin((2.0*PI*t)/beta))/\
+ (pow(a,2)*PI));
+}
+
+// DDHThermalDrDr
+static number DDHThermalDrDr(const number& r, const number& t, const number& beta, const number& a) {
+	return (-2.0*exp(-(pow(r,2)/pow(a,2)) + (pow(beta,2)*(-1 + cos((2.0*PI*t)/beta)))/(2.0*pow(a,2)*pow(PI,2))))/pow(a,2) \
+ + (4.0*exp(-(pow(r,2)/pow(a,2)) + (pow(beta,2)*(-1 + cos((2.0*PI*t)/beta)))/(2.0*pow(a,2)*pow(PI,2)))*pow(r,2))/pow(a,4);
+}
+
+// DDHThermalDtDrOnr
+static number DDHThermalDtDrOnr(const number& r, const number& t, const number& beta, const number& a) {
+	return  (2.0*exp(-(pow(r,2)/pow(a,2)) + (pow(beta,2)*(-1 + cos((2.0*PI*t)/beta)))/(2.0*pow(a,2)*pow(PI,2)))*beta*sin((2.0*PI*t)/beta))/\
+ (pow(a,4)*PI);
+}
+
+// DDHThermalDtDt
+static number DDHThermalDtDt(const number& r, const number& t, const number& beta, const number& a) {
+	return (-2.0*exp(-(pow(r,2)/pow(a,2)) + (pow(beta,2)*(-1 + cos((2.0*PI*t)/beta)))/(2.0*pow(a,2)*pow(PI,2)))*cos((2.0*PI*t)/beta))/\
+ pow(a,2) + (exp(-(pow(r,2)/pow(a,2)) + (pow(beta,2)*(-1 + cos((2.0*PI*t)/beta)))/(2.0*pow(a,2)*pow(PI,2)))*pow(beta,2)*\
+ pow(sin((2.0*PI*t)/beta),2))/(pow(a,4)*pow(PI,2));
+}
+
 /*----------------------------------------------------------------------------------------------------------------------------
 	1 - nr loop functions
 ----------------------------------------------------------------------------------------------------------------------------*/
