@@ -109,6 +109,10 @@ bool foundToStep = false;
 while (j<Parameters::Size && !foundToStep) {
 	if (prMpi.toStep((Parameters::Label)(j+1))) {
 		(prSerial.Steps)[j] = 0;
+		if (rank==root && (int)(prMpi.Steps)[j]!=Nw) {
+			cerr << "Error: number of steps on first parameter, " << (prMpi.Steps)[j];
+			cerr << ", not equal to number of nodes, " << Nw << endl;
+		}
 		foundToStep = true;
 	}
 	j++;
@@ -127,7 +131,7 @@ argcSerial += 2;
 cout << "rank " << rank << ":" << endl << prSerial << endl;
 
 uint returnValue = 0;
-//returnValue = main_fn(argcSerial,argvSerial);
+returnValue = nrmain_fn(argcSerial,argvSerial);
 
 if (returnValue!=0) {
 	cerr << "----------------------------------------------------------------------" << endl;
