@@ -56,15 +56,6 @@ int nrmain_fn(int argc, vector<string> argv) {
 	1 - argv, parameters etc
 ----------------------------------------------------------------------------------------------------------------------------*/
 
-// printing argv
-for (int j=0; j<argc; j++) {
-	cout << argv[j];
-	if (j<(argc-1))
-		cout << " ";
-	else
-		cout << endl;
-}
-
 // argv options
 bool verbose = true;
 bool guess = false;
@@ -147,7 +138,18 @@ else {
 	return 1;
 }
 
-cout << "using inputs file " << inputsFile << endl;
+if (verbose) {
+	// printing argv
+	for (int j=0; j<argc; j++) {
+		cout << argv[j];
+		if (j<(argc-1))
+			cout << " ";
+		else
+			cout << endl;
+	}
+	// printing inputs file
+	cout << "using inputs file " << inputsFile << endl;
+}
 
 PrintOptions::Option po = PrintOptions::none;
 if (!printOpts.empty()) {
@@ -249,7 +251,8 @@ if (p.empty()) {
 
 // timenumber
 string timenumber = currentDateTime();
-cout << "timenumber: " << timenumber << endl;
+if (verbose)
+	cout << "timenumber: " << timenumber << endl;
 
 // results
 string resultsFile = (pass? "results/nr/nr6pass.csv":"results/nr/nr6.csv");
@@ -269,7 +272,8 @@ NewtonRaphsonData errors(errorsFile,idSizeErrors,datumSizeErrors);
 
 // parameter loops
 uint Npl = pr.totalSteps();
-cout << "looping over " << Npl << " steps" << endl;
+if (verbose)
+	cout << "looping over " << Npl << " steps" << endl;
 
 // starting loop
 for (uint pl=0; pl<Npl; pl++) {
@@ -482,8 +486,10 @@ for (uint pl=0; pl<Npl; pl++) {
 		cerr << "nrmain error: " << loadFile << " doesn't exist, moving to next parameter loop" << endl;
 		continue; ///////// CONTINUE STATEMENT IF FILE DOESN'T EXIST
 	}
-	cout << "loading loops from:" << endl;
-	cout << loadFile << endl;
+	if (verbose) {
+		cout << "loading loops from:" << endl;
+		cout << loadFile << endl;
+	}
 	
 	// loading x
 	loadVectorBinary(loadFile,x);
@@ -1679,10 +1685,10 @@ for (uint pl=0; pl<Npl; pl++) {
 		
 	// printing results to terminal
 	printf("\n");
-	printf("%8s%8s%8s%8s%8s%8s%8s%8s%12s%12s%14s%14s%14s\n","runs","time","K","G","B","Ng","a","mu","E","T","len",\
+	printf("%8s%8s%8s%8s%8s%8s%8s%8s%8s%12s%12s%14s%14s%14s\n","pl","runs","time","K","G","B","Ng","a","mu","E","T","len",\
 		"vr","s");
-	printf("%8i%8.3g%8i%8.4g%8.4g%8i%8.4g%8.4g%12.5g%12.5g%14.5g%14.5g%14.5g\n",\
-		runsCount,realtime,p.K,p.G,p.B,p.Ng,p.Epsi,p.Mu,erg,p.T,len,vr,s);
+	printf("%8i%8i%8.3g%8i%8.4g%8.4g%8i%8.4g%8.4g%12.5g%12.5g%14.5g%14.5g%14.5g\n",\
+		pl,runsCount,realtime,p.K,p.G,p.B,p.Ng,p.Epsi,p.Mu,erg,p.T,len,vr,s);
 	printf("\n");
 	
 	if ((checkDelta.good() && checkSol.good() && checkSolMax.good()) || pass) {
@@ -1717,7 +1723,8 @@ for (uint pl=0; pl<Npl; pl++) {
 		// saving
 		NewtonRaphsonDatum result(idResult,p,datumResult);
 		result.save(resultsFile);
-		printf("%12s%24s\n","results:",resultsFile.c_str());
+		if (verbose)
+			printf("%12s%24s\n","results:",resultsFile.c_str());
 	}
 	else {
 		// printing error results to file	
@@ -1748,7 +1755,8 @@ for (uint pl=0; pl<Npl; pl++) {
 		// saving
 		NewtonRaphsonDatum error(idError,p,datumError);
 		error.save(errorsFile);
-		printf("%12s%24s\n","results:",errorsFile.c_str());
+		if (verbose)
+			printf("%12s%24s\n","results:",errorsFile.c_str());
 	}
 	
 	if (checkDelta.good() && checkSol.good() && checkSolMax.good()) {		
@@ -1765,7 +1773,8 @@ for (uint pl=0; pl<Npl; pl++) {
 		if (kino!=KineticOptions::saddle)
 			(loopRes.Extras).push_back(kinExtras);
 		saveVectorBinary(loopRes,x);
-		printf("%12s%50s\n","x:",((string)loopRes).c_str());
+		if (verbose)
+			printf("%12s%50s\n","x:",((string)loopRes).c_str());
 	}
 
 	// printing extras to ascii files
