@@ -14,7 +14,6 @@
 #include "print.h"
 #include "simple.h"
 #include "eigen_extras.h"
-#include "stepper.h"
 
 using namespace std;
 
@@ -50,10 +49,6 @@ uint NumberPotentialOptions = 9;
 
 struct KineticOptions {
 	enum Option { saddle, s0, len};
-};
-
-struct StepperArgv {
-	enum Option { none, action, entropy};
 };
 
 int nrmain_fn(int argc, vector<string> argv) {
@@ -102,10 +97,7 @@ string printOpts = "";
 string potOpts = "";
 string kinOpts = "";
 string xIn = "";
-string stepperArgv = "";
-string stepperInputsFile = "stepperInputs0";
-string stepperResultsFile = "stepperResultsAction0";
-string inputsFile = "stepper4";
+string inputsFile = "inputs4";
 
 // getting argv
 if (argc % 2 && argc>1) {
@@ -139,9 +131,6 @@ if (argc % 2 && argc>1) {
 		else if (id.compare("print")==0) printOpts = (string)argv[2*j+2];
 		else if (id.compare("pot")==0 || id.compare("potential")==0) potOpts = (string)argv[2*j+2];
 		else if (id.compare("kin")==0 || id.compare("kinetic")==0) kinOpts = (string)argv[2*j+2];
-		else if (id.compare("stepper")==0 || id.compare("step")==0) stepperArgv = (string)argv[2*j+2];
-		else if (id.compare("stepperInputs")==0 || id.compare("stepInputs")==0) stepperInputsFile = (string)argv[2*j+2];
-		else if (id.compare("stepperResults")==0 || id.compare("stepResults")==0) stepperResultsFile = (string)argv[2*j+2];
 		else if (id.compare("xIn")==0) xIn = (string)argv[2*j+2];
 		else if (id.compare("sometests")==0 || id.compare("someTests")==0) sometests = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("alltests")==0 || id.compare("allTests")==0) alltests = (stn<uint>(argv[2*j+2])!=0);
@@ -237,25 +226,10 @@ if (!kinOpts.empty()) {
 	else if (kinOpts.compare("len")==0 || potOpts.compare("length")==0)
 		kino = KineticOptions::len;
 	else {
-		cerr << "kinetic options not understood/available: " << kinOpts << endl;
+		cerr << "potential options not understood/available: " << kinOpts << endl;
 		return 1;
 	}
 	kinExtras.second = nts((int)kino);
-}
-
-// stepper
-StepperArgv::Option stepargv = StepperArgv::none;
-if (!stepperArgv.empty()) {
-	if (stepperArgv.compare("action")==0 || stepperArgv.compare("s")==0 || stepperArgv.compare("S")==0)
-		stepargv = StepperArgv::action;
-	else if (stepperArgv.compare("entropy")==0 || stepperArgv.compare("sigma")==0)
-		stepargv = StepperArgv::entropy;
-	else if (stepperArgv.compare("none")==0)
-		stepargv = StepperArgv::none;
-	else {
-		cerr << "stepper options not understood/available: " << stepperArgv << endl;
-		return 1;
-	}
 }
 
 if (fixall)
@@ -273,38 +247,6 @@ if (p.empty()) {
 	return 1;
 }
 
-// initializing stepper
-StepperOptions stepOpts;
-Point2d point;
-number F0;
-if (stepargv != StepperArgv::none) {
-	{
-		ifstream is;
-		is.open(stepperInputsFile.c_str());
-		if (is.good()) {
-			is >> stepOpts.epsi_x >> stepOpts.epsi_y >> stepOpts.angle0 >> stepOpts.closeness >> F0;
-			is.close();
-		}
-		else {
-			cerr << "Error: cannot open stepper inputs file, " << stepperInputsFile << endl;
-			return 1;
-		}
-	}
-	stepOpts.stepType = StepperOptions::constPlane;
-	stepOpts.directed = StepperOptions::local;
-	if (poto==PotentialOptions::thermal || disjoint) {
-		point(p.B,p.T);
-		//stepOpts.epsi_x *= (abs(p.B)>MIN_NUMBER? p.B: 1.0);
-		//stepOpts.epsi_y *= (abs(p.T)>MIN_NUMBER? p.T: 1.0);
-	}
-	else {
-		point(p.B,p.P4);
-		//stepOpts.epsi_x *= (abs(p.B)>MIN_NUMBER? p.B: 1.0);
-		//stepOpts.epsi_y *= (abs(p.P4)>MIN_NUMBER? p.P4: 1.0);
-	}
-}
-Stepper stepper(step_opts,point);
-
 // timenumber
 string timenumber = currentDateTime();
 cout << "timenumber: " << timenumber << endl;
@@ -315,12 +257,6 @@ uint idSizeResults = 3, datumSizeResults = 17;
 vector<string> idCheck(idSizeResults);
 idCheck[idSizeResults-1] = potExtras.second;
 NewtonRaphsonData results(resultsFile,idSizeResults,datumSizeResults);
-
-// stepper results
-uint idSizeResultsStepper = 4, datumSizeResultsStepper = 3;
-vector<string> idCheckStepper(idSizeResultsStepper);
-idCheckStepper[idSizeResultsStepper-2] = potExtras.second;
-NewtonRaphsonData resultsStepper(stepperOutputsFile,idSizeResults,datumSizeResultsStepper);
 
 // errors
 string errorsFile = "results/nr/nr6error.csv";
@@ -335,9 +271,6 @@ NewtonRaphsonData errors(errorsFile,idSizeErrors,datumSizeErrors);
 uint Npl = pr.totalSteps();
 cout << "looping over " << Npl << " steps" << endl;
 
-// defining scalar quantities
-number len, i0, kinetic, s, sm, v, vr, erg, ergThermal, fgamma, gamma, angle_neigh, zmax, zmin, tmax, ic_max, cc_max, kg_max;
-	
 // starting loop
 for (uint pl=0; pl<Npl; pl++) {
 
@@ -346,10 +279,8 @@ for (uint pl=0; pl<Npl; pl++) {
 	
 	// stepping parameters
 	if (pl>0) {
-		if (stepargv != StepperArgv::none) {
-			p = pr.position(pl);
-			pold = pr.neigh(pl);
-		}
+		p = pr.position(pl);
+		pold = pr.neigh(pl);
 		if (mu_a) {
 			p.Mu = p.Epsi;
 			pold.Mu = pold.Epsi;
@@ -441,6 +372,9 @@ for (uint pl=0; pl<Npl; pl++) {
 	Check checkDeltaMirror("delta mirror symmetry",1.0e-2);
 	Check checkDeltaRotation("delta rotation symmetry",1.0e-16*NT*NT);
 	Check checkEAgree("energies agree",1.0e-3);
+	
+	// defining scalar quantities
+	number len, i0, kinetic, s, sm, v, vr, erg, ergThermal, fgamma, gamma, angle_neigh, zmax, zmin, tmax, ic_max, cc_max, kg_max;
 	
 	// defining vector and matrix quantities
 	vec x(N*dim);
@@ -1832,58 +1766,6 @@ for (uint pl=0; pl<Npl; pl++) {
 			(loopRes.Extras).push_back(kinExtras);
 		saveVectorBinary(loopRes,x);
 		printf("%12s%50s\n","x:",((string)loopRes).c_str());
-	}
-	
-	// printing stepper results
-	if (stepasci!=StepperAscii::none) {
-		// adding result to stepper
-		number F = 0.0;
-		if(stepargv==StepperArgv::action)
-			F = s;
-		else if(stepargv==StepperArgv::entropy)
-			F = -s + ergThermal*p.T;
-		else {
-			cerr << "nrmain_fn error: stepargv, " << stepargv << ", not recognized" << endl;
-			return 1;
-		}
-		if (pl==0 && absDiff(F,F0)<stepper.closeness() && resultsStepper.size()==0) {
-			
-		}
-		stepper.addResult(F);
-		
-		// printing step
-		// id
-		vector<string> idResult(idSizeResults);
-		idResult[0] = timenumber;
-		idResult[1] = nts(pl);
-		idResult[2] = potExtras.second;
-		
-		// actual results
-		vector<number> datumResult(datumSizeResults);
-		datumResult[0] = stepper.result();
-		datumResult[1] = stepper.stepAngle();
-		datumResult[2] = (number)stepper.keep();
-		
-		// saving
-		NewtonRaphsonDatum stepperResult(idResult,p,datumResult);
-		stepperResult.save(stepperResultsFile);
-		printf("%12s%24s\n","stepper results:",stepperResultsFile.c_str());
-		
-		// stepping
-		stepper.step();
-	
-		// getting step base
-		uint sigma = (stepper.steps()>0? 1:0);
-		uint last = pl-stepper.local()+1+sigma;
-		point = stepper.point(last);
-		if (poto==PotentialOptions::thermal || disjoint) {
-			pold.B = point.X;
-			pold.T = point.Y;
-		}
-		else {
-			pold.B = point.X;
-			pold.P4 = point.Y;
-		}
 	}
 
 	// printing extras to ascii files
