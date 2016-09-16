@@ -67,10 +67,8 @@ if (argc % 2 && argc>1) {
 	for (uint j=0; j<(uint)(argc/2); j++) {
 		string id = argv[2*j+1];
 		if (id[0]=='-') id = id.substr(1);
-		if (id.compare("mpiinputs")==0 || id.compare("mpiInputs")==0)
+		if (id.compare("mpiinputs")==0 || id.compare("mpiInputs")==0 || id.compare("inputs")==0)
 			mpiInputsFile = (string)argv[2*j+2];
-		else if (id.compare("inputs")==0)
-			continue; // don't copy this input across
 		else {
 			argvSerial.push_back((string)argv[2*j+1]);
 			argvSerial.push_back((string)argv[2*j+2]);

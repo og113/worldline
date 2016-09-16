@@ -1,0 +1,84 @@
+./nrmain -inputs inputs4 -guess 0 -step 1 -old 0 -pot thermal -gaussian 1 -mu_a 0 -pass 0 -nonrel 0 -allTests 0 -fixdz 0 -fixtlr 0 -fixdislr 0 -print none -eigen 0 -conservation 0
+using inputs file inputs4
+timenumber: 160911173122
+looping over 11 steps
+loading loops from:
+data/nr/loops/dim_4/K_12/loop_kappa_1_E_0_a_0.05_T_0.2_pot_9.dat
+  pl run        len         i0          s          E        sol       solM      delta  dx*kg_max     ic_max     cc_max       dx/a
+   0   1      6.303     -3.162      2.897   -0.08245  0.0001994  0.0001007  0.0002813      1.208  4.706e-06          0    0.03078
+   0   2      6.305     -3.163      2.896   -0.08325  1.169e-10   1.59e-10  2.623e-07      1.208  4.702e-06          0    0.03079
+
+    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       25.36e+03      12       1       1       0    0.05     0.1   -0.083248         0.2         6.305      -0.24506        2.8965
+
+    results:      results/nr/nr5.csv
+          x:data/nr/loops/dim_4/K_12/loop_kappa_1_E_0_a_0.05_T_0.2_pot_9.dat
+loading loops from:
+data/nr/loops/dim_4/K_12/loop_kappa_1_E_0_a_0.05_T_0.2_pot_9.dat
+  pl run        len         i0          s          E        sol       solM      delta  dx*kg_max     ic_max     cc_max       dx/a
+   1   1      6.305     -3.163      2.896   -0.08343  1.807e-06  1.807e-06   0.001183      1.208  4.702e-06          0    0.03346
+   1   2      6.313     -3.171      2.896   -0.08571   2.43e-11   3.78e-11  5.535e-07      1.208  4.702e-06          0     0.0335
+
+    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       25.38e+03      12       1       1       0   0.046     0.1   -0.085706         0.2        6.3125      -0.24564        2.8959
+
+    results:      results/nr/nr5.csv
+          x:data/nr/loops/dim_4/K_12/loop_kappa_1_E_0_a_0.046_T_0.2_pot_9.dat
+loading loops from:
+data/nr/loops/dim_4/K_12/loop_kappa_1_E_0_a_0.046_T_0.2_pot_9.dat
+  pl run        len         i0          s          E        sol       solM      delta  dx*kg_max     ic_max     cc_max       dx/a
+   2   1      6.313     -3.171      2.895   -0.08588  2.306e-06  2.306e-06   0.001511      1.208  4.702e-06          0    0.03669
+   2   2      6.322     -3.181      2.895    -0.0888  3.889e-11  6.067e-11  4.443e-07      1.208  4.702e-06          0    0.03675
+
+    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       25.41e+03      12       1       1       0   0.042     0.1   -0.088802         0.2         6.322      -0.24622        2.8952
+
+    results:      results/nr/nr5.csv
+          x:data/nr/loops/dim_4/K_12/loop_kappa_1_E_0_a_0.042_T_0.2_pot_9.dat
+loading loops from:
+data/nr/loops/dim_4/K_12/loop_kappa_1_E_0_a_0.042_T_0.2_pot_9.dat
+  pl run        len         i0          s          E        sol       solM      delta  dx*kg_max     ic_max     cc_max       dx/a
+   3   1      6.322     -3.181      2.895   -0.08898  3.027e-06  3.027e-06   0.001987      1.208  4.702e-06          0    0.04062
+   3   2      6.335     -3.193      2.895   -0.09282  6.591e-11  1.033e-10  8.188e-07      1.208  4.702e-06          0     0.0407
+
+    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       25.44e+03      12       1       1       0   0.038     0.1   -0.092821         0.2        6.3346      -0.24681        2.8946
+
+    results:      results/nr/nr5.csv
+          x:data/nr/loops/dim_4/K_12/loop_kappa_1_E_0_a_0.038_T_0.2_pot_9.dat
+loading loops from:
+data/nr/loops/dim_4/K_12/loop_kappa_1_E_0_a_0.038_T_0.2_pot_9.dat
+  pl run        len         i0          s          E        sol       solM      delta  dx*kg_max     ic_max     cc_max       dx/a
+   4   1      6.335     -3.193      2.894     -0.093  4.106e-06  4.106e-06   0.002702      1.208  4.702e-06          0    0.04549
+   4   2      6.352      -3.21      2.894   -0.09823  1.197e-10  1.886e-10  1.697e-07      1.208  4.702e-06          0    0.04561
+
+    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       25.48e+03      12       1       1       0   0.034     0.1   -0.098232         0.2        6.3517      -0.24741        2.8938
+
+    results:      results/nr/nr5.csv
+          x:data/nr/loops/dim_4/K_12/loop_kappa_1_E_0_a_0.034_T_0.2_pot_9.dat
+loading loops from:
+data/nr/loops/dim_4/K_12/loop_kappa_1_E_0_a_0.034_T_0.2_pot_9.dat
+  pl run        len         i0          s          E        sol       solM      delta  dx*kg_max     ic_max     cc_max       dx/a
+   5   1      6.352      -3.21      2.893   -0.09841  5.797e-06  5.798e-06   0.003828      1.208  4.702e-06          0    0.05169
+   5   2      6.376     -3.235      2.893    -0.1058  2.364e-10  3.755e-10  1.729e-07      1.208  4.702e-06          0    0.05189
+
+    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       25.51e+03      12       1       1       0    0.03     0.1    -0.10584         0.2         6.376      -0.24801        2.8929
+
+    results:      results/nr/nr5.csv
+          x:data/nr/loops/dim_4/K_12/loop_kappa_1_E_0_a_0.03_T_0.2_pot_9.dat
+loading loops from:
+data/nr/loops/dim_4/K_12/loop_kappa_1_E_0_a_0.03_T_0.2_pot_9.dat
+  pl run        len         i0          s          E        sol       solM      delta  dx*kg_max     ic_max     cc_max       dx/a
+   6   1      6.376     -3.235      2.892     -0.106  8.607e-06  8.609e-06   0.005714      1.208  4.702e-06          0    0.05987
+   6   2      6.412     -3.272      2.892    -0.1172  5.203e-10  8.333e-10  4.401e-07      1.208  4.702e-06          0    0.06021
+
+    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       25.54e+03      12       1       1       0   0.026     0.1    -0.11717         0.2        6.4125      -0.24864        2.8916
+
+    results:      results/nr/nr5.csv
+          x:data/nr/loops/dim_4/K_12/loop_kappa_1_E_0_a_0.026_T_0.2_pot_9.dat
+loading loops from:
+data/nr/loops/dim_4/K_12/loop_kappa_1_E_0_a_0.026_T_0.2_pot_9.dat
+=>> PBS: job killed: walltime 43237 exceeded limit 43200
