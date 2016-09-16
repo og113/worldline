@@ -243,7 +243,7 @@ ParametersRange pr;
 pr.load(inputsFile);
 Parameters p = pr.Min, pold = pr.Min;
 if (p.empty()) {
-	cerr << "Parameters empty: nothing in inputs file" << endl;
+	cerr << "Parameters empty: nothing in inputs file: " << inputsFile << endl;
 	return 1;
 }
 

@@ -91,6 +91,10 @@ nrmain: $(ODIR)/nrmain.o $(COMMONOBJS)
 	$(CC) -o $@ $^ $(CFLAGS) $(INCLUDES) $(LIBS)
 	@echo Simple compiler named nrmain has been compiled
 	
+nrmpi: $(MPIODIR)/nrmpi.o $(COMMONOBJS) 
+	$(MPICC) -o $@ $^ $(MPICFLAGS) $(INCLUDES) $(MPILIBS)
+	@echo Simple compiler named nrmpi has been compiled
+	
 perturbativeFiniteTemp: $(ODIR)/perturbativeFiniteTemp.o $(COMMONOBJS) 
 	$(CC) -o $@ $^ $(CFLAGS) $(INCLUDES) $(LIBS)
 	@echo Simple compiler named perturbativeFiniteTemp has been compiled
