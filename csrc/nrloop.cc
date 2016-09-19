@@ -199,7 +199,7 @@ static number DDHThermalDtDrOnr(const number& r, const number& t, const number& 
 
 // DDHThermalDtDt
 static number DDHThermalDtDt(const number& r, const number& t, const number& beta, const number& a) {
-	return (-2.0*exp(-(pow(r,2)/pow(a,2)) + (pow(beta,2)*(-1 + cos((2.0*PI*t)/beta)))/(2.0*pow(a,2)*pow(PI,2)))*cos((2.0*PI*t)/beta))/\
+	return  (-2.0*exp(-(pow(r,2)/pow(a,2)) + (pow(beta,2)*(-1 + cos((2.0*PI*t)/beta)))/(2.0*pow(a,2)*pow(PI,2)))*cos((2.0*PI*t)/beta))/\
  pow(a,2) + (exp(-(pow(r,2)/pow(a,2)) + (pow(beta,2)*(-1 + cos((2.0*PI*t)/beta)))/(2.0*pow(a,2)*pow(PI,2)))*pow(beta,2)*\
  pow(sin((2.0*PI*t)/beta),2))/(pow(a,4)*pow(PI,2));
 }

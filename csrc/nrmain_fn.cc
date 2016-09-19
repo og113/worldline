@@ -378,7 +378,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	Check checkEAgree("energies agree",1.0e-3);
 	
 	// defining scalar quantities
-	number len, i0, kinetic, s, sm, v, vr, erg, ergThermal, fgamma, gamma, angle_neigh, zmax, zmin, tmax, ic_max, cc_max, kg_max;
+	number len, i0, kinetic = 0.0, s, sm, v = 0.0, vr = 0.0, erg, ergThermal = 0.0, fgamma, gamma, angle_neigh, zmax, zmin, tmax, ic_max, cc_max, kg_max;
 	
 	// defining vector and matrix quantities
 	vec x(N*dim);
