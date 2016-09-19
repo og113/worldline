@@ -14,6 +14,7 @@
 #include "print.h"
 #include "simple.h"
 #include "eigen_extras.h"
+#include "stepper.h"
 
 using namespace std;
 
@@ -51,10 +52,23 @@ struct KineticOptions {
 	enum Option { saddle, s0, len};
 };
 
+struct StepperArgv {
+	enum Option { none, action, entropy};
+};
+
 int nrmain_fn(int argc, vector<string> argv) {
 /*----------------------------------------------------------------------------------------------------------------------------
 	1 - argv, parameters etc
 ----------------------------------------------------------------------------------------------------------------------------*/
+
+// printing argv
+for (int j=0; j<argc; j++) {
+	cout << argv[j];
+	if (j<(argc-1))
+		cout << " ";
+	else
+		cout << endl;
+}
 
 // argv options
 bool verbose = true;
@@ -88,7 +102,10 @@ string printOpts = "";
 string potOpts = "";
 string kinOpts = "";
 string xIn = "";
-string inputsFile = "inputs4";
+string stepperArgv = "";
+string stepperInputsFile = "stepperInputs0";
+string stepperResultsFile = "stepperResultsAction0";
+string inputsFile = "stepper4";
 
 // getting argv
 if (argc % 2 && argc>1) {
@@ -122,6 +139,9 @@ if (argc % 2 && argc>1) {
 		else if (id.compare("print")==0) printOpts = (string)argv[2*j+2];
 		else if (id.compare("pot")==0 || id.compare("potential")==0) potOpts = (string)argv[2*j+2];
 		else if (id.compare("kin")==0 || id.compare("kinetic")==0) kinOpts = (string)argv[2*j+2];
+		else if (id.compare("stepper")==0 || id.compare("step")==0) stepperArgv = (string)argv[2*j+2];
+		else if (id.compare("stepperInputs")==0 || id.compare("stepInputs")==0) stepperInputsFile = (string)argv[2*j+2];
+		else if (id.compare("stepperResults")==0 || id.compare("stepResults")==0) stepperResultsFile = (string)argv[2*j+2];
 		else if (id.compare("xIn")==0) xIn = (string)argv[2*j+2];
 		else if (id.compare("sometests")==0 || id.compare("someTests")==0) sometests = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("alltests")==0 || id.compare("allTests")==0) alltests = (stn<uint>(argv[2*j+2])!=0);
@@ -138,18 +158,7 @@ else {
 	return 1;
 }
 
-if (verbose) {
-	// printing argv
-	for (int j=0; j<argc; j++) {
-		cout << argv[j];
-		if (j<(argc-1))
-			cout << " ";
-		else
-			cout << endl;
-	}
-	// printing inputs file
-	cout << "using inputs file " << inputsFile << endl;
-}
+cout << "using inputs file " << inputsFile << endl;
 
 PrintOptions::Option po = PrintOptions::none;
 if (!printOpts.empty()) {
@@ -228,10 +237,25 @@ if (!kinOpts.empty()) {
 	else if (kinOpts.compare("len")==0 || potOpts.compare("length")==0)
 		kino = KineticOptions::len;
 	else {
-		cerr << "potential options not understood/available: " << kinOpts << endl;
+		cerr << "kinetic options not understood/available: " << kinOpts << endl;
 		return 1;
 	}
 	kinExtras.second = nts((int)kino);
+}
+
+// stepper
+StepperArgv::Option stepargv = StepperArgv::none;
+if (!stepperArgv.empty()) {
+	if (stepperArgv.compare("action")==0 || stepperArgv.compare("s")==0 || stepperArgv.compare("S")==0)
+		stepargv = StepperArgv::action;
+	else if (stepperArgv.compare("entropy")==0 || stepperArgv.compare("sigma")==0)
+		stepargv = StepperArgv::entropy;
+	else if (stepperArgv.compare("none")==0)
+		stepargv = StepperArgv::none;
+	else {
+		cerr << "stepper options not understood/available: " << stepperArgv << endl;
+		return 1;
+	}
 }
 
 if (fixall)
@@ -249,10 +273,41 @@ if (p.empty()) {
 	return 1;
 }
 
+// initializing stepper
+StepperOptions stepOpts;
+Point2d point;
+number F0;
+if (stepargv != StepperArgv::none) {
+	{
+		ifstream is;
+		is.open(stepperInputsFile.c_str());
+		if (is.good()) {
+			is >> stepOpts.epsi_x >> stepOpts.epsi_y >> stepOpts.angle0 >> stepOpts.closeness >> F0;
+			is.close();
+		}
+		else {
+			cerr << "Error: cannot open stepper inputs file, " << stepperInputsFile << endl;
+			return 1;
+		}
+	}
+	stepOpts.stepType = StepperOptions::constPlane;
+	stepOpts.directed = StepperOptions::local;
+	if (poto==PotentialOptions::thermal || disjoint) {
+		point(p.B,p.T);
+		//stepOpts.epsi_x *= (abs(p.B)>MIN_NUMBER? p.B: 1.0);
+		//stepOpts.epsi_y *= (abs(p.T)>MIN_NUMBER? p.T: 1.0);
+	}
+	else {
+		point(p.B,p.P4);
+		//stepOpts.epsi_x *= (abs(p.B)>MIN_NUMBER? p.B: 1.0);
+		//stepOpts.epsi_y *= (abs(p.P4)>MIN_NUMBER? p.P4: 1.0);
+	}
+}
+Stepper stepper(step_opts,point);
+
 // timenumber
 string timenumber = currentDateTime();
-if (verbose)
-	cout << "timenumber: " << timenumber << endl;
+cout << "timenumber: " << timenumber << endl;
 
 // results
 string resultsFile = (pass? "results/nr/nr6pass.csv":"results/nr/nr6.csv");
@@ -261,11 +316,15 @@ vector<string> idCheck(idSizeResults);
 idCheck[idSizeResults-1] = potExtras.second;
 NewtonRaphsonData results(resultsFile,idSizeResults,datumSizeResults);
 
+// stepper results
+uint idSizeResultsStepper = 4, datumSizeResultsStepper = 3;
+vector<string> idCheckStepper(idSizeResultsStepper);
+idCheckStepper[idSizeResultsStepper-2] = potExtras.second;
+NewtonRaphsonData resultsStepper(stepperOutputsFile,idSizeResults,datumSizeResultsStepper);
+
 // errors
 string errorsFile = "results/nr/nr6error.csv";
 uint idSizeErrors = 4, datumSizeErrors = 13;
-vector<string> idCheckErrors(idSizeErrors);
-idCheckErrors[idSizeErrors-1] = potExtras.second;
 NewtonRaphsonData errors(errorsFile,idSizeErrors,datumSizeErrors);
 
 /*----------------------------------------------------------------------------------------------------------------------------
@@ -274,9 +333,11 @@ NewtonRaphsonData errors(errorsFile,idSizeErrors,datumSizeErrors);
 
 // parameter loops
 uint Npl = pr.totalSteps();
-if (verbose)
-	cout << "looping over " << Npl << " steps" << endl;
+cout << "looping over " << Npl << " steps" << endl;
 
+// defining scalar quantities
+number len, i0, kinetic, s, sm, v, vr, erg, ergThermal, fgamma, gamma, angle_neigh, zmax, zmin, tmax, ic_max, cc_max, kg_max;
+	
 // starting loop
 for (uint pl=0; pl<Npl; pl++) {
 
@@ -285,8 +346,10 @@ for (uint pl=0; pl<Npl; pl++) {
 	
 	// stepping parameters
 	if (pl>0) {
-		p = pr.position(pl);
-		pold = pr.neigh(pl);
+		if (stepargv != StepperArgv::none) {
+			p = pr.position(pl);
+			pold = pr.neigh(pl);
+		}
 		if (mu_a) {
 			p.Mu = p.Epsi;
 			pold.Mu = pold.Epsi;
@@ -299,7 +362,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		cout << "continuing to next step" << endl;
 		continue; // CONTINUE STATEMENT!!!!!!
 	}
-	if (!redoErrors && errors.find(idCheckErrors,p)) {
+	if (!redoErrors && errors.find(idCheck,p)) {
 		cout << "result found in " << errorsFile << " for pl = " << pl << ", ";
 		cout << "continuing to next step" << endl;
 		continue; // CONTINUE STATEMENT!!!!!!
@@ -378,9 +441,6 @@ for (uint pl=0; pl<Npl; pl++) {
 	Check checkDeltaMirror("delta mirror symmetry",1.0e-2);
 	Check checkDeltaRotation("delta rotation symmetry",1.0e-16*NT*NT);
 	Check checkEAgree("energies agree",1.0e-3);
-	
-	// defining scalar quantities
-	number len, i0, kinetic, s, sm, v, vr, erg, ergThermal, fgamma, gamma, angle_neigh, zmax, zmin, tmax, ic_max, cc_max, kg_max;
 	
 	// defining vector and matrix quantities
 	vec x(N*dim);
@@ -488,10 +548,8 @@ for (uint pl=0; pl<Npl; pl++) {
 		cerr << "nrmain error: " << loadFile << " doesn't exist, moving to next parameter loop" << endl;
 		continue; ///////// CONTINUE STATEMENT IF FILE DOESN'T EXIST
 	}
-	if (verbose) {
-		cout << "loading loops from:" << endl;
-		cout << loadFile << endl;
-	}
+	cout << "loading loops from:" << endl;
+	cout << loadFile << endl;
 	
 	// loading x
 	loadVectorBinary(loadFile,x);
@@ -528,15 +586,14 @@ for (uint pl=0; pl<Npl; pl++) {
 		vectorToLoop(x,xLoop);
 		len = L(xLoop);
 		number dx = len/(number)N;
-		if ((dx/p.Epsi)>p.Lambda && p.Lambda>MIN_NUMBER && dx>MIN_NUMBER) {
+		if ((dx/p.Epsi)>p.Lambda && abs(p.Lambda)>MIN_NUMBER) {
 			number a_new = sigFig(dx/p.Lambda,2.0);
 			if (abs(a_new-p.Epsi)>MIN_NUMBER) {
-				if (verbose)
-					cout << "changed a: a_old = " << p.Epsi << ", a_new = " << a_new << ", using Lambda = " << p.Lambda << endl;
+				cout << "changed a: a_old = " << p.Epsi << ", a_new = " << a_new << ", using Lambda = " << p.Lambda << endl;
 				(pr.Min).Epsi 	= a_new;
 				(pr.Min).Epsi 	= a_new;
-				p.Epsi 		= a_new;
-				pold.Epsi 	= a_new;
+				p.Epsi 			= a_new;
+				pold.Epsi 		= a_new;
 			}
 		}
 	}
@@ -1688,10 +1745,10 @@ for (uint pl=0; pl<Npl; pl++) {
 		
 	// printing results to terminal
 	printf("\n");
-	printf("%8s%8s%8s%8s%8s%8s%8s%8s%8s%12s%12s%14s%14s%14s\n","pl","runs","time","K","G","B","Ng","a","mu","E","T","len",\
+	printf("%8s%8s%8s%8s%8s%8s%8s%8s%12s%12s%14s%14s%14s\n","runs","time","K","G","B","Ng","a","mu","E","T","len",\
 		"vr","s");
-	printf("%8i%8i%8.3g%8i%8.4g%8.4g%8i%8.4g%8.4g%12.5g%12.5g%14.5g%14.5g%14.5g\n",\
-		pl,runsCount,realtime,p.K,p.G,p.B,p.Ng,p.Epsi,p.Mu,erg,p.T,len,vr,s);
+	printf("%8i%8.3g%8i%8.4g%8.4g%8i%8.4g%8.4g%12.5g%12.5g%14.5g%14.5g%14.5g\n",\
+		runsCount,realtime,p.K,p.G,p.B,p.Ng,p.Epsi,p.Mu,erg,p.T,len,vr,s);
 	printf("\n");
 	
 	if ((checkDelta.good() && checkSol.good() && checkSolMax.good()) || pass) {
@@ -1726,8 +1783,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		// saving
 		NewtonRaphsonDatum result(idResult,p,datumResult);
 		result.save(resultsFile);
-		if (verbose)
-			printf("%12s%24s\n","results:",resultsFile.c_str());
+		printf("%12s%24s\n","results:",resultsFile.c_str());
 	}
 	else {
 		// printing error results to file	
@@ -1758,8 +1814,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		// saving
 		NewtonRaphsonDatum error(idError,p,datumError);
 		error.save(errorsFile);
-		if (verbose)
-			printf("%12s%24s\n","results:",errorsFile.c_str());
+		printf("%12s%24s\n","results:",errorsFile.c_str());
 	}
 	
 	if (checkDelta.good() && checkSol.good() && checkSolMax.good()) {		
@@ -1776,8 +1831,59 @@ for (uint pl=0; pl<Npl; pl++) {
 		if (kino!=KineticOptions::saddle)
 			(loopRes.Extras).push_back(kinExtras);
 		saveVectorBinary(loopRes,x);
-		if (verbose)
-			printf("%12s%50s\n","x:",((string)loopRes).c_str());
+		printf("%12s%50s\n","x:",((string)loopRes).c_str());
+	}
+	
+	// printing stepper results
+	if (stepasci!=StepperAscii::none) {
+		// adding result to stepper
+		number F = 0.0;
+		if(stepargv==StepperArgv::action)
+			F = s;
+		else if(stepargv==StepperArgv::entropy)
+			F = -s + ergThermal*p.T;
+		else {
+			cerr << "nrmain_fn error: stepargv, " << stepargv << ", not recognized" << endl;
+			return 1;
+		}
+		if (pl==0 && absDiff(F,F0)<stepper.closeness() && resultsStepper.size()==0) {
+			
+		}
+		stepper.addResult(F);
+		
+		// printing step
+		// id
+		vector<string> idResult(idSizeResults);
+		idResult[0] = timenumber;
+		idResult[1] = nts(pl);
+		idResult[2] = potExtras.second;
+		
+		// actual results
+		vector<number> datumResult(datumSizeResults);
+		datumResult[0] = stepper.result();
+		datumResult[1] = stepper.stepAngle();
+		datumResult[2] = (number)stepper.keep();
+		
+		// saving
+		NewtonRaphsonDatum stepperResult(idResult,p,datumResult);
+		stepperResult.save(stepperResultsFile);
+		printf("%12s%24s\n","stepper results:",stepperResultsFile.c_str());
+		
+		// stepping
+		stepper.step();
+	
+		// getting step base
+		uint sigma = (stepper.steps()>0? 1:0);
+		uint last = pl-stepper.local()+1+sigma;
+		point = stepper.point(last);
+		if (poto==PotentialOptions::thermal || disjoint) {
+			pold.B = point.X;
+			pold.T = point.Y;
+		}
+		else {
+			pold.B = point.X;
+			pold.P4 = point.Y;
+		}
 	}
 
 	// printing extras to ascii files

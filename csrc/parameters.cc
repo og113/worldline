@@ -30,11 +30,55 @@ CONTENTS
 const uint Parameters::Size = 16;
 const uint ParametersRange::Size = 16;
 
+// nameVector()
+vector<string> Parameters::nameVector() const {
+	vector<string> v(Size);
+	v[0] = "Nl";
+	v[1] =  "Ng";
+	v[2] =  "Nig";
+	v[3] =  "Nsw";
+	v[4] =  "Npsw";
+	v[5] =  "K";
+	v[6] =  "G";
+	v[7] =  "B";
+	v[8] =  "T";
+	v[9] =  "Epsi";
+	v[10] =  "Mu";
+	v[11] =  "P1";
+	v[12] =  "P2";
+	v[13] =  "P3";
+	v[14] =  "P4";
+	v[15] =  "Lambda";
+	return v;
+}
+
+// valueVector()
+vector<string> Parameters::valueVector() const {
+	vector<string> v(Size);
+	v[0] = nts(Nl);
+	v[1] =  nts(Ng);
+	v[2] =  nts(Nig);
+	v[3] =  nts(Nsw);
+	v[4] =  nts(Npsw);
+	v[5] =  nts(K);
+	v[6] =  nts(G,16);
+	v[7] =  nts(B,16);
+	v[8] =  nts(T,16);
+	v[9] =  nts(Epsi,16);
+	v[10] =  nts(Mu,16);
+	v[11] =  nts(P1,16);
+	v[12] =  nts(P2,16);
+	v[13] =  nts(P3,16);
+	v[14] =  nts(P4,16);
+	v[15] =  nts(Lambda,16);
+	return v;
+}
+
 // step
 void Parameters::step(const ParametersRange& pr, const Parameters::Label& label, const uint& j) {
 	if (pr.toStep(label)) {
 		number stepSize;
-		switch (label){
+		switch (label) {
 			case nl:
 				stepSize = ((int)((pr.Max).Nl-(pr.Min).Nl))/((pr.Steps)[label-1]-1.0);
 				Nl += (int)j*stepSize;
@@ -116,22 +160,10 @@ void Parameters::step(const ParametersRange& pr, const Parameters::Label& label)
 // operator<<
 ostream& operator<<(ostream& os, const Parameters& p) {
 	os << left;
-	os << setw(20) << "Nl" << setw(20) << p.Nl << endl;
-	os << setw(20) << "Ng" << setw(20) << p.Ng << endl;
-	os << setw(20) << "Nig" << setw(20) << p.Nig << endl;
-	os << setw(20) << "Nsw" << setw(20) << p.Nsw << endl;
-	os << setw(20) << "Npsw" << setw(20) << p.Npsw << endl;
-	os << setw(20) << "K" << setw(20) << p.K << endl;
-	os << setw(20) << "G" << setw(20) << p.G << endl;
-	os << setw(20) << "B" << setw(20) << p.B << endl;
-	os << setw(20) << "T" << setw(20) << p.T << endl;
-	os << setw(20) << "Epsi" << setw(20) << p.Epsi << endl;
-	os << setw(20) << "Mu" << setw(20) << p.Mu << endl;
-	os << setw(20) << "P1" << setw(20) << p.P1 << endl;
-	os << setw(20) << "P2" << setw(20) << p.P2 << endl;
-	os << setw(20) << "P3" << setw(20) << p.P3 << endl;
-	os << setw(20) << "P4" << setw(20) << p.P4 << endl;
-	os << setw(20) << "Lambda" << setw(20) << p.Lambda << endl;
+	vector<string> nv = p.nameVector();
+	vector<string> vv = p.valueVector();
+	for (uint j=0; j<p.Size; j++)
+		os << setw(20) << nv[j] << setw(20) << vv[j] << endl;
 	return os;
 }
 
@@ -150,6 +182,31 @@ void Parameters::save(const string& filename) const {
 }
 
 //load
+void Parameters::load(const vector<string>& v) {
+	if (v.size()!=Size) {
+		cerr << "Parameters::load error: vector of size " << v.size() << "!=" << Size << endl;
+	}
+		
+	Nl = stn<uint>(v[0]);
+	Ng = stn<uint>(v[1]);
+	Nig = stn<uint>(v[2]);
+	Nsw = stn<uint>(v[3]);
+	Npsw = stn<uint>(v[4]);
+	K = stn<uint>(v[5]);
+	G = stn<number>(v[6]);
+	B = stn<number>(v[7]);
+	T = stn<number>(v[8]);
+	Epsi = stn<number>(v[9]);
+	Mu = stn<number>(v[10]);
+	P1 = stn<number>(v[11]);
+	P2 = stn<number>(v[12]);
+	P3 = stn<number>(v[13]);
+	P4 = stn<number>(v[14]);
+	Lambda = stn<number>(v[15]);
+
+}
+
+//load
 void Parameters::load(const string& filename) {
 	ifstream is;
 	is.open(filename.c_str());
@@ -159,23 +216,13 @@ void Parameters::load(const string& filename) {
 		return;
 	}
 	string dross;
-	is >> dross >> Nl;
-	is >> dross >> Ng;
-	is >> dross >> Nig;
-	is >> dross >> Nsw;
-	is >> dross >> Npsw;
-	is >> dross >> K;
-	is >> dross >> G;
-	is >> dross >> B;
-	is >> dross >> T;
-	is >> dross >> Epsi;
-	is >> dross >> Mu;
-	is >> dross >> P1;
-	is >> dross >> P2;
-	is >> dross >> P3;
-	is >> dross >> P4;
-	is >> dross >> Lambda;
+	vector<string> v(Size);
+	for (uint j=0; j<Size; j++)
+		is >> dross >> v[j];
 	is.close();
+		
+	load(v);
+
 }
 
 // empty
@@ -377,39 +424,12 @@ istream& ParametersRange::readBinary(istream& is) {
 // operator<<
 ostream& operator<<(ostream& os, const ParametersRange& pr) {
 	os << left;
-	os << setw(20) << "Nl" << "[ " << setw(12) << (pr.Min).Nl << " , " \
-						<< setw(12) << (pr.Max).Nl << " , " << setw(12) << (pr.Steps)[0] << " ]" << endl;
-	os << setw(20) << "Ng" << "[ " << setw(12) <<  (pr.Min).Ng << " , " \
-						<< setw(12) << (pr.Max).Ng << " , " << setw(12) << (pr.Steps)[1] << " ]" << endl;
-	os << setw(20) << "Nig" << "[ " << setw(12) << (pr.Min).Nig << " , " \
-						<< setw(12) << (pr.Max).Nig << " , " << setw(12) << (pr.Steps)[2] << " ]" << endl;
-	os << setw(20) << "Nsw" << "[ " << setw(12) << (pr.Min).Nsw << " , " \
-						<< setw(12) << (pr.Max).Nsw << " , " << setw(12) << (pr.Steps)[3] << " ]" << endl;
-	os << setw(20) << "Npsw" << "[ " << setw(12) << (pr.Min).Npsw << " , " \
-						<< setw(12) << (pr.Max).Npsw << " , " << setw(12) << (pr.Steps)[4] << " ]" << endl;
-	os << setw(20) << "K" << "[ " << setw(12) << setw(12) << (pr.Min).K << " , " \
-						<< setw(12) << (pr.Max).K << " , " << setw(12) << (pr.Steps)[5] << " ]" << endl;
-	os << setw(20) << "G" << "[ " << setw(12) << (pr.Min).G << " , " \
-						<< setw(12) << (pr.Max).G << " , " << setw(12) << (pr.Steps)[6] << " ]" << endl;
-	os << setw(20) << "B" << "[ " << setw(12) << (pr.Min).B << " , " \
-						<< setw(12) << (pr.Max).B << " , " << setw(12) << (pr.Steps)[7] << " ]" << endl;
-	os << setw(20) << "T" << "[ " << setw(12) << (pr.Min).T << " , " \
-						<< setw(12) << (pr.Max).T << " , " << setw(12) << (pr.Steps)[8] << " ]" << endl;
-	os << setw(20) << "Epsi" << "[ " << setw(12) << (pr.Min).Epsi << " , " \
-						<< setw(12) << (pr.Max).Epsi << " , " << setw(12) << (pr.Steps)[9] << " ]" << endl;
-	os << setw(20) << "Mu" << "[ " << setw(12) << (pr.Min).Mu << " , " \
-						<< setw(12) << (pr.Max).Mu << " , " << setw(12) << (pr.Steps)[10] << " ]" << endl;
-	os << setw(20) << "P1" << "[ " << setw(12) << (pr.Min).P1 << " , " \
-						<< setw(12) << (pr.Max).P1 << " , " << setw(12) << (pr.Steps)[11] << " ]" << endl;
-	os << setw(20) << "P2" << "[ " << setw(12) << (pr.Min).P2 << " , " \
-						<< setw(12) << (pr.Max).P2 << " , " << setw(12) << (pr.Steps)[12] << " ]" << endl;
-	os << setw(20) << "P3" << "[ " << setw(12) << (pr.Min).P3 << " , " \
-						<< setw(12) << (pr.Max).P3 << " , " << setw(12) << (pr.Steps)[13] << " ]" << endl;
-	os << setw(20) << "P4" << "[ " << setw(12) << (pr.Min).P4 << " , " \
-						<< setw(12) << (pr.Max).P4 << " , " << setw(12) << (pr.Steps)[14] << " ]" << endl;
-	os << setw(20) << "Lambda" << "[ " << setw(12) << (pr.Min).Lambda << " , " \
-						<< setw(12) << (pr.Max).Lambda << " , " << setw(12) << (pr.Steps)[15] << " ]" << endl;
-	
+	vector<string> nv = (pr.Min).nameVector();
+	vector<string> vvMin = (pr.Min).valueVector();
+	vector<string> vvMax = (pr.Max).valueVector();
+	for (uint j=0; j<pr.Size; j++)
+		os << setw(20) << nv[j] << "[ " << setw(12) << vvMin[j] << " , " \
+						<< setw(12) << vvMax[j] << " , " << setw(12) << (pr.Steps)[j] << " ]" << endl;
 	return os;
 }
 

@@ -248,6 +248,9 @@ void Filename::set(const string& f) {
 		//cerr << "Filename error: file, " << f << ", not of expected form";
 		return;
 	}
+	if (f.compare((*this)())!=0) {
+		cerr << "Filename::set error: " << f << " is not of the expected form" << endl;
+	}
 }
 
 // operator=

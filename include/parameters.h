@@ -52,10 +52,13 @@ struct Parameters {
 	number P3;
 	number P4;
 	number Lambda;
+	vector<string> nameVector() const;
+	vector<string> valueVector() const;
 	void step(const ParametersRange&, const Parameters::Label&);
 	void step(const ParametersRange&, const Parameters::Label&, const uint&);
 	void save(const string& filename) const;
 	void load(const string& filename);
+	void load(const vector<string>& vv);
 	bool empty() const;
 	ostream& writeBinary(ostream&) const;
 	istream& readBinary(istream&);

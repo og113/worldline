@@ -96,10 +96,10 @@ else
 		#sed -i 's/zzz/j/g' $1
 		sed -i 's/DX(/DX(l,/g' $1
 		sed -i 's/Thermak/Thermal/g' $1
-		sed -i 's/FThermal(\([a-z]*\),\([a-z]*\))/FThermal_\1\2/g' $1
-		sed -i 's/FThermal(\([a-z]\),-1 + \([a-z]\))/FThermal_\1m\2/g' $1
-		sed -i 's/FThermal(-1 + \([a-z]\),\([a-z]\))/FThermal_m\1\2/g' $1
-		sed -i 's/FThermal(-1 + \([a-z]\),-1 + \([a-z]\))/FThermal_m\1m\2/g' $1
+		sed -i 's/\([A-Z]\)Thermal(\([a-z]*\),\([a-z]*\))/\1Thermal_\1\2/g' $1
+		sed -i 's/\([A-Z]\)Thermal(\([a-z]\),-1 + \([a-z]\))/\1Thermal_\1m\2/g' $1
+		sed -i 's/\([A-Z]\)Thermal(-1 + \([a-z]\),\([a-z]\))/\1Thermal_m\1\2/g' $1
+		sed -i 's/\([A-Z]\)Thermal(-1 + \([a-z]\),-1 + \([a-z]\))/\1Thermal_m\1m\2/g' $1
 		sed -i 's/Dr(\([a-z]*\),\([a-z]*\))/Dr_\1\2/g' $1
 		sed -i 's/Dr(\([a-z]\),-1 + \([a-z]\))/Dr_\1m\2/g' $1
 		sed -i 's/Dr(-1 + \([a-z]\),\([a-z]\))/Dr_m\1\2/g' $1

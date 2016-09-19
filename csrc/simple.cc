@@ -209,7 +209,7 @@ uint countLines(const string & file_to_count) {
 uint countColumns(const string & file_to_count) {
 	ifstream fin;
 	fin.open(file_to_count.c_str(), ios::in);
-	if (!fin.good()) cerr << "countRows error: " << file_to_count << " not opened properly." << endl;
+	if (!fin.good()) cerr << "countColumns error: " << file_to_count << " not opened properly." << endl;
 	string line;
 	unsigned int counter = 0;
 	while(!fin.eof()) {
@@ -219,6 +219,29 @@ uint countColumns(const string & file_to_count) {
 			stringstream ss(line);
 			string temp;
 			while (ss >> temp) {
+				counter++;
+			}
+			break;
+		}
+	}		
+	fin.close();
+    return counter;
+}
+
+// countColumns
+uint countColumns(const string & file_to_count, const char& sep) {
+	ifstream fin;
+	fin.open(file_to_count.c_str(), ios::in);
+	if (!fin.good()) cerr << "countColumns error: " << file_to_count << " not opened properly." << endl;
+	string line;
+	unsigned int counter = 0;
+	while(!fin.eof()) {
+		getline(fin,line);
+		if(line.empty()) continue;
+		else {
+			stringstream ss(line);
+			string temp;
+			while (getline(ss,temp,sep)) {
 				counter++;
 			}
 			break;
