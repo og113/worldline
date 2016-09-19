@@ -1483,7 +1483,7 @@ void ErgS0Disjoint_nr(const Loop<Dim>& l, const uint& j, const uint& mu, const n
 // ErgL_nr
 template<uint Dim>
 void ErgL_nr(const Loop<Dim>& l, const uint& j, const uint& mu, const number& f, number& erg) {
-	uint pj = posNeighDisjoint(j,l.size());
+	uint pj = posNeigh(j,l.size());
 	erg += f*DX(l,pj,j,mu)/Distance(l[pj],l[j]);
 }
 
