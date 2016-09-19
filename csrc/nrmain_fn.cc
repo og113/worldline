@@ -295,14 +295,18 @@ for (uint pl=0; pl<Npl; pl++) {
 	
 	// checking if have results already
 	if (!redo && results.find(idCheck,p)) {
-		cout << "result found in " << resultsFile << " for pl = " << pl << ", ";
-		cout << "continuing to next step" << endl;
-		continue; // CONTINUE STATEMENT!!!!!!
+		if (verbose) {
+			cout << "result found in " << resultsFile << " for pl = " << pl << ", ";
+			cout << "continuing to next step" << endl;
+		}
+		continue;
 	}
 	if (!redoErrors && errors.find(idCheckErrors,p)) {
-		cout << "result found in " << errorsFile << " for pl = " << pl << ", ";
-		cout << "continuing to next step" << endl;
-		continue; // CONTINUE STATEMENT!!!!!!
+		if (verbose) {
+			cout << "result found in " << errorsFile << " for pl = " << pl << ", ";
+			cout << "continuing to next step" << endl;
+		}
+		continue;
 	}
 	
 	// getting step file
