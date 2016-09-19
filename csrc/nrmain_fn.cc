@@ -264,6 +264,8 @@ NewtonRaphsonData results(resultsFile,idSizeResults,datumSizeResults);
 // errors
 string errorsFile = "results/nr/nr6error.csv";
 uint idSizeErrors = 4, datumSizeErrors = 13;
+vector<string> idCheckErrors(idSizeErrors);
+idCheckErrors[idSizeErrors-1] = potExtras.second;
 NewtonRaphsonData errors(errorsFile,idSizeErrors,datumSizeErrors);
 
 /*----------------------------------------------------------------------------------------------------------------------------
@@ -297,7 +299,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		cout << "continuing to next step" << endl;
 		continue; // CONTINUE STATEMENT!!!!!!
 	}
-	if (!redoErrors && errors.find(idCheck,p)) {
+	if (!redoErrors && errors.find(idCheckErrors,p)) {
 		cout << "result found in " << errorsFile << " for pl = " << pl << ", ";
 		cout << "continuing to next step" << endl;
 		continue; // CONTINUE STATEMENT!!!!!!
@@ -526,14 +528,15 @@ for (uint pl=0; pl<Npl; pl++) {
 		vectorToLoop(x,xLoop);
 		len = L(xLoop);
 		number dx = len/(number)N;
-		if ((dx/p.Epsi)>p.Lambda && abs(p.Lambda)>MIN_NUMBER) {
+		if ((dx/p.Epsi)>p.Lambda && p.Lambda>MIN_NUMBER && dx>MIN_NUMBER) {
 			number a_new = sigFig(dx/p.Lambda,2.0);
 			if (abs(a_new-p.Epsi)>MIN_NUMBER) {
-				cout << "changed a: a_old = " << p.Epsi << ", a_new = " << a_new << ", using Lambda = " << p.Lambda << endl;
+				if (verbose)
+					cout << "changed a: a_old = " << p.Epsi << ", a_new = " << a_new << ", using Lambda = " << p.Lambda << endl;
 				(pr.Min).Epsi 	= a_new;
 				(pr.Min).Epsi 	= a_new;
-				p.Epsi 			= a_new;
-				pold.Epsi 		= a_new;
+				p.Epsi 		= a_new;
+				pold.Epsi 	= a_new;
 			}
 		}
 	}
