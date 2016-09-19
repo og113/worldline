@@ -1,4 +1,10 @@
-output="entropy_kappa_T_a_0.02_K_11_pot_8.dat"
+output="s_kappa_T_a_0.02_K_11_pot_8.dat"
+
+pi=3.1415926535897932
+Tmax(kappa)=sqrt(2)/pi**0.75/kappa**0.25
+Sstraight(kappa,T)=(1.0-sqrt(kappa/4.0/pi))*2.0/T
+min2(a,b)=(a<b?a:b);
+min3(a,b,c)=min2(a,min2(b,c));
 
 reset
 set xrange [0:10]
@@ -9,14 +15,14 @@ set cntrparam order 4
 set cntrparam bspline
 set dgrid3d
 set table 'test.dat'
-splot output u 1:2:3
+splot output u 1:2:(min2($3,Sstraight($1,$2)))
 unset table
 
 set cont base
-set cntrparam level incremental -4.0, 0.2, 4.0
+set cntrparam level incremental -4.0, 0.5, 4.0
 unset surf
 set table 'cont.dat'
-splot output u 1:2:3
+splot output u 1:2:(min2($3,Sstraight($1,$2)))
 unset table
 
 reset
@@ -24,11 +30,17 @@ set xrange [0:10]
 set yrange [0:2]
 set xlabel "{/Symbol k}"
 set ylabel "T"
-set zlabel "{/Symbol S}"
-set title "{/Symbol S} vs {/Symbol k} and T: K=11, a=0.02"
-unset key
+set zlabel "S"
+set title "S vs {/Symbol k} and T: K=11, a=0.02"
+set key below
 set palette rgbformulae 33,13,10
-l '<bash cont.sh cont.dat 0 7 0'
-p 'test.dat' w ima, '<bash cont.sh cont.dat 1 7 0' w l lt -1 lw 1.5
+l '<bash cont.sh cont.dat 0 2 1'
+
+#p 'test.dat' w ima, \
+#	'<bash cont.sh cont.dat 1 2 1' w l lt -1 lw 1.5, \
+#	Tmax(x) w lines dt 2 lt 1 lc rgb "black" title "{/Symbol S}=0"
+	
+p '<bash cont.sh cont.dat 1 2 1' w l lt -1 lw 1.5, \
+	Tmax(x) w lines dt 2 lt 1 lc rgb "black" title "{/Symbol S}=0"
 
 pause -1
