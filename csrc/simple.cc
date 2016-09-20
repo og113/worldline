@@ -33,7 +33,11 @@ CONTENTS
 	10 - delta
 	11 - sigFig
 	12 - sign
+<<<<<<< HEAD
 	13 - split
+=======
+	13 - splitString
+>>>>>>> b634b5a67e9bc1c07415df25ecc390dfaf3b5a20
 	A - explicit instantiation
 -------------------------------------------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------------------------------------------*/
@@ -393,22 +397,21 @@ double sign(double num) {
 }
 
 /*-------------------------------------------------------------------------------------------------------------------------
-	13. split
+	13. splitString
 -------------------------------------------------------------------------------------------------------------------------*/
 
-template<typename T>
-vector<T> split(const T & str, const T & delimiters) {
-    vector<T> v;
-    T::size_type start = 0;
-    auto pos = str.find_first_of(delimiters, start);
-    while(pos != T::npos) {
+vector<string> splitString(const string & str, const string & delimiters) {
+    vector<string> v;
+    size_t start = 0;
+    size_t pos = str.find_first_of(delimiters, start);
+    while(pos != string::npos) {
         if(pos != start) // ignore empty tokens
-            v.emplace_back(str, start, pos - start);
+            v.push_back(str.substr(start, pos - start));
         start = pos + 1;
         pos = str.find_first_of(delimiters, start);
     }
     if(start < str.length()) // ignore trailing delimiter
-        v.emplace_back(str, start, str.length() - start); // add what's left of the string
+        v.push_back(str.substr(start,str.length() - start)); // add what's left of the string
     return v;
 }
 
@@ -459,5 +462,3 @@ template uint countType<comp>(const string&,const comp&);
 
 template double mod<double>(const double& x, const double& min, const double& max);
 template int mod<int>(const int& x, const int& min, const int& max);
-
-template vector<string> split<string>(const string & str, const string & delimiters);

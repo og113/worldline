@@ -9,6 +9,7 @@
 #include <fstream>
 #include <mpi.h>
 #include "simple.h"
+#include "folder.h"
 #include "parameters.h"
 #include "nrmain_fn.h"
 
@@ -47,6 +48,7 @@ if (rank==root)
 // argc and argv
 uint argcSerial = 1;
 string mpiInputsFile = "nrinputs/mpi/inputs0";
+string argvList = "";
 vector<string> argvSerial(1);
 argvSerial[0] = "./nrmpi";
 
@@ -69,6 +71,8 @@ if (argc % 2 && argc>1) {
 		if (id[0]=='-') id = id.substr(1);
 		if (id.compare("mpiinputs")==0 || id.compare("mpiInputs")==0 || id.compare("inputs")==0)
 			mpiInputsFile = (string)argv[2*j+2];
+		else if (id.compare("argvlist")==0 || id.compare("argvList")==0)
+			argvList = (string)argv[2*j+2];
 		else {
 			argvSerial.push_back((string)argv[2*j+1]);
 			argvSerial.push_back((string)argv[2*j+2]);
@@ -82,45 +86,70 @@ else if (rank==root) {
 }
 	
 sleep(rank*2);
+
+if (argvList.empty()) {
 	
-// loading parameters
-ParametersRange prMpi;
-prMpi.load(mpiInputsFile);
-if (rank==root) {
-	Parameters pMpi = prMpi.Min;
-	if (pMpi.empty()) {
-		cerr << "Parameters empty: nothing in inputs file: " << mpiInputsFile << endl;
-		MPI_Abort(MPI_COMM_WORLD,1);
-	}
-	if (Nw>(int)prMpi.totalSteps()) {
-		cerr << "Error: too few steps, " << prMpi.totalSteps() << ", for nodes, " << Nw << endl;
-		MPI_Abort(MPI_COMM_WORLD,1);
-	}
-}
-
-// distributing parameters
-string inputsSerial = mpiInputsFile+"_rank_"+nts(rank);
-ParametersRange prSerial = prMpi;
-prSerial.Min = prMpi.position(rank);
-uint j=0;
-bool foundToStep = false;
-while (j<Parameters::Size && !foundToStep) {
-	if (prMpi.toStep((Parameters::Label)(j+1))) {
-		(prSerial.Steps)[j] = 0;
-		if (rank==root && (int)(prMpi.Steps)[j]!=Nw) {
-			cerr << "Error: number of steps on first parameter, " << (prMpi.Steps)[j];
-			cerr << ", not equal to number of nodes, " << Nw << endl;
+	// loading parameters
+	ParametersRange prMpi;
+	prMpi.load(mpiInputsFile);
+	if (rank==root) {
+		Parameters pMpi = prMpi.Min;
+		if (pMpi.empty()) {
+			cerr << "Parameters empty: nothing in inputs file: " << mpiInputsFile << endl;
+			MPI_Abort(MPI_COMM_WORLD,1);
 		}
-		foundToStep = true;
+		if (Nw>(int)prMpi.totalSteps()) {
+			cerr << "Error: too few steps, " << prMpi.totalSteps() << ", for nodes, " << Nw << endl;
+			MPI_Abort(MPI_COMM_WORLD,1);
+		}
 	}
-	j++;
-}
-prSerial.save(inputsSerial);
 
-// adding inputs filename to argv
-argvSerial.push_back("-inputs");
-argvSerial.push_back(inputsSerial);
-argcSerial += 2;
+	// distributing parameters
+	string inputsSerial = mpiInputsFile+"_rank_"+nts(rank);
+	ParametersRange prSerial = prMpi;
+	prSerial.Min = prMpi.position(rank);
+	uint j=0;
+	bool foundToStep = false;
+	while (j<Parameters::Size && !foundToStep) {
+		if (prMpi.toStep((Parameters::Label)(j+1))) {
+			(prSerial.Steps)[j] = 0;
+			if (rank==root && (int)(prMpi.Steps)[j]!=Nw) {
+				cerr << "Error: number of steps on first parameter, " << (prMpi.Steps)[j];
+				cerr << ", not equal to number of nodes, " << Nw << endl;
+			}
+			foundToStep = true;
+		}
+		j++;
+	}
+	prSerial.save(inputsSerial);
+
+	// adding inputs filename to argv
+	argvSerial.push_back("-inputs");
+	argvSerial.push_back(inputsSerial);
+	argcSerial += 2;
+}
+else {
+	ifstream is;
+	is.open(argvList.c_str());
+	if (is.good()) {
+		string line;
+		for (uint j=0; j<(rank+1); j++) {
+			if (is.eof()) {
+				cerr << "nrmpi error: argvList file " << argvList << " has too few lines for rank " << rank << endl;
+				return 1;
+			}
+			getline(is,line);
+		}
+		is.close();
+		argvSerial.clear();
+		argvSerial = splitString(line," ");
+		argcSerial = argvSerial.size();
+	}
+	else {
+		cerr << "nrmpi error: cannot load from " << argvList << endl;
+		MPI_Abort(MPI_COMM_WORLD,1);
+	}
+}
 
 /*----------------------------------------------------------------------------------------------------------------------------
 	2. running nrmain

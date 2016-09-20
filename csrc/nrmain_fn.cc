@@ -151,6 +151,14 @@ if (argc % 2 && argc>1) {
 }
 else {
 	cerr << "must provide an even number of arguments after ./nrmain" << endl;
+	// printing argv
+	for (int j=0; j<argc; j++) {
+		cerr << argv[j];
+		if (j<(argc-1))
+			cerr << " ";
+		else
+			cerr << endl;
+	}
 	return 1;
 }
 
@@ -163,8 +171,6 @@ if (verbose) {
 		else
 			cout << endl;
 	}
-	// printing inputs file
-	cout << "using inputs file " << inputsFile << endl;
 }
 
 PrintOptions::Option po = PrintOptions::none;
