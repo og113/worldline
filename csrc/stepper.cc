@@ -9,6 +9,7 @@
 #include <vector>
 #include <utility> //for pair
 #include <iostream>
+#include <fstream>
 #include <iomanip>
 #include "error.h"
 #include "simple.h"
@@ -74,6 +75,12 @@ ostream& operator<<(ostream& os,const Point2d& p) {
 	return os;
 }
 
+// operator>>
+istream& operator>>(istream& is ,Point2d& p) {
+	is >> p.X >> p.Y;
+	return is;
+}
+
 // operator +
 Point2d operator+(const Point2d& p1, const Point2d& p2) {
 	Point2d p(p1.X+p2.X,p1.Y+p2.Y);
@@ -93,8 +100,8 @@ bool operator==(const Point2d& lhs, const Point2d& rhs) {
 
 // operator^=
 bool operator^=(const Point2d& lhs, const Point2d& rhs) {
-	double closeness = MIN_NUMBER*1.0e4;
-	return (abs(lhs.X-rhs.X)<closeness && abs(lhs.Y-rhs.Y)<closeness);
+	double tol = MIN_NUMBER*1.0e4;
+	return (abs(lhs.X-rhs.X)<tol && abs(lhs.Y-rhs.Y)<tol);
 }
 
 /*-------------------------------------------------------------------------------------------------------------------------
@@ -220,7 +227,7 @@ static bool isClockwise(const double& v, const double& a) {
 		- x
 		- y
 		- result
-		- closeness
+		- tol
 		- stepAngle
 		- local
 		- keep
@@ -233,6 +240,33 @@ ostream& operator<<(ostream& os, const FxyPair& p) {
 	return os;
 }
 
+istream& operator>>(istream& is, FxyPair& p) {
+	is >> p.first >> p.second;
+	return is;
+}
+
+// <<
+ostream& operator<<(ostream& os, const StepperOptions& s) {
+	os << s.epsi_x << endl;
+	os << s.epsi_y << endl;
+	os << s.angle0 << endl;
+	os << s.tol << endl;
+	os << s.aim << endl;
+	os << s.fixedAim << endl;
+	os << s.stepType << endl;
+	os << s.directed << endl;
+	return os;
+}
+
+// >>
+istream& operator>>(istream& is, StepperOptions& s) {
+	int temp1, temp2;
+	is >> s.epsi_x >> s.epsi_y >> s.angle0 >> s.tol >> s.aim >> s.fixedAim >> temp1 >> temp2;
+	s.stepType = (StepperOptions::stepTypeList)temp1;
+	s.directed = (StepperOptions::directedList)temp2;
+	return is;
+}
+
 // <<
 ostream& operator<<(ostream& os, const Stepper& s) {
 	os << s.x() << " " << s.y() << " " << s.result() << " " << s.keep() << " " << s.steps() << " " << s.local();
@@ -241,51 +275,51 @@ ostream& operator<<(ostream& os, const Stepper& s) {
 
 // constructor
 Stepper::Stepper(const StepperOptions& sto, const double& X, const double& Y, const double& f0):\
- 		opts(sto), f_xy_local(), f_xy_steps(), angle(sto.angle0){
+ 		opts(sto), f_xy_local(), f_xy_steps(), angle(sto.angle0) {
 	Point2d P(X,Y);
 	FxyPair toAdd(P,f0);
 	f_xy_local.push_back(toAdd);
 	f_xy_steps.push_back(toAdd);
-	if (opts.stepType!=StepperOptions::straight && opts.closeness<MIN_NUMBER)
-		cerr << "Stepper error: closeness must be larger than 0" << endl;
+	if (opts.stepType!=StepperOptions::straight && opts.tol<MIN_NUMBER)
+		cerr << "Stepper error: tol must be larger than 0" << endl;
 }
 
 // constructor
 Stepper::Stepper(const StepperOptions& sto, const double& X, const double& Y):\
-			 opts(sto), f_xy_local(), f_xy_steps(), angle(sto.angle0){
+			 opts(sto), f_xy_local(), f_xy_steps(), angle(sto.angle0) {
 	Point2d P(X,Y);
 	FxyPair toAdd(P,0.0);
 	f_xy_local.push_back(toAdd);
 	f_xy_steps.push_back(toAdd);
-	if (opts.stepType!=StepperOptions::straight && opts.closeness<MIN_NUMBER)
-		cerr << "Stepper error: closeness must be larger than 0" << endl;
+	if (opts.stepType!=StepperOptions::straight && opts.tol<MIN_NUMBER)
+		cerr << "Stepper error: tol must be larger than 0" << endl;
 }
 
 // constructor
 Stepper::Stepper(const StepperOptions& sto, const Point2d& P, const double& f0):\
-			 opts(sto), f_xy_local(), f_xy_steps(), angle(sto.angle0){
+			 opts(sto), f_xy_local(), f_xy_steps(), angle(sto.angle0) {
 	FxyPair toAdd(P,f0);
 	f_xy_local.push_back(toAdd);
 	f_xy_steps.push_back(toAdd);
-	if (opts.stepType!=StepperOptions::straight && abs(opts.closeness)<MIN_NUMBER)
-		cerr << "Stepper error: closeness must be larger than 0" << endl;
+	if (opts.stepType!=StepperOptions::straight && abs(opts.tol)<MIN_NUMBER)
+		cerr << "Stepper error: tol must be larger than 0" << endl;
 }
 
 // constructor
 Stepper::Stepper(const StepperOptions& sto, const Point2d& P):\
-			 opts(sto), f_xy_local(), f_xy_steps(), angle(sto.angle0){
+			 opts(sto), f_xy_local(), f_xy_steps(), angle(sto.angle0) {
 	FxyPair toAdd(P,0.0);
 	f_xy_local.push_back(toAdd);
 	f_xy_steps.push_back(toAdd);
-	if (opts.stepType!=StepperOptions::straight && abs(opts.closeness)<MIN_NUMBER)
-		cerr << "Stepper error: closeness must be larger than 0" << endl;
+	if (opts.stepType!=StepperOptions::straight && abs(opts.tol)<MIN_NUMBER)
+		cerr << "Stepper error: tol must be larger than 0" << endl;
 }
 
 // constructor
 Stepper::Stepper(const StepperOptions& sto):\
-			 opts(sto), f_xy_local(), f_xy_steps(), angle(sto.angle0){
-	if (opts.stepType!=StepperOptions::straight && abs(opts.closeness)<MIN_NUMBER)
-		cerr << "Stepper error: closeness must be larger than 0" << endl;
+			 opts(sto), f_xy_local(), f_xy_steps(), angle(sto.angle0) {
+	if (opts.stepType!=StepperOptions::straight && abs(opts.tol)<MIN_NUMBER)
+		cerr << "Stepper error: tol must be larger than 0" << endl;
 }
 
 // set Start
@@ -305,6 +339,51 @@ void Stepper::setStart(const Point2d& P) {
 	FxyPair toAdd(P,0.0);
 	f_xy_local.push_back(toAdd);
 	f_xy_steps.push_back(toAdd);
+}
+
+// save
+void Stepper::save(const string& f) const {
+	ofstream os;
+	os.open(f.c_str());
+	if (os.good()) {
+		os << opts << endl << steps()+1 << endl;
+		for (uint j=0; j<(steps()+1); j++) {
+			os << f_xy_steps[j] << endl;
+		}
+		os << endl << local() << endl;
+		for (uint j=0; j<local(); j++) {
+			os << f_xy_local[j] << endl;
+		}
+		os << endl << angle << endl;
+		os.close();
+	}
+	else {
+		cerr << "Stepper::save error: cannot save to " << f << endl;
+	}
+}
+
+// load
+void Stepper::load(const string& f) {
+	ifstream is;
+	is.open(f.c_str());
+	if (is.good()) {
+		uint len = 0;
+		is >> opts >> len;
+		f_xy_steps.resize(len);
+		for (uint j=0; j<len; j++) {
+			is >> f_xy_steps[j];
+		}
+		is >> len;
+		f_xy_local.resize(len);
+		for (uint j=0; j<len; j++) {
+			is >> f_xy_local[j];
+		}
+		is >> angle;
+		is.close();
+	}
+	else {
+		cerr << "Stepper::load error: cannot load from " << f << endl;
+	}
 }
 
 // x()
@@ -327,9 +406,14 @@ double Stepper::result(const uint& j) const {
 	return (f_xy_local[j]).second;
 }
 
-// closeness()
-double Stepper::closeness() const {
-	return opts.closeness;
+// tol()
+double Stepper::tol() const {
+	return opts.tol;
+}
+
+// aim()
+double Stepper::aim() const {
+	return opts.aim;
 }
 
 // stepAngle()
@@ -344,15 +428,20 @@ uint Stepper::local() const {
 
 // keep() - n.b. only works after addResult
 bool Stepper::keep() const {
-	double test = absDiff((f_xy_local.back()).second,(f_xy_steps[0]).second); // just a double check
+	double test = absDiff((f_xy_local.back()).second,opts.aim); // just a double check , (f_xy_steps[0]).second
 	bool firstKeep = (steps()==0 && local()==1);
 	bool laterKeeps = (steps()>0 && local()==2);
-	return ( ( test<opts.closeness && (firstKeep || laterKeeps) ) || opts.stepType==StepperOptions::straight);
+	return ( ( test<opts.tol && (firstKeep || laterKeeps) ) || opts.stepType==StepperOptions::straight);
 }
 
 // point()
 Point2d Stepper::point() const{
 	return (f_xy_local.back()).first;
+}
+
+// lastStep()
+Point2d Stepper::lastStep() const{
+	return (f_xy_steps.back()).first;
 }
 
 // point(uint)
@@ -406,7 +495,16 @@ void Stepper::step() {
 void Stepper::addResult(const double& f) {
 	(f_xy_local.back()).second = f;
 	if (local()==1) {
-		(f_xy_steps.back()).second = f;
+		if (!opts.fixedAim) {
+			opts.aim = f;
+			(f_xy_steps.back()).second = f;
+		}
+		else if (absDiff(f,opts.aim)<opts.tol) {
+			(f_xy_steps.back()).second = f;
+		}
+		else {
+			cerr << "Stepper error: intial result, " << f << " not within tolerance of aim, " << opts.aim << endl;
+		}
 	}
 	else if (opts.stepType==StepperOptions::straight) {
 		f_xy_steps.push_back(f_xy_local.back());
@@ -415,8 +513,8 @@ void Stepper::addResult(const double& f) {
 		f_xy_local.push_back(f_xy_steps[steps()]);
 	}
 	else if (opts.stepType==StepperOptions::constPlane) {
-		double test = absDiff(f,(f_xy_steps[0]).second);
-		if (test<opts.closeness && local()>3) {
+		double test = absDiff(f,opts.aim);
+		if (test<opts.tol && local()>3) {
 			f_xy_steps.push_back(f_xy_local.back());
 			f_xy_local.clear();
 			f_xy_local.push_back(f_xy_steps[steps()-1]);
@@ -448,7 +546,7 @@ void Stepper::addResult(const double& f) {
 		}
 		else if (local()>3) {
 			Point2d p0 = (f_xy_steps.back()).first;
-			double f0 = (f_xy_steps[0]).second;
+			double f0 = opts.aim;//(f_xy_steps[0]).second; //note that we are not solving the correct problem exactly
 			vector <FxyPair> f_low, f_high, f_xy_local_minus_loc = f_xy_local;
 			steps()==0? f_xy_local_minus_loc.erase(f_xy_local_minus_loc.begin()):\
 								 f_xy_local_minus_loc.erase(f_xy_local_minus_loc.begin()+1);
@@ -502,7 +600,7 @@ void Stepper::addResult(const double& f) {
 	}
 	/*else if (opts.stepType==StepperOptions::constTaylor) {
 		double test = absDiff((f_xy_local.back()).second,(f_xy_steps[0]).second);
-		if (test<opts.closeness && local()>3) {
+		if (test<opts.tol && local()>3) {
 			f_xy_steps.push_back(f_xy_local.back());
 			f_xy_local.clear();
 			f_xy_local.push_back(f_xy_steps[steps()-1]);

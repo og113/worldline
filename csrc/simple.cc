@@ -33,6 +33,7 @@ CONTENTS
 	10 - delta
 	11 - sigFig
 	12 - sign
+	13 - splitString
 	A - explicit instantiation
 -------------------------------------------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------------------------------------------*/
@@ -389,6 +390,25 @@ double sigFig(double num, double N) {
 
 double sign(double num) {
 	return (num>0.0? 1.0: -1.0);
+}
+
+/*-------------------------------------------------------------------------------------------------------------------------
+	13. splitString
+-------------------------------------------------------------------------------------------------------------------------*/
+
+vector<string> splitString(const string & str, const string & delimiters) {
+    vector<string> v;
+    size_t start = 0;
+    auto pos = str.find_first_of(delimiters, start);
+    while(pos != string::npos) {
+        if(pos != start) // ignore empty tokens
+            v.push_back(str.substr(start, pos - start));
+        start = pos + 1;
+        pos = str.find_first_of(delimiters, start);
+    }
+    if(start < str.length()) // ignore trailing delimiter
+        v.push_back(str.substr(start,str.length() - start)); // add what's left of the string
+    return v;
 }
 
 /*-------------------------------------------------------------------------------------------------------------------------
