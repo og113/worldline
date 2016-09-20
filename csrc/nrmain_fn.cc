@@ -1894,7 +1894,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		if(stepargv==StepperArgv::action)
 			F = s;
 		else if(stepargv==StepperArgv::entropy)
-			F = -s + ergThermal*p.T;
+			F = s - ergThermal*p.T;
 		else {
 			cerr << "nrmain_fn error: stepargv, " << stepargv << ", not recognized" << endl;
 			return 1;
