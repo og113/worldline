@@ -103,9 +103,9 @@ string potOpts = "";
 string kinOpts = "";
 string xIn = "";
 string stepperArgv = "";
-string stepperInputsFile = "stepperInputs0";
-string stepperResultsFile = "stepperResultsAction0";
-string inputsFile = "stepper4";
+string stepperInputsFile = "step0";
+string stepperResultsFile = "results/nr/step";
+string inputsFile = "inputs4";
 
 // getting argv
 if (argc % 2 && argc>1) {
@@ -246,10 +246,14 @@ if (!kinOpts.empty()) {
 // stepper
 StepperArgv::Option stepargv = StepperArgv::none;
 if (!stepperArgv.empty()) {
-	if (stepperArgv.compare("action")==0 || stepperArgv.compare("s")==0 || stepperArgv.compare("S")==0)
+	if (stepperArgv.compare("action")==0 || stepperArgv.compare("s")==0 || stepperArgv.compare("S")==0) {
 		stepargv = StepperArgv::action;
-	else if (stepperArgv.compare("entropy")==0 || stepperArgv.compare("sigma")==0)
+		stepperResultsFile += "_const_action";
+	}
+	else if (stepperArgv.compare("entropy")==0 || stepperArgv.compare("sigma")==0) {
 		stepargv = StepperArgv::entropy;
+		stepperResultsFile += "_const_entropy";
+	}
 	else if (stepperArgv.compare("none")==0)
 		stepargv = StepperArgv::none;
 	else {
@@ -276,14 +280,14 @@ if (p.empty()) {
 // initializing stepper
 StepperOptions stepOpts;
 Point2d point;
-number F0;
 if (stepargv != StepperArgv::none) {
 	{
 		ifstream is;
 		is.open(stepperInputsFile.c_str());
 		if (is.good()) {
-			is >> stepOpts.epsi_x >> stepOpts.epsi_y >> stepOpts.angle0 >> stepOpts.closeness >> F0;
+			is >> stepOpts.epsi_x >> stepOpts.epsi_y >> stepOpts.angle0 >> stepOpts.tol >> stepOpts.aim;
 			is.close();
+			stepperResultsFile += "_aim_"+nts(stepOpts.aim)+".dat";
 		}
 		else {
 			cerr << "Error: cannot open stepper inputs file, " << stepperInputsFile << endl;
@@ -1845,9 +1849,6 @@ for (uint pl=0; pl<Npl; pl++) {
 		else {
 			cerr << "nrmain_fn error: stepargv, " << stepargv << ", not recognized" << endl;
 			return 1;
-		}
-		if (pl==0 && absDiff(F,F0)<stepper.closeness() && resultsStepper.size()==0) {
-			
 		}
 		stepper.addResult(F);
 		

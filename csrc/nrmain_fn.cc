@@ -2,6 +2,8 @@
 	main program to run serial n-r method to solve classical monopole worldline equations (as a function)
 */
 
+#include <fstream>
+#include <iostream>
 #include <Eigen/Dense>
 #include <gsl/gsl_sf_zeta.h>
 #include <gsl/gsl_sf_gamma.h>
@@ -14,6 +16,7 @@
 #include "print.h"
 #include "simple.h"
 #include "eigen_extras.h"
+#include "stepper.h"
 
 using namespace std;
 
@@ -50,6 +53,11 @@ uint NumberPotentialOptions = 9;
 struct KineticOptions {
 	enum Option { saddle, s0, len};
 };
+
+struct StepperArgv {
+	enum Option { none, action, entropy};
+};
+
 
 int nrmain_fn(int argc, vector<string> argv) {
 /*----------------------------------------------------------------------------------------------------------------------------
@@ -89,6 +97,10 @@ string potOpts = "";
 string kinOpts = "";
 string xIn = "";
 string inputsFile = "inputs4";
+string stepperArgv = "";
+string stepperInputsFile = "step0";
+Filename stepperOutputsFile = "results/nr/stepper/step.csv";
+uint steps = 1;
 
 // getting argv
 if (argc % 2 && argc>1) {
@@ -122,6 +134,10 @@ if (argc % 2 && argc>1) {
 		else if (id.compare("print")==0) printOpts = (string)argv[2*j+2];
 		else if (id.compare("pot")==0 || id.compare("potential")==0) potOpts = (string)argv[2*j+2];
 		else if (id.compare("kin")==0 || id.compare("kinetic")==0) kinOpts = (string)argv[2*j+2];
+		else if (id.compare("stepper")==0) stepperArgv = (string)argv[2*j+2];
+		else if (id.compare("steps")==0) steps = stn<uint>(argv[2*j+2]);
+		else if (id.compare("stepperInputs")==0 || id.compare("stepInputs")==0) stepperInputsFile = (string)argv[2*j+2];
+		else if (id.compare("stepperOutputs")==0 || id.compare("stepResults")==0) stepperOutputsFile = (string)argv[2*j+2];
 		else if (id.compare("xIn")==0) xIn = (string)argv[2*j+2];
 		else if (id.compare("sometests")==0 || id.compare("someTests")==0) sometests = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("alltests")==0 || id.compare("allTests")==0) alltests = (stn<uint>(argv[2*j+2])!=0);
@@ -234,6 +250,29 @@ if (!kinOpts.empty()) {
 	kinExtras.second = nts((int)kino);
 }
 
+// stepper
+StepperArgv::Option stepargv = StepperArgv::none;
+if (!stepperArgv.empty()) {
+	if (stepperArgv.compare("action")==0 || stepperArgv.compare("s")==0 || stepperArgv.compare("S")==0) {
+		stepargv = StepperArgv::action;
+		(stepperOutputsFile.Extras).push_back(StringPair("const","action"));
+		if (verbose)
+			cout << "stepping with constant action" << endl;
+	}
+	else if (stepperArgv.compare("entropy")==0 || stepperArgv.compare("sigma")==0) {
+		stepargv = StepperArgv::entropy;
+		(stepperOutputsFile.Extras).push_back(StringPair("const","entropy"));
+		if (verbose)
+			cout << "stepping with constant entropy" << endl;
+	}
+	else if (stepperArgv.compare("none")==0)
+		stepargv = StepperArgv::none;
+	else {
+		cerr << "stepper options not understood/available: " << stepperArgv << endl;
+		return 1;
+	}
+}
+
 if (fixall)
 	fixtlr = false;
 	
@@ -249,10 +288,52 @@ if (p.empty()) {
 	return 1;
 }
 
-// timenumber
-string timenumber = currentDateTime();
-if (verbose)
-	cout << "timenumber: " << timenumber << endl;
+// initializing stepper
+StepperOptions stepOpts;
+stepOpts.tol = 1.0;
+Point2d point;
+if (stepargv!=StepperArgv::none) {
+	{
+		ifstream is;
+		is.open(stepperInputsFile.c_str());
+		if (is.good()) {
+			is >> stepOpts;
+			is.close();
+			(stepperOutputsFile.Extras).push_back(StringPair("tol",nts(stepOpts.tol)));
+			(stepperOutputsFile.Extras).push_back(StringPair("aim",nts(stepOpts.aim)));
+		}
+		else {
+			cerr << "Error: cannot open stepper inputs file, " << stepperInputsFile << endl;
+			return 1;
+		}
+	}
+	if (poto==PotentialOptions::thermal || disjoint) {
+		point(p.B,p.T);
+		//stepOpts.epsi_x *= (abs(p.B)>MIN_NUMBER? p.B: 1.0);
+		//stepOpts.epsi_y *= (abs(p.T)>MIN_NUMBER? p.T: 1.0);
+	}
+	else {
+		point(p.B,p.P4);
+		//stepOpts.epsi_x *= (abs(p.B)>MIN_NUMBER? p.B: 1.0);
+		//stepOpts.epsi_y *= (abs(p.P4)>MIN_NUMBER? p.P4: 1.0);
+	}
+}
+Stepper stepper(stepOpts,point);
+if (stepperOutputsFile.exists() && stepargv!=StepperArgv::none) {
+	stepper.load(stepperOutputsFile);
+	if (poto==PotentialOptions::thermal || disjoint) {
+		p.B = stepper.x();
+		p.T = stepper.y();
+		pold.B = (stepper.lastStep()).X;
+		pold.T = (stepper.lastStep()).Y;
+	}
+	else {
+		p.B = stepper.x();
+		p.P4 = stepper.y();
+		pold.B = (stepper.lastStep()).X;
+		pold.P4 = (stepper.lastStep()).Y;
+	}
+}
 
 // results
 string resultsFile = (pass? "results/nr/nr6pass.csv":"results/nr/nr6.csv");
@@ -268,12 +349,17 @@ vector<string> idCheckErrors(idSizeErrors);
 idCheckErrors[idSizeErrors-1] = potExtras.second;
 NewtonRaphsonData errors(errorsFile,idSizeErrors,datumSizeErrors);
 
+// timenumber
+string timenumber = currentDateTime();
+if (verbose)
+	cout << "timenumber: " << timenumber << endl;
+
 /*----------------------------------------------------------------------------------------------------------------------------
 	2 - beginning parameter loop
 ----------------------------------------------------------------------------------------------------------------------------*/
 
 // parameter loops
-uint Npl = pr.totalSteps();
+uint Npl = (stepargv==StepperArgv::none? pr.totalSteps(): steps);
 if (verbose)
 	cout << "looping over " << Npl << " steps" << endl;
 
@@ -285,8 +371,25 @@ for (uint pl=0; pl<Npl; pl++) {
 	
 	// stepping parameters
 	if (pl>0) {
-		p = pr.position(pl);
-		pold = pr.neigh(pl);
+		if (stepargv==StepperArgv::none) {
+			p = pr.position(pl);
+			pold = pr.neigh(pl);
+		}
+		else {
+			// getting step base
+			if (poto==PotentialOptions::thermal || disjoint) {
+				p.B = stepper.x();
+				p.T = stepper.y();
+				pold.B = (stepper.lastStep()).X;
+				pold.T = (stepper.lastStep()).Y;
+			}
+			else {
+				p.B = stepper.x();
+				p.P4 = stepper.y();
+				pold.B = (stepper.lastStep()).X;
+				pold.P4 = (stepper.lastStep()).Y;
+			}
+		}
 		if (mu_a) {
 			p.Mu = p.Epsi;
 			pold.Mu = pold.Epsi;
@@ -1782,6 +1885,30 @@ for (uint pl=0; pl<Npl; pl++) {
 		saveVectorBinary(loopRes,x);
 		if (verbose)
 			printf("%12s%50s\n","x:",((string)loopRes).c_str());
+	}
+	
+	// printing stepper results
+	if (stepargv!=StepperArgv::none) {
+		// adding result to stepper
+		number F = 0.0;
+		if(stepargv==StepperArgv::action)
+			F = s;
+		else if(stepargv==StepperArgv::entropy)
+			F = -s + ergThermal*p.T;
+		else {
+			cerr << "nrmain_fn error: stepargv, " << stepargv << ", not recognized" << endl;
+			return 1;
+		}
+		stepper.addResult(F);
+		
+		// printing step
+		stepper.save(stepperOutputsFile);
+		if (verbose)
+			printf("%12s%24s\n","stepper outputs:",((string)stepperOutputsFile).c_str());
+		
+		// stepping
+		stepper.step();
+	
 	}
 
 	// printing extras to ascii files
