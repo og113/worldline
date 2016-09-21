@@ -36,7 +36,7 @@ if (rank==root)
 cout << "node " << rank << endl;
 
 MPI_Barrier(MPI_COMM_WORLD);
-MPI::Finalize();
+MPI_Finalize();
 
 return 0;
 }

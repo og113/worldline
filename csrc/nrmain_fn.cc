@@ -647,7 +647,7 @@ for (uint pl=0; pl<Npl; pl++) {
 				if (verbose)
 					cout << "changed a: a_old = " << p.Epsi << ", a_new = " << a_new << ", using Lambda = " << p.Lambda << endl;
 				(pr.Min).Epsi 	= a_new;
-				(pr.Min).Epsi 	= a_new;
+				(pr.Max).Epsi 	= a_new;
 				p.Epsi 		= a_new;
 				pold.Epsi 	= a_new;
 			}
