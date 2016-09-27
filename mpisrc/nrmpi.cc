@@ -45,6 +45,8 @@ if (rank==root)
 	1. sorting inputs
 ----------------------------------------------------------------------------------------------------------------------------*/
 
+sleep(rank*2);
+
 // argc and argv
 uint argcSerial = 1;
 string mpiInputsFile = "nrinputs/mpi/inputs0";
@@ -84,8 +86,6 @@ else if (rank==root) {
 	cerr << "must provide an even number of arguments after ./nrmpi" << endl;
 	MPI_Abort(MPI_COMM_WORLD,1);
 }
-	
-sleep(rank*2);
 
 if (argvList.empty()) {
 	

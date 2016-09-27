@@ -38,7 +38,7 @@ common: $(COMMONOBJS)
 monte: addVectors binaryToAscii circle common floop glmain loop loop2 schwingerRate
 
 .PHONY: nr
-nr: 3dPotentialExtrema addVectors binaryToAscii circle common highTemp highTempParameters nrmain perturbativeFiniteTemp
+nr: 3dPotentialExtrema addVectors binaryToAscii circle common highTemp highTempParameters nrmain nrmpi perturbativeFiniteTemp
 
 #------------------------------------------------------------------------------------------------------------------------
 # targets, dependencies and rules for executables
