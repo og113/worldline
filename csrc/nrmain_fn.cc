@@ -552,10 +552,30 @@ for (uint pl=0; pl<Npl; pl++) {
 				loadFile = filenameLoopNR<dim>(p);
 				(loadFile.Extras).push_back(potExtras);
 			}
-			if (!loadFile.exists() && (poto==PotentialOptions::thermal || disjoint))
-				loadFile = filenameLoopNR<dim>(p);
-			else if (!loadFile.exists())
+			if (!loadFile.exists() && (poto==PotentialOptions::thermal || disjoint)) {
 				loadFile = filenameThermalNR<dim>(p);
+				StringPair potExtrasAlt("pot","");
+				if (poto==PotentialOptions::thermal) {
+					int offset = (gaussian? -1: 1);
+					potExtrasAlt.second = nts((int)(stn<int>(potExtras.second)+offset));
+				}
+				else if (poto==PotentialOptions::thermalDisjoint) {
+					int offset = (gaussianLR? -2: 2);
+					potExtrasAlt.second = nts((int)(stn<int>(potExtras.second)+offset));
+				}	
+				(loadFile.Extras).push_back(potExtras);
+			}
+			else if (!loadFile.exists()) {
+				loadFile = filenameLoopNR<dim>(p);
+				StringPair potExtrasAlt("pot","");
+				int offset = (gaussian? -1:+1);
+				potExtrasAlt.second = nts((int)(stn<int>(potExtras.second)+offset));
+				(loadFile.Extras).push_back(potExtras);
+			}
+			if (!loadFile.exists() && (poto==PotentialOptions::thermal || disjoint))
+				loadFile = filenameThermalNR<dim>(p);
+			else if (!loadFile.exists())
+				loadFile = filenameLoopNR<dim>(p);
 			if (!loadFile.exists()) {
 				if (pl>0)
 					loadFile = stepFile;

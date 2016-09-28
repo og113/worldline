@@ -1,0 +1,410 @@
+starting glmain with 9 nodes
+input argv to ./nrmpi:
+./nrmpi -inputs nrinputs/mpi/inputs0 -guess 0 -step 1 -old 1 -pot thermal -gaussian 0 -gaussianLR 0 -mu_a 0 -pass 0 -nonrel 0 -allTests 0 -fixdz 0 -fixtlr 0 -fixdislr 0 -print none -eigen 0 -auto_a 1 -conservation 0 -redo 0 -redoErrors 0 -verbose 0
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.02_E_0_a_0.02_T_0.52_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.02_E_0_a_0.02_T_0.54_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.02_E_0_a_0.02_T_0.56_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.02_E_0_a_0.02_T_0.58_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.02_E_0_a_0.02_T_0.6_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.02_E_0_a_0.02_T_0.62_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.02_E_0_a_0.02_T_0.64_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.02_E_0_a_0.02_T_0.66_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.02_E_0_a_0.02_T_0.68_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.02_E_0_a_0.0225_T_0.52_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.02_E_0_a_0.0225_T_0.54_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.02_E_0_a_0.0225_T_0.56_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.02_E_0_a_0.0225_T_0.58_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.02_E_0_a_0.0225_T_0.6_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.02_E_0_a_0.0225_T_0.62_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.02_E_0_a_0.0225_T_0.64_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.02_E_0_a_0.0225_T_0.66_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.02_E_0_a_0.0225_T_0.68_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.03_E_0_a_0.02_T_0.52_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.03_E_0_a_0.02_T_0.54_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.03_E_0_a_0.02_T_0.56_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.03_E_0_a_0.02_T_0.58_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.03_E_0_a_0.02_T_0.6_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.03_E_0_a_0.02_T_0.62_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.03_E_0_a_0.02_T_0.64_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.03_E_0_a_0.02_T_0.66_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.03_E_0_a_0.02_T_0.68_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.03_E_0_a_0.0225_T_0.52_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.03_E_0_a_0.0225_T_0.54_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.03_E_0_a_0.0225_T_0.56_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.03_E_0_a_0.0225_T_0.58_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.03_E_0_a_0.0225_T_0.6_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.03_E_0_a_0.0225_T_0.62_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.03_E_0_a_0.0225_T_0.64_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.03_E_0_a_0.0225_T_0.66_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.03_E_0_a_0.0225_T_0.68_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.03_E_0_a_0.025_T_0.52_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.03_E_0_a_0.025_T_0.54_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.03_E_0_a_0.025_T_0.56_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.03_E_0_a_0.025_T_0.58_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.03_E_0_a_0.025_T_0.6_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.03_E_0_a_0.025_T_0.62_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.03_E_0_a_0.025_T_0.64_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.03_E_0_a_0.025_T_0.66_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.03_E_0_a_0.025_T_0.68_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.03_E_0_a_0.0275_T_0.52_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.03_E_0_a_0.0275_T_0.54_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.03_E_0_a_0.0275_T_0.56_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.03_E_0_a_0.0275_T_0.58_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.03_E_0_a_0.0275_T_0.6_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.03_E_0_a_0.0275_T_0.62_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.03_E_0_a_0.0275_T_0.64_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.03_E_0_a_0.0275_T_0.66_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.03_E_0_a_0.0275_T_0.68_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.03_E_0_a_0.03_T_0.52_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.03_E_0_a_0.03_T_0.54_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.03_E_0_a_0.03_T_0.56_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.03_E_0_a_0.03_T_0.58_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.03_E_0_a_0.03_T_0.6_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.03_E_0_a_0.03_T_0.62_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.03_E_0_a_0.03_T_0.64_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.03_E_0_a_0.03_T_0.66_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.03_E_0_a_0.03_T_0.68_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.04_E_0_a_0.02_T_0.52_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.04_E_0_a_0.02_T_0.54_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.04_E_0_a_0.02_T_0.56_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.04_E_0_a_0.02_T_0.58_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.04_E_0_a_0.02_T_0.6_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.04_E_0_a_0.02_T_0.62_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.04_E_0_a_0.02_T_0.64_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.04_E_0_a_0.02_T_0.66_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.04_E_0_a_0.02_T_0.68_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.04_E_0_a_0.0225_T_0.52_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.04_E_0_a_0.0225_T_0.54_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.04_E_0_a_0.0225_T_0.56_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.04_E_0_a_0.0225_T_0.58_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.04_E_0_a_0.0225_T_0.6_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.04_E_0_a_0.0225_T_0.62_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.04_E_0_a_0.0225_T_0.64_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.04_E_0_a_0.0225_T_0.66_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.04_E_0_a_0.0225_T_0.68_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.05_E_0_a_0.02_T_0.54_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.05_E_0_a_0.02_T_0.56_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.05_E_0_a_0.02_T_0.58_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.05_E_0_a_0.02_T_0.6_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.05_E_0_a_0.02_T_0.62_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.05_E_0_a_0.02_T_0.64_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.05_E_0_a_0.02_T_0.66_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.05_E_0_a_0.02_T_0.68_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.05_E_0_a_0.0225_T_0.54_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.05_E_0_a_0.0225_T_0.56_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.05_E_0_a_0.0225_T_0.58_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.05_E_0_a_0.0225_T_0.6_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.05_E_0_a_0.0225_T_0.62_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.05_E_0_a_0.0225_T_0.64_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.05_E_0_a_0.0225_T_0.66_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.05_E_0_a_0.0225_T_0.68_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.05_E_0_a_0.025_T_0.54_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.05_E_0_a_0.025_T_0.56_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.05_E_0_a_0.025_T_0.58_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.05_E_0_a_0.025_T_0.6_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.05_E_0_a_0.025_T_0.62_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.05_E_0_a_0.025_T_0.64_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.05_E_0_a_0.025_T_0.66_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.05_E_0_a_0.025_T_0.68_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.05_E_0_a_0.0275_T_0.54_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.05_E_0_a_0.0275_T_0.56_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.05_E_0_a_0.0275_T_0.58_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.05_E_0_a_0.0275_T_0.6_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.05_E_0_a_0.0275_T_0.62_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.05_E_0_a_0.0275_T_0.64_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.05_E_0_a_0.0275_T_0.66_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.05_E_0_a_0.0275_T_0.68_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.06_E_0_a_0.02_T_0.52_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.06_E_0_a_0.02_T_0.54_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.06_E_0_a_0.02_T_0.56_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.06_E_0_a_0.02_T_0.58_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.06_E_0_a_0.02_T_0.6_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.06_E_0_a_0.02_T_0.62_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.06_E_0_a_0.02_T_0.64_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.06_E_0_a_0.02_T_0.66_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.06_E_0_a_0.02_T_0.68_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.06_E_0_a_0.0225_T_0.52_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.06_E_0_a_0.0225_T_0.54_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.06_E_0_a_0.0225_T_0.56_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.06_E_0_a_0.0225_T_0.58_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.06_E_0_a_0.0225_T_0.6_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.06_E_0_a_0.0225_T_0.62_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.06_E_0_a_0.0225_T_0.64_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.06_E_0_a_0.0225_T_0.66_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.06_E_0_a_0.0225_T_0.68_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.06_E_0_a_0.025_T_0.52_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.06_E_0_a_0.025_T_0.54_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.06_E_0_a_0.025_T_0.56_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.06_E_0_a_0.025_T_0.58_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.06_E_0_a_0.025_T_0.6_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.06_E_0_a_0.025_T_0.62_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.06_E_0_a_0.025_T_0.64_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.06_E_0_a_0.025_T_0.66_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.06_E_0_a_0.025_T_0.68_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.06_E_0_a_0.0275_T_0.54_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.06_E_0_a_0.0275_T_0.56_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.06_E_0_a_0.0275_T_0.58_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.06_E_0_a_0.0275_T_0.6_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.06_E_0_a_0.0275_T_0.62_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.06_E_0_a_0.0275_T_0.64_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.06_E_0_a_0.0275_T_0.66_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.06_E_0_a_0.0275_T_0.68_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.06_E_0_a_0.03_T_0.54_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.06_E_0_a_0.03_T_0.56_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.06_E_0_a_0.03_T_0.58_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.06_E_0_a_0.03_T_0.6_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.06_E_0_a_0.03_T_0.62_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.06_E_0_a_0.03_T_0.64_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.06_E_0_a_0.03_T_0.66_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.06_E_0_a_0.03_T_0.68_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.02_T_0.52_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.02_T_0.54_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.02_T_0.56_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.02_T_0.58_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.02_T_0.6_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.02_T_0.62_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.02_T_0.64_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.02_T_0.66_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.02_T_0.68_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.0225_T_0.52_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.0225_T_0.54_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.0225_T_0.56_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.0225_T_0.58_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.0225_T_0.6_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.0225_T_0.62_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.0225_T_0.64_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.0225_T_0.66_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.0225_T_0.68_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.025_T_0.52_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.025_T_0.54_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.025_T_0.56_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.025_T_0.58_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.025_T_0.6_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.025_T_0.62_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.025_T_0.64_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.025_T_0.66_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.025_T_0.68_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.0275_T_0.52_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.0275_T_0.54_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.0275_T_0.56_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.0275_T_0.58_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.0275_T_0.6_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.0275_T_0.62_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.0275_T_0.64_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.0275_T_0.66_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.0275_T_0.68_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.03_T_0.54_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.03_T_0.56_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.03_T_0.58_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.03_T_0.6_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.03_T_0.62_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.03_T_0.64_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.03_T_0.66_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.03_T_0.68_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.02_T_0.52_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.02_T_0.54_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.02_T_0.56_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.02_T_0.58_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.02_T_0.6_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.02_T_0.62_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.02_T_0.64_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.02_T_0.66_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.02_T_0.68_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.0225_T_0.52_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.0225_T_0.54_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.0225_T_0.56_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.0225_T_0.58_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.0225_T_0.6_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.0225_T_0.62_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.0225_T_0.64_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.0225_T_0.66_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.0225_T_0.68_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.025_T_0.52_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.025_T_0.54_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.025_T_0.56_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.025_T_0.58_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.025_T_0.6_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.025_T_0.62_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.025_T_0.64_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.025_T_0.66_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.025_T_0.68_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.0275_T_0.52_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.0275_T_0.54_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.0275_T_0.56_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.0275_T_0.58_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.0275_T_0.6_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.0275_T_0.62_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.0275_T_0.64_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.0275_T_0.66_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.0275_T_0.68_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.03_T_0.54_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.03_T_0.56_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.03_T_0.58_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.03_T_0.6_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.03_T_0.62_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.03_T_0.64_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.03_T_0.66_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.03_T_0.68_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.09_E_0_a_0.02_T_0.52_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.09_E_0_a_0.02_T_0.54_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.09_E_0_a_0.02_T_0.56_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.09_E_0_a_0.02_T_0.58_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.09_E_0_a_0.02_T_0.6_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.09_E_0_a_0.02_T_0.62_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.09_E_0_a_0.02_T_0.64_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.09_E_0_a_0.02_T_0.66_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.09_E_0_a_0.02_T_0.68_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.09_E_0_a_0.0225_T_0.52_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.09_E_0_a_0.0225_T_0.54_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.09_E_0_a_0.0225_T_0.56_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.09_E_0_a_0.0225_T_0.58_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.09_E_0_a_0.0225_T_0.6_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.09_E_0_a_0.0225_T_0.62_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.09_E_0_a_0.0225_T_0.64_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.09_E_0_a_0.0225_T_0.66_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.09_E_0_a_0.0225_T_0.68_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.09_E_0_a_0.025_T_0.56_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.09_E_0_a_0.025_T_0.58_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.09_E_0_a_0.025_T_0.6_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.09_E_0_a_0.025_T_0.62_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.09_E_0_a_0.025_T_0.64_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.09_E_0_a_0.025_T_0.66_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.09_E_0_a_0.025_T_0.68_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.09_E_0_a_0.0275_T_0.56_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.09_E_0_a_0.0275_T_0.58_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.09_E_0_a_0.0275_T_0.6_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.09_E_0_a_0.0275_T_0.62_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.09_E_0_a_0.0275_T_0.64_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.09_E_0_a_0.0275_T_0.66_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.09_E_0_a_0.0275_T_0.68_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.09_E_0_a_0.03_T_0.56_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.09_E_0_a_0.03_T_0.58_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.09_E_0_a_0.03_T_0.6_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.09_E_0_a_0.03_T_0.62_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.09_E_0_a_0.03_T_0.64_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.09_E_0_a_0.03_T_0.66_pot_8.dat doesn't exist, moving to next parameter loop
+nrmain error: data/nr/loops/dim_4/K_11/loop_kappa_0.09_E_0_a_0.03_T_0.68_pot_8.dat doesn't exist, moving to next parameter loop
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+     169       3     491      11       1    0.01       0    0.03     0.1   -0.019143         0.6        6.3123    -0.0073202        3.1344
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+     166       4     654      11       1    0.02       0    0.03     0.1   -0.078242        0.54        6.4196     -0.026539         3.117
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+     164       4     655      11       1    0.04       0    0.03     0.1     0.23635         0.5        5.7828     -0.029602        3.1028
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+     170       4     658      11       1    0.05       0    0.03     0.1   -0.094189        0.62         6.426     -0.037942         3.108
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+     170       3     490      11       1    0.01       0    0.03     0.1   -0.017371        0.62        6.3088    -0.0062838        3.1355
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+     167       4     652      11       1    0.02       0    0.03     0.1   -0.055667        0.56        6.3755     -0.021386        3.1213
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+     171       4     656      11       1    0.05       0    0.03     0.1   -0.085516        0.64        6.4087     -0.032773        3.1127
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+     171       3     489      11       1    0.01       0    0.03     0.1   -0.016124        0.64        6.3062     -0.005391        3.1363
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+     168       3     488      11       1    0.02       0    0.03     0.1   -0.045215        0.58         6.355     -0.017947        3.1245
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+     165       71.14e+03      11       1    0.04       0    0.03     0.1     0.39989        0.52        5.4426      -0.03766        3.0775
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+     172       3     492      11       1    0.05       0    0.03     0.1   -0.079351        0.66        6.3963     -0.028399        3.1167
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+     172       3     489      11       1    0.01       0    0.03     0.1     -0.0152        0.66        6.3043    -0.0046052        3.1371
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+     169       3     488      11       1    0.02       0    0.03     0.1   -0.039211         0.6        6.3433     -0.015313         3.127
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+     173       3     492      11       1    0.05       0    0.03     0.1   -0.074711        0.68        6.3867     -0.024602        3.1203
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+     173       3     488      11       1    0.01       0    0.03     0.1   -0.014483        0.68        6.3028    -0.0039033        3.1378
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+     170       3     487      11       1    0.02       0    0.03     0.1   -0.035339        0.62        6.3356     -0.013155         3.129
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+     166       6     976      11       1    0.04       0    0.03     0.1    -0.22785        0.54        6.6968     -0.066784        3.0879
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+     174       3     491      11       1    0.05       0    0.03     0.1    -0.07102         0.7         6.379     -0.021251        3.1235
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+     174       3     485      11       1    0.01       0    0.03     0.1     -0.0139         0.7        6.3015    -0.0032699        3.1384
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+     171       3     483      11       1    0.02       0    0.03     0.1   -0.032648        0.64        6.3302     -0.011318        3.1308
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+     167       4     643      11       1    0.04       0    0.03     0.1     -0.1292        0.56        6.5028     -0.048638        3.0988
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+     172       3     482      11       1    0.02       0    0.03     0.1   -0.030671        0.66        6.3261    -0.0097137        3.1324
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+     168       4     643      11       1    0.04       0    0.03     0.1   -0.098548        0.58        6.4429     -0.039804        3.1057
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+     173       3     483      11       1    0.02       0    0.03     0.1   -0.029145        0.68        6.3229    -0.0082892        3.1338
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+     174       3     483      11       1    0.02       0    0.03     0.1    -0.02791         0.7        6.3202    -0.0070101        3.1351
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+     169       4     643      11       1    0.04       0    0.03     0.1    -0.08301         0.6        6.4124     -0.033678         3.111
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+     170       4     643      11       1    0.04       0    0.03     0.1   -0.073574        0.62        6.3938     -0.028902        3.1153
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+     171       3     482      11       1    0.04       0    0.03     0.1   -0.067232        0.64        6.3812     -0.024951         3.119
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+     172       3     483      11       1    0.04       0    0.03     0.1   -0.062672        0.66        6.3719     -0.021568        3.1222
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+     173       3     483      11       1    0.04       0    0.03     0.1   -0.059203        0.68        6.3647     -0.018606        3.1251
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+     174       3     483      11       1    0.04       0    0.03     0.1   -0.056424         0.7        6.3588     -0.015975        3.1276
+
