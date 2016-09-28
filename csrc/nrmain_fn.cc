@@ -563,14 +563,14 @@ for (uint pl=0; pl<Npl; pl++) {
 					int offset = (gaussianLR? -2: 2);
 					potExtrasAlt.second = nts((int)(stn<int>(potExtras.second)+offset));
 				}	
-				(loadFile.Extras).push_back(potExtras);
+				(loadFile.Extras).push_back(potExtrasAlt);
 			}
 			else if (!loadFile.exists()) {
 				loadFile = filenameLoopNR<dim>(p);
 				StringPair potExtrasAlt("pot","");
 				int offset = (gaussian? -1:+1);
 				potExtrasAlt.second = nts((int)(stn<int>(potExtras.second)+offset));
-				(loadFile.Extras).push_back(potExtras);
+				(loadFile.Extras).push_back(potExtrasAlt);
 			}
 			if (!loadFile.exists() && (poto==PotentialOptions::thermal || disjoint))
 				loadFile = filenameThermalNR<dim>(p);
