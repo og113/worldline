@@ -92,6 +92,7 @@ bool sometests = false;
 bool alltests = false; // doing alltests
 bool redo = true;
 bool redoErrors = true;
+string baseFolder = "";
 string printOpts = "";
 string potOpts = "";
 string kinOpts = "";
@@ -130,6 +131,7 @@ if (argc % 2 && argc>1) {
 		else if (id.compare("fixall")==0) fixall = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("fixodt")==0) fixodt = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("fixdislr")==0) fixdislr = (stn<uint>(argv[2*j+2])!=0);
+		else if (id.compare("base")==0) baseFolder = (string)argv[2*j+2];
 		else if (id.compare("inputs")==0) inputsFile = (string)argv[2*j+2];
 		else if (id.compare("print")==0) printOpts = (string)argv[2*j+2];
 		else if (id.compare("pot")==0 || id.compare("potential")==0) potOpts = (string)argv[2*j+2];
@@ -425,10 +427,10 @@ for (uint pl=0; pl<Npl; pl++) {
 				cerr << "must have T!=0 for thermal runs" << endl;
 				return 1;
 			}
-			stepFile = filenameThermalNR<dim>(pold);
+			stepFile = filenameThermalNR<dim>(pold,baseFolder);
 		}
 		else
-			stepFile = filenameLoopNR<dim>(pold);
+			stepFile = filenameLoopNR<dim>(pold,baseFolder);
 		if (weak)
 			(stepFile.Extras).push_back(StringPair("weak","1"));
 		if (poto!=PotentialOptions::original || gaussian)
@@ -518,19 +520,19 @@ for (uint pl=0; pl<Npl; pl++) {
 		}
 		else if (guess) {
 			if (!disjoint) {
-				loadFile = "data/lemon/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_R_"+nts(R)+"_E_"+nts(E)+"_rank_0.dat";
+				loadFile = baseFolder+"data/lemon/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_R_"+nts(R)+"_E_"+nts(E)+"_rank_0.dat";
 				if (!loadFile.exists())
-					loadFile = "data/circle/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_R_"+nts(R)+"_rank_0.dat";
+					loadFile = baseFolder+"data/circle/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_R_"+nts(R)+"_rank_0.dat";
 			}
 			else {
 				if (nonrelativistic)
-					loadFile = "data/highTemp/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/highTemp_kappa_"+nts(pow(p.G,3)*p.B)\
+					loadFile = baseFolder+"data/highTemp/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/highTemp_kappa_"+nts(pow(p.G,3)*p.B)\
 					+"_T_"+nts(p.T)+"_rank_0.dat";
 				else 
-					loadFile = "data/cosDisjoint/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_kappa_"+nts(pow(p.G,3)*p.B)\
+					loadFile = baseFolder+"data/cosDisjoint/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_kappa_"+nts(pow(p.G,3)*p.B)\
 						+"_T_"+nts(p.T)+"_mu_"+nts(p.Mu)+"_lambda_"+nts(p.Lambda)+"_rank_0.dat";
 				if (!loadFile.exists() || straight) {
-					loadFile = "data/straightDisjoint/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_kappa_"+nts(pow(p.G,3)*p.B)\
+					loadFile = baseFolder+"data/straightDisjoint/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_kappa_"+nts(pow(p.G,3)*p.B)\
 					+"_T_"+nts(p.T)+"_rank_0.dat";
 					if (extended)
 						(loadFile.Extras).push_back(StringPair("Lambda",nts(p.Lambda)));
@@ -539,9 +541,9 @@ for (uint pl=0; pl<Npl; pl++) {
 		}
 		else {
 			if (poto==PotentialOptions::thermal || disjoint)
-				loadFile = filenameThermalNR<dim>(p);
+				loadFile = filenameThermalNR<dim>(p,baseFolder);
 			else
-				loadFile = filenameLoopNR<dim>(p);
+				loadFile = filenameLoopNR<dim>(p,baseFolder);
 			if (weak)
 				(loadFile.Extras).push_back(StringPair("weak","1"));
 			if (poto!=PotentialOptions::original || gaussian)
@@ -549,11 +551,11 @@ for (uint pl=0; pl<Npl; pl++) {
 			if (kino!=KineticOptions::saddle)
 				(stepFile.Extras).push_back(kinExtras);
 			if (!loadFile.exists() && (poto!=PotentialOptions::original || gaussian)) {
-				loadFile = filenameLoopNR<dim>(p);
+				loadFile = filenameLoopNR<dim>(p,baseFolder);
 				(loadFile.Extras).push_back(potExtras);
 			}
 			if (!loadFile.exists() && (poto==PotentialOptions::thermal || disjoint)) {
-				loadFile = filenameThermalNR<dim>(p);
+				loadFile = filenameThermalNR<dim>(p,baseFolder);
 				StringPair potExtrasAlt("pot","");
 				if (poto==PotentialOptions::thermal) {
 					int offset = (gaussian? -1: 1);
@@ -566,42 +568,42 @@ for (uint pl=0; pl<Npl; pl++) {
 				(loadFile.Extras).push_back(potExtrasAlt);
 			}
 			else if (!loadFile.exists()) {
-				loadFile = filenameLoopNR<dim>(p);
+				loadFile = filenameLoopNR<dim>(p,baseFolder);
 				StringPair potExtrasAlt("pot","");
 				int offset = (gaussian? -1:+1);
 				potExtrasAlt.second = nts((int)(stn<int>(potExtras.second)+offset));
 				(loadFile.Extras).push_back(potExtrasAlt);
 			}
 			if (!loadFile.exists() && (poto==PotentialOptions::thermal || disjoint))
-				loadFile = filenameThermalNR<dim>(p);
+				loadFile = filenameThermalNR<dim>(p,baseFolder);
 			else if (!loadFile.exists())
-				loadFile = filenameLoopNR<dim>(p);
+				loadFile = filenameLoopNR<dim>(p,baseFolder);
 			if (!loadFile.exists()) {
 				if (pl>0)
 					loadFile = stepFile;
 					if (!loadFile.exists() && (poto==PotentialOptions::thermal || disjoint))
-						loadFile = filenameLoopNR<dim>(pold);
+						loadFile = filenameLoopNR<dim>(pold,baseFolder);
 					else if (!loadFile.exists())
-						loadFile = filenameThermalNR<dim>(pold);
+						loadFile = filenameThermalNR<dim>(pold,baseFolder);
 				if (!loadFile.exists() && old)
-					loadFile = "data/nr/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_kappa_"+nts(pow(p.G,3)*p.B)+"_E_"+nts(p.P4)\
+					loadFile = baseFolder+"data/nr/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_kappa_"+nts(pow(p.G,3)*p.B)+"_E_"+nts(p.P4)\
 		+"_a_"+nts(p.Epsi)+".dat";
 		
 				if (!loadFile.exists()) {
 					if (!disjoint) {
-					loadFile = "data/lemon/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_R_"+nts(R)+"_E_"+nts(E)+"_rank_0.dat";
+					loadFile = baseFolder+"data/lemon/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_R_"+nts(R)+"_E_"+nts(E)+"_rank_0.dat";
 						if (!loadFile.exists())
-							loadFile = "data/circle/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_R_"+nts(R)+"_rank_0.dat";
+							loadFile = baseFolder+"data/circle/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_R_"+nts(R)+"_rank_0.dat";
 					}
 					else {
 						if (nonrelativistic)
-							loadFile = "data/highTemp/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/highTemp_kappa_"+nts(pow(p.G,3)*p.B)\
+							loadFile = baseFolder+"data/highTemp/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/highTemp_kappa_"+nts(pow(p.G,3)*p.B)\
 							+"_T_"+nts(p.T)+"_rank_0.dat";
 						else 
-							loadFile = "data/cosDisjoint/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_kappa_"+nts(pow(p.G,3)*p.B)\
+							loadFile = baseFolder+"data/cosDisjoint/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_kappa_"+nts(pow(p.G,3)*p.B)\
 								+"_T_"+nts(p.T)+"_mu_"+nts(p.Mu)+"_lambda_"+nts(p.Lambda)+"_rank_0.dat";
 						if (!loadFile.exists() || straight) {
-							loadFile = "data/straightDisjoint/loops/dim_"+nts(dim)+"/K_"+nts(p.K)\
+							loadFile = baseFolder+"data/straightDisjoint/loops/dim_"+nts(dim)+"/K_"+nts(p.K)\
 							+"/loop_kappa_"+nts(pow(p.G,3)*p.B)+"_T_"+nts(p.T)+"_rank_0.dat";
 							if (extended)
 								(loadFile.Extras).push_back(StringPair("Lambda",nts(p.Lambda)));
@@ -1450,7 +1452,7 @@ for (uint pl=0; pl<Npl; pl++) {
 ----------------------------------------------------------------------------------------------------------------------------*/	
 		
 		if (po!=PrintOptions::none) {
-			Filename early = "data/temp/"+timenumber+"xEarly1_K_"+nts(p.K)+"_kappa_"+nts(pow(p.G,3)*p.B)+"_E_"+nts(E)\
+			Filename early = baseFolder+"data/temp/"+timenumber+"xEarly1_K_"+nts(p.K)+"_kappa_"+nts(pow(p.G,3)*p.B)+"_E_"+nts(E)\
 						+"_a_"+nts(p.Epsi)+".dat";
 			if (abs(E)>MIN_NUMBER)
 				(early.Extras).push_back(StringPair("mu",nts(p.Mu)));
@@ -1514,7 +1516,7 @@ for (uint pl=0; pl<Npl; pl++) {
 
 		// printing delta early
 		if (po!=PrintOptions::none) {
-			Filename early = "data/temp/"+timenumber+"deltaEarly2_K_"+nts(p.K)+"_kappa_"+nts(pow(p.G,3)*p.B)+"_E_"+nts(E)\
+			Filename early = baseFolder+"data/temp/"+timenumber+"deltaEarly2_K_"+nts(p.K)+"_kappa_"+nts(pow(p.G,3)*p.B)+"_E_"+nts(E)\
 							+"_a_"+nts(p.Epsi)+".dat";
 			if (abs(E)>MIN_NUMBER)
 				(early.Extras).push_back(StringPair("mu",nts(p.Mu)));
@@ -1721,7 +1723,7 @@ for (uint pl=0; pl<Npl; pl++) {
 					cout << ", ergHighTemp = " << 2.0*(1.0-sqrt((pow(p.G,3)*p.B)/4.0/PI)) << endl;
 				}
 			}
-			string consFile = "data/temp/"+timenumber+"Js_pl_"+nts(pl)+"_run_"+nts(runsCount)+".dat";
+			string consFile = baseFolder+"data/temp/"+timenumber+"Js_pl_"+nts(pl)+"_run_"+nts(runsCount)+".dat";
 			saveVectorAscii(consFile,Js);
 			printf("%12s%50s\n","Js       :",consFile.c_str());
 		}
@@ -1747,7 +1749,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		cout << "calculating eigendecomposition of dds..." << endl;
 		Eigen::SelfAdjointEigenSolver<mat> eigensolver(dds_wlm);
 		if (eigensolver.info()!=Eigen::Success) abort();
-		Filename eigenFile = "data/nr/eigenvalues/dim_"+nts(dim)+"/K_"+nts(p.K)+"/"+timenumber+"eigenvalues_pl_"+nts(pl)\
+		Filename eigenFile = baseFolder+"data/nr/eigenvalues/dim_"+nts(dim)+"/K_"+nts(p.K)+"/"+timenumber+"eigenvalues_pl_"+nts(pl)\
 				+"_run_"+nts(runsCount)+".dat";
 		saveVectorBinary(eigenFile,eigensolver.eigenvalues());
 		printf("%12s%50s\n","eigenvalues:",((string)eigenFile).c_str());
@@ -1798,7 +1800,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	
 	// curvature, if required
 	if (curvature || alltests) {
-		Filename file = "data/temp/"+timenumber+"xCurvature_K_"+nts(p.K)+"_kappa_"+nts(pow(p.G,3)*p.B)+"_E_"+nts(E)\
+		Filename file = baseFolder+"data/temp/"+timenumber+"xCurvature_K_"+nts(p.K)+"_kappa_"+nts(pow(p.G,3)*p.B)+"_E_"+nts(E)\
 						+"_a_"+nts(p.Epsi)+".dat";
 		if (abs(E)>MIN_NUMBER)
 			(file.Extras).push_back(StringPair("mu",nts(p.Mu)));
@@ -1899,9 +1901,9 @@ for (uint pl=0; pl<Npl; pl++) {
 		// printing loop to file
 		Filename loopRes;
 		if (poto==PotentialOptions::thermal || disjoint)
-			loopRes = filenameThermalNR<dim>(p);
+			loopRes = filenameThermalNR<dim>(p,baseFolder);
 		else
-			loopRes = filenameLoopNR<dim>(p);
+			loopRes = filenameLoopNR<dim>(p,baseFolder);
 		if (weak)
 			(loopRes.Extras).push_back(StringPair("weak","1"));
 		if (poto!=PotentialOptions::original || gaussian)
@@ -1939,7 +1941,7 @@ for (uint pl=0; pl<Npl; pl++) {
 
 	// printing extras to ascii files
 	if (po!=PrintOptions::none) {
-		Filename file = "data/temp/"+timenumber+"xEnd_K_"+nts(p.K)+"_kappa_"+nts(pow(p.G,3)*p.B)+"_E_"+nts(E)\
+		Filename file = baseFolder+"data/temp/"+timenumber+"xEnd_K_"+nts(p.K)+"_kappa_"+nts(pow(p.G,3)*p.B)+"_E_"+nts(E)\
 							+"_a_"+nts(p.Epsi)+".dat";
 			if (abs(E)>MIN_NUMBER)
 				(file.Extras).push_back(StringPair("mu",nts(p.Mu)));
