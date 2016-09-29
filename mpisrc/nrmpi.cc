@@ -8,6 +8,7 @@
 #include <iomanip>
 #include <fstream>
 #include <mpi.h>
+#include <unistd.h>
 #include "simple.h"
 #include "folder.h"
 #include "parameters.h"
