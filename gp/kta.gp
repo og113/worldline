@@ -1,7 +1,7 @@
 # gnuplot program to plot parameter space explored for thermal calc
 
-#file10="db/nr/plotsHand/kta_pot_10.dat"
-#file11="db/nr/plotsHand/kta_pot_11.dat"
+file10="db/nr/plotsHand/kta_pot_10.dat"
+file11="db/nr/plotsHand/kta_pot_11.dat"
 file12="db/nr/plotsHand/kta_pot_12.dat"
 file8="db/nr/plotsHand/kta_pot_8.dat"
 
