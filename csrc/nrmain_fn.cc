@@ -1829,6 +1829,24 @@ for (uint pl=0; pl<Npl; pl++) {
 		pl,runsCount,realtime,p.K,p.G,p.B,p.Ng,p.Epsi,p.Mu,erg,p.T,len,vr,s);
 	printf("\n");
 	
+	if (checkDelta.good() && checkSol.good() && checkSolMax.good()) {		
+		// printing loop to file
+		Filename loopRes;
+		if (poto==PotentialOptions::thermal || disjoint)
+			loopRes = filenameThermalNR<dim>(p,baseFolder);
+		else
+			loopRes = filenameLoopNR<dim>(p,baseFolder);
+		if (weak)
+			(loopRes.Extras).push_back(StringPair("weak","1"));
+		if (poto!=PotentialOptions::original || gaussian)
+			(loopRes.Extras).push_back(potExtras);
+		if (kino!=KineticOptions::saddle)
+			(loopRes.Extras).push_back(kinExtras);
+		saveVectorBinary(loopRes,x);
+		if (verbose)
+			printf("%12s%50s\n","x:",((string)loopRes).c_str());
+	}
+	
 	if ((checkDelta.good() && checkSol.good() && checkSolMax.good()) || pass) {
 		// printing good results to file
 		
@@ -1895,24 +1913,6 @@ for (uint pl=0; pl<Npl; pl++) {
 		error.save(errorsFile);
 		if (verbose)
 			printf("%12s%24s\n","results:",errorsFile.c_str());
-	}
-	
-	if (checkDelta.good() && checkSol.good() && checkSolMax.good()) {		
-		// printing loop to file
-		Filename loopRes;
-		if (poto==PotentialOptions::thermal || disjoint)
-			loopRes = filenameThermalNR<dim>(p,baseFolder);
-		else
-			loopRes = filenameLoopNR<dim>(p,baseFolder);
-		if (weak)
-			(loopRes.Extras).push_back(StringPair("weak","1"));
-		if (poto!=PotentialOptions::original || gaussian)
-			(loopRes.Extras).push_back(potExtras);
-		if (kino!=KineticOptions::saddle)
-			(loopRes.Extras).push_back(kinExtras);
-		saveVectorBinary(loopRes,x);
-		if (verbose)
-			printf("%12s%50s\n","x:",((string)loopRes).c_str());
 	}
 	
 	// printing stepper results
