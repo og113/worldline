@@ -620,7 +620,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	}
 	// check if file exists
 	if (!loadFile.exists()) {
-		cerr << "nrmain error: " << loadFile << " doesn't exist, moving to next parameter loop" << endl;
+		cerr << "nrmain error: " << loadFile << " doesn't exist on pl = " << pl << ", moving to next parameter loop" << endl;
 		continue; ///////// CONTINUE STATEMENT IF FILE DOESN'T EXIST
 	}
 	if (verbose) {
