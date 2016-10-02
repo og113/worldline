@@ -1,0 +1,31 @@
+./nrmain -inputs nrinputs/highTemp/inputs10 -guess 0 -step 0 -old 0 -pot thermalDisjoint -gaussianLR 0 -gaussian 0 -mu_a 0 -pass 0 -nonrel 0 -allTests 0 -fixdz 1 -fixtlr 1 -fixdislr 1 -print none -eigen 0 -verbose 1 -redo 1 -redoErrors 1 -xIn data/nr/loops/dim_4/K_12/loop_kappa_0.01_E_0_a_0.005_T_1.8_pot_11.dat
+timenumber: 160929103054
+looping over 41 steps
+loading loops from:
+data/nr/loops/dim_4/K_12/loop_kappa_0.01_E_0_a_0.005_T_1.8_pot_11.dat
+  pl run        len         i0          s          E        sol       solM      delta  dx*kg_max     ic_max     cc_max       dx/a
+   0   1      1.112   -0.01727       1.08      1.939   0.001241  0.0007446  0.0007714    0.07406  3.268e-07          0    0.05432
+   0   2      1.112   -0.01736       1.08      1.939  2.564e-07  4.478e-07  2.284e-05    0.07589  3.485e-07          0    0.05432
+   0   3      1.112   -0.01736       1.08      1.939  3.966e-10  7.161e-10  6.223e-09    0.07582   3.48e-07          0    0.05432
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       0       32.63e+03      12       1    0.01       0   0.005     0.1      1.9387         1.8        1.1125     -0.015156          1.08
+
+    results:      results/nr/nr6.csv
+          x:data/nr/loops/dim_4/K_12/loop_kappa_0.01_E_0_a_0.005_T_1.8_pot_10.dat
+loading loops from:
+data/nr/loops/dim_4/K_12/loop_kappa_0.01_E_0_a_0.005_T_1.8_pot_11.dat
+  pl run        len         i0          s          E        sol       solM      delta  dx*kg_max     ic_max     cc_max       dx/a
+   1   1      1.114   -0.01725      1.085      1.929      1.061      19.71   0.004116     0.0742      5.666          0    0.05442
+   1   2      1.109   -0.01688      1.077       1.94    0.01449     0.2692   0.002436    0.06696    0.08063          0    0.05416
+   1   3      1.109   -0.01715      1.077      1.939  3.583e-06  4.227e-05  0.0002517     0.0728  1.203e-05          0    0.05417
+   1   4      1.109   -0.01713      1.077      1.939  4.789e-08  8.502e-08  7.843e-07    0.07212   3.05e-07          0    0.05416
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       1       4 3.5e+03      12       1    0.01       0   0.005     0.1      1.9392       1.805        1.1093     -0.015169         1.077
+
+    results:      results/nr/nr6.csv
+          x:data/nr/loops/dim_4/K_12/loop_kappa_0.01_E_0_a_0.005_T_1.805_pot_10.dat
+loading loops from:
+data/nr/loops/dim_4/K_12/loop_kappa_0.01_E_0_a_0.005_T_1.8_pot_11.dat
+=>> PBS: job killed: walltime 7232 exceeded limit 7200
