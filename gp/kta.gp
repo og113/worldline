@@ -17,7 +17,7 @@ set zlabel "a"
 pi=3.1415926535897932
 Tmax(kappa)=sqrt(2)/pi**0.75/kappa**0.25
 
-set xrange [0.01:0.1]
+set xrange [0.01:1]
 
 splot file8 using 1:2:3 with points ls 1 lc rgb "blue" title "pot 8", \
 	file10 using 1:2:3 with points ls 2 lc rgb "red" title "pot 10", \

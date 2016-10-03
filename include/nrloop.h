@@ -686,10 +686,10 @@ void printAsLoop(const string& f, const uint& Dim, const vec& v, const uint len)
 
 // filenameLoop
 template<uint Dim>
-Filename filenameLoopNR(const Parameters&);
+Filename filenameLoopNR(const Parameters&, const string&);
 
 // filenameLoop
 template<uint Dim>
-Filename filenameThermalNR(const Parameters&);
+Filename filenameThermalNR(const Parameters&, const string&);
 
 #endif // __NRLOOP_H_INCLUDED__

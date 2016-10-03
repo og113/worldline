@@ -1982,8 +1982,8 @@ void printAsLoop(const string& f, const uint& Dim, const vec& v, const uint len)
 
 // filenameLoop
 template<uint Dim>
-Filename filenameLoopNR(const Parameters& p) {
-	Filename f = "data/nr/loops/dim_"+nts(Dim)+"/K_"+nts(p.K)+"/loop_kappa_"+nts(pow(p.G,3)*p.B)+"_E_"+nts(p.P4)\
+Filename filenameLoopNR(const Parameters& p, const string& base) {
+	Filename f = base+"data/nr/loops/dim_"+nts(Dim)+"/K_"+nts(p.K)+"/loop_kappa_"+nts(pow(p.G,3)*p.B)+"_E_"+nts(p.P4)\
 		+"_a_"+nts(p.Epsi)+"_mu_"+nts(p.Mu)+".dat";
 	if (p.Ng>0)
 		(f.Extras).push_back(StringPair("Ng",nts(p.Ng)));
@@ -1992,8 +1992,8 @@ Filename filenameLoopNR(const Parameters& p) {
 
 // filenameThermal
 template<uint Dim>
-Filename filenameThermalNR(const Parameters& p) {
-	Filename f = "data/nr/loops/dim_"+nts(Dim)+"/K_"+nts(p.K)+"/loop_kappa_"+nts(pow(p.G,3)*p.B)+"_E_"+nts(p.P4)\
+Filename filenameThermalNR(const Parameters& p, const string& base) {
+	Filename f = base+"data/nr/loops/dim_"+nts(Dim)+"/K_"+nts(p.K)+"/loop_kappa_"+nts(pow(p.G,3)*p.B)+"_E_"+nts(p.P4)\
 		+"_a_"+nts(p.Epsi)+".dat";
 	if (abs(p.P4)>MIN_NUMBER)
 		(f.Extras).push_back(StringPair("mu",nts(p.Mu)));
@@ -2044,7 +2044,7 @@ template void mdFGamma_nr<2>(const Loop<2>& l, const uint& loc, const number& f,
 template void ddFGamma_nr<2>(const Loop<2>& l, const uint& loc, const number& f, mat& v);
 template void loopToVector<2>(const Loop<2>&,vec&);
 template void vectorToLoop<2>(const vec&, Loop<2>&);
-template Filename filenameLoopNR<2>(const Parameters& p);
+template Filename filenameLoopNR<2>(const Parameters& p, const string&);
 
 // mdI0_nr<2>
 template <> void mdI0_nr<2>(const uint& j, const uint& mu, const Loop<2>& l, const number& f, vec& v) {
@@ -2204,8 +2204,8 @@ template void PGaussianThermalLRDisjoint_nr<4>(const Loop<4>& l, const uint& j, 
 template void PRGaussianThermalLRDisjoint_nr<4>(const Loop<4>& l, const uint& j, const uint& mu, const uint& k, const uint& nu, const number& beta, const number& a, const number& f, vec& v);
 template void loopToVector<4>(const Loop<4>&,vec&);
 template void vectorToLoop<4>(const vec&, Loop<4>&);
-template Filename filenameLoopNR<4>(const Parameters& p);
-template Filename filenameThermalNR<4>(const Parameters& p);
+template Filename filenameLoopNR<4>(const Parameters& p, const string&);
+template Filename filenameThermalNR<4>(const Parameters& p, const string&);
 
 template <> void PseudoAngle<4>(const uint& j, const Loop<4>& l, const number& f, number& result) {
 	uint pj = (j==(l.size()-1)? 0: j+1);
