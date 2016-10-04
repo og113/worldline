@@ -359,8 +359,7 @@ NewtonRaphsonData errors(errorsFile,idSizeErrors,datumSizeErrors);
 
 // timenumber
 string timenumber = currentDateTime();
-if (verbose)
-	cout << "timenumber: " << timenumber << endl;
+cout << "timenumber: " << timenumber << endl;
 
 /*----------------------------------------------------------------------------------------------------------------------------
 	2 - beginning parameter loop
