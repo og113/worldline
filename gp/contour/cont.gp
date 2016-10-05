@@ -16,14 +16,14 @@ set samples 10, 10
 set cntrparam order 4
 set cntrparam bspline
 set dgrid3d
-set table 'test8.dat'
+set table '~/Documents/worldline/gp/contour/test8.dat'
 splot output8 u 1:2:3
 unset table
 
 set cont base
 set cntrparam level incremental 0.0, 0.1, 4.0
 unset surf
-set table 'cont8.dat'
+set table '~/Documents/worldline/gp/contour/cont8.dat'
 splot output8 u 1:2:3
 unset table
 
@@ -35,14 +35,14 @@ set samples 10, 10
 set cntrparam order 4
 set cntrparam bspline
 set dgrid3d
-set table 'test10.dat'
+set table '~/Documents/worldline/gp/contour/test10.dat'
 splot output10 u 1:2:3
 unset table
 
 set cont base
 set cntrparam level incremental 0.0, 0.1, 4.0
 unset surf
-set table 'cont10.dat'
+set table '~/Documents/worldline/gp/contour/cont10.dat'
 splot output10 u 1:2:3
 unset table
 
@@ -55,15 +55,15 @@ set zlabel "S"
 set title "S vs {/Symbol k} and T: K=11, a=0.02"
 set key below
 set palette rgbformulae 33,13,10
-l '<bash cont.sh cont8.dat 0 2 1'
-l '<bash cont.sh cont10.dat 0 2 1'
+l '<bash ~/Documents/worldline/gp/contour/cont.sh ~/Documents/worldline/gp/contour/cont8.dat 0 2 1'
+l '<bash ~/Documents/worldline/gp/contour/cont.sh ~/Documents/worldline/gp/contour/cont10.dat 0 2 1'
 
 #p 'test.dat' w ima, \
-#	'<bash cont.sh cont.dat 1 2 1' w l lt -1 lw 1.5, \
+#	'<bash ~/Documents/worldline/gp/contour/cont.sh ~/Documents/worldline/gp/contour/cont.dat 1 2 1' w l lt -1 lw 1.5, \
 #	Tmax(x) w lines dt 2 lt 1 lc rgb "black" title "{/Symbol S}=0"
 	
-p '<bash cont.sh cont8.dat 1 2 1' w l lt -1 lw 1.5 lc rgb "black", \
-	'<bash cont.sh cont10.dat 1 2 1' w l lt -1 lw 1.5 lc rgb "red", \
+p '<bash ~/Documents/worldline/gp/contour/cont.sh ~/Documents/worldline/gp/contour/cont8.dat 1 2 1' w l lt -1 lw 1.5 lc rgb "black", \
+	'<bash ~/Documents/worldline/gp/contour/cont.sh ~/Documents/worldline/gp/contour/cont10.dat 1 2 1' w l lt -1 lw 1.5 lc rgb "red", \
 	Tmax(x) w lines dt 2 lt 1 lc rgb "green" title "{/Symbol S}=0", \
 	Tstraight(x,1.2) w lines lt 1 lc rgb "blue" title "S=1.2", \
 	Tstraight(x,1.4) w lines lt 1 lc rgb "blue" title "S=1.4", \
