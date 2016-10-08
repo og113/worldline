@@ -359,8 +359,7 @@ NewtonRaphsonData errors(errorsFile,idSizeErrors,datumSizeErrors);
 
 // timenumber
 string timenumber = currentDateTime();
-if (verbose)
-	cout << "timenumber: " << timenumber << endl;
+cout << "timenumber: " << timenumber << endl;
 
 /*----------------------------------------------------------------------------------------------------------------------------
 	2 - beginning parameter loop
@@ -620,7 +619,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	}
 	// check if file exists
 	if (!loadFile.exists()) {
-		cerr << "nrmain error: " << loadFile << " doesn't exist, moving to next parameter loop" << endl;
+		cerr << "nrmain error: " << loadFile << " doesn't exist on pl = " << pl << ", moving to next parameter loop" << endl;
 		continue; ///////// CONTINUE STATEMENT IF FILE DOESN'T EXIST
 	}
 	if (verbose) {
