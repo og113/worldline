@@ -1,0 +1,1065 @@
+starting glmain with 5 nodes
+input argv to ./nrmpi:
+./nrmpi -base /slow/data/dc-goul1/worldline/ -inputs nrinputs/mpi/inputs1 -guess 0 -step 1 -old 0 -pot thermalDisjoint -gaussian 0 -gaussianLR 0 -mu_a 0 -pass 0 -nonrel 0 -allTests 0 -fixdz 1 -fixtlr 1 -fixdislr 1 -print none -eigen 0 -auto_a 0 -conservation 0 -redo 0 -redoErrors 0 -verbose 0
+timenumber: 161007094624
+timenumber: 161007094626
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.015_T_0.4_pot_10.dat doesn't exist on pl = 165, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.015_T_0.395_pot_10.dat doesn't exist on pl = 166, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.015_T_0.39_pot_10.dat doesn't exist on pl = 167, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.015_T_0.385_pot_10.dat doesn't exist on pl = 168, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.015_T_0.38_pot_10.dat doesn't exist on pl = 169, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.015_T_0.375_pot_10.dat doesn't exist on pl = 170, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.015_T_0.37_pot_10.dat doesn't exist on pl = 171, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.015_T_0.365_pot_10.dat doesn't exist on pl = 172, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.015_T_0.36_pot_10.dat doesn't exist on pl = 173, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.015_T_0.355_pot_10.dat doesn't exist on pl = 174, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.015_T_0.35_pot_10.dat doesn't exist on pl = 175, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.015_T_0.345_pot_10.dat doesn't exist on pl = 176, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.015_T_0.34_pot_10.dat doesn't exist on pl = 177, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.015_T_0.335_pot_10.dat doesn't exist on pl = 178, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.015_T_0.33_pot_10.dat doesn't exist on pl = 179, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.015_T_0.325_pot_10.dat doesn't exist on pl = 180, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.015_T_0.32_pot_10.dat doesn't exist on pl = 181, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.015_T_0.315_pot_10.dat doesn't exist on pl = 182, moving to next parameter loop
+timenumber: 161007094628
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.0175_T_0.33_pot_10.dat doesn't exist on pl = 118, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.0175_T_0.325_pot_10.dat doesn't exist on pl = 119, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.0175_T_0.32_pot_10.dat doesn't exist on pl = 120, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.0175_T_0.315_pot_10.dat doesn't exist on pl = 121, moving to next parameter loop
+timenumber: 161007094630
+timenumber: 161007094632
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       1       5     874      11       1    0.06       0    0.02     0.1      1.7583       0.605        3.3578      -0.19666        3.0136
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       1       5     878      11       1    0.09       0    0.02     0.1      1.6383       0.605        3.4161      -0.21686        2.9292
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       1       5     883      11       1     0.1       0    0.02     0.1      1.5986       0.605        3.4387      -0.21696        2.9064
+
+Check delta: test(8.73295) > closeness(1)
+x information:
+x.norm()    :         21.6293
+x.mean()    :         -8.34829e-14
+x.minCoeff():         -0.819891
+x.maxCoeff():         0.819891
+x minCoeff  :         8191
+x maxCoeff  :         0
+x absmax/2 counter :  692
+(x.tail(zm)).norm()/sqrt(zm): 0.00220679
+(x.head(v.size()-zm)).norm()/sqrt(v.size()-zm):  0.238972
+
+mds information:
+mds.norm()    :         2.44181
+mds.mean()    :         -2.87058e-16
+mds.minCoeff():         -0.18454
+mds.maxCoeff():         0.18454
+mds minCoeff  :         7778
+mds maxCoeff  :         0
+mds absmax/2 counter :  294
+(mds.tail(zm)).norm()/sqrt(zm): 6.85017e-14
+(mds.head(v.size()-zm)).norm()/sqrt(v.size()-zm):  0.0269785
+
+delta information:
+delta.norm()    :         188.888
+delta.mean()    :         -3.08778e-12
+delta.minCoeff():         -5.53741
+delta.maxCoeff():         5.53741
+delta minCoeff  :         6154
+delta maxCoeff  :         0
+delta absmax/2 counter :  1632
+(delta.tail(zm)).norm()/sqrt(zm): 0.0230721
+(delta.head(v.size()-zm)).norm()/sqrt(v.size()-zm):  2.08693
+
+dds information:
+dds.norm()    :         49213.5
+dds.minCoeff():         -325.812
+dds.maxCoeff():         651.694
+dds minCoeff  :         (4754,4750)
+dds maxCoeff  :         (0,0)
+dds absmax/2 counter :  5020
+dds.trace():            3.31731e+06
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+     122       91.57e+03      11       1    0.08       0   0.015     0.1      1.5731        0.61        3.4366      -0.20166        2.8867
+
+dds.determinant():      -inf
+dds.mean():             0.000243724
+dds.sum():              16384
+dds.prod():             -0
+
+action info:
+s:                      6.53103
+kinetic:                6.2828
+i0:                     0.373674
+vr:                     -0.125449
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+     183       91.62e+03      11       1    0.07       0  0.0125     0.1     -1.2289        0.61        4.5844      -0.12545         6.531
+
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.0125_T_0.61_pot_10.dat doesn't exist on pl = 184, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.0125_T_0.605_pot_10.dat doesn't exist on pl = 185, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.0125_T_0.6_pot_10.dat doesn't exist on pl = 186, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.0125_T_0.595_pot_10.dat doesn't exist on pl = 187, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.0125_T_0.59_pot_10.dat doesn't exist on pl = 188, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.0125_T_0.585_pot_10.dat doesn't exist on pl = 189, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.0125_T_0.58_pot_10.dat doesn't exist on pl = 190, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.0125_T_0.575_pot_10.dat doesn't exist on pl = 191, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.0125_T_0.57_pot_10.dat doesn't exist on pl = 192, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.0125_T_0.565_pot_10.dat doesn't exist on pl = 193, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.0125_T_0.56_pot_10.dat doesn't exist on pl = 194, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.0125_T_0.555_pot_10.dat doesn't exist on pl = 195, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.0125_T_0.55_pot_10.dat doesn't exist on pl = 196, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.0125_T_0.545_pot_10.dat doesn't exist on pl = 197, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.0125_T_0.54_pot_10.dat doesn't exist on pl = 198, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.0125_T_0.535_pot_10.dat doesn't exist on pl = 199, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.0125_T_0.53_pot_10.dat doesn't exist on pl = 200, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.0125_T_0.525_pot_10.dat doesn't exist on pl = 201, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.0125_T_0.52_pot_10.dat doesn't exist on pl = 202, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.0125_T_0.515_pot_10.dat doesn't exist on pl = 203, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.0125_T_0.51_pot_10.dat doesn't exist on pl = 204, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.0125_T_0.505_pot_10.dat doesn't exist on pl = 205, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.0125_T_0.5_pot_10.dat doesn't exist on pl = 206, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.0125_T_0.495_pot_10.dat doesn't exist on pl = 207, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.0125_T_0.49_pot_10.dat doesn't exist on pl = 208, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.0125_T_0.485_pot_10.dat doesn't exist on pl = 209, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.0125_T_0.48_pot_10.dat doesn't exist on pl = 210, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.0125_T_0.475_pot_10.dat doesn't exist on pl = 211, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.0125_T_0.47_pot_10.dat doesn't exist on pl = 212, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.0125_T_0.465_pot_10.dat doesn't exist on pl = 213, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.0125_T_0.46_pot_10.dat doesn't exist on pl = 214, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.0125_T_0.455_pot_10.dat doesn't exist on pl = 215, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.0125_T_0.45_pot_10.dat doesn't exist on pl = 216, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.0125_T_0.445_pot_10.dat doesn't exist on pl = 217, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.0125_T_0.44_pot_10.dat doesn't exist on pl = 218, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.0125_T_0.435_pot_10.dat doesn't exist on pl = 219, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.0125_T_0.43_pot_10.dat doesn't exist on pl = 220, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.0125_T_0.425_pot_10.dat doesn't exist on pl = 221, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.0125_T_0.42_pot_10.dat doesn't exist on pl = 222, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.0125_T_0.415_pot_10.dat doesn't exist on pl = 223, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.0125_T_0.41_pot_10.dat doesn't exist on pl = 224, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.0125_T_0.405_pot_10.dat doesn't exist on pl = 225, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.0125_T_0.4_pot_10.dat doesn't exist on pl = 226, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.0125_T_0.395_pot_10.dat doesn't exist on pl = 227, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.0125_T_0.39_pot_10.dat doesn't exist on pl = 228, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.0125_T_0.385_pot_10.dat doesn't exist on pl = 229, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.0125_T_0.38_pot_10.dat doesn't exist on pl = 230, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.0125_T_0.375_pot_10.dat doesn't exist on pl = 231, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.0125_T_0.37_pot_10.dat doesn't exist on pl = 232, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.0125_T_0.365_pot_10.dat doesn't exist on pl = 233, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.0125_T_0.36_pot_10.dat doesn't exist on pl = 234, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.0125_T_0.355_pot_10.dat doesn't exist on pl = 235, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.0125_T_0.35_pot_10.dat doesn't exist on pl = 236, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.0125_T_0.345_pot_10.dat doesn't exist on pl = 237, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.0125_T_0.34_pot_10.dat doesn't exist on pl = 238, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.0125_T_0.335_pot_10.dat doesn't exist on pl = 239, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.0125_T_0.33_pot_10.dat doesn't exist on pl = 240, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.0125_T_0.325_pot_10.dat doesn't exist on pl = 241, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.0125_T_0.32_pot_10.dat doesn't exist on pl = 242, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.0125_T_0.315_pot_10.dat doesn't exist on pl = 243, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.0125_T_0.61_pot_10.dat doesn't exist on pl = 244, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.01_T_0.61_pot_10.dat doesn't exist on pl = 245, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.01_T_0.605_pot_10.dat doesn't exist on pl = 246, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.01_T_0.6_pot_10.dat doesn't exist on pl = 247, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.01_T_0.595_pot_10.dat doesn't exist on pl = 248, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.01_T_0.59_pot_10.dat doesn't exist on pl = 249, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.01_T_0.585_pot_10.dat doesn't exist on pl = 250, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.01_T_0.58_pot_10.dat doesn't exist on pl = 251, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.01_T_0.575_pot_10.dat doesn't exist on pl = 252, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.01_T_0.57_pot_10.dat doesn't exist on pl = 253, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.01_T_0.565_pot_10.dat doesn't exist on pl = 254, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.01_T_0.56_pot_10.dat doesn't exist on pl = 255, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.01_T_0.555_pot_10.dat doesn't exist on pl = 256, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.01_T_0.55_pot_10.dat doesn't exist on pl = 257, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.01_T_0.545_pot_10.dat doesn't exist on pl = 258, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.01_T_0.54_pot_10.dat doesn't exist on pl = 259, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.01_T_0.535_pot_10.dat doesn't exist on pl = 260, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.01_T_0.53_pot_10.dat doesn't exist on pl = 261, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.01_T_0.525_pot_10.dat doesn't exist on pl = 262, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.01_T_0.52_pot_10.dat doesn't exist on pl = 263, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.01_T_0.515_pot_10.dat doesn't exist on pl = 264, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.01_T_0.51_pot_10.dat doesn't exist on pl = 265, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.01_T_0.505_pot_10.dat doesn't exist on pl = 266, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.01_T_0.5_pot_10.dat doesn't exist on pl = 267, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.01_T_0.495_pot_10.dat doesn't exist on pl = 268, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.01_T_0.49_pot_10.dat doesn't exist on pl = 269, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.01_T_0.485_pot_10.dat doesn't exist on pl = 270, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.01_T_0.48_pot_10.dat doesn't exist on pl = 271, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.01_T_0.475_pot_10.dat doesn't exist on pl = 272, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.01_T_0.47_pot_10.dat doesn't exist on pl = 273, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.01_T_0.465_pot_10.dat doesn't exist on pl = 274, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.01_T_0.46_pot_10.dat doesn't exist on pl = 275, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.01_T_0.455_pot_10.dat doesn't exist on pl = 276, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.01_T_0.45_pot_10.dat doesn't exist on pl = 277, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.01_T_0.445_pot_10.dat doesn't exist on pl = 278, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.01_T_0.44_pot_10.dat doesn't exist on pl = 279, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.01_T_0.435_pot_10.dat doesn't exist on pl = 280, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.01_T_0.43_pot_10.dat doesn't exist on pl = 281, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.01_T_0.425_pot_10.dat doesn't exist on pl = 282, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.01_T_0.42_pot_10.dat doesn't exist on pl = 283, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.01_T_0.415_pot_10.dat doesn't exist on pl = 284, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.01_T_0.41_pot_10.dat doesn't exist on pl = 285, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.01_T_0.405_pot_10.dat doesn't exist on pl = 286, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.01_T_0.4_pot_10.dat doesn't exist on pl = 287, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.01_T_0.395_pot_10.dat doesn't exist on pl = 288, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.01_T_0.39_pot_10.dat doesn't exist on pl = 289, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.01_T_0.385_pot_10.dat doesn't exist on pl = 290, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.01_T_0.38_pot_10.dat doesn't exist on pl = 291, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.01_T_0.375_pot_10.dat doesn't exist on pl = 292, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.01_T_0.37_pot_10.dat doesn't exist on pl = 293, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.01_T_0.365_pot_10.dat doesn't exist on pl = 294, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.01_T_0.36_pot_10.dat doesn't exist on pl = 295, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.01_T_0.355_pot_10.dat doesn't exist on pl = 296, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.01_T_0.35_pot_10.dat doesn't exist on pl = 297, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.01_T_0.345_pot_10.dat doesn't exist on pl = 298, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.01_T_0.34_pot_10.dat doesn't exist on pl = 299, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.01_T_0.335_pot_10.dat doesn't exist on pl = 300, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.01_T_0.33_pot_10.dat doesn't exist on pl = 301, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.01_T_0.325_pot_10.dat doesn't exist on pl = 302, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.01_T_0.32_pot_10.dat doesn't exist on pl = 303, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.07_E_0_a_0.01_T_0.315_pot_10.dat doesn't exist on pl = 304, moving to next parameter loop
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       2       5     864      11       1    0.06       0    0.02     0.1      1.7583         0.6        3.3853      -0.19993        3.0379
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       2       5     865      11       1    0.09       0    0.02     0.1      1.6383         0.6        3.4437      -0.22175        2.9518
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       2       5     872      11       1     0.1       0    0.02     0.1      1.5985         0.6        3.4663      -0.22236        2.9285
+
+Check delta: test(13.8151) > closeness(1)
+x information:
+x.norm()    :         32.784
+x.mean()    :         -9.81975e-15
+x.minCoeff():         -0.888561
+x.maxCoeff():         0.888561
+x minCoeff  :         8191
+x maxCoeff  :         0
+x absmax/2 counter :  2440
+(x.tail(zm)).norm()/sqrt(zm): 0.204037
+(x.head(v.size()-zm)).norm()/sqrt(v.size()-zm):  0.362166
+
+mds information:
+mds.norm()    :         1.89886
+mds.mean()    :         -6.6066e-18
+mds.minCoeff():         -0.245669
+mds.maxCoeff():         0.245669
+mds minCoeff  :         8190
+mds maxCoeff  :         0
+mds absmax/2 counter :  94
+(mds.tail(zm)).norm()/sqrt(zm): 1.15098e-13
+(mds.head(v.size()-zm)).norm()/sqrt(v.size()-zm):  0.0209796
+
+delta information:
+delta.norm()    :         452.912
+delta.mean()    :         -2.55556e-12
+delta.minCoeff():         -13.0774
+delta.maxCoeff():         13.0774
+delta minCoeff  :         1838
+delta maxCoeff  :         0
+delta absmax/2 counter :  1436
+(delta.tail(zm)).norm()/sqrt(zm): 3.39873
+(delta.head(v.size()-zm)).norm()/sqrt(v.size()-zm):  5.00304
+
+dds information:
+dds.norm()    :         60020.8
+dds.minCoeff():         -345.405
+dds.maxCoeff():         690.784
+dds minCoeff  :         (4470,4466)
+dds maxCoeff  :         (0,0)
+dds absmax/2 counter :  7972
+dds.trace():            4.34969e+06
+dds.determinant():      -inf
+dds.mean():             0.000243724
+dds.sum():              16384
+dds.prod():             0
+
+action info:
+s:                      4.24034
+kinetic:                5.9066
+i0:                     -1.58797
+vr:                     -0.0782824
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+     123       5     888      11       1    0.08       0   0.015     0.1     0.19792       0.605        5.0454     -0.078282        4.2403
+
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.015_T_0.605_pot_10.dat doesn't exist on pl = 124, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.015_T_0.6_pot_10.dat doesn't exist on pl = 125, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.015_T_0.595_pot_10.dat doesn't exist on pl = 126, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.015_T_0.59_pot_10.dat doesn't exist on pl = 127, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.015_T_0.585_pot_10.dat doesn't exist on pl = 128, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.015_T_0.58_pot_10.dat doesn't exist on pl = 129, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.015_T_0.575_pot_10.dat doesn't exist on pl = 130, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.015_T_0.57_pot_10.dat doesn't exist on pl = 131, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.015_T_0.565_pot_10.dat doesn't exist on pl = 132, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.015_T_0.56_pot_10.dat doesn't exist on pl = 133, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.015_T_0.555_pot_10.dat doesn't exist on pl = 134, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.015_T_0.55_pot_10.dat doesn't exist on pl = 135, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.015_T_0.545_pot_10.dat doesn't exist on pl = 136, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.015_T_0.54_pot_10.dat doesn't exist on pl = 137, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.015_T_0.535_pot_10.dat doesn't exist on pl = 138, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.015_T_0.53_pot_10.dat doesn't exist on pl = 139, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.015_T_0.525_pot_10.dat doesn't exist on pl = 140, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.015_T_0.52_pot_10.dat doesn't exist on pl = 141, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.015_T_0.515_pot_10.dat doesn't exist on pl = 142, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.015_T_0.51_pot_10.dat doesn't exist on pl = 143, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.015_T_0.505_pot_10.dat doesn't exist on pl = 144, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.015_T_0.5_pot_10.dat doesn't exist on pl = 145, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.015_T_0.495_pot_10.dat doesn't exist on pl = 146, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.015_T_0.49_pot_10.dat doesn't exist on pl = 147, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.015_T_0.485_pot_10.dat doesn't exist on pl = 148, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.015_T_0.48_pot_10.dat doesn't exist on pl = 149, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.015_T_0.475_pot_10.dat doesn't exist on pl = 150, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.015_T_0.47_pot_10.dat doesn't exist on pl = 151, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.015_T_0.465_pot_10.dat doesn't exist on pl = 152, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.015_T_0.46_pot_10.dat doesn't exist on pl = 153, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.015_T_0.455_pot_10.dat doesn't exist on pl = 154, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.015_T_0.45_pot_10.dat doesn't exist on pl = 155, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.015_T_0.445_pot_10.dat doesn't exist on pl = 156, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.015_T_0.44_pot_10.dat doesn't exist on pl = 157, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.015_T_0.435_pot_10.dat doesn't exist on pl = 158, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.015_T_0.43_pot_10.dat doesn't exist on pl = 159, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.015_T_0.425_pot_10.dat doesn't exist on pl = 160, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.015_T_0.42_pot_10.dat doesn't exist on pl = 161, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.015_T_0.415_pot_10.dat doesn't exist on pl = 162, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.015_T_0.41_pot_10.dat doesn't exist on pl = 163, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.015_T_0.405_pot_10.dat doesn't exist on pl = 164, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.015_T_0.4_pot_10.dat doesn't exist on pl = 165, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.015_T_0.395_pot_10.dat doesn't exist on pl = 166, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.015_T_0.39_pot_10.dat doesn't exist on pl = 167, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.015_T_0.385_pot_10.dat doesn't exist on pl = 168, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.015_T_0.38_pot_10.dat doesn't exist on pl = 169, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.015_T_0.375_pot_10.dat doesn't exist on pl = 170, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.015_T_0.37_pot_10.dat doesn't exist on pl = 171, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.015_T_0.365_pot_10.dat doesn't exist on pl = 172, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.015_T_0.36_pot_10.dat doesn't exist on pl = 173, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.015_T_0.355_pot_10.dat doesn't exist on pl = 174, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.015_T_0.35_pot_10.dat doesn't exist on pl = 175, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.015_T_0.345_pot_10.dat doesn't exist on pl = 176, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.015_T_0.34_pot_10.dat doesn't exist on pl = 177, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.015_T_0.335_pot_10.dat doesn't exist on pl = 178, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.015_T_0.33_pot_10.dat doesn't exist on pl = 179, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.015_T_0.325_pot_10.dat doesn't exist on pl = 180, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.015_T_0.32_pot_10.dat doesn't exist on pl = 181, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.015_T_0.315_pot_10.dat doesn't exist on pl = 182, moving to next parameter loop
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       3       5     837      11       1    0.06       0    0.02     0.1      1.7583       0.595        3.4133      -0.20326        3.0625
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       3       5     841      11       1    0.09       0    0.02     0.1      1.6382       0.595        3.4717      -0.22672        2.9748
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       3       5     844      11       1     0.1       0    0.02     0.1      1.5984       0.595        3.4944      -0.22786        2.9509
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       4       5     832      11       1    0.06       0    0.02     0.1      1.7582        0.59        3.4418      -0.20664        3.0876
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       4       5     838      11       1    0.09       0    0.02     0.1      1.6382        0.59        3.5002      -0.23178        2.9982
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       4       5     838      11       1     0.1       0    0.02     0.1      1.5984        0.59        3.5229      -0.23346        2.9738
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       5       5     831      11       1    0.06       0    0.02     0.1      1.7582       0.585        3.4708      -0.21009        3.1131
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       5       5     837      11       1    0.09       0    0.02     0.1      1.6381       0.585        3.5292      -0.23693         3.022
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       5       5     838      11       1     0.1       0    0.02     0.1      1.5983       0.585        3.5519      -0.23916         2.997
+
+Check delta: test(1.09166) > closeness(1)
+x information:
+x.norm()    :         21.4137
+x.mean()    :         -7.05148e-15
+x.minCoeff():         -0.827353
+x.maxCoeff():         0.827353
+x minCoeff  :         3
+x maxCoeff  :         0
+x absmax/2 counter :  1006
+(x.tail(zm)).norm()/sqrt(zm): 0.0143485
+(x.head(v.size()-zm)).norm()/sqrt(v.size()-zm):  0.23659
+
+mds information:
+mds.norm()    :         2.14901
+mds.mean()    :         -4.38577e-16
+mds.minCoeff():         -0.348095
+mds.maxCoeff():         0.348095
+mds minCoeff  :         342
+mds maxCoeff  :         0
+mds absmax/2 counter :  38
+(mds.tail(zm)).norm()/sqrt(zm): 1.54487e-13
+(mds.head(v.size()-zm)).norm()/sqrt(v.size()-zm):  0.0237435
+
+delta information:
+delta.norm()    :         23.3765
+delta.mean()    :         -3.52051e-13
+delta.minCoeff():         -0.751773
+delta.maxCoeff():         0.751773
+delta minCoeff  :         6130
+delta maxCoeff  :         0
+delta absmax/2 counter :  1252
+(delta.tail(zm)).norm()/sqrt(zm): 0.33969
+(delta.head(v.size()-zm)).norm()/sqrt(v.size()-zm):  0.258085
+
+dds information:
+dds.norm()    :         102250
+dds.minCoeff():         -574.684
+dds.maxCoeff():         1149.4
+dds minCoeff  :         (7803,7799)
+dds maxCoeff  :         (0,0)
+dds absmax/2 counter :  8104
+dds.trace():            7.4508e+06
+dds.determinant():      inf
+dds.mean():             0.000243724
+dds.sum():              16384
+dds.prod():             0
+
+action info:
+s:                      3.2954
+kinetic:                3.52529
+i0:                     -0.071996
+vr:                     -0.157891
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+     183      152.57e+03      11       1    0.08       0  0.0125     0.1      1.6554        0.61        3.4395      -0.15789        3.2954
+
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.0125_T_0.61_pot_10.dat doesn't exist on pl = 184, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.0125_T_0.605_pot_10.dat doesn't exist on pl = 185, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.0125_T_0.6_pot_10.dat doesn't exist on pl = 186, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.0125_T_0.595_pot_10.dat doesn't exist on pl = 187, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.0125_T_0.59_pot_10.dat doesn't exist on pl = 188, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.0125_T_0.585_pot_10.dat doesn't exist on pl = 189, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.0125_T_0.58_pot_10.dat doesn't exist on pl = 190, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.0125_T_0.575_pot_10.dat doesn't exist on pl = 191, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.0125_T_0.57_pot_10.dat doesn't exist on pl = 192, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.0125_T_0.565_pot_10.dat doesn't exist on pl = 193, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.0125_T_0.56_pot_10.dat doesn't exist on pl = 194, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.0125_T_0.555_pot_10.dat doesn't exist on pl = 195, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.0125_T_0.55_pot_10.dat doesn't exist on pl = 196, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.0125_T_0.545_pot_10.dat doesn't exist on pl = 197, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.0125_T_0.54_pot_10.dat doesn't exist on pl = 198, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.0125_T_0.535_pot_10.dat doesn't exist on pl = 199, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.0125_T_0.53_pot_10.dat doesn't exist on pl = 200, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.0125_T_0.525_pot_10.dat doesn't exist on pl = 201, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.0125_T_0.52_pot_10.dat doesn't exist on pl = 202, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.0125_T_0.515_pot_10.dat doesn't exist on pl = 203, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.0125_T_0.51_pot_10.dat doesn't exist on pl = 204, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.0125_T_0.505_pot_10.dat doesn't exist on pl = 205, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.0125_T_0.5_pot_10.dat doesn't exist on pl = 206, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.0125_T_0.495_pot_10.dat doesn't exist on pl = 207, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.0125_T_0.49_pot_10.dat doesn't exist on pl = 208, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.0125_T_0.485_pot_10.dat doesn't exist on pl = 209, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.0125_T_0.48_pot_10.dat doesn't exist on pl = 210, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.0125_T_0.475_pot_10.dat doesn't exist on pl = 211, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.0125_T_0.47_pot_10.dat doesn't exist on pl = 212, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.0125_T_0.465_pot_10.dat doesn't exist on pl = 213, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.0125_T_0.46_pot_10.dat doesn't exist on pl = 214, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.0125_T_0.455_pot_10.dat doesn't exist on pl = 215, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.0125_T_0.45_pot_10.dat doesn't exist on pl = 216, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.0125_T_0.445_pot_10.dat doesn't exist on pl = 217, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.0125_T_0.44_pot_10.dat doesn't exist on pl = 218, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.0125_T_0.435_pot_10.dat doesn't exist on pl = 219, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.0125_T_0.43_pot_10.dat doesn't exist on pl = 220, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.0125_T_0.425_pot_10.dat doesn't exist on pl = 221, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.0125_T_0.42_pot_10.dat doesn't exist on pl = 222, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.0125_T_0.415_pot_10.dat doesn't exist on pl = 223, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.0125_T_0.41_pot_10.dat doesn't exist on pl = 224, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.0125_T_0.405_pot_10.dat doesn't exist on pl = 225, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.0125_T_0.4_pot_10.dat doesn't exist on pl = 226, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.0125_T_0.395_pot_10.dat doesn't exist on pl = 227, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.0125_T_0.39_pot_10.dat doesn't exist on pl = 228, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.0125_T_0.385_pot_10.dat doesn't exist on pl = 229, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.0125_T_0.38_pot_10.dat doesn't exist on pl = 230, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.0125_T_0.375_pot_10.dat doesn't exist on pl = 231, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.0125_T_0.37_pot_10.dat doesn't exist on pl = 232, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.0125_T_0.365_pot_10.dat doesn't exist on pl = 233, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.0125_T_0.36_pot_10.dat doesn't exist on pl = 234, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.0125_T_0.355_pot_10.dat doesn't exist on pl = 235, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.0125_T_0.35_pot_10.dat doesn't exist on pl = 236, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.0125_T_0.345_pot_10.dat doesn't exist on pl = 237, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.0125_T_0.34_pot_10.dat doesn't exist on pl = 238, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.0125_T_0.335_pot_10.dat doesn't exist on pl = 239, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.0125_T_0.33_pot_10.dat doesn't exist on pl = 240, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.0125_T_0.325_pot_10.dat doesn't exist on pl = 241, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.0125_T_0.32_pot_10.dat doesn't exist on pl = 242, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.0125_T_0.315_pot_10.dat doesn't exist on pl = 243, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.0125_T_0.61_pot_10.dat doesn't exist on pl = 244, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.01_T_0.61_pot_10.dat doesn't exist on pl = 245, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.01_T_0.605_pot_10.dat doesn't exist on pl = 246, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.01_T_0.6_pot_10.dat doesn't exist on pl = 247, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.01_T_0.595_pot_10.dat doesn't exist on pl = 248, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.01_T_0.59_pot_10.dat doesn't exist on pl = 249, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.01_T_0.585_pot_10.dat doesn't exist on pl = 250, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.01_T_0.58_pot_10.dat doesn't exist on pl = 251, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.01_T_0.575_pot_10.dat doesn't exist on pl = 252, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.01_T_0.57_pot_10.dat doesn't exist on pl = 253, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.01_T_0.565_pot_10.dat doesn't exist on pl = 254, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.01_T_0.56_pot_10.dat doesn't exist on pl = 255, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.01_T_0.555_pot_10.dat doesn't exist on pl = 256, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.01_T_0.55_pot_10.dat doesn't exist on pl = 257, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.01_T_0.545_pot_10.dat doesn't exist on pl = 258, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.01_T_0.54_pot_10.dat doesn't exist on pl = 259, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.01_T_0.535_pot_10.dat doesn't exist on pl = 260, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.01_T_0.53_pot_10.dat doesn't exist on pl = 261, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.01_T_0.525_pot_10.dat doesn't exist on pl = 262, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.01_T_0.52_pot_10.dat doesn't exist on pl = 263, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.01_T_0.515_pot_10.dat doesn't exist on pl = 264, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.01_T_0.51_pot_10.dat doesn't exist on pl = 265, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.01_T_0.505_pot_10.dat doesn't exist on pl = 266, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.01_T_0.5_pot_10.dat doesn't exist on pl = 267, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.01_T_0.495_pot_10.dat doesn't exist on pl = 268, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.01_T_0.49_pot_10.dat doesn't exist on pl = 269, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.01_T_0.485_pot_10.dat doesn't exist on pl = 270, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.01_T_0.48_pot_10.dat doesn't exist on pl = 271, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.01_T_0.475_pot_10.dat doesn't exist on pl = 272, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.01_T_0.47_pot_10.dat doesn't exist on pl = 273, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.01_T_0.465_pot_10.dat doesn't exist on pl = 274, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.01_T_0.46_pot_10.dat doesn't exist on pl = 275, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.01_T_0.455_pot_10.dat doesn't exist on pl = 276, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.01_T_0.45_pot_10.dat doesn't exist on pl = 277, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.01_T_0.445_pot_10.dat doesn't exist on pl = 278, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.01_T_0.44_pot_10.dat doesn't exist on pl = 279, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.01_T_0.435_pot_10.dat doesn't exist on pl = 280, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.01_T_0.43_pot_10.dat doesn't exist on pl = 281, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.01_T_0.425_pot_10.dat doesn't exist on pl = 282, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.01_T_0.42_pot_10.dat doesn't exist on pl = 283, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.01_T_0.415_pot_10.dat doesn't exist on pl = 284, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.01_T_0.41_pot_10.dat doesn't exist on pl = 285, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.01_T_0.405_pot_10.dat doesn't exist on pl = 286, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.01_T_0.4_pot_10.dat doesn't exist on pl = 287, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.01_T_0.395_pot_10.dat doesn't exist on pl = 288, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.01_T_0.39_pot_10.dat doesn't exist on pl = 289, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.01_T_0.385_pot_10.dat doesn't exist on pl = 290, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.01_T_0.38_pot_10.dat doesn't exist on pl = 291, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.01_T_0.375_pot_10.dat doesn't exist on pl = 292, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.01_T_0.37_pot_10.dat doesn't exist on pl = 293, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.01_T_0.365_pot_10.dat doesn't exist on pl = 294, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.01_T_0.36_pot_10.dat doesn't exist on pl = 295, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.01_T_0.355_pot_10.dat doesn't exist on pl = 296, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.01_T_0.35_pot_10.dat doesn't exist on pl = 297, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.01_T_0.345_pot_10.dat doesn't exist on pl = 298, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.01_T_0.34_pot_10.dat doesn't exist on pl = 299, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.01_T_0.335_pot_10.dat doesn't exist on pl = 300, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.01_T_0.33_pot_10.dat doesn't exist on pl = 301, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.01_T_0.325_pot_10.dat doesn't exist on pl = 302, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.01_T_0.32_pot_10.dat doesn't exist on pl = 303, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.08_E_0_a_0.01_T_0.315_pot_10.dat doesn't exist on pl = 304, moving to next parameter loop
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       6       5     831      11       1    0.06       0    0.02     0.1      1.7582        0.58        3.5003      -0.21359         3.139
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       6       5     837      11       1    0.09       0    0.02     0.1      1.6381        0.58        3.5587      -0.24217        3.0461
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       6       5     838      11       1     0.1       0    0.02     0.1      1.5982        0.58        3.5814      -0.24496        3.0206
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       7       5     830      11       1    0.06       0    0.02     0.1      1.7582       0.575        3.5303      -0.21716        3.1654
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       7       5     836      11       1    0.09       0    0.02     0.1      1.6381       0.575        3.5887      -0.24751        3.0708
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       7       5     837      11       1     0.1       0    0.02     0.1      1.5982       0.575        3.6115      -0.25087        3.0446
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       8       5     829      11       1    0.06       0    0.02     0.1      1.7582        0.57        3.5608      -0.22078        3.1923
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       8       5     835      11       1    0.09       0    0.02     0.1       1.638        0.57        3.6192      -0.25294        3.0958
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       8       5     836      11       1     0.1       0    0.02     0.1      1.5981        0.57         3.642      -0.25689        3.0691
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       9       5     829      11       1    0.06       0    0.02     0.1      1.7582       0.565        3.5918      -0.22448        3.2196
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       9       5     835      11       1    0.09       0    0.02     0.1       1.638       0.565        3.6503      -0.25847        3.1213
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       9       6   1e+03      11       1     0.1       0    0.02     0.1       1.598       0.565        3.6731      -0.26302        3.0939
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      10       5     829      11       1    0.06       0    0.02     0.1      1.7582        0.56        3.6234      -0.22823        3.2475
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      10       5     835      11       1    0.09       0    0.02     0.1       1.638        0.56        3.6819       -0.2641        3.1472
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      10       6   1e+03      11       1     0.1       0    0.02     0.1       1.598        0.56        3.7047      -0.26926        3.1192
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      11       5     828      11       1    0.06       0    0.02     0.1      1.7582       0.555        3.6556      -0.23206        3.2758
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      11       5     835      11       1    0.09       0    0.02     0.1      1.6379       0.555        3.7141      -0.26983        3.1737
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      11       6   1e+03      11       1     0.1       0    0.02     0.1      1.5979       0.555        3.7369      -0.27561         3.145
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      12       5     828      11       1    0.06       0    0.02     0.1      1.7582        0.55        3.6884      -0.23596        3.3046
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      12       5     834      11       1    0.09       0    0.02     0.1      1.6379        0.55        3.7469      -0.27567        3.2005
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      12       6   1e+03      11       1     0.1       0    0.02     0.1      1.5979        0.55        3.7697      -0.28209        3.1713
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      13       5     827      11       1    0.06       0    0.02     0.1      1.7582       0.545        3.7218      -0.23992         3.334
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      13       5     834      11       1    0.09       0    0.02     0.1      1.6379       0.545        3.7802      -0.28162        3.2279
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      14       5     827      11       1    0.06       0    0.02     0.1      1.7582        0.54        3.7557      -0.24396        3.3639
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      14       5     834      11       1    0.09       0    0.02     0.1      1.6379        0.54        3.8142      -0.28768        3.2558
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      13       6   1e+03      11       1     0.1       0    0.02     0.1      1.5979       0.545        3.8031      -0.28869         3.198
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      15       5     826      11       1    0.06       0    0.02     0.1      1.7582       0.535        3.7903      -0.24808        3.3944
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      15       5     833      11       1    0.09       0    0.02     0.1      1.6379       0.535        3.8489      -0.29385        3.2842
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      14       6   1e+03      11       1     0.1       0    0.02     0.1      1.5978        0.54        3.8371      -0.29541        3.2252
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      16       5     826      11       1    0.06       0    0.02     0.1      1.7582        0.53        3.8256      -0.25228        3.4254
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      16       5     833      11       1    0.09       0    0.02     0.1      1.6378        0.53        3.8841      -0.30015        3.3132
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      15       6   1e+03      11       1     0.1       0    0.02     0.1      1.5978       0.535        3.8717      -0.30227        3.2529
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      17       5     825      11       1    0.06       0    0.02     0.1      1.7582       0.525        3.8616      -0.25655         3.457
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      17       6   1e+03      11       1    0.09       0    0.02     0.1      1.6378       0.525        3.9201      -0.30656        3.3427
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      16       6   1e+03      11       1     0.1       0    0.02     0.1      1.5978        0.53         3.907      -0.30925        3.2812
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      18       5     824      11       1    0.06       0    0.02     0.1      1.7582        0.52        3.8982      -0.26091        3.4893
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      18       6   1e+03      11       1    0.09       0    0.02     0.1      1.6378        0.52        3.9567       -0.3131        3.3727
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      17       6   1e+03      11       1     0.1       0    0.02     0.1      1.5977       0.525         3.943      -0.31637          3.31
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      19       5     823      11       1    0.06       0    0.02     0.1      1.7582       0.515        3.9355      -0.26535        3.5221
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      19       6   1e+03      11       1    0.09       0    0.02     0.1      1.6378       0.515        3.9941      -0.31977        3.4034
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      20       5     822      11       1    0.06       0    0.02     0.1      1.7582        0.51        3.9736      -0.26988        3.5557
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      18       71.17e+03      11       1     0.1       0    0.02     0.1      1.5977        0.52        3.9796      -0.32363        3.3393
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      20       6   1e+03      11       1    0.09       0    0.02     0.1      1.6378        0.51        4.0322      -0.32657        3.4346
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      21       5     821      11       1    0.06       0    0.02     0.1      1.7582       0.505        4.0124       -0.2745        3.5898
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      19       71.17e+03      11       1     0.1       0    0.02     0.1      1.5977       0.515         4.017      -0.33103        3.3692
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      22       5     793      11       1    0.06       0    0.02     0.1      1.7582         0.5         4.052      -0.27921        3.6247
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      21       6     998      11       1    0.09       0    0.02     0.1      1.6377       0.505         4.071       -0.3335        3.4665
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      23       5     821      11       1    0.06       0    0.02     0.1      1.7582       0.495        4.0925      -0.28402        3.6603
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      20       71.17e+03      11       1     0.1       0    0.02     0.1      1.5976        0.51        4.0551      -0.33858        3.3997
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      22       6     962      11       1    0.09       0    0.02     0.1      1.6377         0.5        4.1106      -0.34058         3.499
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      24       5     820      11       1    0.06       0    0.02     0.1      1.7582        0.49        4.1337      -0.28892        3.6965
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      23       6     997      11       1    0.09       0    0.02     0.1      1.6377       0.495         4.151       -0.3478        3.5322
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      21       71.17e+03      11       1     0.1       0    0.02     0.1      1.5976       0.505        4.0939      -0.34628        3.4308
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      25       5     820      11       1    0.06       0    0.02     0.1      1.7582       0.485        4.1758      -0.29393        3.7336
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      24       6     996      11       1    0.09       0    0.02     0.1      1.6377        0.49        4.1923      -0.35516         3.566
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      26       5     820      11       1    0.06       0    0.02     0.1      1.7582        0.48        4.2187      -0.29904        3.7714
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      22       71.13e+03      11       1     0.1       0    0.02     0.1      1.5976         0.5        4.1335      -0.35414        3.4625
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      27       5     820      11       1    0.06       0    0.02     0.1      1.7582       0.475        4.2626      -0.30426          3.81
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      25       6     996      11       1    0.09       0    0.02     0.1      1.6377       0.485        4.2344      -0.36269        3.6005
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      23       71.16e+03      11       1     0.1       0    0.02     0.1      1.5976       0.495         4.174      -0.36216        3.4949
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      28       5     819      11       1    0.06       0    0.02     0.1      1.7582        0.47        4.3074      -0.30959        3.8494
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      26       6     995      11       1    0.09       0    0.02     0.1      1.6377        0.48        4.2773      -0.37036        3.6358
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      24       71.16e+03      11       1     0.1       0    0.02     0.1      1.5975        0.49        4.2152      -0.37034        3.5279
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      29       5     819      11       1    0.06       0    0.02     0.1      1.7582       0.465        4.3531      -0.31504        3.8897
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      27       6     995      11       1    0.09       0    0.02     0.1      1.6377       0.475        4.3212       -0.3782        3.6718
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      30       5     818      11       1    0.06       0    0.02     0.1      1.7582        0.46        4.3999       -0.3206        3.9309
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      25       71.16e+03      11       1     0.1       0    0.02     0.1      1.5975       0.485        4.2573       -0.3787        3.5616
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      28       6     994      11       1    0.09       0    0.02     0.1      1.6377        0.47         4.366      -0.38621        3.7086
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      31       5     818      11       1    0.06       0    0.02     0.1      1.7582       0.455        4.4477      -0.32629        3.9729
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      26       71.16e+03      11       1     0.1       0    0.02     0.1      1.5975        0.48        4.3003      -0.38723         3.596
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      29       6     994      11       1    0.09       0    0.02     0.1      1.6376       0.465        4.4118      -0.39439        3.7461
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      32       5     818      11       1    0.06       0    0.02     0.1      1.7582        0.45        4.4965       -0.3321        4.0159
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      33       5     818      11       1    0.06       0    0.02     0.1      1.7582       0.445        4.5464      -0.33804        4.0599
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      30       6     995      11       1    0.09       0    0.02     0.1      1.6376        0.46        4.4585      -0.40275        3.7845
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      27       71.16e+03      11       1     0.1       0    0.02     0.1      1.5975       0.475        4.3441      -0.39594        3.6312
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      34       5     817      11       1    0.06       0    0.02     0.1      1.7582        0.44        4.5975      -0.34412        4.1048
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      31       6     995      11       1    0.09       0    0.02     0.1      1.6376       0.455        4.5063       -0.4113        3.8237
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      28       6     996      11       1     0.1       0    0.02     0.1      1.5975        0.47        4.3889      -0.40483         3.667
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      35       5     817      11       1    0.06       0    0.02     0.1      1.7582       0.435        4.6498      -0.35034        4.1508
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      32       6     995      11       1    0.09       0    0.02     0.1      1.6376        0.45        4.5551      -0.42003        3.8638
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      29       6     995      11       1     0.1       0    0.02     0.1      1.5974       0.465        4.4347      -0.41392        3.7037
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      36       5     816      11       1    0.06       0    0.02     0.1      1.7582        0.43        4.7032       -0.3567        4.1979
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      33       6     993      11       1    0.09       0    0.02     0.1      1.6376       0.445        4.6051      -0.42897        3.9048
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      30       6     995      11       1     0.1       0    0.02     0.1      1.5974        0.46        4.4815      -0.42321        3.7411
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      37       5     816      11       1    0.06       0    0.02     0.1      1.7581       0.425         4.758      -0.36321         4.246
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      34       6     992      11       1    0.09       0    0.02     0.1      1.6376        0.44        4.6562       -0.4381        3.9467
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      38       5     816      11       1    0.06       0    0.02     0.1      1.7581        0.42         4.814      -0.36988        4.2953
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      31       6     996      11       1     0.1       0    0.02     0.1      1.5974       0.455        4.5293      -0.43271        3.7794
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      35       5     826      11       1    0.09       0    0.02     0.1      1.6376       0.435        4.7084      -0.44745        3.9896
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      39       5     816      11       1    0.06       0    0.02     0.1      1.7581       0.415        4.8714      -0.37671        4.3458
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      32       6     996      11       1     0.1       0    0.02     0.1      1.5974        0.45        4.5781      -0.44241        3.8185
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      40       5     815      11       1    0.06       0    0.02     0.1      1.7581        0.41        4.9301       -0.3837        4.3976
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      36       5     825      11       1    0.09       0    0.02     0.1      1.6376        0.43        4.7619      -0.45701        4.0334
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      33       6     995      11       1     0.1       0    0.02     0.1      1.5974       0.445        4.6281      -0.45234        3.8585
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      41       5     815      11       1    0.06       0    0.02     0.1      1.7581       0.405        4.9904      -0.39087        4.4506
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      37       5     825      11       1    0.09       0    0.02     0.1      1.6376       0.425        4.8166       -0.4668        4.0783
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      34       6     994      11       1     0.1       0    0.02     0.1      1.5974        0.44        4.6792      -0.46249        3.8994
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      42       5     814      11       1    0.06       0    0.02     0.1      1.7581         0.4        5.0521      -0.39822        4.5049
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      38       5     824      11       1    0.09       0    0.02     0.1      1.6376        0.42        4.8727      -0.47683        4.1243
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      35       6     993      11       1     0.1       0    0.02     0.1      1.5974       0.435        4.7314      -0.47288        3.9412
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      43       5     814      11       1    0.06       0    0.02     0.1      1.7581       0.395        5.1154      -0.40575        4.5606
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      39       6     989      11       1    0.09       0    0.02     0.1      1.6376       0.415          4.93      -0.48709        4.1714
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      44       5     814      11       1    0.06       0    0.02     0.1      1.7581        0.39        5.1803      -0.41347        4.6178
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      36       6     992      11       1     0.1       0    0.02     0.1      1.5973        0.43        4.7849      -0.48351         3.984
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      40       6     988      11       1    0.09       0    0.02     0.1      1.6376        0.41        4.9888      -0.49761        4.2196
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      45       5     813      11       1    0.06       0    0.02     0.1      1.7581       0.385        5.2469       -0.4214        4.6764
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      37       6     991      11       1     0.1       0    0.02     0.1      1.5973       0.425        4.8396      -0.49439        4.0279
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      41       6     989      11       1    0.09       0    0.02     0.1      1.6376       0.405         5.049      -0.50838        4.2691
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      46       5     813      11       1    0.06       0    0.02     0.1      1.7581        0.38        5.3152      -0.42954        4.7365
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      38       6     991      11       1     0.1       0    0.02     0.1      1.5973        0.42        4.8956      -0.50553        4.0727
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      42       6     989      11       1    0.09       0    0.02     0.1      1.6375         0.4        5.1108      -0.51943        4.3197
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      47       5     812      11       1    0.06       0    0.02     0.1      1.7581       0.375        5.3854      -0.43789        4.7983
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      39       6     990      11       1     0.1       0    0.02     0.1      1.5973       0.415         4.953      -0.51694        4.1187
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      48       5     812      11       1    0.06       0    0.02     0.1      1.7581        0.37        5.4575      -0.44647        4.8618
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      43       6     988      11       1    0.09       0    0.02     0.1      1.6375       0.395        5.1741      -0.53076        4.3717
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      49       5     812      11       1    0.06       0    0.02     0.1      1.7581       0.365        5.5315      -0.45528        4.9269
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      40       6     990      11       1     0.1       0    0.02     0.1      1.5973        0.41        5.0118      -0.52863        4.1657
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      44       6     987      11       1    0.09       0    0.02     0.1      1.6375        0.39         5.239      -0.54238        4.4249
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      50       5     811      11       1    0.06       0    0.02     0.1      1.7581        0.36        5.6077      -0.46434        4.9939
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      41       6     989      11       1     0.1       0    0.02     0.1      1.5973       0.405         5.072      -0.54061         4.214
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      45       6     985      11       1    0.09       0    0.02     0.1      1.6375       0.385        5.3056      -0.55429        4.4796
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      51       5     811      11       1    0.06       0    0.02     0.1      1.7581       0.355        5.6859      -0.47365        5.0628
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      42       6     989      11       1     0.1       0    0.02     0.1      1.5973         0.4        5.1338      -0.55289        4.2634
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      46       6     985      11       1    0.09       0    0.02     0.1      1.6375        0.38         5.374      -0.56653        4.5357
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      52       5     811      11       1    0.06       0    0.02     0.1      1.7581        0.35        5.7664      -0.48323        5.1336
+
+=>> PBS: job killed: walltime 43242 exceeded limit 43200
+/opt/sgi/mpt/mpt-2.13/bin/mpiexec_mpt: line 71: 1192053 Killed                  $mpicmdline_prefix -f $paramfile
