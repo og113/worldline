@@ -9,7 +9,7 @@ set key below
 set autoscale
 set xtic auto
 set ytic auto
-set title "Potential 12: Kappa, Temperature, a"
+set title "Kappa, Temperature, a"
 set xlabel "{/Symbol k}"
 set ylabel "Temperature"
 set zlabel "a"
