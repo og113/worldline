@@ -6,6 +6,9 @@ if (outFile ne 'gui') \
 set term svg size 1600,800; \
 set output outFile; \
 
+file8="db/nr/plotsHand/s_T_a_0.02_kappa_0.01_K_11_pot_8.dat"
+file10="db/nr/plotsHand/s_T_a_0.01_kappa_0.01_K_11_pot_10.dat"
+
 # files
 file2="results/nr/nr2.dat"
 file4="results/nr/nr4.dat"
@@ -42,10 +45,13 @@ ST4r='? $12: 1/0): 1/0): 1/0)'
 
 set xrange [0:2]
 set yrange [1:4]
-plot @ST2l 0.1 @ST2m 0.1 @ST2r t "Finite temperature calculation, closed topology, a=0.1, K=10" with points lc rgb "blue", \
-	@ST4l 0.005 @ST4r t "Finite temperature calculation, open topology, a=0.005, K=11" with points lc rgb "magenta", \
+plot file8 u 1:2 with lines lc rgb "blue" title "pot 8", \
+	file10 u 1:2 with lines lc rgb "black" title "pot 10", \
 	ptemp(x,Napprox) title "low temperature result" with lines lc rgb "red", \
 	pweak(x) title "weak coupling result" with lines lc rgb "green", \
 	phightemp(x,kappa) title "high temperature result" with lines lc rgb "orange"
+	
+#plot @ST2l 0.1 @ST2m 0.1 @ST2r t "Finite temperature calculation, closed topology, a=0.1, K=10" with points lc rgb "blue", \
+#	@ST4l 0.005 @ST4r t "Finite temperature calculation, open topology, a=0.005, K=11" with points lc rgb "magenta", \
 
 pause -1
