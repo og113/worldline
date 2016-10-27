@@ -239,10 +239,14 @@ if (gaussianLR)
 	gaussian = true;
 
 StringPair potExtras("pot",nts((int)poto));
-if ((int)poto<5)
+if ((int)poto<5 && !thermal2)
 	potExtras.second = nts(2*(int)poto + (int)gaussian);
-else
+else if (!thermal2)
 	potExtras.second = nts(10 + 3*((int)poto-5) + (int)gaussian + (int)gaussianLR);
+else if (!disjoint)
+	potExtras.second = nts(13);
+else
+	potExtras.second = nts(14); // this is all a bit messy now but whatever
 	
 KineticOptions::Option kino = KineticOptions::saddle;
 StringPair kinExtras("kin",nts((int)kino));
@@ -555,7 +559,7 @@ for (uint pl=0; pl<Npl; pl++) {
 				loadFile = filenameLoopNR<dim>(p,baseFolder);
 				(loadFile.Extras).push_back(potExtras);
 			}
-			if (!loadFile.exists() && (poto==PotentialOptions::thermal || disjoint)) {
+			if (!loadFile.exists() && (poto==PotentialOptions::thermal || disjoint) && !thermal2) {
 				loadFile = filenameThermalNR<dim>(p,baseFolder);
 				StringPair potExtrasAlt("pot","");
 				if (poto==PotentialOptions::thermal) {
@@ -567,6 +571,27 @@ for (uint pl=0; pl<Npl; pl++) {
 					potExtrasAlt.second = nts((int)(stn<int>(potExtras.second)+offset));
 				}	
 				(loadFile.Extras).push_back(potExtrasAlt);
+			}
+			if (!loadFile.exists() && (poto==PotentialOptions::thermal || disjoint) && thermal2) { // very messy but no time to fix now
+				loadFile = filenameThermalNR<dim>(p,baseFolder);
+				StringPair potExtrasAlt("pot","");
+				if (poto==PotentialOptions::thermal) {
+					potExtrasAlt.second = nts(9);
+				}
+				else if (poto==PotentialOptions::thermalDisjoint) {
+					potExtrasAlt.second = nts(12);
+				}	
+				(loadFile.Extras).push_back(potExtrasAlt);
+				if (!loadFile.exists()) {
+					loadFile = filenameThermalNR<dim>(p,baseFolder);
+					StringPair potExtrasAlt("pot","");
+					if (poto==PotentialOptions::thermal) {
+						potExtrasAlt.second = nts(8);
+					}
+					else if (poto==PotentialOptions::thermalDisjoint) {
+						potExtrasAlt.second = nts(10);
+					}	
+				}
 			}
 			else if (!loadFile.exists()) {
 				loadFile = filenameLoopNR<dim>(p,baseFolder);
