@@ -237,6 +237,8 @@ if (!disjoint)
 	gaussianLR = false;
 if (gaussianLR)
 	gaussian = true;
+if (thermal2)
+	gaussian = true;
 
 StringPair potExtras("pot",nts((int)poto));
 if ((int)poto<5 && !thermal2)
@@ -572,7 +574,7 @@ for (uint pl=0; pl<Npl; pl++) {
 				}	
 				(loadFile.Extras).push_back(potExtrasAlt);
 			}
-			if (!loadFile.exists() && (poto==PotentialOptions::thermal || disjoint) && thermal2) { // very messy but no time to fix now
+			else if (!loadFile.exists() && (poto==PotentialOptions::thermal || disjoint) && thermal2) { // very messy but no time to fix now
 				loadFile = filenameThermalNR<dim>(p,baseFolder);
 				StringPair potExtrasAlt("pot","");
 				if (poto==PotentialOptions::thermal) {
@@ -590,10 +592,11 @@ for (uint pl=0; pl<Npl; pl++) {
 					}
 					else if (poto==PotentialOptions::thermalDisjoint) {
 						potExtrasAlt.second = nts(10);
-					}	
+					}
+					(loadFile.Extras).push_back(potExtrasAlt);
 				}
 			}
-			else if (!loadFile.exists()) {
+			else if (!loadFile.exists() && !thermal2) {
 				loadFile = filenameLoopNR<dim>(p,baseFolder);
 				StringPair potExtrasAlt("pot","");
 				int offset = (gaussian? -1:+1);
