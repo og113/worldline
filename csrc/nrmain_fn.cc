@@ -237,6 +237,8 @@ if (!disjoint)
 	gaussianLR = false;
 if (gaussianLR)
 	gaussian = true;
+if (thermal2)
+	gaussian = true;
 
 StringPair potExtras("pot",nts((int)poto));
 if ((int)poto<5 && !thermal2)

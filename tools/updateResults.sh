@@ -55,17 +55,46 @@ echo "new results: $deltaLines";
 if [ "$deltaLines" -gt 0 ]
 then
 
-# a "here document" follows. note that there must be no trailing space after the last "HERE"
-# this iports results to the sqlite database
+# some "here documents" follow. note that there must be no trailing space after the last "HERE"
+# this imports results to the sqlite database
 sqlite3 $databaseFile <<HERE
 .separator ","
 .import "$deltaResultsFile" "$table"
+HERE
+
+# views to export
+view1="s_B_T_a_0.01_K_11_pot_10"
+view2="s_B_T_a_0.02_K_11_pot_8"
+view3="s_T_a_B_0.01_K_12_pot_10"
+view4="s_T_a_B_0.01_K_12_pot_8"
+view5="s_sigma_B_T_E_a_0.02_K_11_pot_10"
+view6="s_sigma_B_T_E_a_0.02_K_11_pot_8"
+echo "updating views ${view1}, ${view2}, ${view3}, ${view4}, ${view5}, ${view6}" 
+
+# exporting views
+sqlite3 $databaseFile <<HERE
+.mode csv
+.separator " "
+.header off
+.output "temp/${view1}.dat"
+SELECT * FROM "$view1";
+.output "temp/${view2}.dat"
+SELECT * FROM "$view2";
+.output "temp/${view3}.dat"
+SELECT * FROM "$view3";
+.output "temp/${view4}.dat"
+SELECT * FROM "$view4";
+.output "temp/${view5}.dat"
+SELECT * FROM "$view5";
+.output "temp/${view6}.dat"
+SELECT * FROM "$view6";
 HERE
 
 if [ "$?" -eq 0 ]
 then
 	cat $deltaResultsFile >> $databaseResultsFile
 fi
+
 
 fi
 
