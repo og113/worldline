@@ -55,8 +55,8 @@ echo "new results: $deltaLines";
 if [ "$deltaLines" -gt 0 ]
 then
 
-# a "here document" follows. note that there must be no trailing space after the last "HERE"
-# this iports results to the sqlite database
+# some "here documents" follow. note that there must be no trailing space after the last "HERE"
+# this imports results to the sqlite database
 sqlite3 $databaseFile <<HERE
 .separator ","
 .import "$deltaResultsFile" "$table"
@@ -69,4 +69,20 @@ fi
 
 fi
 
+# views to export
+views="s_B_T_a_0.01_K_11_pot_10 s_B_T_a_0.02_K_11_pot_8 s_T_a_B_0.01_K_12_pot_10 s_T_a_B_0.01_K_12_pot_8 s_sigma_B_T_E_a_0.02_K_11_pot_10 s_sigma_B_T_E_a_0.02_K_11_pot_8 kta_pot_8 kta_pot_10 kta_pot_12 kta_pot_13 kta_pot_14"
+echo "updating views:"
+
+# exporting views
+for v in $views;
+do
+echo $v
+sqlite3 $databaseFile <<HERE
+.mode csv
+.separator " "
+.header off
+.output "db/nr/plotsHand/${v}.dat"
+SELECT * FROM "${v}";
+HERE
+done
 
