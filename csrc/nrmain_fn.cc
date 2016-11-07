@@ -556,7 +556,7 @@ for (uint pl=0; pl<Npl; pl++) {
 			if (poto!=PotentialOptions::original || gaussian)
 				(loadFile.Extras).push_back(potExtras);
 			if (kino!=KineticOptions::saddle)
-				(stepFile.Extras).push_back(kinExtras);
+				(loadFile.Extras).push_back(kinExtras);
 			if (!loadFile.exists() && (poto!=PotentialOptions::original || gaussian)) {
 				loadFile = filenameLoopNR<dim>(p,baseFolder);
 				(loadFile.Extras).push_back(potExtras);
