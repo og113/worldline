@@ -1,0 +1,29 @@
+nrmain_x8_B_a_0.02_K_11_T_0.7_pot_14_step_0
+./nrmain -base /slow/data/dc-goul1/worldline/ -inputs nrinputs/inputs4 -guess 0 -step 1 -old 0 -pot thermalDisjoint -gaussian 1 -thermal2 1 -gaussianLR 1 -mu_a 0 -pass 0 -nonrel 0 -allTests 0 -fixdz 1 -fixtlr 1 -fixdislr 1 -print none -eigen 0 -redo 1 -redoErrors 1
+timenumber: 161106091743
+looping over 2 steps
+loading loops from:
+/slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.499_E_0_a_0.02_T_0.7_pot_14.dat
+  pl run        len         i0          s          E        sol       solM      delta  dx*kg_max     ic_max     cc_max       dx/a
+   0   1      2.861    -0.2885      2.289      1.592   0.000471  0.0003731   1.46e-05    0.08206  1.207e-06          0    0.06986
+   0   2      2.861    -0.2885      2.289      1.592  9.681e-14  6.777e-13  8.347e-13    0.08206  1.207e-06          0    0.06986
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       0       2     443      11       1   0.499       0    0.02     0.1      1.5923         0.7        2.8613      -0.28365        2.2891
+
+          x:/slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.499_E_0_a_0.02_T_0.7_pot_14.dat
+    results:      results/nr/nr6.csv
+loading loops from:
+/slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.499_E_0_a_0.02_T_0.7_pot_14.dat
+  pl run        len         i0          s          E        sol       solM      delta  dx*kg_max     ic_max     cc_max       dx/a
+   1   1      2.861    -0.2885      2.289      1.592  6.779e-06  5.521e-06   0.002542    0.08206  1.207e-06          0    0.06986
+   1   2      2.861    -0.2878      2.289      1.593  1.366e-06  1.889e-06  0.0003758     0.0746  9.955e-07          0    0.06984
+   1   3      2.861    -0.2879      2.289      1.593  2.394e-08  2.819e-08  1.949e-05    0.07564  1.028e-06          0    0.06984
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       1       3     665      11       1     0.5       0    0.02     0.1      1.5929         0.7        2.8607      -0.28419        2.2886
+
+          x:/slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.5_E_0_a_0.02_T_0.7_pot_14.dat
+    results:      results/nr/nr6.csv
+1108.65user 1.50system 18:30.34elapsed 99%CPU (0avgtext+0avgdata 1090736maxresident)k
+144inputs+312outputs (0major+13741minor)pagefaults 0swaps

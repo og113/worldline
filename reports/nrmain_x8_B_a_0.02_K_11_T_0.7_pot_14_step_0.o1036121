@@ -1,0 +1,543 @@
+nrmain_x8_B_a_0.02_K_11_T_0.7_pot_14_step_0
+./nrmain -base /slow/data/dc-goul1/worldline/ -inputs nrinputs/inputs4 -guess 0 -step 0 -old 0 -pot thermalDisjoint -gaussian 1 -thermal2 1 -gaussianLR 1 -mu_a 0 -pass 0 -nonrel 0 -allTests 0 -fixdz 1 -fixtlr 1 -fixdislr 1 -print none -eigen 0 -redo 0 -redoErrors 0
+timenumber: 161103231954
+looping over 101 steps
+loading loops from:
+/slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.4_E_0_a_0.02_T_0.7_pot_10.dat
+  pl run        len         i0          s          E        sol       solM      delta  dx*kg_max     ic_max     cc_max       dx/a
+   0   1      2.955    -0.3873      2.345      1.508   0.000563   0.003875    0.03681     0.4777  0.0002095          0    0.07214
+   0   2      2.925    -0.3474      2.345      1.543  0.0001832  0.0005526   0.005135     0.3885   0.000157          0    0.07141
+   0   3       2.92    -0.3432      2.345       1.55  1.422e-05   3.21e-05  0.0006515     0.3706  6.094e-05          0    0.07129
+   0   4       2.92    -0.3439      2.345      1.549  3.078e-08  4.871e-08  5.902e-06      0.372  6.216e-05          0     0.0713
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       0       4     903      11       1     0.4       0    0.02     0.1      1.5489         0.7        2.9203      -0.23154        2.3449
+
+          x:/slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.4_E_0_a_0.02_T_0.7_pot_14.dat
+    results:      results/nr/nr6.csv
+loading loops from:
+/slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.4_E_0_a_0.02_T_0.7_pot_14.dat
+  pl run        len         i0          s          E        sol       solM      delta  dx*kg_max     ic_max     cc_max       dx/a
+   1   1       2.92    -0.3439      2.344      1.549  1.215e-05  2.075e-05  0.0006396      0.372  6.216e-05          0     0.0713
+   1   2       2.92    -0.3433      2.344      1.549  2.206e-07  5.543e-07  9.732e-06       0.37  6.091e-05          0    0.07128
+   1   3       2.92    -0.3433      2.344      1.549  7.332e-12  1.281e-11  1.286e-09       0.37  6.093e-05          0    0.07128
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       1       3     678      11       1   0.401       0    0.02     0.1      1.5493         0.7        2.9197      -0.23206        2.3443
+
+          x:/slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.401_E_0_a_0.02_T_0.7_pot_14.dat
+    results:      results/nr/nr6.csv
+loading loops from:
+/slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.401_E_0_a_0.02_T_0.7_pot_14.dat
+  pl run        len         i0          s          E        sol       solM      delta  dx*kg_max     ic_max     cc_max       dx/a
+   2   1       2.92    -0.3433      2.344      1.549  1.207e-05  2.054e-05  0.0006422       0.37  6.093e-05          0    0.07128
+   2   2      2.919    -0.3428      2.344       1.55  2.207e-07  5.526e-07  9.833e-06     0.3679   5.97e-05          0    0.07127
+   2   3      2.919    -0.3428      2.344       1.55  7.481e-12  1.311e-11  1.325e-09     0.3679  5.973e-05          0    0.07127
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       2       3     677      11       1   0.402       0    0.02     0.1      1.5497         0.7        2.9191      -0.23258        2.3437
+
+          x:/slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.402_E_0_a_0.02_T_0.7_pot_14.dat
+    results:      results/nr/nr6.csv
+loading loops from:
+/slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.402_E_0_a_0.02_T_0.7_pot_14.dat
+  pl run        len         i0          s          E        sol       solM      delta  dx*kg_max     ic_max     cc_max       dx/a
+   3   1      2.919    -0.3428      2.343      1.549    1.2e-05  2.033e-05  0.0006449     0.3679  5.973e-05          0    0.07127
+   3   2      2.919    -0.3422      2.343       1.55  2.207e-07  5.511e-07  9.936e-06     0.3659  5.851e-05          0    0.07125
+   3   3      2.919    -0.3422      2.343       1.55  7.636e-12  1.342e-11  1.365e-09     0.3659  5.854e-05          0    0.07125
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       3       3     677      11       1   0.403       0    0.02     0.1      1.5501         0.7        2.9185       -0.2331        2.3432
+
+          x:/slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.403_E_0_a_0.02_T_0.7_pot_14.dat
+    results:      results/nr/nr6.csv
+loading loops from:
+/slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.403_E_0_a_0.02_T_0.7_pot_14.dat
+  pl run        len         i0          s          E        sol       solM      delta  dx*kg_max     ic_max     cc_max       dx/a
+   4   1      2.919    -0.3422      2.343       1.55  1.193e-05  2.013e-05  0.0006476     0.3659  5.854e-05          0    0.07125
+   4   2      2.918    -0.3417      2.343       1.55  2.208e-07  5.495e-07  1.004e-05     0.3638  5.734e-05          0    0.07124
+   4   3      2.918    -0.3417      2.343       1.55  7.797e-12  1.375e-11  1.407e-09     0.3639  5.736e-05          0    0.07124
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       4       3     677      11       1   0.404       0    0.02     0.1      1.5504         0.7        2.9179      -0.23362        2.3426
+
+          x:/slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.404_E_0_a_0.02_T_0.7_pot_14.dat
+    results:      results/nr/nr6.csv
+loading loops from:
+/slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.404_E_0_a_0.02_T_0.7_pot_14.dat
+  pl run        len         i0          s          E        sol       solM      delta  dx*kg_max     ic_max     cc_max       dx/a
+   5   1      2.918    -0.3417      2.342       1.55  1.186e-05  1.993e-05  0.0006503     0.3639  5.736e-05          0    0.07124
+   5   2      2.917    -0.3411      2.342      1.551   2.21e-07   5.48e-07  1.015e-05     0.3618  5.618e-05          0    0.07122
+   5   3      2.917    -0.3412      2.342      1.551  7.963e-12  1.408e-11   1.45e-09     0.3618   5.62e-05          0    0.07122
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       5       3     677      11       1   0.405       0    0.02     0.1      1.5508         0.7        2.9173      -0.23414         2.342
+
+          x:/slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.405_E_0_a_0.02_T_0.7_pot_14.dat
+    results:      results/nr/nr6.csv
+loading loops from:
+/slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.405_E_0_a_0.02_T_0.7_pot_14.dat
+  pl run        len         i0          s          E        sol       solM      delta  dx*kg_max     ic_max     cc_max       dx/a
+   6   1      2.917    -0.3412      2.341      1.551  1.179e-05  1.972e-05   0.000653     0.3618   5.62e-05          0    0.07122
+   6   2      2.917    -0.3406      2.341      1.551  2.211e-07  5.465e-07  1.026e-05     0.3597  5.504e-05          0    0.07121
+   6   3      2.917    -0.3406      2.341      1.551  8.137e-12  1.443e-11  1.495e-09     0.3597  5.506e-05          0    0.07121
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       6       3     677      11       1   0.406       0    0.02     0.1      1.5512         0.7        2.9167      -0.23466        2.3415
+
+          x:/slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.406_E_0_a_0.02_T_0.7_pot_14.dat
+    results:      results/nr/nr6.csv
+loading loops from:
+/slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.406_E_0_a_0.02_T_0.7_pot_14.dat
+  pl run        len         i0          s          E        sol       solM      delta  dx*kg_max     ic_max     cc_max       dx/a
+   7   1      2.917    -0.3406      2.341      1.551  1.173e-05  1.952e-05  0.0006558     0.3597  5.506e-05          0    0.07121
+   7   2      2.916    -0.3401      2.341      1.552  2.212e-07   5.45e-07  1.037e-05     0.3576  5.392e-05          0    0.07119
+   7   3      2.916    -0.3401      2.341      1.552  8.317e-12  1.478e-11  1.542e-09     0.3576  5.394e-05          0     0.0712
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       7       3     677      11       1   0.407       0    0.02     0.1      1.5515         0.7        2.9162      -0.23518        2.3409
+
+          x:/slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.407_E_0_a_0.02_T_0.7_pot_14.dat
+    results:      results/nr/nr6.csv
+loading loops from:
+/slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.407_E_0_a_0.02_T_0.7_pot_14.dat
+  pl run        len         i0          s          E        sol       solM      delta  dx*kg_max     ic_max     cc_max       dx/a
+   8   1      2.916    -0.3401       2.34      1.551  1.166e-05  1.932e-05  0.0006587     0.3576  5.394e-05          0     0.0712
+   8   2      2.916    -0.3395       2.34      1.552  2.214e-07  5.436e-07  1.048e-05     0.3555  5.281e-05          0    0.07118
+   8   3      2.916    -0.3395       2.34      1.552  8.505e-12  1.515e-11  1.591e-09     0.3556  5.283e-05          0    0.07118
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       8       3     677      11       1   0.408       0    0.02     0.1      1.5519         0.7        2.9156       -0.2357        2.3403
+
+          x:/slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.408_E_0_a_0.02_T_0.7_pot_14.dat
+    results:      results/nr/nr6.csv
+loading loops from:
+/slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.408_E_0_a_0.02_T_0.7_pot_14.dat
+  pl run        len         i0          s          E        sol       solM      delta  dx*kg_max     ic_max     cc_max       dx/a
+   9   1      2.916    -0.3395       2.34      1.552  1.159e-05  1.913e-05  0.0006615     0.3556  5.283e-05          0    0.07118
+   9   2      2.915     -0.339       2.34      1.552  2.215e-07  5.422e-07   1.06e-05     0.3534  5.172e-05          0    0.07117
+   9   3      2.915     -0.339       2.34      1.552    8.7e-12  1.553e-11  1.642e-09     0.3535  5.174e-05          0    0.07117
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       9       3     676      11       1   0.409       0    0.02     0.1      1.5523         0.7         2.915      -0.23622        2.3398
+
+          x:/slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.409_E_0_a_0.02_T_0.7_pot_14.dat
+    results:      results/nr/nr6.csv
+loading loops from:
+/slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.409_E_0_a_0.02_T_0.7_pot_14.dat
+  pl run        len         i0          s          E        sol       solM      delta  dx*kg_max     ic_max     cc_max       dx/a
+  10   1      2.915     -0.339      2.339      1.552  1.152e-05  1.893e-05  0.0006644     0.3535  5.174e-05          0    0.07117
+  10   2      2.914    -0.3384      2.339      1.553  2.217e-07  5.408e-07  1.072e-05     0.3513  5.064e-05          0    0.07115
+  10   3      2.914    -0.3384      2.339      1.553  8.903e-12  1.594e-11  1.696e-09     0.3514  5.066e-05          0    0.07115
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      10       3     676      11       1    0.41       0    0.02     0.1      1.5527         0.7        2.9144      -0.23674        2.3392
+
+          x:/slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.41_E_0_a_0.02_T_0.7_pot_14.dat
+    results:      results/nr/nr6.csv
+loading loops from:
+/slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.41_E_0_a_0.02_T_0.7_pot_14.dat
+  pl run        len         i0          s          E        sol       solM      delta  dx*kg_max     ic_max     cc_max       dx/a
+  11   1      2.914    -0.3384      2.339      1.552  1.145e-05  1.874e-05  0.0006674     0.3514  5.066e-05          0    0.07115
+  11   2      2.914    -0.3379      2.339      1.553  2.219e-07  5.395e-07  1.084e-05     0.3492  4.958e-05          0    0.07114
+  11   3      2.914    -0.3379      2.339      1.553  9.114e-12  1.634e-11  1.752e-09     0.3492   4.96e-05          0    0.07114
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      11       3     676      11       1   0.411       0    0.02     0.1       1.553         0.7        2.9138      -0.23726        2.3386
+
+          x:/slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.411_E_0_a_0.02_T_0.7_pot_14.dat
+    results:      results/nr/nr6.csv
+loading loops from:
+/slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.411_E_0_a_0.02_T_0.7_pot_14.dat
+  pl run        len         i0          s          E        sol       solM      delta  dx*kg_max     ic_max     cc_max       dx/a
+  12   1      2.914    -0.3379      2.338      1.553  1.139e-05  1.854e-05  0.0006704     0.3492   4.96e-05          0    0.07114
+  12   2      2.913    -0.3373      2.338      1.553  2.222e-07  5.382e-07  1.097e-05     0.3471  4.853e-05          0    0.07112
+  12   3      2.913    -0.3373      2.338      1.553  9.334e-12  1.677e-11   1.81e-09     0.3471  4.855e-05          0    0.07112
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      12       3     676      11       1   0.412       0    0.02     0.1      1.5534         0.7        2.9132      -0.23779        2.3381
+
+          x:/slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.412_E_0_a_0.02_T_0.7_pot_14.dat
+    results:      results/nr/nr6.csv
+loading loops from:
+/slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.412_E_0_a_0.02_T_0.7_pot_14.dat
+  pl run        len         i0          s          E        sol       solM      delta  dx*kg_max     ic_max     cc_max       dx/a
+  13   1      2.913    -0.3373      2.337      1.553  1.132e-05  1.835e-05  0.0006734     0.3471  4.855e-05          0    0.07112
+  13   2      2.913    -0.3368      2.337      1.554  2.224e-07   5.37e-07   1.11e-05      0.345   4.75e-05          0    0.07111
+  13   3      2.913    -0.3368      2.337      1.554  9.564e-12  1.722e-11  1.871e-09      0.345  4.752e-05          0    0.07111
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      13       3     676      11       1   0.413       0    0.02     0.1      1.5538         0.7        2.9126      -0.23831        2.3375
+
+          x:/slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.413_E_0_a_0.02_T_0.7_pot_14.dat
+    results:      results/nr/nr6.csv
+loading loops from:
+/slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.413_E_0_a_0.02_T_0.7_pot_14.dat
+  pl run        len         i0          s          E        sol       solM      delta  dx*kg_max     ic_max     cc_max       dx/a
+  14   1      2.913    -0.3368      2.337      1.554  1.126e-05  1.816e-05  0.0006765      0.345  4.752e-05          0    0.07111
+  14   2      2.912    -0.3362      2.337      1.554  2.227e-07  5.358e-07  1.123e-05     0.3428  4.648e-05          0    0.07109
+  14   3      2.912    -0.3363      2.337      1.554  9.803e-12  1.768e-11  1.935e-09     0.3428   4.65e-05          0    0.07109
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      14       3     676      11       1   0.414       0    0.02     0.1      1.5542         0.7         2.912      -0.23883        2.3369
+
+          x:/slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.414_E_0_a_0.02_T_0.7_pot_14.dat
+    results:      results/nr/nr6.csv
+loading loops from:
+/slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.414_E_0_a_0.02_T_0.7_pot_14.dat
+  pl run        len         i0          s          E        sol       solM      delta  dx*kg_max     ic_max     cc_max       dx/a
+  15   1      2.912    -0.3363      2.336      1.554  1.119e-05  1.797e-05  0.0006796     0.3428   4.65e-05          0    0.07109
+  15   2      2.911    -0.3357      2.336      1.555   2.23e-07  5.346e-07  1.136e-05     0.3407  4.548e-05          0    0.07108
+  15   3      2.911    -0.3357      2.336      1.555  1.005e-11  1.815e-11  2.001e-09     0.3407   4.55e-05          0    0.07108
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      15       3     676      11       1   0.415       0    0.02     0.1      1.5545         0.7        2.9114      -0.23935        2.3364
+
+          x:/slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.415_E_0_a_0.02_T_0.7_pot_14.dat
+    results:      results/nr/nr6.csv
+loading loops from:
+/slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.415_E_0_a_0.02_T_0.7_pot_14.dat
+  pl run        len         i0          s          E        sol       solM      delta  dx*kg_max     ic_max     cc_max       dx/a
+  16   1      2.911    -0.3357      2.336      1.554  1.112e-05  1.779e-05  0.0006828     0.3407   4.55e-05          0    0.07108
+  16   2      2.911    -0.3352      2.336      1.555  2.233e-07  5.335e-07   1.15e-05     0.3385  4.449e-05          0    0.07106
+  16   3      2.911    -0.3352      2.336      1.555  1.031e-11  1.865e-11  2.071e-09     0.3385  4.451e-05          0    0.07107
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      16       3     676      11       1   0.416       0    0.02     0.1      1.5549         0.7        2.9108      -0.23987        2.3358
+
+          x:/slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.416_E_0_a_0.02_T_0.7_pot_14.dat
+    results:      results/nr/nr6.csv
+loading loops from:
+/slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.416_E_0_a_0.02_T_0.7_pot_14.dat
+  pl run        len         i0          s          E        sol       solM      delta  dx*kg_max     ic_max     cc_max       dx/a
+  17   1      2.911    -0.3352      2.335      1.555  1.106e-05   1.76e-05   0.000686     0.3385  4.451e-05          0    0.07107
+  17   2       2.91    -0.3346      2.335      1.555  2.236e-07  5.324e-07  1.164e-05     0.3363  4.352e-05          0    0.07105
+  17   3       2.91    -0.3346      2.335      1.555  1.058e-11  1.916e-11  2.144e-09     0.3364  4.354e-05          0    0.07105
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      17       3     676      11       1   0.417       0    0.02     0.1      1.5553         0.7        2.9102      -0.24039        2.3352
+
+          x:/slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.417_E_0_a_0.02_T_0.7_pot_14.dat
+    results:      results/nr/nr6.csv
+loading loops from:
+/slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.417_E_0_a_0.02_T_0.7_pot_14.dat
+  pl run        len         i0          s          E        sol       solM      delta  dx*kg_max     ic_max     cc_max       dx/a
+  18   1       2.91    -0.3346      2.335      1.555  1.099e-05  1.742e-05  0.0006893     0.3364  4.354e-05          0    0.07105
+  18   2       2.91    -0.3341      2.335      1.556  2.239e-07  5.313e-07  1.179e-05     0.3342  4.256e-05          0    0.07104
+  18   3       2.91    -0.3341      2.335      1.556  1.087e-11  1.969e-11  2.221e-09     0.3342  4.258e-05          0    0.07104
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      18       3     676      11       1   0.418       0    0.02     0.1      1.5557         0.7        2.9096      -0.24092        2.3347
+
+          x:/slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.418_E_0_a_0.02_T_0.7_pot_14.dat
+    results:      results/nr/nr6.csv
+loading loops from:
+/slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.418_E_0_a_0.02_T_0.7_pot_14.dat
+  pl run        len         i0          s          E        sol       solM      delta  dx*kg_max     ic_max     cc_max       dx/a
+  19   1       2.91    -0.3341      2.334      1.555  1.093e-05  1.723e-05  0.0006926     0.3342  4.258e-05          0    0.07104
+  19   2      2.909    -0.3335      2.334      1.556  2.243e-07  5.303e-07  1.193e-05      0.332  4.162e-05          0    0.07102
+  19   3      2.909    -0.3335      2.334      1.556  1.117e-11  2.025e-11  2.301e-09      0.332  4.164e-05          0    0.07102
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      19       3     676      11       1   0.419       0    0.02     0.1      1.5561         0.7         2.909      -0.24144        2.3341
+
+          x:/slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.419_E_0_a_0.02_T_0.7_pot_14.dat
+    results:      results/nr/nr6.csv
+loading loops from:
+/slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.419_E_0_a_0.02_T_0.7_pot_14.dat
+  pl run        len         i0          s          E        sol       solM      delta  dx*kg_max     ic_max     cc_max       dx/a
+  20   1      2.909    -0.3335      2.334      1.556  1.087e-05  1.705e-05   0.000696      0.332  4.164e-05          0    0.07102
+  20   2      2.908     -0.333      2.334      1.556  2.247e-07  5.293e-07  1.209e-05     0.3298  4.069e-05          0    0.07101
+  20   3      2.908     -0.333      2.334      1.556  1.148e-11  2.083e-11  2.386e-09     0.3298  4.071e-05          0    0.07101
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      20       3     675      11       1    0.42       0    0.02     0.1      1.5565         0.7        2.9085      -0.24196        2.3335
+
+          x:/slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.42_E_0_a_0.02_T_0.7_pot_14.dat
+    results:      results/nr/nr6.csv
+loading loops from:
+/slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.42_E_0_a_0.02_T_0.7_pot_14.dat
+  pl run        len         i0          s          E        sol       solM      delta  dx*kg_max     ic_max     cc_max       dx/a
+  21   1      2.908     -0.333      2.333      1.556   1.08e-05  1.687e-05  0.0006994     0.3298  4.071e-05          0    0.07101
+  21   2      2.908    -0.3324      2.333      1.557  2.251e-07  5.284e-07  1.224e-05     0.3276  3.978e-05          0    0.07099
+  21   3      2.908    -0.3324      2.333      1.557   1.18e-11  2.144e-11  2.474e-09     0.3276  3.979e-05          0    0.07099
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      21       3     675      11       1   0.421       0    0.02     0.1      1.5568         0.7        2.9079      -0.24248         2.333
+
+          x:/slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.421_E_0_a_0.02_T_0.7_pot_14.dat
+    results:      results/nr/nr6.csv
+loading loops from:
+/slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.421_E_0_a_0.02_T_0.7_pot_14.dat
+  pl run        len         i0          s          E        sol       solM      delta  dx*kg_max     ic_max     cc_max       dx/a
+  22   1      2.908    -0.3324      2.332      1.557  1.074e-05  1.669e-05  0.0007029     0.3276  3.979e-05          0    0.07099
+  22   2      2.907    -0.3319      2.332      1.557  2.255e-07  5.275e-07   1.24e-05     0.3253  3.887e-05          0    0.07098
+  22   3      2.907    -0.3319      2.332      1.557  1.214e-11  2.206e-11  2.567e-09     0.3254  3.889e-05          0    0.07098
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      22       3     675      11       1   0.422       0    0.02     0.1      1.5572         0.7        2.9073      -0.24301        2.3324
+
+          x:/slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.422_E_0_a_0.02_T_0.7_pot_14.dat
+    results:      results/nr/nr6.csv
+loading loops from:
+/slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.422_E_0_a_0.02_T_0.7_pot_14.dat
+  pl run        len         i0          s          E        sol       solM      delta  dx*kg_max     ic_max     cc_max       dx/a
+  23   1      2.907    -0.3319      2.332      1.557  1.068e-05  1.651e-05  0.0007064     0.3254  3.889e-05          0    0.07098
+  23   2      2.907    -0.3313      2.332      1.558   2.26e-07  5.267e-07  1.257e-05     0.3231  3.799e-05          0    0.07096
+  23   3      2.907    -0.3313      2.332      1.558  1.249e-11  2.272e-11  2.665e-09     0.3231    3.8e-05          0    0.07096
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      23       3     675      11       1   0.423       0    0.02     0.1      1.5576         0.7        2.9067      -0.24353        2.3318
+
+          x:/slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.423_E_0_a_0.02_T_0.7_pot_14.dat
+    results:      results/nr/nr6.csv
+loading loops from:
+/slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.423_E_0_a_0.02_T_0.7_pot_14.dat
+  pl run        len         i0          s          E        sol       solM      delta  dx*kg_max     ic_max     cc_max       dx/a
+  24   1      2.907    -0.3313      2.331      1.557  1.062e-05  1.634e-05    0.00071     0.3231    3.8e-05          0    0.07096
+  24   2      2.906    -0.3308      2.331      1.558  2.265e-07  5.259e-07  1.274e-05     0.3209  3.711e-05          0    0.07095
+  24   3      2.906    -0.3308      2.331      1.558  1.287e-11  2.341e-11  2.767e-09     0.3209  3.713e-05          0    0.07095
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      24       3     675      11       1   0.424       0    0.02     0.1       1.558         0.7        2.9061      -0.24405        2.3313
+
+          x:/slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.424_E_0_a_0.02_T_0.7_pot_14.dat
+    results:      results/nr/nr6.csv
+loading loops from:
+/slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.424_E_0_a_0.02_T_0.7_pot_14.dat
+  pl run        len         i0          s          E        sol       solM      delta  dx*kg_max     ic_max     cc_max       dx/a
+  25   1      2.906    -0.3308      2.331      1.558  1.055e-05  1.616e-05  0.0007137     0.3209  3.713e-05          0    0.07095
+  25   2      2.905    -0.3302      2.331      1.558   2.27e-07  5.251e-07  1.291e-05     0.3186  3.625e-05          0    0.07093
+  25   3      2.905    -0.3302      2.331      1.558  1.326e-11  2.412e-11  2.875e-09     0.3186  3.627e-05          0    0.07093
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      25       3     675      11       1   0.425       0    0.02     0.1      1.5584         0.7        2.9055      -0.24458        2.3307
+
+          x:/slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.425_E_0_a_0.02_T_0.7_pot_14.dat
+    results:      results/nr/nr6.csv
+loading loops from:
+/slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.425_E_0_a_0.02_T_0.7_pot_14.dat
+  pl run        len         i0          s          E        sol       solM      delta  dx*kg_max     ic_max     cc_max       dx/a
+  26   1      2.905    -0.3302       2.33      1.558  1.049e-05  1.599e-05  0.0007174     0.3186  3.627e-05          0    0.07093
+  26   2      2.905    -0.3297       2.33      1.559  2.275e-07  5.244e-07  1.309e-05     0.3163   3.54e-05          0    0.07092
+  26   3      2.905    -0.3297       2.33      1.559  1.366e-11  2.487e-11  2.989e-09     0.3164  3.542e-05          0    0.07092
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      26       3     675      11       1   0.426       0    0.02     0.1      1.5588         0.7        2.9049       -0.2451        2.3301
+
+          x:/slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.426_E_0_a_0.02_T_0.7_pot_14.dat
+    results:      results/nr/nr6.csv
+loading loops from:
+/slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.426_E_0_a_0.02_T_0.7_pot_14.dat
+  pl run        len         i0          s          E        sol       solM      delta  dx*kg_max     ic_max     cc_max       dx/a
+  27   1      2.905    -0.3297       2.33      1.559  1.043e-05  1.582e-05  0.0007212     0.3164  3.542e-05          0    0.07092
+  27   2      2.904    -0.3291       2.33      1.559  2.281e-07  5.238e-07  1.327e-05     0.3141  3.457e-05          0    0.07091
+  27   3      2.904    -0.3291       2.33      1.559  1.409e-11  2.564e-11  3.109e-09     0.3141  3.458e-05          0    0.07091
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      27       3     674      11       1   0.427       0    0.02     0.1      1.5592         0.7        2.9043      -0.24562        2.3296
+
+          x:/slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.427_E_0_a_0.02_T_0.7_pot_14.dat
+    results:      results/nr/nr6.csv
+loading loops from:
+/slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.427_E_0_a_0.02_T_0.7_pot_14.dat
+  pl run        len         i0          s          E        sol       solM      delta  dx*kg_max     ic_max     cc_max       dx/a
+  28   1      2.904    -0.3291      2.329      1.559  1.037e-05  1.565e-05  0.0007251     0.3141  3.458e-05          0    0.07091
+  28   2      2.904    -0.3286      2.329       1.56  2.287e-07  5.232e-07  1.346e-05     0.3118  3.374e-05          0    0.07089
+  28   3      2.904    -0.3286      2.329       1.56  1.454e-11  2.647e-11  3.236e-09     0.3118  3.376e-05          0    0.07089
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      28       3     673      11       1   0.428       0    0.02     0.1      1.5596         0.7        2.9037      -0.24615         2.329
+
+          x:/slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.428_E_0_a_0.02_T_0.7_pot_14.dat
+    results:      results/nr/nr6.csv
+loading loops from:
+/slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.428_E_0_a_0.02_T_0.7_pot_14.dat
+  pl run        len         i0          s          E        sol       solM      delta  dx*kg_max     ic_max     cc_max       dx/a
+  29   1      2.904    -0.3286      2.328      1.559  1.031e-05  1.548e-05   0.000729     0.3118  3.376e-05          0    0.07089
+  29   2      2.903     -0.328      2.328       1.56  2.293e-07  5.226e-07  1.365e-05     0.3095  3.294e-05          0    0.07088
+  29   3      2.903     -0.328      2.328       1.56  1.502e-11  2.731e-11  3.369e-09     0.3095  3.295e-05          0    0.07088
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      29       3     673      11       1   0.429       0    0.02     0.1        1.56         0.7        2.9031      -0.24667        2.3284
+
+          x:/slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.429_E_0_a_0.02_T_0.7_pot_14.dat
+    results:      results/nr/nr6.csv
+loading loops from:
+/slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.429_E_0_a_0.02_T_0.7_pot_14.dat
+  pl run        len         i0          s          E        sol       solM      delta  dx*kg_max     ic_max     cc_max       dx/a
+  30   1      2.903     -0.328      2.328       1.56  1.025e-05  1.531e-05  0.0007331     0.3095  3.295e-05          0    0.07088
+  30   2      2.903    -0.3275      2.328       1.56  2.299e-07  5.221e-07  1.385e-05     0.3071  3.214e-05          0    0.07086
+  30   3      2.903    -0.3275      2.328       1.56  1.551e-11   2.82e-11   3.51e-09     0.3072  3.216e-05          0    0.07086
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      30       3     673      11       1    0.43       0    0.02     0.1      1.5604         0.7        2.9025      -0.24719        2.3279
+
+          x:/slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.43_E_0_a_0.02_T_0.7_pot_14.dat
+    results:      results/nr/nr6.csv
+loading loops from:
+/slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.43_E_0_a_0.02_T_0.7_pot_14.dat
+  pl run        len         i0          s          E        sol       solM      delta  dx*kg_max     ic_max     cc_max       dx/a
+  31   1      2.903    -0.3275      2.327       1.56  1.019e-05  1.514e-05  0.0007372     0.3072  3.216e-05          0    0.07086
+  31   2      2.902    -0.3269      2.327      1.561  2.306e-07  5.217e-07  1.406e-05     0.3048  3.136e-05          0    0.07085
+  31   3      2.902    -0.3269      2.327      1.561  1.604e-11  2.914e-11  3.659e-09     0.3049  3.137e-05          0    0.07085
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      31       3     673      11       1   0.431       0    0.02     0.1      1.5607         0.7        2.9019      -0.24772        2.3273
+
+          x:/slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.431_E_0_a_0.02_T_0.7_pot_14.dat
+    results:      results/nr/nr6.csv
+loading loops from:
+/slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.431_E_0_a_0.02_T_0.7_pot_14.dat
+  pl run        len         i0          s          E        sol       solM      delta  dx*kg_max     ic_max     cc_max       dx/a
+  32   1      2.902    -0.3269      2.327       1.56  1.013e-05  1.497e-05  0.0007413     0.3049  3.137e-05          0    0.07085
+  32   2      2.901    -0.3263      2.327      1.561  2.313e-07  5.213e-07  1.427e-05     0.3025  3.058e-05          0    0.07083
+  32   3      2.901    -0.3264      2.327      1.561  1.659e-11  3.012e-11  3.817e-09     0.3025   3.06e-05          0    0.07083
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      32       3     673      11       1   0.432       0    0.02     0.1      1.5611         0.7        2.9013      -0.24824        2.3267
+
+          x:/slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.432_E_0_a_0.02_T_0.7_pot_14.dat
+    results:      results/nr/nr6.csv
+loading loops from:
+/slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.432_E_0_a_0.02_T_0.7_pot_14.dat
+  pl run        len         i0          s          E        sol       solM      delta  dx*kg_max     ic_max     cc_max       dx/a
+  33   1      2.901    -0.3264      2.326      1.561  1.007e-05  1.481e-05  0.0007456     0.3025   3.06e-05          0    0.07083
+  33   2      2.901    -0.3258      2.326      1.562  2.321e-07   5.21e-07  1.449e-05     0.3001  2.983e-05          0    0.07082
+  33   3      2.901    -0.3258      2.326      1.562  1.717e-11  3.114e-11  3.984e-09     0.3002  2.984e-05          0    0.07082
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      33       3     673      11       1   0.433       0    0.02     0.1      1.5615         0.7        2.9007      -0.24877        2.3262
+
+          x:/slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.433_E_0_a_0.02_T_0.7_pot_14.dat
+    results:      results/nr/nr6.csv
+loading loops from:
+/slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.433_E_0_a_0.02_T_0.7_pot_14.dat
+  pl run        len         i0          s          E        sol       solM      delta  dx*kg_max     ic_max     cc_max       dx/a
+  34   1      2.901    -0.3258      2.326      1.561  1.001e-05  1.465e-05  0.0007499     0.3002  2.984e-05          0    0.07082
+  34   2        2.9    -0.3252      2.326      1.562  2.329e-07  5.208e-07  1.471e-05     0.2978  2.908e-05          0     0.0708
+  34   3        2.9    -0.3252      2.326      1.562  1.778e-11  3.222e-11   4.16e-09     0.2978   2.91e-05          0     0.0708
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      34       3     673      11       1   0.434       0    0.02     0.1      1.5619         0.7        2.9001      -0.24929        2.3256
+
+          x:/slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.434_E_0_a_0.02_T_0.7_pot_14.dat
+    results:      results/nr/nr6.csv
+loading loops from:
+/slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.434_E_0_a_0.02_T_0.7_pot_14.dat
+  pl run        len         i0          s          E        sol       solM      delta  dx*kg_max     ic_max     cc_max       dx/a
+  35   1        2.9    -0.3252      2.325      1.562  9.954e-06  1.448e-05  0.0007544     0.2978   2.91e-05          0     0.0708
+  35   2        2.9    -0.3247      2.325      1.562  2.337e-07  5.206e-07  1.494e-05     0.2954  2.834e-05          0    0.07079
+  35   3        2.9    -0.3247      2.325      1.562  1.843e-11  3.335e-11  4.348e-09     0.2954  2.836e-05          0    0.07079
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      35       3     673      11       1   0.435       0    0.02     0.1      1.5623         0.7        2.8995      -0.24981         2.325
+
+          x:/slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.435_E_0_a_0.02_T_0.7_pot_14.dat
+    results:      results/nr/nr6.csv
+loading loops from:
+/slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.435_E_0_a_0.02_T_0.7_pot_14.dat
+  pl run        len         i0          s          E        sol       solM      delta  dx*kg_max     ic_max     cc_max       dx/a
+  36   1        2.9    -0.3247      2.324      1.562  9.896e-06  1.432e-05  0.0007589     0.2954  2.836e-05          0    0.07079
+  36   2      2.899    -0.3241      2.324      1.563  2.346e-07  5.205e-07  1.518e-05      0.293  2.762e-05          0    0.07077
+  36   3      2.899    -0.3241      2.324      1.563  1.911e-11  3.454e-11  4.547e-09      0.293  2.764e-05          0    0.07078
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      36       3     673      11       1   0.436       0    0.02     0.1      1.5627         0.7        2.8989      -0.25034        2.3245
+
+          x:/slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.436_E_0_a_0.02_T_0.7_pot_14.dat
+    results:      results/nr/nr6.csv
+loading loops from:
+/slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.436_E_0_a_0.02_T_0.7_pot_14.dat
+  pl run        len         i0          s          E        sol       solM      delta  dx*kg_max     ic_max     cc_max       dx/a
+  37   1      2.899    -0.3241      2.324      1.562  9.838e-06  1.416e-05  0.0007635      0.293  2.764e-05          0    0.07078
+  37   2      2.898    -0.3236      2.324      1.563  2.355e-07  5.204e-07  1.543e-05     0.2906  2.691e-05          0    0.07076
+  37   3      2.898    -0.3236      2.324      1.563  1.983e-11   3.58e-11  4.758e-09     0.2906  2.693e-05          0    0.07076
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      37       3     673      11       1   0.437       0    0.02     0.1      1.5631         0.7        2.8984      -0.25086        2.3239
+
+          x:/slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.437_E_0_a_0.02_T_0.7_pot_14.dat
+    results:      results/nr/nr6.csv
+loading loops from:
+/slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.437_E_0_a_0.02_T_0.7_pot_14.dat
+  pl run        len         i0          s          E        sol       solM      delta  dx*kg_max     ic_max     cc_max       dx/a
+  38   1      2.898    -0.3236      2.323      1.563  9.781e-06    1.4e-05  0.0007682     0.2906  2.693e-05          0    0.07076
+  38   2      2.898     -0.323      2.323      1.564  2.365e-07  5.204e-07  1.568e-05     0.2882  2.621e-05          0    0.07075
+  38   3      2.898     -0.323      2.323      1.564  2.059e-11  3.711e-11  4.982e-09     0.2882  2.623e-05          0    0.07075
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      38       3     673      11       1   0.438       0    0.02     0.1      1.5636         0.7        2.8978      -0.25139        2.3233
+
+          x:/slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.438_E_0_a_0.02_T_0.7_pot_14.dat
+    results:      results/nr/nr6.csv
+loading loops from:
+/slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.438_E_0_a_0.02_T_0.7_pot_14.dat
+  pl run        len         i0          s          E        sol       solM      delta  dx*kg_max     ic_max     cc_max       dx/a
+  39   1      2.898     -0.323      2.323      1.563  9.724e-06  1.384e-05  0.0007731     0.2882  2.623e-05          0    0.07075
+  39   2      2.897    -0.3225      2.323      1.564  2.375e-07  5.205e-07  1.595e-05     0.2857  2.552e-05          0    0.07073
+  39   3      2.897    -0.3225      2.323      1.564  2.139e-11  3.849e-11  5.222e-09     0.2858  2.554e-05          0    0.07073
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      39       3     673      11       1   0.439       0    0.02     0.1       1.564         0.7        2.8972      -0.25191        2.3228
+
+          x:/slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.439_E_0_a_0.02_T_0.7_pot_14.dat
+    results:      results/nr/nr6.csv
+loading loops from:
+/slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.44_E_0_a_0.02_T_0.7_pot_10.dat
+  pl run        len         i0          s          E        sol       solM      delta  dx*kg_max     ic_max     cc_max       dx/a
+  40   1      2.933    -0.3686      2.322       1.52  0.0002327   0.002041    0.03966     0.4111  0.0001061          0     0.0716
+  40   2      2.904    -0.3279      2.322      1.554  0.0001954  0.0005104    0.01067     0.3129  0.0001171          0    0.07089
+  40   3      2.895    -0.3197      2.322      1.566  3.679e-05  7.624e-05   0.002323     0.2785  2.279e-05          0    0.07069
+  40   4      2.897     -0.322      2.322      1.564  4.354e-07  7.094e-07  0.0001216     0.2837  2.494e-05          0    0.07072
+  40   5      2.897    -0.3219      2.322      1.564  3.086e-09  6.735e-09  3.559e-08     0.2833  2.486e-05          0    0.07072
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      40       51.13e+03      11       1    0.44       0    0.02     0.1      1.5644         0.7        2.8966      -0.25244        2.3222
+
+          x:/slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.44_E_0_a_0.02_T_0.7_pot_14.dat
+    results:      results/nr/nr6.csv
+loading loops from:
+/slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.441_E_0_a_0.02_T_0.7_pot_10.dat
+  pl run        len         i0          s          E        sol       solM      delta  dx*kg_max     ic_max     cc_max       dx/a
+  41   1      2.932    -0.3681      2.322       1.52  0.0002307   0.002009    0.03972     0.4093   0.000104          0    0.07159
+  41   2      2.903    -0.3274      2.322      1.554  0.0001957   0.000509    0.01089     0.3109  0.0001163          0    0.07087
+  41   3      2.895     -0.319      2.322      1.566  3.784e-05  7.822e-05   0.002411     0.2758  2.209e-05          0    0.07067
+  41   4      2.896    -0.3215      2.322      1.565  4.714e-07  7.665e-07  0.0001331     0.2813  2.428e-05          0     0.0707
+  41   5      2.896    -0.3214      2.322      1.565  3.679e-09  7.993e-09  4.281e-08     0.2809   2.42e-05          0     0.0707
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      41       51.13e+03      11       1   0.441       0    0.02     0.1      1.5648         0.7         2.896      -0.25296        2.3216
+
+          x:/slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.441_E_0_a_0.02_T_0.7_pot_14.dat
+    results:      results/nr/nr6.csv
+loading loops from:
+/slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.442_E_0_a_0.02_T_0.7_pot_10.dat
+  pl run        len         i0          s          E        sol       solM      delta  dx*kg_max     ic_max     cc_max       dx/a
+  42   1      2.932    -0.3676      2.321       1.52  0.0002286   0.001975    0.03978     0.4075  0.0001019          0    0.07157
+  42   2      2.903     -0.327      2.321      1.555   0.000196  0.0005077    0.01111     0.3089  0.0001154          0    0.07086
+  42   3      2.894    -0.3184      2.321      1.567  3.894e-05  8.028e-05   0.002503     0.2732  2.141e-05          0    0.07066
+  42   4      2.895    -0.3209      2.321      1.565  5.108e-07   8.29e-07  0.0001457     0.2788  2.364e-05          0    0.07069
+  42   5      2.895    -0.3208      2.321      1.565  4.397e-09  9.507e-09  5.167e-08     0.2784  2.354e-05          0    0.07069
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      42       51.13e+03      11       1   0.442       0    0.02     0.1      1.5652         0.7        2.8954      -0.25349        2.3211
+
+          x:/slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.442_E_0_a_0.02_T_0.7_pot_14.dat
+    results:      results/nr/nr6.csv
+loading loops from:
+/slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.443_E_0_a_0.02_T_0.7_pot_10.dat
+  pl run        len         i0          s          E        sol       solM      delta  dx*kg_max     ic_max     cc_max       dx/a
+  43   1      2.931    -0.3671      2.321       1.52  0.0002265   0.001941    0.03984     0.4057  9.983e-05          0    0.07156
+  43   2      2.902    -0.3265       2.32      1.555  0.0001962  0.0005062    0.01135     0.3069  0.0001146          0    0.07085
+  43   3      2.893    -0.3178      2.321      1.567  4.008e-05  8.241e-05     0.0026     0.2705  2.073e-05          0    0.07064
+  43   4      2.895    -0.3204      2.321      1.565  5.542e-07  8.977e-07  0.0001598     0.2764    2.3e-05          0    0.07068
+  43   5      2.895    -0.3202      2.321      1.566  5.267e-09  1.133e-08  6.259e-08     0.2759   2.29e-05          0    0.07067
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+      43       51.12e+03      11       1   0.443       0    0.02     0.1      1.5656         0.7        2.8948      -0.25401        2.3205
+
+          x:/slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.443_E_0_a_0.02_T_0.7_pot_14.dat
+    results:      results/nr/nr6.csv
+loading loops from:
+/slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.444_E_0_a_0.02_T_0.7_pot_10.dat

@@ -62,13 +62,21 @@ sqlite3 $databaseFile <<HERE
 .import "$deltaResultsFile" "$table";
 HERE
 
-views="s_B_T_a_0.01_K_11_pot_10 s_B_T_a_0.02_K_11_pot_8 s_T_a_B_0.01_K_12_pot_10 s_T_a_B_0.01_K_12_pot_8 s_sigma_B_T_E_a_0.02_K_11_pot_10 \
-s_sigma_B_T_E_a_0.02_K_11_pot_8 kta_pot_8 kta_pot_10 kta_pot_13 kta_pot_14";
-echo "updating views ${views}"
+if [ "$?" -eq 0 ]
+then
+	cat $deltaResultsFile >> $databaseResultsFile
+fi
+
+fi
+
+# views to export
+views="s_B_T_a_0.01_K_11_pot_10 s_B_T_a_0.02_K_11_pot_8 s_T_a_B_0.01_K_12_pot_10 s_T_a_B_0.01_K_12_pot_8 s_sigma_B_T_E_a_0.02_K_11_pot_10 s_sigma_B_T_E_a_0.02_K_11_pot_8 kta_pot_8 kta_pot_10 kta_pot_12 kta_pot_13 kta_pot_14"
+echo "updating views:"
 
 # exporting views
 for v in $views;
 do
+echo $v
 sqlite3 $databaseFile <<HERE
 .mode csv
 .separator " "
@@ -77,13 +85,4 @@ sqlite3 $databaseFile <<HERE
 SELECT * FROM "${v}";
 HERE
 done
-
-if [ "$?" -eq 0 ]
-then
-	cat $deltaResultsFile >> $databaseResultsFile
-fi
-
-
-fi
-
 

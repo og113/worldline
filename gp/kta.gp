@@ -4,6 +4,8 @@ file10="db/nr/plotsHand/kta_pot_10.dat"
 file11="db/nr/plotsHand/kta_pot_11.dat"
 file12="db/nr/plotsHand/kta_pot_12.dat"
 file8="db/nr/plotsHand/kta_pot_8.dat"
+file13="db/nr/plotsHand/kta_pot_13.dat"
+file14="db/nr/plotsHand/kta_pot_14.dat"
 
 set key below
 set autoscale
@@ -23,6 +25,8 @@ splot file8 using 1:2:3 with points ls 1 lc rgb "blue" title "pot 8", \
 	file10 using 1:2:3 with points ls 2 lc rgb "red" title "pot 10", \
 	file11 using 1:2:3 with points ls 4 lc rgb "green" title "pot 11", \
 	file12 using 1:2:3 with points ls 8 lc rgb "orange" title "pot 12", \
+	file13 using 1:2:3 with points ls 8 lc rgb "cyan" title "pot 13", \
+	file14 using 1:2:3 with points ls 8 lc rgb "magenta" title "pot 14", \
 	'+' u 1:(Tmax($1)):(0.01) with lines ls 1 lc rgb "black" title "T_{Max}", \
 
 #	file10 using 1:2:3 with points ls 1 lc rgb "green" title "pot 10", \
