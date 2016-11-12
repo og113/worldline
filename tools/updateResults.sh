@@ -59,7 +59,7 @@ then
 # this imports results to the sqlite database
 sqlite3 $databaseFile <<HERE
 .separator ","
-.import "$deltaResultsFile" "$table"
+.import "$deltaResultsFile" "$table";
 HERE
 
 if [ "$?" -eq 0 ]

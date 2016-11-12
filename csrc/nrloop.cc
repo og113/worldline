@@ -406,6 +406,12 @@ void VthrDisjoint (const uint& j, const uint& k, const Loop<Dim>& l, const numbe
 	cerr << "VthrDisjoint error: not defined in dimension " << Dim << endl;
 }
 
+// VthrDisjointLR
+template <uint Dim>
+void VthrDisjointLR (const uint& j, const uint& k, const Loop<Dim>& l, const number& beta, const number& a, const number& f, number& result) {
+	cerr << "VthrDisjoint errorLR: not defined in dimension " << Dim << endl;
+}
+
 // VnonrelDisjoint
 template <uint Dim>
 void VnonrelDisjoint (const uint& j, const Loop<Dim>& l, const number& f, number& result) {
@@ -1269,6 +1275,13 @@ void mdVnonrelrDisjoint_nr(const uint& j, const uint& mu, const Loop<Dim>& l, co
 	cerr << "mdVnonrelrDisjoint_nr Error: no script written for dim = " << Dim << endl;
 }
 
+// mdVthr_nr
+template<uint Dim>
+void mdVthr_nr(const uint& j, const uint& mu, const uint& i, const Loop<Dim>& l,\
+					 	const number& beta, const number& a, const number& f, vec& v) {
+	cerr << "mddVthr_nr Error: no script written for dim = " << Dim << endl;
+}
+
 // ddVthr_nr
 template<uint Dim>
 void ddVthr_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l,\
@@ -1278,9 +1291,16 @@ void ddVthr_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, con
 
 // mdVthrDisjoint_nr
 template<uint Dim>
-void mdVthr_nr(const uint& j, const uint& mu, const uint& i, const Loop<Dim>& l,\
+void mdVthrDisjoint_nr(const uint& j, const uint& mu, const uint& i, const Loop<Dim>& l,\
 					 	const number& beta, const number& a, const number& f, vec& v) {
 	cerr << "mddVthrDisjoint_nr Error: no script written for dim = " << Dim << endl;
+}
+
+// mdVthrDisjointLR_nr
+template<uint Dim>
+void mdVthrDisjointLR_nr(const uint& j, const uint& mu, const uint& i, const Loop<Dim>& l,\
+					 	const number& beta, const number& a, const number& f, vec& v) {
+	cerr << "mddVthrDisjointLR_nr Error: no script written for dim = " << Dim << endl;
 }
 
 // ddVthrDisjoint_nr
@@ -1288,6 +1308,13 @@ template<uint Dim>
 void ddVthrDisjoint_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l,\
 						 const number& beta, const number& a, const number& f, mat& m) {
 	cerr << "ddVthrDisjoint_nr Error: no script written for dim = " << Dim << endl;
+}
+
+// ddVthrDisjointLR_nr
+template<uint Dim>
+void ddVthrDisjointLR_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l,\
+						 const number& beta, const number& a, const number& f, mat& m) {
+	cerr << "ddVthrDisjointLR_nr Error: no script written for dim = " << Dim << endl;
 }
 
 // ddVnonrelDisjoint_nr
@@ -1667,6 +1694,16 @@ void ErgVthrDisjoint_nr(const Loop<Dim>& l, const uint& j, const uint& mu, const
 	number t = DX(l,k,j,Dim-1); // intentionally not DXDisjoint(l,k,j,Dim-1,beta);
 
 	erg += f*(-pow(2.0*PI,2))*DXDisjoint(l,k,mu,beta)*FThermal(r,t,beta,a);	
+}
+
+// ErgVthrDisjointLR_nr
+template<uint Dim>
+void ErgVthrDisjointLR_nr(const Loop<Dim>& l, const uint& j, const uint& mu, const uint& k, const number& beta, const number& a, const number& f, number& erg) {
+	uint N = l.size();
+	if ((j<N/2 && k<N/2) || (j>=N/2 && k>=N/2))
+		ErgVthrDisjoint_nr(l,j,mu,k,beta,a,f,erg);
+	else
+		ErgVthrDisjoint_nr(l,j,mu,k,beta,0.0,f,erg);
 }
 
 // ErgGaussian_nr
@@ -2323,6 +2360,7 @@ template void ErgInDisjoint_nr<4>(const Loop<4>& l, const uint& loc, const uint&
 template void ErgVor_nr<4>(const Loop<4>& l, const uint& j, const uint& mu, const uint& k, const number& a, const number& f, number& erg);
 template void ErgVthr_nr<4>(const Loop<4>& l, const uint& j, const uint& mu, const uint& k, const number& beta, const number& a, const number& f, number& erg);
 template void ErgVthrDisjoint_nr<4>(const Loop<4>& l, const uint& j, const uint& mu, const uint& k, const number& beta, const number& a, const number& f, number& erg);
+template void ErgVthrDisjointLR_nr<4>(const Loop<4>& l, const uint& j, const uint& mu, const uint& k, const number& beta, const number& a, const number& f, number& erg);
 template void ErgGaussian_nr<4>(const Loop<4>& l, const uint& loc, const uint& mu, const uint& k, const number& a, const number& f, number& erg);
 template void ErgGaussianDisjoint_nr<4>(const Loop<4>& l, const uint& j, const uint& mu, const uint& k, const number& beta, const number& a, const number& f, number& erg);
 template void ErgGaussianLRDisjoint_nr<4>(const Loop<4>& l, const uint& j, const uint& mu, const uint& k, const number& beta, const number& a, const number& f, number& erg);
@@ -2452,6 +2490,16 @@ void VthrDisjoint<4> (const uint& j, const uint& k, const Loop<4>& l, const numb
 	
 		result += f*(-pow(2.0*PI,2))*(1.0+(number)(k<j))*DotDisjoint(l[pj],l[j],l[pk],l[k],beta)*FThermal(r,t,beta,a);	
 	}
+}
+
+// VthrDisjointLR
+template <>
+void VthrDisjointLR<4> (const uint& j, const uint& k, const Loop<4>& l, const number& beta, const number& a, const number& f, number& result) {
+	uint N = l.size();
+	if ((j<N/2 && k<N/2) || (j>=N/2 && k>=N/2))
+		VthrDisjoint(j,k,l,beta,a,f,result);
+	else
+		VthrDisjoint(j,k,l,beta,0.0,f,result);
 }
 
 // VnonrelDisjoint
@@ -2677,6 +2725,17 @@ template <> void mdVthrDisjoint_nr<4>(const uint& j, const uint& mu, const uint&
 		
 	v[j*4+mu] += -f*(-pow(2.0*PI,2))*res;
 }
+
+// mdVthrDisjointLR_nr
+template <> void mdVthrDisjointLR_nr<4>(const uint& j, const uint& mu, const uint& i, const Loop<4>& l, \
+			const number& beta, const number& a, const number& f, vec& v) {
+	uint N = l.size();
+	if ((j<N/2 && i<N/2) || (j>=N/2 && i>=N/2))
+		mdVthrDisjoint_nr(j,mu,i,l,beta,a,f,v);
+	else
+		mdVthrDisjoint_nr(j,mu,i,l,beta,0.0,f,v);
+}
+
 
 // mdVnonrelDisjoint_nr
 template <>
@@ -3698,6 +3757,17 @@ template <> void ddVthrDisjoint_nr<4>(const uint& j, const uint& mu, const uint&
 	
 	m(4*j+mu,4*k+nu) += f*(-pow(2.0*PI,2))*res;
 }
+
+// ddVthrDisjointLR_nr
+template <> void ddVthrDisjointLR_nr<4>(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<4>& l,\
+						 const number& beta, const number& a, const number& f, mat& m) {
+	uint N = l.size();
+	if ((j<N/2 && k<N/2) || (j>=N/2 && k>=N/2))
+		ddVthrDisjoint_nr(j,mu,k,nu,l,beta,a,f,m);
+	else
+		ddVthrDisjoint_nr(j,mu,k,nu,l,beta,0.0,f,m);
+}
+
 
 // ddVnonrelDisjoint_nr
 template <>
