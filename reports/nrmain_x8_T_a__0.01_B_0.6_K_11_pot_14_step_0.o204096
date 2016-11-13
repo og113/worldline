@@ -1,0 +1,151 @@
+nrmain_x8_T_a__0.01_B_0.6_K_11_pot_14_step_0
+./nrmain -base /slow/data/dc-goul1/worldline/ -inputs nrinputs/inputs4 -guess 0 -step 1 -old 0 -pot thermalDisjoint -gaussian 1 -thermal2 1 -gaussianLR 1 -mu_a 0 -pass 0 -nonrel 0 -allTests 0 -fixdz 1 -fixtlr 1 -fixdislr 1 -print none -eigen 0 -redo 0 -redoErrors 0
+timenumber: 161111234539
+looping over 133 steps
+result found in results/nr/nr6.csv for pl = 0, continuing to next step
+loading loops from:
+/slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.633_pot_14.dat
+  pl run        len         i0          s          E        sol       solM      delta  dx*kg_max     ic_max     cc_max       dx/a
+   1   1       3.21    -0.4204      2.465      1.488    0.04014     0.5496   0.001109     0.3078     0.3983          0     0.1568
+   1   2      3.211    -0.4215      2.464      1.488   0.000122   0.001585  0.0003632     0.3241     0.0014          0     0.1568
+   1   3      3.211    -0.4216      2.464      1.488  5.761e-06  7.996e-06  1.952e-05     0.3149  0.0001368          0     0.1568
+   1   4      3.211    -0.4216      2.464      1.488  8.795e-09  1.173e-08  1.769e-06     0.3153  0.0001428          0     0.1568
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+       1       4     850      11       1     0.6       0    0.01     0.1      1.4879     0.63275        3.2112      -0.32525        2.4644
+
+          x:/slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.63275_pot_14.dat
+    results:      results/nr/nr6.csv
+result found in results/nr/nr6error.csv for pl = 2, continuing to next step
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.6325_pot_14.dat doesn't exist on pl = 3, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.63225_pot_14.dat doesn't exist on pl = 4, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.632_pot_14.dat doesn't exist on pl = 5, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.63175_pot_14.dat doesn't exist on pl = 6, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.6315_pot_14.dat doesn't exist on pl = 7, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.63125_pot_14.dat doesn't exist on pl = 8, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.631_pot_14.dat doesn't exist on pl = 9, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.63075_pot_14.dat doesn't exist on pl = 10, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.6305_pot_14.dat doesn't exist on pl = 11, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.63025_pot_14.dat doesn't exist on pl = 12, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.63_pot_14.dat doesn't exist on pl = 13, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.62975_pot_14.dat doesn't exist on pl = 14, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.6295_pot_14.dat doesn't exist on pl = 15, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.62925_pot_14.dat doesn't exist on pl = 16, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.629_pot_14.dat doesn't exist on pl = 17, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.62875_pot_14.dat doesn't exist on pl = 18, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.6285_pot_14.dat doesn't exist on pl = 19, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.62825_pot_14.dat doesn't exist on pl = 20, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.628_pot_14.dat doesn't exist on pl = 21, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.62775_pot_14.dat doesn't exist on pl = 22, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.6275_pot_14.dat doesn't exist on pl = 23, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.62725_pot_14.dat doesn't exist on pl = 24, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.627_pot_14.dat doesn't exist on pl = 25, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.62675_pot_14.dat doesn't exist on pl = 26, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.6265_pot_14.dat doesn't exist on pl = 27, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.62625_pot_14.dat doesn't exist on pl = 28, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.626_pot_14.dat doesn't exist on pl = 29, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.62575_pot_14.dat doesn't exist on pl = 30, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.6255_pot_14.dat doesn't exist on pl = 31, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.62525_pot_14.dat doesn't exist on pl = 32, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.625_pot_14.dat doesn't exist on pl = 33, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.62475_pot_14.dat doesn't exist on pl = 34, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.6245_pot_14.dat doesn't exist on pl = 35, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.62425_pot_14.dat doesn't exist on pl = 36, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.624_pot_14.dat doesn't exist on pl = 37, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.62375_pot_14.dat doesn't exist on pl = 38, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.6235_pot_14.dat doesn't exist on pl = 39, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.62325_pot_14.dat doesn't exist on pl = 40, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.623_pot_14.dat doesn't exist on pl = 41, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.62275_pot_14.dat doesn't exist on pl = 42, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.6225_pot_14.dat doesn't exist on pl = 43, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.62225_pot_14.dat doesn't exist on pl = 44, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.622_pot_14.dat doesn't exist on pl = 45, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.62175_pot_14.dat doesn't exist on pl = 46, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.6215_pot_14.dat doesn't exist on pl = 47, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.62125_pot_14.dat doesn't exist on pl = 48, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.621_pot_14.dat doesn't exist on pl = 49, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.62075_pot_14.dat doesn't exist on pl = 50, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.6205_pot_14.dat doesn't exist on pl = 51, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.62025_pot_14.dat doesn't exist on pl = 52, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.62_pot_14.dat doesn't exist on pl = 53, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.61975_pot_14.dat doesn't exist on pl = 54, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.6195_pot_14.dat doesn't exist on pl = 55, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.61925_pot_14.dat doesn't exist on pl = 56, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.619_pot_14.dat doesn't exist on pl = 57, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.61875_pot_14.dat doesn't exist on pl = 58, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.6185_pot_14.dat doesn't exist on pl = 59, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.61825_pot_14.dat doesn't exist on pl = 60, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.618_pot_14.dat doesn't exist on pl = 61, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.61775_pot_14.dat doesn't exist on pl = 62, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.6175_pot_14.dat doesn't exist on pl = 63, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.61725_pot_14.dat doesn't exist on pl = 64, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.617_pot_14.dat doesn't exist on pl = 65, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.61675_pot_14.dat doesn't exist on pl = 66, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.6165_pot_14.dat doesn't exist on pl = 67, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.61625_pot_14.dat doesn't exist on pl = 68, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.616_pot_14.dat doesn't exist on pl = 69, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.61575_pot_14.dat doesn't exist on pl = 70, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.6155_pot_14.dat doesn't exist on pl = 71, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.61525_pot_14.dat doesn't exist on pl = 72, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.615_pot_14.dat doesn't exist on pl = 73, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.61475_pot_14.dat doesn't exist on pl = 74, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.6145_pot_14.dat doesn't exist on pl = 75, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.61425_pot_14.dat doesn't exist on pl = 76, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.614_pot_14.dat doesn't exist on pl = 77, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.61375_pot_14.dat doesn't exist on pl = 78, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.6135_pot_14.dat doesn't exist on pl = 79, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.61325_pot_14.dat doesn't exist on pl = 80, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.613_pot_14.dat doesn't exist on pl = 81, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.61275_pot_14.dat doesn't exist on pl = 82, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.6125_pot_14.dat doesn't exist on pl = 83, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.61225_pot_14.dat doesn't exist on pl = 84, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.612_pot_14.dat doesn't exist on pl = 85, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.61175_pot_14.dat doesn't exist on pl = 86, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.6115_pot_14.dat doesn't exist on pl = 87, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.61125_pot_14.dat doesn't exist on pl = 88, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.611_pot_14.dat doesn't exist on pl = 89, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.61075_pot_14.dat doesn't exist on pl = 90, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.6105_pot_14.dat doesn't exist on pl = 91, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.61025_pot_14.dat doesn't exist on pl = 92, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.61_pot_14.dat doesn't exist on pl = 93, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.60975_pot_14.dat doesn't exist on pl = 94, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.6095_pot_14.dat doesn't exist on pl = 95, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.60925_pot_14.dat doesn't exist on pl = 96, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.609_pot_14.dat doesn't exist on pl = 97, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.60875_pot_14.dat doesn't exist on pl = 98, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.6085_pot_14.dat doesn't exist on pl = 99, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.60825_pot_14.dat doesn't exist on pl = 100, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.608_pot_14.dat doesn't exist on pl = 101, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.60775_pot_14.dat doesn't exist on pl = 102, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.6075_pot_14.dat doesn't exist on pl = 103, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.60725_pot_14.dat doesn't exist on pl = 104, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.607_pot_14.dat doesn't exist on pl = 105, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.60675_pot_14.dat doesn't exist on pl = 106, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.6065_pot_14.dat doesn't exist on pl = 107, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.60625_pot_14.dat doesn't exist on pl = 108, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.606_pot_14.dat doesn't exist on pl = 109, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.60575_pot_14.dat doesn't exist on pl = 110, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.6055_pot_14.dat doesn't exist on pl = 111, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.60525_pot_14.dat doesn't exist on pl = 112, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.605_pot_14.dat doesn't exist on pl = 113, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.60475_pot_14.dat doesn't exist on pl = 114, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.6045_pot_14.dat doesn't exist on pl = 115, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.60425_pot_14.dat doesn't exist on pl = 116, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.604_pot_14.dat doesn't exist on pl = 117, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.60375_pot_14.dat doesn't exist on pl = 118, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.6035_pot_14.dat doesn't exist on pl = 119, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.60325_pot_14.dat doesn't exist on pl = 120, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.603_pot_14.dat doesn't exist on pl = 121, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.60275_pot_14.dat doesn't exist on pl = 122, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.6025_pot_14.dat doesn't exist on pl = 123, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.60225_pot_14.dat doesn't exist on pl = 124, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.602_pot_14.dat doesn't exist on pl = 125, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.60175_pot_14.dat doesn't exist on pl = 126, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.6015_pot_14.dat doesn't exist on pl = 127, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.60125_pot_14.dat doesn't exist on pl = 128, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.601_pot_14.dat doesn't exist on pl = 129, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.60075_pot_14.dat doesn't exist on pl = 130, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.6005_pot_14.dat doesn't exist on pl = 131, moving to next parameter loop
+nrmain error: /slow/data/dc-goul1/worldline/data/nr/loops/dim_4/K_11/loop_kappa_0.6_E_0_a_0.01_T_0.60025_pot_14.dat doesn't exist on pl = 132, moving to next parameter loop
+851.07user 0.67system 14:11.87elapsed 99%CPU (0avgtext+0avgdata 1091876maxresident)k
+144inputs+200outputs (0major+12187minor)pagefaults 0swaps
