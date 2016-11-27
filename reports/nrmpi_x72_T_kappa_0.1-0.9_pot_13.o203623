@@ -1,0 +1,509 @@
+nrmpi_x72_T_kappa_0.1-0.9_pot_13
+starting glmain with 9 nodes
+input argv to ./nrmpi:
+./nrmpi -base /slow/data/dc-goul1/worldline/ -inputs nrinputs/mpi/inputs1 -guess 0 -step 0 -old 0 -pot thermal -gaussian 1 -thermal2 1 -gaussianLR 0 -mu_a 0 -pass 0 -nonrel 0 -allTests 0 -fixdz 0 -fixtlr 0 -fixdislr 0 -print none -eigen 0 -redo 0 -redoErrors 0 -verbose 0 -print none -eigen 0 -auto_a 0 -conservation 0
+timenumber: 161103205338
+timenumber: 161103205340
+timenumber: 161103205342
+timenumber: 161103205344
+timenumber: 161103205346
+timenumber: 161103205348
+timenumber: 161103205350
+timenumber: 161103205352
+timenumber: 161103205354
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+     115       3     701      11       1     0.1       0    0.05     0.1    0.086287        0.46         6.082     -0.043171        3.0965
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+     116       3     699      11       1     0.1       0    0.05     0.1     0.16239        0.48        5.9226     -0.050776        3.0851
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+     119      133.01e+03      11       1     0.2       0    0.05     0.1      0.3596        0.54        5.4815      -0.10403        3.0159
+
+Check delta: test(2.08183) > closeness(1)
+x information:
+x.norm()    :         50.6078
+x.mean()    :         1.6474e-16
+x.minCoeff():         -1.19965
+x.maxCoeff():         1.19965
+x minCoeff  :         4110
+x maxCoeff  :         0
+x absmax/2 counter :  2624
+(x.tail(zm)).norm()/sqrt(zm): 3.00307e-16
+(x.head(v.size()-zm)).norm()/sqrt(v.size()-zm):  0.559143
+
+mds information:
+mds.norm()    :         2.4105
+mds.mean()    :         -3.55046e-16
+mds.minCoeff():         -0.286352
+mds.maxCoeff():         0.286352
+mds minCoeff  :         2166
+mds maxCoeff  :         0
+mds absmax/2 counter :  82
+(mds.tail(zm)).norm()/sqrt(zm): 7.10082e-13
+(mds.head(v.size()-zm)).norm()/sqrt(v.size()-zm):  0.0266326
+
+delta information:
+delta.norm()    :         105.357
+delta.mean()    :         -1.20944e-16
+delta.minCoeff():         -3.42771
+delta.maxCoeff():         3.42771
+delta minCoeff  :         4106
+delta maxCoeff  :         0
+delta absmax/2 counter :  1166
+(delta.tail(zm)).norm()/sqrt(zm): 6.17567e-15
+(delta.head(v.size()-zm)).norm()/sqrt(v.size()-zm):  1.16404
+
+dds information:
+dds.norm()    :         54122.4
+dds.minCoeff():         -248.342
+dds.maxCoeff():         496.878
+dds minCoeff  :         (5867,5863)
+dds maxCoeff  :         (0,0)
+dds absmax/2 counter :  8192
+dds.trace():            4.00082e+06
+dds.determinant():      -inf
+dds.mean():             0.000243902
+dds.sum():              16384
+dds.prod():             0
+
+action info:
+s:                      4.12318
+kinetic:                8.43615
+i0:                     -3.91312
+vr:                     -0.399849
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+     119      194.47e+03      11       1     0.3       0    0.05     0.1    -0.67073        0.54        8.1858      -0.39985        4.1232
+
+Check delta: test(2.14798) > closeness(1)
+x information:
+x.norm()    :         35.2179
+x.mean()    :         -6.35547e-17
+x.minCoeff():         -0.915383
+x.maxCoeff():         0.915383
+x minCoeff  :         6555
+x maxCoeff  :         0
+x absmax/2 counter :  2380
+(x.tail(zm)).norm()/sqrt(zm): 3.0286e-16
+(x.head(v.size()-zm)).norm()/sqrt(v.size()-zm):  0.389106
+
+mds information:
+mds.norm()    :         0.361154
+mds.mean()    :         2.37686e-16
+mds.minCoeff():         -0.0373119
+mds.maxCoeff():         0.0373119
+mds minCoeff  :         6891
+mds maxCoeff  :         0
+mds absmax/2 counter :  118
+(mds.tail(zm)).norm()/sqrt(zm): 2.77545e-13
+(mds.head(v.size()-zm)).norm()/sqrt(v.size()-zm):  0.00399022
+
+delta information:
+delta.norm()    :         75.6471
+delta.mean()    :         -5.05351e-17
+delta.minCoeff():         -1.80821
+delta.maxCoeff():         1.80821
+delta minCoeff  :         7410
+delta maxCoeff  :         0
+delta absmax/2 counter :  2506
+(delta.tail(zm)).norm()/sqrt(zm): 5.23889e-16
+(delta.head(v.size()-zm)).norm()/sqrt(v.size()-zm):  0.83579
+
+dds information:
+dds.norm()    :         91950.8
+dds.minCoeff():         -416.354
+dds.maxCoeff():         832.885
+dds minCoeff  :         (2151,2147)
+dds maxCoeff  :         (0,0)
+dds absmax/2 counter :  8192
+dds.trace():            6.79573e+06
+Check delta: test(80.4422) > closeness(1)
+x information:
+x.norm()    :         18.4786
+x.mean()    :         -1.21592e-16
+x.minCoeff():         -0.783249
+x.maxCoeff():         0.783249
+x minCoeff  :         6179
+x maxCoeff  :         0
+x absmax/2 counter :  728
+(x.tail(zm)).norm()/sqrt(zm): 5.11826e-16
+(x.head(v.size()-zm)).norm()/sqrt(v.size()-zm):  0.204162
+
+mds information:
+mds.norm()    :         1.87006
+mds.mean()    :         -2.3748e-16
+mds.minCoeff():         -0.123638
+mds.maxCoeff():         0.123638
+mds minCoeff  :         2083
+mds maxCoeff  :         0
+mds absmax/2 counter :  300
+(mds.tail(zm)).norm()/sqrt(zm): 3.73869e-13
+(mds.head(v.size()-zm)).norm()/sqrt(v.size()-zm):  0.0206614
+
+delta information:
+delta.norm()    :         1486.46
+delta.mean()    :         5.61499e-15
+delta.minCoeff():         -36.4391
+delta.maxCoeff():         36.4391
+delta minCoeff  :         2262
+delta maxCoeff  :         0
+delta absmax/2 counter :  2550
+(delta.tail(zm)).norm()/sqrt(zm): 1.9379e-14
+(delta.head(v.size()-zm)).norm()/sqrt(v.size()-zm):  16.4232
+
+dds information:
+dds.norm()    :         116099
+dds.minCoeff():         -525.43
+dds.maxCoeff():         1051.74
+dds minCoeff  :         (6094,6090)
+dds maxCoeff  :         (0,0)
+dds absmax/2 counter :  8192
+dds.trace():            8.5805e+06
+dds.determinant():      inf
+dds.mean():             0.000243902
+dds.sum():              16384
+dds.prod():             0
+
+action info:
+s:                      3.00594
+kinetic:                4.94808
+i0:                     -1.85894
+vr:                     -0.0832006
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+     120      143.26e+03      11       1     0.2       0    0.05     0.1      0.6229        0.56        4.9473     -0.083201        3.0059
+
+dds.determinant():      -inf
+dds.mean():             0.000243902
+dds.sum():              16384
+dds.prod():             0
+
+action info:
+s:                      4.0826
+kinetic:                3.92323
+i0:                     0.370734
+vr:                     -0.211365
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+     123      276.29e+03      11       1     0.4       0    0.05     0.1     -1.3421        0.62        3.3169      -0.21136        4.0826
+
+Check delta: test(2.43197) > closeness(1)
+x information:
+x.norm()    :         34.186
+x.mean()    :         -4.90599e-17
+x.minCoeff():         -1.21399
+x.maxCoeff():         1.21399
+x minCoeff  :         5651
+x maxCoeff  :         0
+x absmax/2 counter :  1034
+(x.tail(zm)).norm()/sqrt(zm): 2.78901e-16
+(x.head(v.size()-zm)).norm()/sqrt(v.size()-zm):  0.377706
+
+mds information:
+mds.norm()    :         2.43434
+mds.mean()    :         1.90089e-16
+mds.minCoeff():         -0.253141
+mds.maxCoeff():         0.253141
+mds minCoeff  :         3059
+mds maxCoeff  :         0
+mds absmax/2 counter :  66
+(mds.tail(zm)).norm()/sqrt(zm): 1.49697e-13
+(mds.head(v.size()-zm)).norm()/sqrt(v.size()-zm):  0.0268959
+
+delta information:
+delta.norm()    :         83.1394
+delta.mean()    :         -2.92382e-16
+delta.minCoeff():         -2.47145
+delta.maxCoeff():         2.47145
+delta minCoeff  :         6511
+delta maxCoeff  :         0
+delta absmax/2 counter :  1588
+(delta.tail(zm)).norm()/sqrt(zm): 1.73508e-15
+(delta.head(v.size()-zm)).norm()/sqrt(v.size()-zm):  0.918569
+
+dds information:
+dds.norm()    :         57138
+dds.minCoeff():         -260.98
+dds.maxCoeff():         522.489
+dds minCoeff  :         (2046,2042)
+dds maxCoeff  :         (0,0)
+dds absmax/2 counter :  8192
+dds.trace():            4.22331e+06
+dds.determinant():      -inf
+dds.mean():             0.000243902
+dds.sum():              16384
+dds.prod():             0
+
+action info:
+s:                      6.04621
+kinetic:                7.98716
+i0:                     -1.69102
+vr:                     -0.249926
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+     120      102.36e+03      11       1     0.3       0    0.05     0.1     0.60185        0.56        7.4643      -0.24993        6.0462
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+     121       51.16e+03      11       1     0.2       0    0.05     0.1    -0.30589        0.58        6.7937      -0.15722          3.01
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+     117      276.06e+03      11       1     0.1       0    0.05     0.1    -0.97169         0.5        8.1859     -0.099992        3.0807
+
+Check delta: test(5.51329) > closeness(1)
+x information:
+x.norm()    :         81.4862
+x.mean()    :         -3.44218e-16
+x.minCoeff():         -2.31537
+x.maxCoeff():         2.31537
+x minCoeff  :         5622
+x maxCoeff  :         0
+x absmax/2 counter :  1856
+(x.tail(zm)).norm()/sqrt(zm): 8.33685e-16
+(x.head(v.size()-zm)).norm()/sqrt(v.size()-zm):  0.900304
+
+mds information:
+mds.norm()    :         1.37693
+mds.mean()    :         -1.05017e-17
+mds.minCoeff():         -0.118754
+mds.maxCoeff():         0.118754
+mds minCoeff  :         2539
+mds maxCoeff  :         0
+mds absmax/2 counter :  180
+(mds.tail(zm)).norm()/sqrt(zm): 1.49725e-12
+(mds.head(v.size()-zm)).norm()/sqrt(v.size()-zm):  0.0152131
+
+delta information:
+delta.norm()    :         449.257
+delta.mean()    :         1.59869e-15
+delta.minCoeff():         -17.2079
+delta.maxCoeff():         17.2079
+delta minCoeff  :         3575
+delta maxCoeff  :         0
+delta absmax/2 counter :  490
+(delta.tail(zm)).norm()/sqrt(zm): 1.02978e-14
+(delta.head(v.size()-zm)).norm()/sqrt(v.size()-zm):  4.96364
+
+dds information:
+dds.norm()    :         34613.3
+dds.minCoeff():         -156.841
+dds.maxCoeff():         313.852
+dds minCoeff  :         (3299,3295)
+dds maxCoeff  :         (0,0)
+dds absmax/2 counter :  8192
+dds.trace():            2.55843e+06
+dds.determinant():      -inf
+dds.mean():             0.000243902
+dds.sum():              16384
+dds.prod():             0
+
+action info:
+s:                      3.42643
+kinetic:                13.1591
+i0:                     -9.63522
+vr:                     -0.0974177
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+     118       3     739      11       1     0.1       0    0.05     0.1     -2.5918        0.52        12.995     -0.097418        3.4264
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+     122       4     925      11       1     0.2       0    0.05     0.1    -0.25378         0.6        6.6922      -0.13281        3.0256
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+     123       4     926      11       1     0.2       0    0.05     0.1    -0.22763        0.62        6.6417      -0.11657        3.0382
+
+Check delta: test(1.05203) > closeness(1)
+x information:
+x.norm()    :         45.6807
+x.mean()    :         2.56923e-17
+x.minCoeff():         -1.02355
+x.maxCoeff():         1.02355
+x minCoeff  :         4102
+x maxCoeff  :         0
+x absmax/2 counter :  2716
+(x.tail(zm)).norm()/sqrt(zm): 8.60139e-17
+(x.head(v.size()-zm)).norm()/sqrt(v.size()-zm):  0.504705
+
+mds information:
+mds.norm()    :         0.0756198
+mds.mean()    :         -7.88932e-17
+mds.minCoeff():         -0.00827707
+mds.maxCoeff():         0.00827707
+mds minCoeff  :         5559
+mds maxCoeff  :         0
+mds absmax/2 counter :  100
+(mds.tail(zm)).norm()/sqrt(zm): 3.06489e-13
+(mds.head(v.size()-zm)).norm()/sqrt(v.size()-zm):  0.000835489
+
+delta information:
+delta.norm()    :         48.0575
+delta.mean()    :         -2.20838e-16
+delta.minCoeff():         -1.48462
+delta.maxCoeff():         1.48462
+delta minCoeff  :         8170
+delta maxCoeff  :         0
+delta absmax/2 counter :  1250
+(delta.tail(zm)).norm()/sqrt(zm): 3.74732e-15
+(delta.head(v.size()-zm)).norm()/sqrt(v.size()-zm):  0.530965
+
+dds information:
+dds.norm()    :         71616.9
+dds.minCoeff():         -323.649
+dds.maxCoeff():         647.403
+dds minCoeff  :         (6706,6702)
+dds maxCoeff  :         (0,0)
+dds absmax/2 counter :  8192
+dds.trace():            5.29286e+06
+dds.determinant():      -inf
+dds.mean():             0.000243902
+dds.sum():              16384
+dds.prod():             0
+
+action info:
+s:                      3.07064
+kinetic:                6.34856
+i0:                     -3.19961
+vr:                     -0.078314
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+     119       71.66e+03      11       1     0.1       0    0.05     0.1   -0.057019        0.54        6.3485     -0.078314        3.0706
+
+Check delta: test(1.86428) > closeness(1)
+x information:
+x.norm()    :         45.9442
+x.mean()    :         1.82903e-16
+x.minCoeff():         -1.38241
+x.maxCoeff():         1.38241
+x minCoeff  :         6907
+x maxCoeff  :         0
+x absmax/2 counter :  2012
+(x.tail(zm)).norm()/sqrt(zm): 2.5992e-16
+(x.head(v.size()-zm)).norm()/sqrt(v.size()-zm):  0.507616
+
+mds information:
+mds.norm()    :         2.80831
+mds.mean()    :         -2.65931e-17
+mds.minCoeff():         -0.251441
+mds.maxCoeff():         0.251441
+mds minCoeff  :         6822
+mds maxCoeff  :         0
+mds absmax/2 counter :  104
+(mds.tail(zm)).norm()/sqrt(zm): 6.95329e-13
+(mds.head(v.size()-zm)).norm()/sqrt(v.size()-zm):  0.0310277
+
+delta information:
+delta.norm()    :         85.6531
+delta.mean()    :         -1.35123e-16
+delta.minCoeff():         -2.55663
+delta.maxCoeff():         2.55663
+delta minCoeff  :         7602
+delta maxCoeff  :         0
+delta absmax/2 counter :  1332
+(delta.tail(zm)).norm()/sqrt(zm): 3.29274e-15
+(delta.head(v.size()-zm)).norm()/sqrt(v.size()-zm):  0.946342
+
+dds information:
+dds.norm()    :         36564.1
+dds.minCoeff():         -168.981
+dds.maxCoeff():         338.558
+dds minCoeff  :         (5799,5795)
+dds maxCoeff  :         (0,0)
+dds absmax/2 counter :  8192
+dds.trace():            2.70316e+06
+dds.determinant():      -inf
+dds.mean():             0.000243902
+dds.sum():              16384
+dds.prod():             0
+
+action info:
+s:                      9.35088
+kinetic:                12.5253
+i0:                     -2.61122
+vr:                     -0.563219
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+     121      153.52e+03      11       1     0.3       0    0.05     0.1    -0.33199        0.58        11.439      -0.56322        9.3509
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+     120       4     925      11       1     0.1       0    0.05     0.1    -0.12053        0.56        6.4741     -0.073188        3.0741
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+     121       4     926      11       1     0.1       0    0.05     0.1    -0.11782        0.58        6.4697      -0.06442        3.0812
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+     122       71.62e+03      11       1     0.3       0    0.05     0.1     -0.5101         0.6        7.1524      -0.25334        2.9501
+
+Check delta: test(3.63396) > closeness(1)
+x information:
+x.norm()    :         40.1152
+x.mean()    :         -9.1927e-17
+x.minCoeff():         -0.989216
+x.maxCoeff():         0.989216
+x minCoeff  :         7063
+x maxCoeff  :         0
+x absmax/2 counter :  2676
+(x.tail(zm)).norm()/sqrt(zm): 9.11436e-16
+(x.head(v.size()-zm)).norm()/sqrt(v.size()-zm):  0.443214
+
+mds information:
+mds.norm()    :         1.86801
+mds.mean()    :         -1.95475e-17
+mds.minCoeff():         -0.198486
+mds.maxCoeff():         0.198486
+mds minCoeff  :         2979
+mds maxCoeff  :         0
+mds absmax/2 counter :  98
+(mds.tail(zm)).norm()/sqrt(zm): 4.32076e-13
+(mds.head(v.size()-zm)).norm()/sqrt(v.size()-zm):  0.0206388
+
+delta information:
+delta.norm()    :         145.777
+delta.mean()    :         6.06899e-16
+delta.minCoeff():         -4.3791
+delta.maxCoeff():         4.3791
+delta minCoeff  :         2071
+delta maxCoeff  :         0
+delta absmax/2 counter :  1824
+(delta.tail(zm)).norm()/sqrt(zm): 6.06848e-15
+(delta.head(v.size()-zm)).norm()/sqrt(v.size()-zm):  1.61062
+
+dds information:
+dds.norm()    :         60855.7
+dds.minCoeff():         -276.716
+dds.maxCoeff():         554.057
+dds minCoeff  :         (5470,5466)
+dds maxCoeff  :         (0,0)
+dds absmax/2 counter :  8192
+dds.trace():            4.49829e+06
+dds.determinant():      -inf
+dds.mean():             0.000243902
+dds.sum():              16384
+dds.prod():             0
+
+action info:
+s:                      4.71912
+kinetic:                7.49733
+i0:                     -2.5308
+vr:                     -0.24741
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+     123       2     503      11       1     0.3       0    0.05     0.1     0.17236        0.62         7.134      -0.24741        4.7191
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+     122       4     926      11       1     0.1       0    0.05     0.1    -0.11037         0.6        6.4556     -0.057225        3.0876
+
+
+      pl    runs    time       K       G       B      Ng       a      mu           E           T           len            vr             s
+     123       3     694      11       1     0.1       0    0.05     0.1    -0.10397        0.62        6.4433     -0.051166        3.0931
+
