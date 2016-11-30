@@ -59,9 +59,8 @@ then
 # this imports results to the sqlite database
 sqlite3 $databaseFile <<HERE
 .separator ","
-.import "$deltaResultsFile" "$table";
+.import "$deltaResultsFile" "$table"
 HERE
-# it seems there was an error here last time i used this, not sure what though.
 
 if [ "$?" -eq 0 ]
 then
