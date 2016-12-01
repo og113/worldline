@@ -22,7 +22,7 @@ git add --all tools/*.sh
 git add --all notes/*.txt
 
 # adding reports
-git add --all reports/*
+#git add --all reports/*
 
 # adding gp files
 git add --all gp/*.gp
