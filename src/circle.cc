@@ -41,7 +41,7 @@ bool circle = false;
 bool lemon = false;
 bool straightDisjoint = false;
 bool cosDisjoint = false;
-string shape = "";
+string shape = "circle";
 
 // getting argv
 if (argc % 2 && argc>1) {
@@ -144,11 +144,12 @@ for (uint pl=0; pl<Npl; pl++) {
 		if (so==ShapeOptions::circle)	{
 			file = "data/"+shape+"/loops/dim_"+nts<uint>(dim)+"/K_"+nts(p.K)+"/loop_R_"+nts(R0)\
 															+"_rank_"+nts(j)+".dat";
-			number w = 2.0*PI/(number)N;
+			number w = 2.0*PI/(number)N, angle;
 			for (uint k=0; k<N; k++) {
 				point = p0;
-				point[2] += R*gsl_sf_cos(w*k);
-				point[3] += R*gsl_sf_sin(w*k);
+				angle = w*k - PI/2.0;
+				point[2] += R*gsl_sf_cos(angle);
+				point[3] += R*gsl_sf_sin(angle);
 				loop[k] = point;
 			}
 		}
