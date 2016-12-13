@@ -70,7 +70,7 @@ fi
 fi
 
 # views to export
-views="s_B_T_a_0.01_K_11_pot_10 s_B_T_a_0.02_K_11_pot_8 s_T_a_B_0.01_K_12_pot_10 s_T_a_B_0.01_K_12_pot_8 s_sigma_B_T_E_a_0.02_K_11_pot_10 s_sigma_B_T_E_a_0.02_K_11_pot_8 s_sigma_B_T_a_E_K_11_pot_8 s_sigma_B_T_a_E_K_11_pot_10 s_sigma_B_T_a_E_K_11_pot_13 s_sigma_B_T_a_E_K_11_pot_14 kta_pot_8 kta_pot_10 kta_pot_12 kta_pot_13 kta_pot_14 kta_pot_15"
+views="s_B_T_a_0.01_K_11_pot_10 s_B_T_a_0.02_K_11_pot_8 s_T_a_B_0.01_K_12_pot_10 s_T_a_B_0.01_K_12_pot_8 s_sigma_B_T_E_a_0.02_K_11_pot_10 s_sigma_B_T_E_a_0.02_K_11_pot_8 s_sigma_B_T_a_E_K_11_pot_8 s_sigma_B_T_a_E_K_11_pot_10 s_sigma_B_T_a_E_K_11_pot_13 s_sigma_B_T_a_E_K_11_pot_14 s_sigma_B_T_a_E_K_11_pot_15 kta_pot_8 kta_pot_10 kta_pot_12 kta_pot_13 kta_pot_14 kta_pot_15"
 echo "updating views:"
 
 # exporting views
