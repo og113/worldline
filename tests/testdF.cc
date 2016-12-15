@@ -251,12 +251,12 @@ cout << "norm(mds) before: " << mds.norm() << endl;
 for (uint j=0; j<N; j++) {
 	for (uint mu=0; mu<dim; mu++) {
 		for (uint k=0; k<N; k++) {
-			mdFth_nr(j, mu, k, xLoop, &FThermal, &DFThermalDrOnr, &DFThermalDt, beta, p.Epsi, g, mdsred);
+			mdFth_nr(j, mu, k, xLoop, &FThermal, &DFThermalDrOnr, &DFThermalDt, beta, p.Epsi, g, mds);
 		}
 	}
 }
 
-cout << "norm(mdsred) middle: " << mdsred.norm() << endl;
+cout << "norm(mds) middle: " << mds.norm() << endl;
 
 //stopping clock
 time = clock() - time;
@@ -266,7 +266,7 @@ cout << "time taken: "  << time/1000000.0 << endl;
 for (uint j=0; j<N; j++) {
 	for (uint mu=0; mu<dim; mu++) {
 		for (uint k=0; k<N; k++) {
-			mdVthr_nr(j, mu, k, xLoop, beta, p.Epsi, -g, mdsred);
+			mdVthr_nr(j, mu, k, xLoop, beta, p.Epsi, -g, mds);
 		}
 	}
 }
@@ -289,12 +289,12 @@ cout << "norm(mdsred) before: " << mdsred.norm() << endl;
 for (uint j=0; j<N; j++) {
 	for (uint mu=0; mu<dimred; mu++) {
 		for (uint k=0; k<N; k++) {
-			mdFth_nr(j, mu, k, xLoopRed, &FThermal, &DFThermalDrOnr, &DFThermalDt, beta, p.Epsi, g, mds);
+			mdFth_nr(j, mu, k, xLoopRed, &FThermal, &DFThermalDrOnr, &DFThermalDt, beta, p.Epsi, g, mdsred);
 		}
 	}
 }
 
-cout << "norm(mds) middle: " << mdsred.norm() << endl;
+cout << "norm(mdsred) middle: " << mdsred.norm() << endl;
 
 //stopping clock
 time = clock() - time;
@@ -304,7 +304,7 @@ cout << "time taken: "  << time/1000000.0 << endl;
 for (uint j=0; j<N; j++) {
 	for (uint mu=0; mu<dimred; mu++) {
 		for (uint k=0; k<N; k++) {
-			mdVthr_nr(j, mu, k, xLoopRed, beta, p.Epsi, -g, mds);
+			mdVthr_nr(j, mu, k, xLoopRed, beta, p.Epsi, -g, mdsred);
 		}
 	}
 }
