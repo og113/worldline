@@ -256,7 +256,7 @@ for (uint j=0; j<N; j++) {
 	}
 }
 
-cout << "norm(mds) middle: " << mds.norm() << endl;
+cout << "norm(mdsred) middle: " << mdsred.norm() << endl;
 
 //stopping clock
 time = clock() - time;
