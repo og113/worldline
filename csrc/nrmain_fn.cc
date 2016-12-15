@@ -1072,9 +1072,9 @@ for (uint pl=0; pl<Npl; pl++) {
 							}
 						}
 							
-						MaxXn(j, k, xLoop, 2, 1.0, zmax);
-						MinXnDisjoint(j, k, xLoop, 2, 1.0, zmin);
-						MaxXn(j, k, xLoop, 3, 1.0, tmax);
+						MaxXn(j, k, xLoop, dim-2, 1.0, zmax);
+						MinXnDisjoint(j, k, xLoop, dim-2, 1.0, zmin);
+						MaxXn(j, k, xLoop, dim-1, 1.0, tmax);
 					}
 					
 					// dynamical field
