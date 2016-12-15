@@ -251,7 +251,7 @@ cout << "norm(mds) before: " << mds.norm() << endl;
 for (uint j=0; j<N; j++) {
 	for (uint mu=0; mu<dim; mu++) {
 		for (uint k=0; k<N; k++) {
-			mdFth_nr(j, mu, k, xLoop, &FThermal, &DFThermalDrOnr, &DFThermalDt, beta, p.Epsi, g, mds);
+			mdFth_nr(j, mu, k, xLoop, &FThermal, &DFThermalDrOnr, &DFThermalDt, beta, p.Epsi, g, mdsred);
 		}
 	}
 }
@@ -266,7 +266,7 @@ cout << "time taken: "  << time/1000000.0 << endl;
 for (uint j=0; j<N; j++) {
 	for (uint mu=0; mu<dim; mu++) {
 		for (uint k=0; k<N; k++) {
-			mdVthr_nr(j, mu, k, xLoop, beta, p.Epsi, -g, mds);
+			mdVthr_nr(j, mu, k, xLoop, beta, p.Epsi, -g, mdsred);
 		}
 	}
 }
