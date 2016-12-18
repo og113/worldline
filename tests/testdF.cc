@@ -49,14 +49,7 @@ number DFThermalDt(const number& r, const number& t, const number& beta, const n
 template<uint Dim>
 void mdFth_nr(const uint& j, const uint& mu, const uint& i, const Loop<Dim>& l,\
 					ThermalFunction Fth, ThermalFunction dFthdronr, ThermalFunction dFthdt, \
-					 	const number& beta, const number& a, const number& f, vec& v);
-
-// mdFth_nr
-template <> void mdFth_nr<4>(const uint& j, const uint& mu, const uint& i, const Loop<4>& l, \
-			ThermalFunction Fth, ThermalFunction dFthdronr, ThermalFunction dFthdt, \
-			const number& beta, const number& a, const number& f, vec& v) {
-		
-	number dimension = 4;	
+					 	const number& beta, const number& a, const number& f, vec& v) {
 	number res = 0.0;
 	
 	uint pj = posNeigh(j,l.size());
@@ -65,14 +58,14 @@ template <> void mdFth_nr<4>(const uint& j, const uint& mu, const uint& i, const
 		
 	if (i!=j) {
 		number r_ij = SpatialDistance(l[i],l[j]);
-		number t_ij = DX(l,j,i,dimension-1); // checked order
+		number t_ij = DX(l,j,i,Dim-1); // checked order
 		number FThermal_ij = Fth(r_ij,t_ij,beta,a);
 		number DFThermalDrOnr_ij = dFthdronr(r_ij,t_ij,beta,a);
 		number DFThermalDt_ij = dFthdt(r_ij,t_ij,beta,a);
 		number T_ij = Dot(l[pi],l[i],l[pj],l[j]);
 		
 		res += 2.0*FThermal_ij*(-DX(l,i,mu));
-		if (mu<(dimension-1))
+		if (mu<(Dim-1))
 			res += 2.0*DFThermalDrOnr_ij*DX(l,j,i,mu)*T_ij;
 		else
 			res += 2.0*DFThermalDt_ij*T_ij;
@@ -80,7 +73,7 @@ template <> void mdFth_nr<4>(const uint& j, const uint& mu, const uint& i, const
 	
 	if (i!=mj) {
 		number r_imj = SpatialDistance(l[i],l[mj]);
-		number t_imj = DX(l,mj,i,dimension-1); // checked order
+		number t_imj = DX(l,mj,i,Dim-1); // checked order
 		number FThermal_imj = Fth(r_imj,t_imj,beta,a);
 		res +=  -2.0*FThermal_imj*(-DX(l,i,mu)); //
 	}
@@ -94,55 +87,8 @@ template <> void mdFth_nr<4>(const uint& j, const uint& mu, const uint& i, const
 	if (i==pj)
 		res += (-1.0/pow(2.0*PI,2))*(-(l[pj])[mu]/a/a);
 		
-	v[j*dimension+mu] += -f*(-pow(2.0*PI,2))*res;
+	v[j*Dim+mu] += -f*(-pow(2.0*PI,2))*res;
 }
-
-// mdFth_nr
-template <> void mdFth_nr<2>(const uint& j, const uint& mu, const uint& i, const Loop<2>& l, \
-			ThermalFunction Fth, ThermalFunction dFthdronr, ThermalFunction dFthdt, \
-			const number& beta, const number& a, const number& f, vec& v) {
-		
-	number dimension = 2;	
-	number res = 0.0;
-	
-	uint pj = posNeigh(j,l.size());
-	uint mj = negNeigh(j,l.size());
-	uint pi = posNeigh(i,l.size());
-		
-	if (i!=j) {
-		number r_ij = SpatialDistance(l[i],l[j]);
-		number t_ij = DX(l,j,i,dimension-1); // checked order
-		number FThermal_ij = Fth(r_ij,t_ij,beta,a);
-		number DFThermalDrOnr_ij = dFthdronr(r_ij,t_ij,beta,a);
-		number DFThermalDt_ij = dFthdt(r_ij,t_ij,beta,a);
-		number T_ij = Dot(l[pi],l[i],l[pj],l[j]);
-		
-		res += 2.0*FThermal_ij*(-DX(l,i,mu));
-		if (mu<(dimension-1))
-			res += 2.0*DFThermalDrOnr_ij*DX(l,j,i,mu)*T_ij;
-		else
-			res += 2.0*DFThermalDt_ij*T_ij;
-	}
-	
-	if (i!=mj) {
-		number r_imj = SpatialDistance(l[i],l[mj]);
-		number t_imj = DX(l,mj,i,dimension-1); // checked order
-		number FThermal_imj = Fth(r_imj,t_imj,beta,a);
-		res +=  -2.0*FThermal_imj*(-DX(l,i,mu)); //
-	}
-	
-	//coincident terms
-	// extra factor of (-1.0/pow(2.0*PI,2)) due to the fact that we are treating the green's function here
-	if (i==j)
-		res += (-1.0/pow(2.0*PI,2))*2.0*(l[j])[mu]/a/a; 
-	if (i==mj)
-		res += (-1.0/pow(2.0*PI,2))*(-(l[mj])[mu]/a/a);
-	if (i==pj)
-		res += (-1.0/pow(2.0*PI,2))*(-(l[pj])[mu]/a/a);
-		
-	v[j*dimension+mu] += -f*(-pow(2.0*PI,2))*res;
-}
-
 
 void dimReduce(const vec& vin, const uint& dimin, const uint& Nin, vec& vout, const uint& dimout, const uint& zmout) {
 	if (dimout>dimin) {
