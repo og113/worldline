@@ -3364,6 +3364,44 @@ void printAsLoop(const string& f, const uint& Dim, const vec& v, const uint len)
 	}
 }
 
+// dimReduce
+void dimReduce(const vec& vin, const uint& dimin, const uint& Nin, vec& vout, const uint& dimout, const uint& zmout) {
+	if (dimout>dimin) {
+		cout << "dimReduce error: dimin=" << dimin << "<dimout=" << dimout << endl;
+		return;
+	}
+	uint NTout = dimout*Nin+zmout, nu;
+	vout = Eigen::VectorXd::Zero(NTout);
+	for (uint j=0; j<Nin; j++) {
+		for (uint mu=0; mu<dimout; mu++) {
+			nu = mu+(dimin-dimout);
+			vout[j*dimout+mu] = vin[j*dimin+nu];
+		}
+	}
+	for (uint z=0; z<zmout; z++) {
+		vout[Nin*dimout+z] = 1.0e-4;
+	}
+}
+
+// dimIncrease
+void dimIncrease(const vec& vin, const uint& dimin, const uint& Nin, vec& vout, const uint& dimout, const uint& zmout) {
+	if (dimout<dimin) {
+		cout << "dimReduce error: dimin=" << dimin << ">dimout=" << dimout << endl;
+		return;
+	}
+	uint NTout = dimout*Nin+zmout, nu;
+	vout = Eigen::VectorXd::Zero(NTout);
+	for (uint j=0; j<Nin; j++) {
+		for (uint mu=0; mu<dimin; mu++) {
+			nu = mu+(dimout-dimin);
+			vout[j*dimout+nu] = vin[j*dimin+mu];
+		}
+	}
+	for (uint z=0; z<zmout; z++) {
+		vout[Nin*dimout+z] = 1.0e-4;
+	}
+}
+
 
 /*----------------------------------------------------------------------------------------------------------------------------
 	3 - filename functions
