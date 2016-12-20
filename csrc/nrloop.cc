@@ -451,23 +451,23 @@ static void mdVthGeneric(const uint& j, const uint& mu, const uint& i, const Loo
 	if (i!=j) {
 		number r_ij = SpatialDistance(l[i],l[j]);
 		number t_ij = DX(l,j,i,Dim-1); // checked order
-		number FThermal_ij = Fth(r_ij,t_ij,beta,a);
-		number DFThermalDrOnr_ij = dFthdronr(r_ij,t_ij,beta,a);
-		number DFThermalDt_ij = dFthdt(r_ij,t_ij,beta,a);
+		number FTH_ij = Fth(r_ij,t_ij,beta,a);
+		number DFTHDrOnr_ij = dFthdronr(r_ij,t_ij,beta,a);
+		number DFTHDt_ij = dFthdt(r_ij,t_ij,beta,a);
 		number T_ij = Dot(l[pi],l[i],l[pj],l[j]);
 		
-		res += 2.0*FThermal_ij*(-DX(l,i,mu));
+		res += 2.0*FTH_ij*(-DX(l,i,mu));
 		if (mu<(Dim-1))
-			res += 2.0*DFThermalDrOnr_ij*DX(l,j,i,mu)*T_ij;
+			res += 2.0*DFTHDrOnr_ij*DX(l,j,i,mu)*T_ij;
 		else
-			res += 2.0*DFThermalDt_ij*T_ij;
+			res += 2.0*DFTHDt_ij*T_ij;
 	}
 	
 	if (i!=mj) {
 		number r_imj = SpatialDistance(l[i],l[mj]);
 		number t_imj = DX(l,mj,i,Dim-1); // checked order
-		number FThermal_imj = Fth(r_imj,t_imj,beta,a);
-		res +=  -2.0*FThermal_imj*(-DX(l,i,mu)); //
+		number FTH_imj = Fth(r_imj,t_imj,beta,a);
+		res +=  -2.0*FTH_imj*(-DX(l,i,mu)); //
 	}
 	
 	//coincident terms
@@ -519,34 +519,34 @@ static void ddVthGeneric(const uint& j, const uint& mu, const uint& k, const uin
 
 	// terms where mu not nexcessarily equal to nu, without sums
 		if (k!=j) {
-			number DFThermalDrOnr_jk = dFthdronr(r_jk,t_jk,beta,a);
-			number DFThermalDt_jk = dFthdt(r_jk,t_jk,beta,a);
-			number DDFThermalDrDr_jk = ddFthdrdr(r_jk,t_jk,beta,a);
-			number DDFThermalDrDtOnr_jk = ddFthdrdtonr(r_jk,t_jk,beta,a);
-			number DDFThermalDtDt_jk = ddFthdtdt(r_jk,t_jk,beta,a);
+			number DFTHDrOnr_jk = dFthdronr(r_jk,t_jk,beta,a);
+			number DFTHDt_jk = dFthdt(r_jk,t_jk,beta,a);
+			number DDFTHDrDr_jk = ddFthdrdr(r_jk,t_jk,beta,a);
+			number DDFTHDrDtOnr_jk = ddFthdrdtonr(r_jk,t_jk,beta,a);
+			number DDFTHDtDt_jk = ddFthdtdt(r_jk,t_jk,beta,a);
 			if (mu==(Dim-1)) {
-				res += - 2.0*DFThermalDt_jk*(-DX(l,j,nu)); //
+				res += - 2.0*DFTHDt_jk*(-DX(l,j,nu)); //
 				if (nu<(Dim-1))
-					res += (2.0*DDFThermalDrDtOnr_jk*DX(l,j,k,nu)*T_jk); //
+					res += (2.0*DDFTHDrDtOnr_jk*DX(l,j,k,nu)*T_jk); //
 				else
-					res += -2.0*DDFThermalDtDt_jk*T_jk;//
+					res += -2.0*DDFTHDtDt_jk*T_jk;//
 			}
 			else {
-				res += + 2.0*DFThermalDrOnr_jk*(-DX(l,j,nu))*DX(l,j,k,mu); //
+				res += + 2.0*DFTHDrOnr_jk*(-DX(l,j,nu))*DX(l,j,k,mu); //
 				if (nu==(Dim-1)) 
-					res += + 2.0*DDFThermalDrDtOnr_jk*DX(l,j,k,mu)*T_jk; //
-				else if (r_jk>MIN_NUMBER) //as -DFThermalDrOnr+DDFThermalDrDr->0 as r->0
-					res += (2.0*DFThermalDrOnr_jk*DX(l,j,k,mu)*DX(l,j,k,nu)*T_jk)/pow(r_jk,2) \
-							- (2.0*DDFThermalDrDr_jk*DX(l,j,k,mu)*DX(l,j,k,nu)*T_jk)/pow(r_jk,2); //
+					res += + 2.0*DDFTHDrDtOnr_jk*DX(l,j,k,mu)*T_jk; //
+				else if (r_jk>MIN_NUMBER) //as -DFTHDrOnr+DDFTHDrDr->0 as r->0
+					res += (2.0*DFTHDrOnr_jk*DX(l,j,k,mu)*DX(l,j,k,nu)*T_jk)/pow(r_jk,2) \
+							- (2.0*DDFTHDrDr_jk*DX(l,j,k,mu)*DX(l,j,k,nu)*T_jk)/pow(r_jk,2); //
 				if (nu==mu)
-					res += - (2.0*DFThermalDrOnr_jk*T_jk);//
+					res += - (2.0*DFTHDrOnr_jk*T_jk);//
 			}
 			
 			if (nu==(Dim-1)) {
-				res += 2.0*DFThermalDt_jk*(-DX(l,k,mu)); //
+				res += 2.0*DFTHDt_jk*(-DX(l,k,mu)); //
 			}
 			else {
-				res += - 2.0*DFThermalDrOnr_jk*DX(l,j,k,nu)*(-DX(l,k,mu)); //
+				res += - 2.0*DFTHDrOnr_jk*DX(l,j,k,nu)*(-DX(l,k,mu)); //
 			}
 			
 		}
@@ -570,11 +570,11 @@ static void ddVthGeneric(const uint& j, const uint& mu, const uint& k, const uin
 		number T_ij;
 		number r_ij, r_imj;
 		number t_ij, t_imj;
-		number DFThermalDrOnr_ij;	
-		number DFThermalDt_ij;	
-		number DDFThermalDrDr_ij;	
-		number DDFThermalDrDtOnr_ij;
-		number DDFThermalDtDt_ij;
+		number DFTHDrOnr_ij;	
+		number DFTHDt_ij;	
+		number DDFTHDrDr_ij;	
+		number DDFTHDrDtOnr_ij;
+		number DDFTHDtDt_ij;
 		
 		for (uint i=0; i<l.size(); i++) {
 		
@@ -586,34 +586,34 @@ static void ddVthGeneric(const uint& j, const uint& mu, const uint& k, const uin
 			t_imj = DX(l,mj,i,Dim-1);
 
 			if (k==j && i!=j) {
-				DFThermalDrOnr_ij = dFthdronr(r_ij,t_ij,beta,a);
-				DFThermalDt_ij = dFthdt(r_ij,t_ij,beta,a);
-				DDFThermalDrDr_ij = ddFthdrdr(r_ij,t_ij,beta,a);
-				DDFThermalDrDtOnr_ij = ddFthdrdtonr(r_ij,t_ij,beta,a);
-				DDFThermalDtDt_ij = ddFthdtdt(r_ij,t_ij,beta,a);
+				DFTHDrOnr_ij = dFthdronr(r_ij,t_ij,beta,a);
+				DFTHDt_ij = dFthdt(r_ij,t_ij,beta,a);
+				DDFTHDrDr_ij = ddFthdrdr(r_ij,t_ij,beta,a);
+				DDFTHDrDtOnr_ij = ddFthdrdtonr(r_ij,t_ij,beta,a);
+				DDFTHDtDt_ij = ddFthdtdt(r_ij,t_ij,beta,a);
 				if (mu==(Dim-1)) {
-					res += 2.0*DFThermalDt_ij*(-DX(l,i,nu)); //
+					res += 2.0*DFTHDt_ij*(-DX(l,i,nu)); //
 					if (nu==(Dim-1)) 
-						res += 2.0*DDFThermalDtDt_ij*T_ij; //
+						res += 2.0*DDFTHDtDt_ij*T_ij; //
 					else
-						res += 2.0*DDFThermalDrDtOnr_ij*DX(l,j,i,nu)*T_ij; //
+						res += 2.0*DDFTHDrDtOnr_ij*DX(l,j,i,nu)*T_ij; //
 				}
 				else {
-					res += 2.0*DFThermalDrOnr_ij*(-DX(l,i,nu))*DX(l,j,i,mu); //
+					res += 2.0*DFTHDrOnr_ij*(-DX(l,i,nu))*DX(l,j,i,mu); //
 					if (nu==(Dim-1))
-						res += 2.0*DDFThermalDrDtOnr_ij*DX(l,j,i,mu)*T_ij; //
-					else if (r_ij>MIN_NUMBER) { // as -DFThermalDrOnr+DDFThermalDrDr->0 as r->0
-						res += - (2.0*DFThermalDrOnr_ij*DX(l,j,i,mu)*DX(l,j,i,nu)*T_ij)/pow(r_ij,2) \
-							+ (2.0*DDFThermalDrDr_ij*DX(l,j,i,mu)*DX(l,j,i,nu)*T_ij)/pow(r_ij,2);  //
+						res += 2.0*DDFTHDrDtOnr_ij*DX(l,j,i,mu)*T_ij; //
+					else if (r_ij>MIN_NUMBER) { // as -DFTHDrOnr+DDFTHDrDr->0 as r->0
+						res += - (2.0*DFTHDrOnr_ij*DX(l,j,i,mu)*DX(l,j,i,nu)*T_ij)/pow(r_ij,2) \
+							+ (2.0*DDFTHDrDr_ij*DX(l,j,i,mu)*DX(l,j,i,nu)*T_ij)/pow(r_ij,2);  //
 					}
 					if (nu==mu)
-						res += 2.0*DFThermalDrOnr_ij*T_ij; //
+						res += 2.0*DFTHDrOnr_ij*T_ij; //
 				}
 				if (nu==(Dim-1)) {
-					res += 2.0*DFThermalDt_ij*(-DX(l,i,mu)); //
+					res += 2.0*DFTHDt_ij*(-DX(l,i,mu)); //
 				}
 				else {
-					res += - 2.0*DFThermalDrOnr_ij*(-DX(l,i,mu))*DX(l,i,j,nu); //
+					res += - 2.0*DFTHDrOnr_ij*(-DX(l,i,mu))*DX(l,i,j,nu); //
 				}
 			} 
 			if (j==pk && i!=mj) {
@@ -657,23 +657,23 @@ static void mdVthDisjointGeneric(const uint& j, const uint& mu, const uint& i, c
 	if (i!=j) {
 		number r_ij = SpatialDistance(l[i],l[j]);
 		number t_ij = DXDisjoint(l,j,i,(Dim-1),beta); // checked order
-		number FThermal_ij = Fth(r_ij,t_ij,beta,a);
-		number DFThermalDrOnr_ij = dFthdronr(r_ij,t_ij,beta,a);
-		number DFThermalDt_ij = dFthdt(r_ij,t_ij,beta,a);
+		number FTH_ij = Fth(r_ij,t_ij,beta,a);
+		number DFTHDrOnr_ij = dFthdronr(r_ij,t_ij,beta,a);
+		number DFTHDt_ij = dFthdt(r_ij,t_ij,beta,a);
 		number T_ij = DotDisjoint(l[pi],l[i],l[pj],l[j],beta);
 		
-		res += 2.0*FThermal_ij*(-DXDisjoint(l,i,mu,beta));
+		res += 2.0*FTH_ij*(-DXDisjoint(l,i,mu,beta));
 		if (mu<(Dim-1))
-			res += 2.0*DFThermalDrOnr_ij*DXDisjoint(l,j,i,mu,beta)*T_ij;
+			res += 2.0*DFTHDrOnr_ij*DXDisjoint(l,j,i,mu,beta)*T_ij;
 		else
-			res += 2.0*DFThermalDt_ij*T_ij;
+			res += 2.0*DFTHDt_ij*T_ij;
 	}
 	
 	if (i!=mj) {
 		number r_imj = SpatialDistance(l[i],l[mj]);
 		number t_imj = DXDisjoint(l,mj,i,(Dim-1),beta); // checked order
-		number FThermal_imj = Fth(r_imj,t_imj,beta,a);
-		res +=  -2.0*FThermal_imj*(-DXDisjoint(l,i,mu,beta)); //
+		number FTH_imj = Fth(r_imj,t_imj,beta,a);
+		res +=  -2.0*FTH_imj*(-DXDisjoint(l,i,mu,beta)); //
 	}
 	
 	//coincident terms
@@ -732,34 +732,34 @@ static void ddVthDisjointGeneric(const uint& j, const uint& mu, const uint& k, c
 
 	// terms where mu not nexcessarily equal to nu, without sums
 		if (k!=j) {
-			number DFThermalDrOnr_jk = dFthdronr(r_jk,t_jk,beta,a);
-			number DFThermalDt_jk = dFthdt(r_jk,t_jk,beta,a);
-			number DDFThermalDrDr_jk = ddFthdrdr(r_jk,t_jk,beta,a);
-			number DDFThermalDrDtOnr_jk = ddFthdrdtonr(r_jk,t_jk,beta,a);
-			number DDFThermalDtDt_jk = ddFthdtdt(r_jk,t_jk,beta,a);
+			number DFTHDrOnr_jk = dFthdronr(r_jk,t_jk,beta,a);
+			number DFTHDt_jk = dFthdt(r_jk,t_jk,beta,a);
+			number DDFTHDrDr_jk = ddFthdrdr(r_jk,t_jk,beta,a);
+			number DDFTHDrDtOnr_jk = ddFthdrdtonr(r_jk,t_jk,beta,a);
+			number DDFTHDtDt_jk = ddFthdtdt(r_jk,t_jk,beta,a);
 			if (mu==(Dim-1)) {
-				res += - 2.0*DFThermalDt_jk*(-DXDisjoint(l,j,nu,beta)); //
+				res += - 2.0*DFTHDt_jk*(-DXDisjoint(l,j,nu,beta)); //
 				if (nu<(Dim-1))
-					res += (2.0*DDFThermalDrDtOnr_jk*DXDisjoint(l,j,k,nu,beta)*T_jk); //
+					res += (2.0*DDFTHDrDtOnr_jk*DXDisjoint(l,j,k,nu,beta)*T_jk); //
 				else
-					res += -2.0*DDFThermalDtDt_jk*T_jk;//
+					res += -2.0*DDFTHDtDt_jk*T_jk;//
 			}
 			else {
-				res += + 2.0*DFThermalDrOnr_jk*(-DXDisjoint(l,j,nu,beta))*DXDisjoint(l,j,k,mu,beta); //
+				res += + 2.0*DFTHDrOnr_jk*(-DXDisjoint(l,j,nu,beta))*DXDisjoint(l,j,k,mu,beta); //
 				if (nu==(Dim-1)) 
-					res += + 2.0*DDFThermalDrDtOnr_jk*DXDisjoint(l,j,k,mu,beta)*T_jk; //
-				else if (r_jk>MIN_NUMBER) //as -DFThermalDrOnr+DDFThermalDrDr->0 as r->0
-					res += (2.0*DFThermalDrOnr_jk*DXDisjoint(l,j,k,mu,beta)*DXDisjoint(l,j,k,nu,beta)*T_jk)/pow(r_jk,2) \
-							- (2.0*DDFThermalDrDr_jk*DXDisjoint(l,j,k,mu,beta)*DXDisjoint(l,j,k,nu,beta)*T_jk)/pow(r_jk,2); //
+					res += + 2.0*DDFTHDrDtOnr_jk*DXDisjoint(l,j,k,mu,beta)*T_jk; //
+				else if (r_jk>MIN_NUMBER) //as -DFTHDrOnr+DDFTHDrDr->0 as r->0
+					res += (2.0*DFTHDrOnr_jk*DXDisjoint(l,j,k,mu,beta)*DXDisjoint(l,j,k,nu,beta)*T_jk)/pow(r_jk,2) \
+							- (2.0*DDFTHDrDr_jk*DXDisjoint(l,j,k,mu,beta)*DXDisjoint(l,j,k,nu,beta)*T_jk)/pow(r_jk,2); //
 				if (nu==mu)
-					res += - (2.0*DFThermalDrOnr_jk*T_jk);//
+					res += - (2.0*DFTHDrOnr_jk*T_jk);//
 			}
 			
 			if (nu==(Dim-1)) {
-				res += 2.0*DFThermalDt_jk*(-DXDisjoint(l,k,mu,beta)); //
+				res += 2.0*DFTHDt_jk*(-DXDisjoint(l,k,mu,beta)); //
 			}
 			else {
-				res += - 2.0*DFThermalDrOnr_jk*DXDisjoint(l,j,k,nu,beta)*(-DXDisjoint(l,k,mu,beta)); //
+				res += - 2.0*DFTHDrOnr_jk*DXDisjoint(l,j,k,nu,beta)*(-DXDisjoint(l,k,mu,beta)); //
 			}
 			
 		}
@@ -783,11 +783,11 @@ static void ddVthDisjointGeneric(const uint& j, const uint& mu, const uint& k, c
 		number T_ij;
 		number r_ij, r_imj;
 		number t_ij, t_imj;
-		number DFThermalDrOnr_ij;	
-		number DFThermalDt_ij;	
-		number DDFThermalDrDr_ij;	
-		number DDFThermalDrDtOnr_ij;
-		number DDFThermalDtDt_ij;
+		number DFTHDrOnr_ij;	
+		number DFTHDt_ij;	
+		number DDFTHDrDr_ij;	
+		number DDFTHDrDtOnr_ij;
+		number DDFTHDtDt_ij;
 		
 		for (uint i=0; i<l.size(); i++) {
 		
@@ -799,34 +799,34 @@ static void ddVthDisjointGeneric(const uint& j, const uint& mu, const uint& k, c
 			t_imj = DXDisjoint(l,mj,i,(Dim-1),beta);
 
 			if (k==j && i!=j) {
-				DFThermalDrOnr_ij = dFthdronr(r_ij,t_ij,beta,a);
-				DFThermalDt_ij = dFthdt(r_ij,t_ij,beta,a);
-				DDFThermalDrDr_ij = ddFthdrdr(r_ij,t_ij,beta,a);
-				DDFThermalDrDtOnr_ij = ddFthdrdtonr(r_ij,t_ij,beta,a);
-				DDFThermalDtDt_ij = ddFthdtdt(r_ij,t_ij,beta,a);
+				DFTHDrOnr_ij = dFthdronr(r_ij,t_ij,beta,a);
+				DFTHDt_ij = dFthdt(r_ij,t_ij,beta,a);
+				DDFTHDrDr_ij = ddFthdrdr(r_ij,t_ij,beta,a);
+				DDFTHDrDtOnr_ij = ddFthdrdtonr(r_ij,t_ij,beta,a);
+				DDFTHDtDt_ij = ddFthdtdt(r_ij,t_ij,beta,a);
 				if (mu==(Dim-1)) {
-					res += 2.0*DFThermalDt_ij*(-DXDisjoint(l,i,nu,beta)); //
+					res += 2.0*DFTHDt_ij*(-DXDisjoint(l,i,nu,beta)); //
 					if (nu==(Dim-1)) 
-						res += 2.0*DDFThermalDtDt_ij*T_ij; //
+						res += 2.0*DDFTHDtDt_ij*T_ij; //
 					else
-						res += 2.0*DDFThermalDrDtOnr_ij*DXDisjoint(l,j,i,nu,beta)*T_ij; //
+						res += 2.0*DDFTHDrDtOnr_ij*DXDisjoint(l,j,i,nu,beta)*T_ij; //
 				}
 				else {
-					res += 2.0*DFThermalDrOnr_ij*(-DXDisjoint(l,i,nu,beta))*DXDisjoint(l,j,i,mu,beta); //
+					res += 2.0*DFTHDrOnr_ij*(-DXDisjoint(l,i,nu,beta))*DXDisjoint(l,j,i,mu,beta); //
 					if (nu==(Dim-1))
-						res += 2.0*DDFThermalDrDtOnr_ij*DXDisjoint(l,j,i,mu,beta)*T_ij; //
-					else if (r_ij>MIN_NUMBER) { // as -DFThermalDrOnr+DDFThermalDrDr->0 as r->0
-						res += - (2.0*DFThermalDrOnr_ij*DXDisjoint(l,j,i,mu,beta)*DXDisjoint(l,j,i,nu,beta)*T_ij)/pow(r_ij,2) \
-							+ (2.0*DDFThermalDrDr_ij*DXDisjoint(l,j,i,mu,beta)*DXDisjoint(l,j,i,nu,beta)*T_ij)/pow(r_ij,2);  //
+						res += 2.0*DDFTHDrDtOnr_ij*DXDisjoint(l,j,i,mu,beta)*T_ij; //
+					else if (r_ij>MIN_NUMBER) { // as -DFTHDrOnr+DDFTHDrDr->0 as r->0
+						res += - (2.0*DFTHDrOnr_ij*DXDisjoint(l,j,i,mu,beta)*DXDisjoint(l,j,i,nu,beta)*T_ij)/pow(r_ij,2) \
+							+ (2.0*DDFTHDrDr_ij*DXDisjoint(l,j,i,mu,beta)*DXDisjoint(l,j,i,nu,beta)*T_ij)/pow(r_ij,2);  //
 					}
 					if (nu==mu)
-						res += 2.0*DFThermalDrOnr_ij*T_ij; //
+						res += 2.0*DFTHDrOnr_ij*T_ij; //
 				}
 				if (nu==(Dim-1)) {
-					res += 2.0*DFThermalDt_ij*(-DXDisjoint(l,i,mu,beta)); //
+					res += 2.0*DFTHDt_ij*(-DXDisjoint(l,i,mu,beta)); //
 				}
 				else {
-					res += - 2.0*DFThermalDrOnr_ij*(-DXDisjoint(l,i,mu,beta))*DXDisjoint(l,i,j,nu,beta); //
+					res += - 2.0*DFTHDrOnr_ij*(-DXDisjoint(l,i,mu,beta))*DXDisjoint(l,i,j,nu,beta); //
 				}
 			} 
 			if (j==pk && i!=mj) {
@@ -867,6 +867,395 @@ static void mdVthDisjointLRGeneric(const uint& j, const uint& mu, const uint& i,
 	else
 		mdVthDisjointGeneric(j,mu,i,l,Fth,dFthdronr,dFthdt,beta,0.0,f,v);
 }
+
+// ddVthDisjointLRGeneric
+template<uint Dim>
+static void ddVthDisjointLRGeneric(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l,\
+	ThermalFunction Fth, ThermalFunction dFthdronr, ThermalFunction dFthdt, ThermalFunction ddFthdrdr, ThermalFunction ddFthdrdtonr, ThermalFunction ddFthdtdt,\
+						 const number& beta, const number& a, const number& f, mat& m) {
+	uint N = l.size();
+
+	number a_jk = (((j<N/2 && k<N/2) || (j>=N/2 && k>=N/2))? a:0.0);
+		
+	number res = 0.0;
+	
+	uint mj = negNeighDisjoint(j,l.size());
+	uint pj = posNeighDisjoint(j,l.size());		
+	uint mk = negNeighDisjoint(k,l.size());
+	uint pk = posNeighDisjoint(k,l.size());
+	
+	number r_jk = SpatialDistance(l[j],l[k]);
+	number r_mjk = SpatialDistance(l[mj],l[k]);
+	number r_jmk = SpatialDistance(l[j],l[mk]);
+	number r_mjmk = SpatialDistance(l[mj],l[mk]);
+	
+	number t_jk = DXDisjoint(l,k,j,(Dim-1),beta);
+	number t_mjk = DXDisjoint(l,k,mj,(Dim-1),beta);
+	number t_jmk = DXDisjoint(l,mk,j,(Dim-1),beta);
+	number t_mjmk = DXDisjoint(l,mk,mj,(Dim-1),beta);
+		
+	number T_jk = DotDisjoint(l[pj],l[j],l[pk],l[k],beta);
+	
+	// terms where mu==nu, without sums
+	if (mu==nu) {
+		if (k!=j)
+			res += 2.0*Fth(r_mjmk,t_mjmk,beta,a_jk)\
+					+ 2.0*Fth(r_jk,t_jk,beta,a_jk);//
+		if (k!=mj)
+			res +=  - 2.0*Fth(r_mjk,t_mjk,beta,a_jk);//
+		if (k!=pj)
+			res += - 2.0*Fth(r_jmk,t_jmk,beta,a_jk);//
+	}
+
+	// terms where mu not nexcessarily equal to nu, without sums
+		if (k!=j) {
+			number DFTHDrOnr_jk = dFthdronr(r_jk,t_jk,beta,a_jk);
+			number DFTHDt_jk = dFthdt(r_jk,t_jk,beta,a_jk);
+			number DDFTHDrDr_jk = ddFthdrdr(r_jk,t_jk,beta,a_jk);
+			number DDFTHDrDtOnr_jk = ddFthdrdtonr(r_jk,t_jk,beta,a_jk);
+			number DDFTHDtDt_jk = ddFthdtdt(r_jk,t_jk,beta,a_jk);
+			if (mu==(Dim-1)) {
+				res += - 2.0*DFTHDt_jk*(-DXDisjoint(l,j,nu,beta)); //
+				if (nu<(Dim-1))
+					res += (2.0*DDFTHDrDtOnr_jk*DXDisjoint(l,j,k,nu,beta)*T_jk); //
+				else
+					res += -2.0*DDFTHDtDt_jk*T_jk;//
+			}
+			else {
+				res += + 2.0*DFTHDrOnr_jk*(-DXDisjoint(l,j,nu,beta))*DXDisjoint(l,j,k,mu,beta); //
+				if (nu==(Dim-1)) 
+					res += + 2.0*DDFTHDrDtOnr_jk*DXDisjoint(l,j,k,mu,beta)*T_jk; //
+				else if (r_jk>MIN_NUMBER) //as -DFTHDrOnr+DDFTHDrDr->0 as r->0
+					res += (2.0*DFTHDrOnr_jk*DXDisjoint(l,j,k,mu,beta)*DXDisjoint(l,j,k,nu,beta)*T_jk)/pow(r_jk,2) \
+							- (2.0*DDFTHDrDr_jk*DXDisjoint(l,j,k,mu,beta)*DXDisjoint(l,j,k,nu,beta)*T_jk)/pow(r_jk,2); //
+				if (nu==mu)
+					res += - (2.0*DFTHDrOnr_jk*T_jk);//
+			}
+			
+			if (nu==(Dim-1)) {
+				res += 2.0*DFTHDt_jk*(-DXDisjoint(l,k,mu,beta)); //
+			}
+			else {
+				res += - 2.0*DFTHDrOnr_jk*DXDisjoint(l,j,k,nu,beta)*(-DXDisjoint(l,k,mu,beta)); //
+			}
+			
+		}
+		if (k!=mj) {
+			if (nu==(Dim-1))
+				res += - 2.0*dFthdt(r_mjk,t_mjk,beta,a_jk)*(-DXDisjoint(l,k,mu,beta)); //
+			else
+				res += 2.0*dFthdronr(r_mjk,t_mjk,beta,a_jk)*DXDisjoint(l,mj,k,nu,beta)*(-DXDisjoint(l,k,mu,beta)); //
+		}
+		if (j!=mk) {
+			if (mu==(Dim-1))
+				res += 2.0*dFthdt(r_jmk,t_jmk,beta,a_jk)*(-DXDisjoint(l,j,nu,beta));//
+			else
+				res += -(2.0*dFthdronr(r_jmk,t_jmk,beta,a_jk)*(-DXDisjoint(l,j,nu,beta))*DXDisjoint(l,j,mk,mu,beta)); //
+		}
+	
+	// terms with sums
+	if (k==j || k==mj || k==pj) {
+	
+			
+		number a_ij;
+		uint pi;
+		number T_ij;
+		number r_ij, r_imj;
+		number t_ij, t_imj;
+		number DFTHDrOnr_ij;	
+		number DFTHDt_ij;	
+		number DDFTHDrDr_ij;	
+		number DDFTHDrDtOnr_ij;
+		number DDFTHDtDt_ij;
+		
+		for (uint i=0; i<l.size(); i++) {
+		
+			pi = posNeighDisjoint(i,l.size());
+			T_ij = DotDisjoint(l[pi],l[i],l[pj],l[j],beta);			
+			r_ij = SpatialDistance(l[j],l[i]);
+			r_imj = SpatialDistance(l[i],l[mj]);	
+			t_ij = DXDisjoint(l,j,i,(Dim-1),beta);
+			t_imj = DXDisjoint(l,mj,i,(Dim-1),beta);
+			a_ij = (((j<N/2 && i<N/2) || (j>=N/2 && i>=N/2))? a:0.0);
+
+			if (k==j && i!=j) {
+				DFTHDrOnr_ij = dFthdronr(r_ij,t_ij,beta,a_ij);
+				DFTHDt_ij = dFthdt(r_ij,t_ij,beta,a_ij);
+				DDFTHDrDr_ij = ddFthdrdr(r_ij,t_ij,beta,a_ij);
+				DDFTHDrDtOnr_ij = ddFthdrdtonr(r_ij,t_ij,beta,a_ij);
+				DDFTHDtDt_ij = ddFthdtdt(r_ij,t_ij,beta,a_ij);
+				if (mu==(Dim-1)) {
+					res += 2.0*DFTHDt_ij*(-DXDisjoint(l,i,nu,beta)); //
+					if (nu==(Dim-1)) 
+						res += 2.0*DDFTHDtDt_ij*T_ij; //
+					else
+						res += 2.0*DDFTHDrDtOnr_ij*DXDisjoint(l,j,i,nu,beta)*T_ij; //
+				}
+				else {
+					res += 2.0*DFTHDrOnr_ij*(-DXDisjoint(l,i,nu,beta))*DXDisjoint(l,j,i,mu,beta); //
+					if (nu==(Dim-1))
+						res += 2.0*DDFTHDrDtOnr_ij*DXDisjoint(l,j,i,mu,beta)*T_ij; //
+					else if (r_ij>MIN_NUMBER) { // as -DFTHDrOnr+DDFTHDrDr->0 as r->0
+						res += - (2.0*DFTHDrOnr_ij*DXDisjoint(l,j,i,mu,beta)*DXDisjoint(l,j,i,nu,beta)*T_ij)/pow(r_ij,2) \
+							+ (2.0*DDFTHDrDr_ij*DXDisjoint(l,j,i,mu,beta)*DXDisjoint(l,j,i,nu,beta)*T_ij)/pow(r_ij,2);  //
+					}
+					if (nu==mu)
+						res += 2.0*DFTHDrOnr_ij*T_ij; //
+				}
+				if (nu==(Dim-1)) {
+					res += 2.0*DFTHDt_ij*(-DXDisjoint(l,i,mu,beta)); //
+				}
+				else {
+					res += - 2.0*DFTHDrOnr_ij*(-DXDisjoint(l,i,mu,beta))*DXDisjoint(l,i,j,nu,beta); //
+				}
+			} 
+			if (j==pk && i!=mj) {
+				if (nu==(Dim-1))
+					res += - 2.0*dFthdt(r_imj,t_imj,beta,a_ij)*(-DXDisjoint(l,i,mu,beta));//
+				else
+					res += 2.0*dFthdronr(r_imj,t_imj,beta,a_ij)*(-DXDisjoint(l,i,mu,beta))*DXDisjoint(l,i,k,nu,beta);//
+			} 
+			if (j==mk && i!=j) {
+				if (mu==(Dim-1))
+					res += - 2.0*dFthdt(r_ij,t_ij,beta,a_ij)*(-DXDisjoint(l,i,nu,beta));//
+				else
+					res += - 2.0*dFthdronr(r_ij,t_ij,beta,a_ij)*(-DXDisjoint(l,i,nu,beta))*DXDisjoint(l,j,i,mu,beta);//
+			}	
+		}		
+	}
+	
+	//coincident terms
+	// extra factor of (-1.0/pow(2.0*PI,2)) due to the fact that we are treating the green's function here
+	if (k==j && mu==nu)
+		res += (-1.0/pow(2.0*PI,2))*2.0/a/a;
+	if (k==mj && mu==nu)
+		res += (-1.0/pow(2.0*PI,2))*(-1.0/a/a);
+	if (k==pj && mu==nu)
+		res += (-1.0/pow(2.0*PI,2))*(-1.0/a/a);
+	
+	m(Dim*j+mu,Dim*k+nu) += f*(-pow(2.0*PI,2))*res;
+}
+
+// mdV0DisjointGeneric
+template<uint Dim>
+static void mdV0DisjointGeneric(const uint& j, const uint& mu, const uint& i, const Loop<Dim>& l,\
+					VacuumFunction FVacuum, VacuumFunction dFVacuumdronr, const number& beta, const number& a, const number& f, vec& v) {
+	number res = 0.0;
+	
+	uint pj = posNeighDisjoint(j,l.size());
+	uint mj = negNeighDisjoint(j,l.size());
+	uint pi = posNeighDisjoint(i,l.size());
+		
+	if (i!=j) {
+		number x_ij = DistanceDisjoint(l[i],l[j],beta);
+		number F0_ij = FVacuum(x_ij,a);
+		number DF0DrOnr_ij = dFVacuumdronr(x_ij,a);
+		number T_ij = DotDisjoint(l[pi],l[i],l[pj],l[j],beta);
+		
+		res += 2.0*F0_ij*DXDisjoint(l,i,pi,mu,beta) \
+ 				+ 2.0*DF0DrOnr_ij*DXDisjoint(l,j,i,mu,beta)*T_ij;
+	}
+	
+	if (i!=mj) {
+		number x_imj = DistanceDisjoint(l[i],l[mj],beta);
+		number F0_imj = FVacuum(x_imj,a);
+		res +=  - 2.0*F0_imj*DXDisjoint(l,i,pi,mu,beta); //
+	}
+	
+	//coincident terms
+	// extra factor of (-1.0/pow(2.0*PI,2)) due to the fact that we are treating the green's function here
+	if (i==j)
+		res += (-1.0/pow(2.0*PI,2))*2.0*(l[j])[mu]/a/a; 
+	if (i==mj)
+		res += (-1.0/pow(2.0*PI,2))*(-(l[mj])[mu]/a/a);
+	if (i==pj)
+		res += (-1.0/pow(2.0*PI,2))*(-(l[pj])[mu]/a/a);
+		
+	v[j*Dim+mu] += -f*(-pow(2.0*PI,2))*res;
+
+}
+
+// ddV0DisjointGeneric
+template<uint Dim>
+static void ddV0DisjointGeneric(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l,\
+						VacuumFunction FVacuum, VacuumFunction dFVacuumdronr,VacuumFunction ddFVacuumdrdr,\
+						 const number& beta, const number& a, const number& f, mat& m) {
+	number res = 0.0;
+	
+	uint mj = negNeighDisjoint(j,l.size());
+	uint pj = posNeighDisjoint(j,l.size());	
+	uint mk = negNeighDisjoint(k,l.size());
+	uint pk = posNeighDisjoint(k,l.size());
+	
+	number x_jk = DistanceDisjoint(l[j],l[k],beta);
+	number x_jmk = DistanceDisjoint(l[j],l[mk],beta);
+	number x_mjk = DistanceDisjoint(l[mj],l[k],beta);
+	number x_mjmk = DistanceDisjoint(l[mj],l[mk],beta);
+	
+	number T_jk = DotDisjoint(l[pj],l[j],l[pk],l[k],beta);
+	
+	// terms where mu==nu, without sums
+	if (mu==nu) {
+		if (k!=j)
+			res += 2.0*FVacuum(x_mjmk,a) \
+			 + 2.0*FVacuum(x_jk,a) \
+			 - 2.0*dFVacuumdronr(x_jk,a)*T_jk;
+		if (k!=mj)
+			res += - 2.0*FVacuum(x_mjk,a);
+		if (k!=pj)
+			res += - 2.0*FVacuum(x_jmk,a);
+	}
+
+	// terms where mu not nexcessarily equal to nu, without sums
+	if (k!=j)
+		res +=  + 2.0*dFVacuumdronr(x_jk,a)*DXDisjoint(l,j,pj,nu,beta)*DXDisjoint(l,j,k,mu,beta) \
+				 - 2.0*dFVacuumdronr(x_jk,a)*DXDisjoint(l,j,k,nu,beta)*DXDisjoint(l,k,pk,mu,beta) \
+				 - (2.0*ddFVacuumdrdr(x_jk,a)*DXDisjoint(l,j,k,mu,beta)*DXDisjoint(l,j,k,nu,beta)*T_jk)/pow(x_jk,2) \
+				 + (2.0*dFVacuumdronr(x_jk,a)*DXDisjoint(l,j,k,mu,beta)*DXDisjoint(l,j,k,nu,beta)*T_jk)/pow(x_jk,2);
+	if (k!=mj)
+		res += + 2.0*dFVacuumdronr(x_mjk,a)*DXDisjoint(l,mj,k,nu,beta)*DXDisjoint(l,k,pk,mu,beta);
+	if (k!=pj)
+		res += - 2.0*dFVacuumdronr(x_jmk,a)*DXDisjoint(l,j,pj,nu,beta)*DXDisjoint(l,j,mk,mu,beta);
+		
+	// terms with sums
+	if (k==j || k==mj || k==pj) {
+	
+		uint pi;
+		number x_ij, x_imj, T_ij;
+		
+		for (uint i=0; i<l.size(); i++) {
+		
+			pi = (i==(l.size()-1)? 0: i+1);
+			x_ij = DistanceDisjoint(l[i],l[j],beta);
+			x_imj = DistanceDisjoint(l[i],l[mj],beta);
+			T_ij = DotDisjoint(l[pi],l[i],l[pj],l[j],beta);
+			
+			if (k==j && i!=j) {
+				res +=  2.0*dFVacuumdronr(x_ij,a)*DXDisjoint(l,i,pi,mu,beta)*DXDisjoint(l,j,i,nu,beta) \
+						 + 2.0*dFVacuumdronr(x_ij,a)*DXDisjoint(l,i,pi,nu,beta)*DXDisjoint(l,j,i,mu,beta) \
+						 + (2.0*ddFVacuumdrdr(x_ij,a)*DXDisjoint(l,j,i,mu,beta)*DXDisjoint(l,j,i,nu,beta)*T_ij)/pow(x_ij,2) \
+						 - (2.0*dFVacuumdronr(x_ij,a)*DXDisjoint(l,j,i,mu,beta)*DXDisjoint(l,j,i,nu,beta)*T_ij)/pow(x_ij,2);
+				if (mu==nu)
+					res += + 2.0*dFVacuumdronr(x_ij,a)*T_ij; //
+			}
+			if (k==mj && i!=mj) 
+				res += 2.0*dFVacuumdronr(x_imj,a)*DXDisjoint(l,i,pi,mu,beta)*DXDisjoint(l,i,k,nu,beta);
+			if (k==pj && i!=j) 
+				res += - 2.0*dFVacuumdronr(x_ij,a)*DXDisjoint(l,i,pi,nu,beta)*DXDisjoint(l,j,i,mu,beta);
+			
+		}		
+	}
+	
+	//coincident terms
+	if (k==j && mu==nu)
+		res += (-1.0/pow(2.0*PI,2))*(2.0/a/a);
+	if (k==mj && mu==nu)
+		res += (-1.0/pow(2.0*PI,2))*(-1.0/a/a);
+	if (k==pj && mu==nu)
+		res += (-1.0/pow(2.0*PI,2))*(-1.0/a/a);
+	
+	m(Dim*j+mu,Dim*k+nu) += f*(-pow(2.0*PI,2))*res;
+	
+}
+
+// mdV0DisjointLRGeneric
+template<uint Dim>
+static void mdV0DisjointLRGeneric(const uint& j, const uint& mu, const uint& i, const Loop<Dim>& l,\
+					VacuumFunction FVacuum, VacuumFunction dFVacuumdronr, const number& beta, const number& a, const number& f, vec& v) {
+	uint N = l.size();
+	if ((j<N/2 && i<N/2) || (j>=N/2 && i>=N/2))
+		mdV0DisjointLRGeneric(j,mu,i,l,FVacuum,dFVacuumdronr,beta,a,f,v);
+}
+
+// ddV0DisjointLRGeneric
+template<uint Dim>
+static void ddV0DisjointLRGeneric(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l,\
+						VacuumFunction FVacuum, VacuumFunction dFVacuumdronr,VacuumFunction ddFVacuumdrdr,\
+						 const number& beta, const number& a, const number& f, mat& m) {
+	uint N = l.size();
+	if ((j<N/2 && k<N/2) || (j>=N/2 && k>=N/2)) {
+		number res = 0.0;
+	
+		uint mj = negNeighDisjoint(j,l.size());
+		uint pj = posNeighDisjoint(j,l.size());	
+		uint mk = negNeighDisjoint(k,l.size());
+		uint pk = posNeighDisjoint(k,l.size());
+	
+		number x_jk = DistanceDisjoint(l[j],l[k],beta);
+		number x_jmk = DistanceDisjoint(l[j],l[mk],beta);
+		number x_mjk = DistanceDisjoint(l[mj],l[k],beta);
+		number x_mjmk = DistanceDisjoint(l[mj],l[mk],beta);
+	
+		number T_jk = DotDisjoint(l[pj],l[j],l[pk],l[k],beta);
+	
+		// terms where mu==nu, without sums
+		if (mu==nu) {
+			if (k!=j)
+				res += 2.0*FVacuum(x_mjmk,a) \
+				 + 2.0*FVacuum(x_jk,a) \
+				 - 2.0*dFVacuumdronr(x_jk,a)*T_jk;
+			if (k!=mj)
+				res += - 2.0*FVacuum(x_mjk,a);
+			if (k!=pj)
+				res += - 2.0*FVacuum(x_jmk,a);
+		}
+
+		// terms where mu not nexcessarily equal to nu, without sums
+		if (k!=j)
+			res +=  + 2.0*dFVacuumdronr(x_jk,a)*DXDisjoint(l,j,pj,nu,beta)*DXDisjoint(l,j,k,mu,beta) \
+					 - 2.0*dFVacuumdronr(x_jk,a)*DXDisjoint(l,j,k,nu,beta)*DXDisjoint(l,k,pk,mu,beta) \
+					 - (2.0*ddFVacuumdrdr(x_jk,a)*DXDisjoint(l,j,k,mu,beta)*DXDisjoint(l,j,k,nu,beta)*T_jk)/pow(x_jk,2) \
+					 + (2.0*dFVacuumdronr(x_jk,a)*DXDisjoint(l,j,k,mu,beta)*DXDisjoint(l,j,k,nu,beta)*T_jk)/pow(x_jk,2);
+		if (k!=mj)
+			res += + 2.0*dFVacuumdronr(x_mjk,a)*DXDisjoint(l,mj,k,nu,beta)*DXDisjoint(l,k,pk,mu,beta);
+		if (k!=pj)
+			res += - 2.0*dFVacuumdronr(x_jmk,a)*DXDisjoint(l,j,pj,nu,beta)*DXDisjoint(l,j,mk,mu,beta);
+		
+		// terms with sums
+		if (k==j || k==mj || k==pj) {
+	
+			uint pi;
+			number x_ij, x_imj, T_ij;
+		
+			// for LR
+			uint iMin = (j<N/2? 0: N/2);
+			uint iMax = (j<N/2? N/2:N);
+		
+			for (uint i=iMin; i<iMax; i++) {
+		
+				pi = (i==(l.size()-1)? 0: i+1);
+				x_ij = DistanceDisjoint(l[i],l[j],beta);
+				x_imj = DistanceDisjoint(l[i],l[mj],beta);
+				T_ij = DotDisjoint(l[pi],l[i],l[pj],l[j],beta);
+			
+				if (k==j && i!=j) {
+					res +=  2.0*dFVacuumdronr(x_ij,a)*DXDisjoint(l,i,pi,mu,beta)*DXDisjoint(l,j,i,nu,beta) \
+							 + 2.0*dFVacuumdronr(x_ij,a)*DXDisjoint(l,i,pi,nu,beta)*DXDisjoint(l,j,i,mu,beta) \
+							 + (2.0*ddFVacuumdrdr(x_ij,a)*DXDisjoint(l,j,i,mu,beta)*DXDisjoint(l,j,i,nu,beta)*T_ij)/pow(x_ij,2) \
+							 - (2.0*dFVacuumdronr(x_ij,a)*DXDisjoint(l,j,i,mu,beta)*DXDisjoint(l,j,i,nu,beta)*T_ij)/pow(x_ij,2);
+					if (mu==nu)
+						res += + 2.0*dFVacuumdronr(x_ij,a)*T_ij; //
+				}
+				if (k==mj && i!=mj) 
+					res += 2.0*dFVacuumdronr(x_imj,a)*DXDisjoint(l,i,pi,mu,beta)*DXDisjoint(l,i,k,nu,beta);
+				if (k==pj && i!=j) 
+					res += - 2.0*dFVacuumdronr(x_ij,a)*DXDisjoint(l,i,pi,nu,beta)*DXDisjoint(l,j,i,mu,beta);
+			
+			}		
+		}
+	
+		//coincident terms
+		if (k==j && mu==nu)
+			res += (-1.0/pow(2.0*PI,2))*(2.0/a/a);
+		if (k==mj && mu==nu)
+			res += (-1.0/pow(2.0*PI,2))*(-1.0/a/a);
+		if (k==pj && mu==nu)
+			res += (-1.0/pow(2.0*PI,2))*(-1.0/a/a);
+	
+		m(Dim*j+mu,Dim*k+nu) += f*(-pow(2.0*PI,2))*res;
+	}	
+}
+
 
 /*----------------------------------------------------------------------------------------------------------------------------
 	1.0 - nr loop scalar functions
@@ -1926,7 +2315,7 @@ void ddVnonrelDisjoint_nr (const uint& j, const uint& mu, const uint& k, const u
 
 // ddVnonrelrDisjoint_nr
 template<uint Dim>
-void ddVnonrelDisjoint_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l,\
+void ddVnonrelrDisjoint_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l,\
 						 const number& beta, const number& a, const number& f, mat& m) {
 
 	if (mu!=(Dim-1) && nu!=(Dim-1)) {
@@ -1996,14 +2385,14 @@ void ddGaussianThermal2_nr(const uint& j, const uint& mu, const uint& k, const u
 template<uint Dim>
 void mdGaussianDisjoint_nr(const uint& j, const uint& mu, const uint& i, const Loop<Dim>& l,\
 			const number& beta, const number& a, const number& f, vec& v) {
-	cerr << "mdGaussianDisjoint_nr Error: no script written for dim = " << Dim << endl;
+	mdV0DisjointGeneric(j, mu, i, l, &G0, &DG0DrOnr, beta, a, f, v);
 }
 
 // mdGaussianLRDisjoint_nr
 template<uint Dim>
 void mdGaussianLRDisjoint_nr(const uint& j, const uint& mu, const uint& i, const Loop<Dim>& l,\
 			const number& beta, const number& a, const number& f, vec& v) {
-	cerr << "mdGaussianLRDisjoint_nr Error: no script written for dim = " << Dim << endl;
+	mdV0DisjointLRGeneric(j, mu, i, l, &G0, &DG0DrOnr, beta, a, f, v);
 }
 
 
@@ -2039,14 +2428,14 @@ void mdGaussianThermal2LRDisjoint_nr(const uint& j, const uint& mu, const uint& 
 template<uint Dim>
 void ddGaussianDisjoint_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l,\
 						 const number& beta, const number& a, const number& f, mat& m) {
-	cerr << "ddGaussianDisjoint_nr Error: no script written for dim = " << Dim << endl;
+	ddV0DisjointGeneric(j, mu, k, nu, l, &G0, &DG0DrOnr, &DDG0DrDr, beta, a, f, m);
 }
 
 // ddGaussianLRDisjoint_nr
 template<uint Dim>
 void ddGaussianLRDisjoint_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l,\
 						 const number& beta, const number& a, const number& f, mat& m) {
-	cerr << "ddGaussianLRDisjoint_nr Error: no script written for dim = " << Dim << endl;
+	ddV0DisjointLRGeneric(j, mu, k, nu, l, &G0, &DG0DrOnr, &DDG0DrDr, beta, a, f, m);
 }
 						 
 // ddGaussianThermalDisjoint_nr
@@ -2956,6 +3345,81 @@ template void vectorToLoop<2>(const vec&, Loop<2>&);
 template Filename filenameLoopNR<2>(const Parameters& p, const string&);
 template Filename filenameThermalNR<2>(const Parameters& p, const string&);
 template void PseudoAngle<2>(const uint& j, const Loop<2>& l, const number& f, number& result);
+template void Vor<2>(const uint& j, const uint& k, const Loop<2>& l, const number& a, const number& f, number& result);
+template void Vlr<2>(const uint& j, const uint& k, const Loop<2>& l, const number& a, const number& f, number& result);
+template void Ver<2>(const uint& j, const uint& k, const Loop<2>& l, const number& a, const number& f, number& result);
+template void Vdr<2>(const uint& j, const uint& k, const Loop<2>& l, const number& a, const number& f, number& result);
+template void Vthr<2>(const uint& j, const uint& k, const Loop<2>& l, const number& beta, const number& a, const number& f, number& result);
+template void VthrDisjoint<2> (const uint& j, const uint& k, const Loop<2>& l, const number& beta, const number& a, const number& f, number& result);
+template void VthrDisjointLR<2> (const uint& j, const uint& k, const Loop<2>& l, const number& beta, const number& a, const number& f, number& result);
+template void VnonrelDisjoint<2> (const uint& j, const Loop<2>& l, const number& beta, const number& f, number& result);
+template void VnonrelrDisjoint<2> (const uint& j, const Loop<2>& l, const number& beta, const number& a, const number& f, number& result);
+template void mdVor_nr<2>(const uint& j, const uint& mu, const uint& i, const Loop<2>& l, const number& a, const number& f, vec& v);
+template void mdVer_nr<2>(const uint& j, const uint& mu, const uint& i, const Loop<2>& l, const number& a, const number& f, vec& v);
+template void mdVdr_nr<2>(const uint& j, const uint& mu, const uint& i, const Loop<2>& l, const number& a, const number& f, vec& v);
+template void mdVthr_nr<2>(const uint& j, const uint& mu, const uint& i, const Loop<2>& l, \
+			const number& beta, const number& a, const number& f, vec& v);
+template void mdVnonrelDisjoint_nr<2> (const uint& j, const uint& mu, const Loop<2>& l, const number& beta, const number& f, vec& v);
+template void mdVnonrelrDisjoint_nr<2> (const uint& j, const uint& mu, const Loop<2>& l, const number& beta, const number& a, const number& f, vec& v);
+template void mdVthrDisjoint_nr<2>(const uint& j, const uint& mu, const uint& i, const Loop<2>& l, \
+			const number& beta, const number& a, const number& f, vec& v);
+template void mdVthrDisjointLR_nr<2>(const uint& j, const uint& mu, const uint& i, const Loop<2>& l, \
+			const number& beta, const number& a, const number& f, vec& v);
+template void mdGaussian_nr<2>(const uint& j, const uint& mu, const uint& i, const Loop<2>& l, const number& a, const number& f, vec& v);
+template void mdGaussianThermal_nr<2>(const uint& j, const uint& mu, const uint& i, const Loop<2>& l, \
+				const number& beta, const number& a, const number& f, vec& v);
+template void mdGaussianThermal2_nr<2>(const uint& j, const uint& mu, const uint& i, const Loop<2>& l, \
+				const number& beta, const number& a, const number& f, vec& v);
+template void mdGaussianThermalDisjoint_nr<2>(const uint& j, const uint& mu, const uint& i, const Loop<2>& l,\
+				const number& beta, const number& a, const number& f, vec& v);
+template void mdGaussianThermal2Disjoint_nr<2>(const uint& j, const uint& mu, const uint& i, const Loop<2>& l,\
+				const number& beta, const number& a, const number& f, vec& v);
+template void mdGaussianThermalLRDisjoint_nr<2>(const uint& j, const uint& mu, const uint& i, const Loop<2>& l,\
+				const number& beta, const number& a, const number& f, vec& v);
+template void mdGaussianThermal2LRDisjoint_nr<2>(const uint& j, const uint& mu, const uint& i, const Loop<2>& l,\
+				const number& beta, const number& a, const number& f, vec& v);
+template void ddVor_nr<2>(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<2>& l,\
+						 const number& a, const number& f, mat& m);
+template void ddVer_nr<2>(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<2>& l,\
+						 const number& a, const number& f, mat& m);
+template void ddVdr_nr<2>(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<2>& l,\
+						 const number& a, const number& f, mat& m);
+template void ddVthr_nr<2>(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<2>& l,\
+						 const number& beta, const number& a, const number& f, mat& m);
+template void ddVthrDisjoint_nr<2>(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<2>& l,\
+						 const number& beta, const number& a, const number& f, mat& m);
+template void ddVthrDisjointLR_nr<2>(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<2>& l,\
+						 const number& beta, const number& a, const number& f, mat& m);
+template void ddVnonrelDisjoint_nr<2> (const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<2>& l,\
+						 const number& beta, const number& f, mat& m);
+template void ddVnonrelrDisjoint_nr<2>(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<2>& l,\
+						 const number& beta, const number& a, const number& f, mat& m);
+template void ddGaussianThermal_nr<2> (const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<2>& l,\
+						 const number& beta, const number& a, const number& f, mat& m);
+template void ddGaussianThermal2_nr<2> (const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<2>& l,\
+						 const number& beta, const number& a, const number& f, mat& m);
+template void ddGaussianThermalDisjoint_nr<2> (const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<2>& l,\
+						 const number& beta, const number& a, const number& f, mat& m);
+template void ddGaussianThermal2Disjoint_nr<2> (const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<2>& l,\
+						 const number& beta, const number& a, const number& f, mat& m);
+template void ddGaussianThermalLRDisjoint_nr<2> (const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<2>& l,\
+						 const number& beta, const number& a, const number& f, mat& m);
+template void ddGaussianThermal2LRDisjoint_nr<2> (const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<2>& l,\
+						 const number& beta, const number& a, const number& f, mat& m);
+template void ddGaussian_nr<2> (const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<2>& l,\
+						 const number& a, const number& f, mat& m);
+template void mdGaussianDisjoint_nr<2>(const uint& j, const uint& mu, const uint& i, const Loop<2>& l,\
+				const number& beta, const number& a, const number& f, vec& v);
+template void mdGaussianLRDisjoint_nr<2>(const uint& j, const uint& mu, const uint& i, const Loop<2>& l,\
+				const number& beta, const number& a, const number& f, vec& v);
+template void ddGaussianDisjoint_nr<2> (const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<2>& l,\
+						 const number& beta, const number& a, const number& f, mat& m);
+template void ddGaussianLRDisjoint_nr<2> (const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<2>& l,\
+						 const number& beta, const number& a, const number& f, mat& m);
+						 
+						 
+
+
 
 // dim 4
 template void L<4>(const uint& j, const Loop<4>& l, const number& f, number& result);
@@ -3093,12 +3557,6 @@ template void vectorToLoop<4>(const vec&, Loop<4>&);
 template Filename filenameLoopNR<4>(const Parameters& p, const string&);
 template Filename filenameThermalNR<4>(const Parameters& p, const string&);
 template void PseudoAngle<4>(const uint& j, const Loop<4>& l, const number& f, number& result);
-
-
-
-
-
-
 template void Vor<4>(const uint& j, const uint& k, const Loop<4>& l, const number& a, const number& f, number& result);
 template void Vlr<4>(const uint& j, const uint& k, const Loop<4>& l, const number& a, const number& f, number& result);
 template void Ver<4>(const uint& j, const uint& k, const Loop<4>& l, const number& a, const number& f, number& result);
@@ -3162,6 +3620,14 @@ template void ddGaussianThermal2LRDisjoint_nr<4> (const uint& j, const uint& mu,
 						 const number& beta, const number& a, const number& f, mat& m);
 template void ddGaussian_nr<4> (const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<4>& l,\
 						 const number& a, const number& f, mat& m);
+template void mdGaussianDisjoint_nr<4>(const uint& j, const uint& mu, const uint& i, const Loop<4>& l,\
+				const number& beta, const number& a, const number& f, vec& v);
+template void mdGaussianLRDisjoint_nr<4>(const uint& j, const uint& mu, const uint& i, const Loop<4>& l,\
+				const number& beta, const number& a, const number& f, vec& v);
+template void ddGaussianDisjoint_nr<4> (const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<4>& l,\
+						 const number& beta, const number& a, const number& f, mat& m);
+template void ddGaussianLRDisjoint_nr<4> (const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<4>& l,\
+						 const number& beta, const number& a, const number& f, mat& m);
 
 // mdVlr_nr
 template <> void mdVlr_nr<4>(const uint& j, const uint& mu, const uint& i, const Loop<4>& l, const number& a, const number& f, vec& v) {
@@ -3340,230 +3806,3 @@ template <> void ddVlr_nr<4>(const uint& j, const uint& mu, const uint& k, const
 	
 }
 
-
-// mdGaussianDisjoint_nr
-template <> void mdGaussianDisjoint_nr<4>(const uint& j, const uint& mu, const uint& i, const Loop<4>& l,\
-				const number& beta, const number& a, const number& f, vec& v) {
-				
- 	number res = 0.0;
-	uint pj = posNeighDisjoint(j,l.size());
-	uint mj = negNeighDisjoint(j,l.size());
-	uint pi = posNeighDisjoint(i,l.size());
-		
-	if (i!=j) {
-		number B_ij = DistanceSquaredDisjoint(l[i],l[j],beta);
-		number T_ij = DotDisjoint(l[pi],l[i],l[pj],l[j],beta);
-		number E_ij = exp(-B_ij/a/a);
-		res += + 2.0*E_ij*(-DXDisjoint(l,i,mu,beta)) \
- 			- (4.0*E_ij*DXDisjoint(l,j,i,mu,beta)*T_ij)/pow(a,2);
-	}
-	if (i!=mj) {
-		number B_imj = DistanceSquaredDisjoint(l[i],l[mj],beta);
-		number E_imj = exp(-B_imj/a/a);
-		res += - 2.0*E_imj*(-DXDisjoint(l,i,mu,beta));
-	}
-		
-	//coincident terms	
-	if (mu==3) {
-		if (i==j) { // bit of a fudge in terms of sum over i
-			res += (DXDisjoint(l,j,mj,mu,beta) + DXDisjoint(l,j,pj,mu,beta));
-		}
-	}
-	else {
-		if (i==j)
-			res += 2.0*(l[j])[mu];
-		if (i==mj)
-			res += -(l[mj])[mu];
-		if (i==pj)
-			res += -(l[pj])[mu];
-	}
-
-	v[j*4+mu] += -f*res;	
-
-}
-
-// mdGaussianLRDisjoint_nr
-template <> void mdGaussianLRDisjoint_nr<4>(const uint& j, const uint& mu, const uint& i, const Loop<4>& l,\
-				const number& beta, const number& a, const number& f, vec& v) {
-	uint N = l.size();
-	if ((j<N/2 && i<N/2) || (j>=N/2 && i>=N/2))
-		mdGaussianDisjoint_nr(j,mu,i,l,beta,a,f,v);
-}
-
-// ddGaussianDisjoint_nr
-template <> void ddGaussianDisjoint_nr<4> (const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<4>& l,\
-						 const number& beta, const number& a, const number& f, mat& m) {
-	number res = 0.0;
-	
-	uint mj = negNeighDisjoint(j,l.size());
-	uint pj = posNeighDisjoint(j,l.size());		
-	uint mk = negNeighDisjoint(k,l.size());
-	uint pk = posNeighDisjoint(k,l.size());
-	
-	number B_jk = DistanceSquaredDisjoint(l[j],l[k],beta);
-	number B_mjk = DistanceSquaredDisjoint(l[mj],l[k],beta);
-	number B_jmk = DistanceSquaredDisjoint(l[j],l[mk],beta);
-	number B_mjmk = DistanceSquaredDisjoint(l[mj],l[mk],beta);
-	
-	number E_jk = exp(-B_jk/a/a);
-	number E_mjk = exp(-B_mjk/a/a);
-	number E_jmk = exp(-B_jmk/a/a);
-	number E_mjmk = exp(-B_mjmk/a/a);
-	
-	number T_jk = DotDisjoint(l[pj],l[j],l[pk],l[k],beta);
-
-	// terms where mu==nu, without sums
-	if (mu==nu) {
-		if (k!=j)
-			res += 	+ 2.0*E_mjmk \
-					 + 2.0*E_jk \
-					 + (4.0*E_jk*T_jk)/pow(a,2);
-		if (k!=mj)
-			res +=  - 2.0*E_mjk; //
-		if (k!=pj)
-			res += - 2.0*E_jmk; //
-	}
-
-	// terms where mu not nexcessarily equal to nu, without sums
-	if (k!=j)
-		res +=  - (4.0*E_jk*(-DXDisjoint(l,j,nu,beta))*DXDisjoint(l,j,k,mu,beta))/pow(a,2) \
-				 + (4.0*E_jk*DXDisjoint(l,j,k,nu,beta)*(-DXDisjoint(l,k,mu,beta)))/pow(a,2) \
-				 - (8.0*E_jk*DXDisjoint(l,j,k,mu,beta)*DXDisjoint(l,j,k,nu,beta)*T_jk)/pow(a,4); //
-	if (k!=mj)
-		res +=  - (4.0*E_mjk*DXDisjoint(l,mj,k,nu,beta)*(-DXDisjoint(l,k,mu,beta)))/pow(a,2); //
-	if (k!=pj)
-		res += + (4.0*E_jmk*(-DXDisjoint(l,j,nu,beta))*DXDisjoint(l,j,mk,mu,beta))/pow(a,2); //
-	
-	// terms with sums
-	if (k==j || k==mj || k==pj) {
-	
-		uint pi;
-		number B_ij, B_imj, E_ij, E_imj, T_ij;
-		
-		for (uint i=0; i<l.size(); i++) {
-		
-			pi = posNeighDisjoint(i,l.size());
-			B_ij = DistanceSquaredDisjoint(l[i],l[j],beta);
-			B_imj = DistanceSquaredDisjoint(l[i],l[mj],beta);
-			E_ij = exp(-B_ij/a/a);
-			E_imj = exp(-B_imj/a/a);
-			T_ij = DotDisjoint(l[pi],l[i],l[pj],l[j],beta);
-			
-			if (k==j && i!=j) {
-				res += - (4.0*E_ij*(-DXDisjoint(l,i,nu,beta))*DXDisjoint(l,j,i,mu,beta))/pow(a,2) \
-						 - (4.0*E_ij*(-DXDisjoint(l,i,mu,beta))*DXDisjoint(l,j,i,nu,beta))/pow(a,2) \
-						 + (8.0*E_ij*DXDisjoint(l,j,i,mu,beta)*DXDisjoint(l,j,i,nu,beta)*T_ij)/pow(a,4);
-				if (mu==nu)
-					res +=  - (4.0*E_ij*T_ij)/pow(a,2); //
-			}
-			if (k==mj && i!=mj) 
-				res +=  (4.0*E_imj*(-DXDisjoint(l,i,mu,beta))*DXDisjoint(l,mj,i,nu,beta))/pow(a,2);
-			if (k==pj && i!=j) 
-				res += + (4.0*E_ij*(-DXDisjoint(l,i,nu,beta))*DXDisjoint(l,j,i,mu,beta))/pow(a,2);
-			
-		}		
-	}
-	
-	//coincident terms
-	if (k==j && mu==nu)
-		res += 2.0;
-	if (k==mj && mu==nu)
-		res += -1.0;
-	if (k==pj && mu==nu)
-		res += -1.0;
-	
-	m(4*j+mu,4*k+nu) += f*res;
-	
-}
-
-// ddGaussianLRDisjoint_nr
-template <> void ddGaussianLRDisjoint_nr<4> (const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<4>& l,\
-						 const number& beta, const number& a, const number& f, mat& m) {
-	uint N = l.size();
-	if ((j<N/2 && k<N/2) || (j>=N/2 && k>=N/2)) {
-		number res = 0.0;
-	
-		uint mj = negNeighDisjoint(j,l.size());
-		uint pj = posNeighDisjoint(j,l.size());		
-		uint mk = negNeighDisjoint(k,l.size());
-		uint pk = posNeighDisjoint(k,l.size());
-	
-		number B_jk = DistanceSquaredDisjoint(l[j],l[k],beta);
-		number B_mjk = DistanceSquaredDisjoint(l[mj],l[k],beta);
-		number B_jmk = DistanceSquaredDisjoint(l[j],l[mk],beta);
-		number B_mjmk = DistanceSquaredDisjoint(l[mj],l[mk],beta);
-	
-		number E_jk = exp(-B_jk/a/a);
-		number E_mjk = exp(-B_mjk/a/a);
-		number E_jmk = exp(-B_jmk/a/a);
-		number E_mjmk = exp(-B_mjmk/a/a);
-	
-		number T_jk = DotDisjoint(l[pj],l[j],l[pk],l[k],beta);
-
-		// terms where mu==nu, without sums
-		if (mu==nu) {
-			if (k!=j)
-				res += 	+ 2.0*E_mjmk \
-						 + 2.0*E_jk \
-						 + (4.0*E_jk*T_jk)/pow(a,2);
-			if (k!=mj)
-				res +=  - 2.0*E_mjk; //
-			if (k!=pj)
-				res += - 2.0*E_jmk; //
-		}
-
-		// terms where mu not nexcessarily equal to nu, without sums
-		if (k!=j)
-			res +=  - (4.0*E_jk*(-DXDisjoint(l,j,nu,beta))*DXDisjoint(l,j,k,mu,beta))/pow(a,2) \
-					 + (4.0*E_jk*DXDisjoint(l,j,k,nu,beta)*(-DXDisjoint(l,k,mu,beta)))/pow(a,2) \
-					 - (8.0*E_jk*DXDisjoint(l,j,k,mu,beta)*DXDisjoint(l,j,k,nu,beta)*T_jk)/pow(a,4); //
-		if (k!=mj)
-			res +=  - (4.0*E_mjk*DXDisjoint(l,mj,k,nu,beta)*(-DXDisjoint(l,k,mu,beta)))/pow(a,2); //
-		if (k!=pj)
-			res += + (4.0*E_jmk*(-DXDisjoint(l,j,nu,beta))*DXDisjoint(l,j,mk,mu,beta))/pow(a,2); //
-	
-		// terms with sums
-		if (k==j || k==mj || k==pj) {
-	
-			uint pi;
-			number B_ij, B_imj, E_ij, E_imj, T_ij;
-			
-			// for LR
-			uint iMin = (j<N/2? 0: N/2);
-			uint iMax = (j<N/2? N/2:N);
-		
-			for (uint i=iMin; i<iMax; i++) {
-		
-				pi = posNeighDisjoint(i,l.size());
-				B_ij = DistanceSquaredDisjoint(l[i],l[j],beta);
-				B_imj = DistanceSquaredDisjoint(l[i],l[mj],beta);
-				E_ij = exp(-B_ij/a/a);
-				E_imj = exp(-B_imj/a/a);
-				T_ij = DotDisjoint(l[pi],l[i],l[pj],l[j],beta);
-			
-				if (k==j && i!=j) {
-					res += - (4.0*E_ij*(-DXDisjoint(l,i,nu,beta))*DXDisjoint(l,j,i,mu,beta))/pow(a,2) \
-							 - (4.0*E_ij*(-DXDisjoint(l,i,mu,beta))*DXDisjoint(l,j,i,nu,beta))/pow(a,2) \
-							 + (8.0*E_ij*DXDisjoint(l,j,i,mu,beta)*DXDisjoint(l,j,i,nu,beta)*T_ij)/pow(a,4);
-					if (mu==nu)
-						res +=  - (4.0*E_ij*T_ij)/pow(a,2); //
-				}
-				if (k==mj && i!=mj) 
-					res +=  (4.0*E_imj*(-DXDisjoint(l,i,mu,beta))*DXDisjoint(l,mj,i,nu,beta))/pow(a,2);
-				if (k==pj && i!=j) 
-					res += + (4.0*E_ij*(-DXDisjoint(l,i,nu,beta))*DXDisjoint(l,j,i,mu,beta))/pow(a,2);
-			
-			}		
-		}
-	
-		//coincident terms
-		if (k==j && mu==nu)
-			res += 2.0;
-		if (k==mj && mu==nu)
-			res += -1.0;
-		if (k==pj && mu==nu)
-			res += -1.0;
-	
-		m(4*j+mu,4*k+nu) += f*res;
-	}
-}
