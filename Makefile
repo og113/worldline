@@ -59,6 +59,10 @@ circle: $(ODIR)/circle.o $(COMMONOBJS)
 	$(CC) -o $@ $^ $(CFLAGS) $(INCLUDES) $(LIBS)
 	@echo Simple compiler named circle has been compiled
 	
+circle2: $(ODIR)/circle2.o $(COMMONOBJS) 
+	$(CC) -o $@ $^ $(CFLAGS) $(INCLUDES) $(LIBS)
+	@echo Simple compiler named circle2 has been compiled
+	
 floop: $(MPIODIR)/floop.o $(COMMONOBJS)
 	$(MPICC) -o $@ $^ $(MPICFLAGS) $(INCLUDES) $(MPILIBS)
 	@echo Simple compiler named floop has been compiled

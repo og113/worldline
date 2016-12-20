@@ -2372,14 +2372,179 @@ void ddVor_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, cons
 // mdVlr_nr
 template<uint Dim>
 void mdVlr_nr(const uint& j, const uint& mu, const uint& i, const Loop<Dim>& l, const number& a, const number& f, vec& v) {
-	cerr << "mdVlr_nr Error: no script written for dim = " << Dim << endl;
+	number B_ij, B_imj, T_ij, T_imj, res = 0.0;
+	uint pj = (j==(l.size()-1)? 0: j+1);
+	uint mj = (j==0? (l.size()-1): j-1);
+	uint pi = (i==(l.size()-1)? 0: i+1);
+		
+	if (i!=j) {
+		B_ij = a*a + 0.25*DistanceSquared(l[pi]+l[i],l[pj]+l[j]);
+		T_ij = Dot(l[pi],l[i],l[pj],l[j]);
+		res =  + 2.0*DX(l,i,pi,mu)/B_ij \
+				+ ( (-DX(l,j,i,mu) - DX(l,pj,pi,mu)) \
+				- (DX(l,j,i,mu) + DX(l,pj,pi,mu)) )*T_ij/(2.0*pow(B_ij,2));
+	}
+	if (i!=mj) {	
+		B_imj = a*a + 0.25*DistanceSquared(l[pi]+l[i],l[j]+l[mj]);
+		T_imj = Dot(l[pi],l[i],l[j],l[mj]);
+		res +=  -2.0*DX(l,i,pi,mu)/B_imj 
+				+( - (-DX(l,mj,i,mu) - DX(l,j,pi,mu)) \
+				+ (DX(l,mj,i,mu) + DX(l,j,pi,mu)) )*T_imj/(2.0*pow(B_imj,2));
+	}
+		
+	//coincident terms
+	if (i==j)
+		res += 2.0*(l[j])[mu]/a/a;
+	if (i==mj)
+		res += -(l[mj])[mu]/a/a;
+	if (i==pj)
+		res += -(l[pj])[mu]/a/a;
+
+	v[j*Dim+mu] += -f*res;
 }
 
 // ddVlr_nr
 template<uint Dim>
 void ddVlr_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l,\
 						 const number& a, const number& f, mat& m) {
-	cerr << "mddVlr_nr Error: no script written for dim = " << Dim << endl;
+	number res = 0.0;
+	
+	uint mj = (j==0? (l.size()-1): j-1);
+	uint pj = (j==(l.size()-1)? 0: j+1);		
+	uint mk = (k==0? (l.size()-1): k-1);
+	uint pk = (k==(l.size()-1)? 0: k+1);
+	
+	number B_jk = a*a + 0.25*DistanceSquared(l[pj]+l[j],l[pk]+l[k]);
+	number B_mjk = a*a + 0.25*DistanceSquared(l[j]+l[mj],l[pk]+l[k]);
+	number B_jmk = a*a + 0.25*DistanceSquared(l[pj]+l[j],l[k]+l[mk]);
+	number B_mjmk = a*a + 0.25*DistanceSquared(l[j]+l[mj],l[k]+l[mk]);
+	
+	number T_jk = Dot(l[pj],l[j],l[pk],l[k]);
+	number T_mjk = Dot(l[j],l[mj],l[pk],l[k]);
+	number T_jmk = Dot(l[pj],l[j],l[k],l[mk]);
+	number T_mjmk = Dot(l[j],l[mj],l[k],l[mk]);
+	
+	// terms where mu==nu, without sums		
+	if (mu==nu) {
+		if (k!=j) {
+			res += 	+ 2.0/B_mjmk \
+					+ 2.0/B_jk \
+					+ T_mjmk/pow(B_mjmk,2) \
+					+ T_jk/pow(B_jk,2);
+		}
+		if (k!=mj)
+			res += 	- 2.0/B_mjk \
+					- T_mjk/pow(B_mjk,2);
+		if (k!=pj)
+			res += 	- 2.0/B_jmk \
+					- T_jmk/pow(B_jmk,2);
+	}
+	
+// terms where mu not nexcessarily equal to nu, without sums#
+	if (k!=j) {
+		res += - (DX(l,j,pj,nu)*DX(l,j,k,mu))/pow(B_jk,2) \
+				 - (DX(l,j,pj,nu)*DX(l,pj,pk,mu))/pow(B_jk,2) \
+				 + (DX(l,j,k,nu)*DX(l,k,pk,mu))/pow(B_jk,2) \
+				 + (DX(l,pj,pk,nu)*DX(l,k,pk,mu))/pow(B_jk,2) \
+				 - (DX(l,j,k,mu)*DX(l,j,k,nu)*T_jk)/pow(B_jk,3) \
+				 - (DX(l,j,k,nu)*DX(l,pj,pk,mu)*T_jk)/pow(B_jk,3) \
+				 - (DX(l,j,k,mu)*DX(l,pj,pk,nu)*T_jk)/pow(B_jk,3) \
+				 - (DX(l,pj,pk,mu)*DX(l,pj,pk,nu)*T_jk)/pow(B_jk,3) \
+				  - (DX(l,mj,mk,mu)*DX(l,j,mj,nu))/pow(B_mjmk,2) \
+				 - (DX(l,j,mj,nu)*DX(l,j,k,mu))/pow(B_mjmk,2) \
+				 + (DX(l,mj,mk,nu)*DX(l,k,mk,mu))/pow(B_mjmk,2) \
+				 + (DX(l,j,k,nu)*DX(l,k,mk,mu))/pow(B_mjmk,2) \
+				 - (DX(l,mj,mk,mu)*DX(l,mj,mk,nu)*T_mjmk)/pow(B_mjmk,3) \
+				 - (DX(l,mj,mk,nu)*DX(l,j,k,mu)*T_mjmk)/pow(B_mjmk,3) \
+				 - (DX(l,mj,mk,mu)*DX(l,j,k,nu)*T_mjmk)/pow(B_mjmk,3) \
+				 - (DX(l,j,k,mu)*DX(l,j,k,nu)*T_mjmk)/pow(B_mjmk,3);
+	}
+	if (k!=mj) {
+		res += 	+ (DX(l,mj,k,mu)*DX(l,j,mj,nu))/pow(B_mjk,2) \
+				 + (DX(l,j,mj,nu)*DX(l,j,pk,mu))/pow(B_mjk,2) \
+				 - (DX(l,mj,k,nu)*DX(l,k,pk,mu))/pow(B_mjk,2) \
+				 - (DX(l,j,pk,nu)*DX(l,k,pk,mu))/pow(B_mjk,2) \
+				 + (DX(l,mj,k,mu)*DX(l,mj,k,nu)*T_mjk)/pow(B_mjk,3) \
+				 + (DX(l,mj,k,nu)*DX(l,j,pk,mu)*T_mjk)/pow(B_mjk,3) \
+				 + (DX(l,mj,k,mu)*DX(l,j,pk,nu)*T_mjk)/pow(B_mjk,3) \
+				 + (DX(l,j,pk,mu)*DX(l,j,pk,nu)*T_mjk)/pow(B_mjk,3);
+	}
+	if (k!=pj) {
+		res +=    + (DX(l,j,pj,nu)*DX(l,j,mk,mu))/pow(B_jmk,2) \
+				+ (DX(l,j,pj,nu)*DX(l,pj,k,mu))/pow(B_jmk,2) \
+				- (DX(l,j,mk,nu)*DX(l,k,mk,mu))/pow(B_jmk,2) \
+				- (DX(l,pj,k,nu)*DX(l,k,mk,mu))/pow(B_jmk,2) \
+				+ (DX(l,j,mk,mu)*DX(l,j,mk,nu)*T_jmk)/pow(B_jmk,3) \
+				+ (DX(l,j,mk,nu)*DX(l,pj,k,mu)*T_jmk)/pow(B_jmk,3) \
+				+ (DX(l,j,mk,mu)*DX(l,pj,k,nu)*T_jmk)/pow(B_jmk,3) \
+				+ (DX(l,pj,k,mu)*DX(l,pj,k,nu)*T_jmk)/pow(B_jmk,3);
+	}
+	
+	// terms with sums
+	if (k==j || k==mj || k==pj) {
+	
+		uint pi;
+		number B_ij, B_imj, T_ij, T_imj;
+		
+		for (uint i=0; i<l.size(); i++) {
+		
+			pi = (i==(l.size()-1)? 0: i+1);		
+			
+			B_ij = a*a + 0.25*DistanceSquared(l[pj]+l[j],l[pi]+l[i]);
+			B_imj = a*a + 0.25*DistanceSquared(l[j]+l[mj],l[pi]+l[i]);
+			T_ij = Dot(l[pj],l[j],l[pi],l[i]);
+			T_imj = Dot(l[j],l[mj],l[pi],l[i]);
+			
+			if (k==j && i!=j) {
+				res += - (DX(l,i,pi,nu)*(-DX(l,mj,i,mu) - DX(l,j,pi,mu)))/(2.0*pow(B_imj,2)) \
+						+ (DX(l,i,pi,nu)*(DX(l,mj,i,mu) + DX(l,j,pi,mu)))/(2.0*pow(B_imj,2)) \
+						- (DX(l,i,pi,mu)*(-DX(l,mj,i,nu) - DX(l,j,pi,nu)))/pow(B_imj,2) \
+						+ (DX(l,i,pi,nu)*(-DX(l,j,i,mu) - DX(l,pj,pi,mu)))/(2.0*pow(B_ij,2)) \
+						- (DX(l,i,pi,nu)*(DX(l,j,i,mu) + DX(l,pj,pi,mu)))/(2.0*pow(B_ij,2)) \
+						+ (DX(l,i,pi,mu)*(-DX(l,j,i,nu) - DX(l,pj,pi,nu)))/pow(B_ij,2) \
+						- ((-DX(l,mj,i,mu) - DX(l,j,pi,mu))*(-DX(l,mj,i,nu) - DX(l,j,pi,nu))*T_imj)/ \
+						(2.0*pow(B_imj,3)) + ((DX(l,mj,i,mu) + DX(l,j,pi,mu))*(-DX(l,mj,i,nu) - DX(l,j,pi,nu))* \
+						T_imj)/(2.0*pow(B_imj,3)) \
+						+ ((-DX(l,j,i,mu) - DX(l,pj,pi,mu))*(-DX(l,j,i,nu) - DX(l,pj,pi,nu))*T_ij)/ \
+						(2.0*pow(B_ij,3)) - ((DX(l,j,i,mu) + DX(l,pj,pi,mu))*(-DX(l,j,i,nu) - DX(l,pj,pi,nu))* \
+						T_ij)/(2.0*pow(B_ij,3));		
+
+				if (mu==nu)
+					res += + T_imj/pow(B_imj,2) \
+							- T_ij/pow(B_ij,2);
+			}
+			if (k==mj && i!=mj) {
+				res +=  (DX(l,i,pi,nu)*(-DX(l,mj,i,mu) - DX(l,j,pi,mu)))/(2.0*pow(B_imj,2)) \
+						- (DX(l,i,pi,nu)*(DX(l,mj,i,mu) + DX(l,j,pi,mu)))/(2.0*pow(B_imj,2)) \
+						- (DX(l,i,pi,mu)*(-DX(l,mj,i,nu) - DX(l,j,pi,nu)))/pow(B_imj,2) \
+						- ((-DX(l,mj,i,mu) - DX(l,j,pi,mu))*(-DX(l,mj,i,nu) - DX(l,j,pi,nu))*T_imj)/ \
+						(2.0*pow(B_imj,3)) + ((DX(l,mj,i,mu) + DX(l,j,pi,mu))*(-DX(l,mj,i,nu) - DX(l,j,pi,nu))* \
+						T_imj)/(2.0*pow(B_imj,3));
+				if (mu==nu)
+					res += + T_imj/pow(B_imj,2);
+			}
+			if (k==pj && i!=j) {
+				res += 	 - (DX(l,i,pi,nu)*(-DX(l,j,i,mu) - DX(l,pj,pi,mu)))/(2.0*pow(B_ij,2)) \
+						+ (DX(l,i,pi,nu)*(DX(l,j,i,mu) + DX(l,pj,pi,mu)))/(2.0*pow(B_ij,2)) \
+						+ (DX(l,i,pi,mu)*(-DX(l,j,i,nu) - DX(l,pj,pi,nu)))/pow(B_ij,2) \
+						+ ((-DX(l,j,i,mu) - DX(l,pj,pi,mu))*(-DX(l,j,i,nu) - DX(l,pj,pi,nu))*T_ij)/ \
+						(2.0*pow(B_ij,3)) - ((DX(l,j,i,mu) + DX(l,pj,pi,mu))*(-DX(l,j,i,nu) - DX(l,pj,pi,nu))* \
+						T_ij)/(2.0*pow(B_ij,3));
+				if (mu==nu)
+					res += - T_ij/pow(B_ij,2);
+			}
+		}		
+	}
+	
+	//coincident terms
+	if (k==j && mu==nu)
+		res += 2.0/a/a;
+	if (k==mj && mu==nu)
+		res += -1.0/a/a;
+	if (k==pj && mu==nu)
+		res += -1.0/a/a;
+	
+	m(Dim*j+mu,Dim*k+nu) += f*res;
 }
 
 // mdVer_nr
@@ -3641,7 +3806,9 @@ template void ddGaussianDisjoint_nr<2> (const uint& j, const uint& mu, const uin
 						 const number& beta, const number& a, const number& f, mat& m);
 template void ddGaussianLRDisjoint_nr<2> (const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<2>& l,\
 						 const number& beta, const number& a, const number& f, mat& m);
-						 
+template void mdVlr_nr<2>(const uint& j, const uint& mu, const uint& i, const Loop<2>& l, const number& a, const number& f, vec& v);
+template void ddVlr_nr<2>(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<2>& l,\
+						 const number& a, const number& f, mat& m);					 
 						 
 
 
@@ -3853,181 +4020,6 @@ template void ddGaussianDisjoint_nr<4> (const uint& j, const uint& mu, const uin
 						 const number& beta, const number& a, const number& f, mat& m);
 template void ddGaussianLRDisjoint_nr<4> (const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<4>& l,\
 						 const number& beta, const number& a, const number& f, mat& m);
-
-// mdVlr_nr
-template <> void mdVlr_nr<4>(const uint& j, const uint& mu, const uint& i, const Loop<4>& l, const number& a, const number& f, vec& v) {
-	number B_ij, B_imj, T_ij, T_imj, res = 0.0;
-	uint pj = (j==(l.size()-1)? 0: j+1);
-	uint mj = (j==0? (l.size()-1): j-1);
-	uint pi = (i==(l.size()-1)? 0: i+1);
-		
-	if (i!=j) {
-		B_ij = a*a + 0.25*DistanceSquared(l[pi]+l[i],l[pj]+l[j]);
-		T_ij = Dot(l[pi],l[i],l[pj],l[j]);
-		res =  + 2.0*DX(l,i,pi,mu)/B_ij \
-				+ ( (-DX(l,j,i,mu) - DX(l,pj,pi,mu)) \
-				- (DX(l,j,i,mu) + DX(l,pj,pi,mu)) )*T_ij/(2.0*pow(B_ij,2));
-	}
-	if (i!=mj) {	
-		B_imj = a*a + 0.25*DistanceSquared(l[pi]+l[i],l[j]+l[mj]);
-		T_imj = Dot(l[pi],l[i],l[j],l[mj]);
-		res +=  -2.0*DX(l,i,pi,mu)/B_imj 
-				+( - (-DX(l,mj,i,mu) - DX(l,j,pi,mu)) \
-				+ (DX(l,mj,i,mu) + DX(l,j,pi,mu)) )*T_imj/(2.0*pow(B_imj,2));
-	}
-		
-	//coincident terms
-	if (i==j)
-		res += 2.0*(l[j])[mu]/a/a;
-	if (i==mj)
-		res += -(l[mj])[mu]/a/a;
-	if (i==pj)
-		res += -(l[pj])[mu]/a/a;
-
-	v[j*4+mu] += -f*res;
-}
-
-// ddVlr_nr
-template <> void ddVlr_nr<4>(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<4>& l,\
-						 const number& a, const number& f, mat& m) {
-	number res = 0.0;
-	
-	uint mj = (j==0? (l.size()-1): j-1);
-	uint pj = (j==(l.size()-1)? 0: j+1);		
-	uint mk = (k==0? (l.size()-1): k-1);
-	uint pk = (k==(l.size()-1)? 0: k+1);
-	
-	number B_jk = a*a + 0.25*DistanceSquared(l[pj]+l[j],l[pk]+l[k]);
-	number B_mjk = a*a + 0.25*DistanceSquared(l[j]+l[mj],l[pk]+l[k]);
-	number B_jmk = a*a + 0.25*DistanceSquared(l[pj]+l[j],l[k]+l[mk]);
-	number B_mjmk = a*a + 0.25*DistanceSquared(l[j]+l[mj],l[k]+l[mk]);
-	
-	number T_jk = Dot(l[pj],l[j],l[pk],l[k]);
-	number T_mjk = Dot(l[j],l[mj],l[pk],l[k]);
-	number T_jmk = Dot(l[pj],l[j],l[k],l[mk]);
-	number T_mjmk = Dot(l[j],l[mj],l[k],l[mk]);
-	
-	// terms where mu==nu, without sums		
-	if (mu==nu) {
-		if (k!=j) {
-			res += 	+ 2.0/B_mjmk \
-					+ 2.0/B_jk \
-					+ T_mjmk/pow(B_mjmk,2) \
-					+ T_jk/pow(B_jk,2);
-		}
-		if (k!=mj)
-			res += 	- 2.0/B_mjk \
-					- T_mjk/pow(B_mjk,2);
-		if (k!=pj)
-			res += 	- 2.0/B_jmk \
-					- T_jmk/pow(B_jmk,2);
-	}
-	
-// terms where mu not nexcessarily equal to nu, without sums#
-	if (k!=j) {
-		res += - (DX(l,j,pj,nu)*DX(l,j,k,mu))/pow(B_jk,2) \
-				 - (DX(l,j,pj,nu)*DX(l,pj,pk,mu))/pow(B_jk,2) \
-				 + (DX(l,j,k,nu)*DX(l,k,pk,mu))/pow(B_jk,2) \
-				 + (DX(l,pj,pk,nu)*DX(l,k,pk,mu))/pow(B_jk,2) \
-				 - (DX(l,j,k,mu)*DX(l,j,k,nu)*T_jk)/pow(B_jk,3) \
-				 - (DX(l,j,k,nu)*DX(l,pj,pk,mu)*T_jk)/pow(B_jk,3) \
-				 - (DX(l,j,k,mu)*DX(l,pj,pk,nu)*T_jk)/pow(B_jk,3) \
-				 - (DX(l,pj,pk,mu)*DX(l,pj,pk,nu)*T_jk)/pow(B_jk,3) \
-				  - (DX(l,mj,mk,mu)*DX(l,j,mj,nu))/pow(B_mjmk,2) \
-				 - (DX(l,j,mj,nu)*DX(l,j,k,mu))/pow(B_mjmk,2) \
-				 + (DX(l,mj,mk,nu)*DX(l,k,mk,mu))/pow(B_mjmk,2) \
-				 + (DX(l,j,k,nu)*DX(l,k,mk,mu))/pow(B_mjmk,2) \
-				 - (DX(l,mj,mk,mu)*DX(l,mj,mk,nu)*T_mjmk)/pow(B_mjmk,3) \
-				 - (DX(l,mj,mk,nu)*DX(l,j,k,mu)*T_mjmk)/pow(B_mjmk,3) \
-				 - (DX(l,mj,mk,mu)*DX(l,j,k,nu)*T_mjmk)/pow(B_mjmk,3) \
-				 - (DX(l,j,k,mu)*DX(l,j,k,nu)*T_mjmk)/pow(B_mjmk,3);
-	}
-	if (k!=mj) {
-		res += 	+ (DX(l,mj,k,mu)*DX(l,j,mj,nu))/pow(B_mjk,2) \
-				 + (DX(l,j,mj,nu)*DX(l,j,pk,mu))/pow(B_mjk,2) \
-				 - (DX(l,mj,k,nu)*DX(l,k,pk,mu))/pow(B_mjk,2) \
-				 - (DX(l,j,pk,nu)*DX(l,k,pk,mu))/pow(B_mjk,2) \
-				 + (DX(l,mj,k,mu)*DX(l,mj,k,nu)*T_mjk)/pow(B_mjk,3) \
-				 + (DX(l,mj,k,nu)*DX(l,j,pk,mu)*T_mjk)/pow(B_mjk,3) \
-				 + (DX(l,mj,k,mu)*DX(l,j,pk,nu)*T_mjk)/pow(B_mjk,3) \
-				 + (DX(l,j,pk,mu)*DX(l,j,pk,nu)*T_mjk)/pow(B_mjk,3);
-	}
-	if (k!=pj) {
-		res +=    + (DX(l,j,pj,nu)*DX(l,j,mk,mu))/pow(B_jmk,2) \
-				+ (DX(l,j,pj,nu)*DX(l,pj,k,mu))/pow(B_jmk,2) \
-				- (DX(l,j,mk,nu)*DX(l,k,mk,mu))/pow(B_jmk,2) \
-				- (DX(l,pj,k,nu)*DX(l,k,mk,mu))/pow(B_jmk,2) \
-				+ (DX(l,j,mk,mu)*DX(l,j,mk,nu)*T_jmk)/pow(B_jmk,3) \
-				+ (DX(l,j,mk,nu)*DX(l,pj,k,mu)*T_jmk)/pow(B_jmk,3) \
-				+ (DX(l,j,mk,mu)*DX(l,pj,k,nu)*T_jmk)/pow(B_jmk,3) \
-				+ (DX(l,pj,k,mu)*DX(l,pj,k,nu)*T_jmk)/pow(B_jmk,3);
-	}
-	
-	// terms with sums
-	if (k==j || k==mj || k==pj) {
-	
-		uint pi;
-		number B_ij, B_imj, T_ij, T_imj;
-		
-		for (uint i=0; i<l.size(); i++) {
-		
-			pi = (i==(l.size()-1)? 0: i+1);		
-			
-			B_ij = a*a + 0.25*DistanceSquared(l[pj]+l[j],l[pi]+l[i]);
-			B_imj = a*a + 0.25*DistanceSquared(l[j]+l[mj],l[pi]+l[i]);
-			T_ij = Dot(l[pj],l[j],l[pi],l[i]);
-			T_imj = Dot(l[j],l[mj],l[pi],l[i]);
-			
-			if (k==j && i!=j) {
-				res += - (DX(l,i,pi,nu)*(-DX(l,mj,i,mu) - DX(l,j,pi,mu)))/(2.0*pow(B_imj,2)) \
-						+ (DX(l,i,pi,nu)*(DX(l,mj,i,mu) + DX(l,j,pi,mu)))/(2.0*pow(B_imj,2)) \
-						- (DX(l,i,pi,mu)*(-DX(l,mj,i,nu) - DX(l,j,pi,nu)))/pow(B_imj,2) \
-						+ (DX(l,i,pi,nu)*(-DX(l,j,i,mu) - DX(l,pj,pi,mu)))/(2.0*pow(B_ij,2)) \
-						- (DX(l,i,pi,nu)*(DX(l,j,i,mu) + DX(l,pj,pi,mu)))/(2.0*pow(B_ij,2)) \
-						+ (DX(l,i,pi,mu)*(-DX(l,j,i,nu) - DX(l,pj,pi,nu)))/pow(B_ij,2) \
-						- ((-DX(l,mj,i,mu) - DX(l,j,pi,mu))*(-DX(l,mj,i,nu) - DX(l,j,pi,nu))*T_imj)/ \
-						(2.0*pow(B_imj,3)) + ((DX(l,mj,i,mu) + DX(l,j,pi,mu))*(-DX(l,mj,i,nu) - DX(l,j,pi,nu))* \
-						T_imj)/(2.0*pow(B_imj,3)) \
-						+ ((-DX(l,j,i,mu) - DX(l,pj,pi,mu))*(-DX(l,j,i,nu) - DX(l,pj,pi,nu))*T_ij)/ \
-						(2.0*pow(B_ij,3)) - ((DX(l,j,i,mu) + DX(l,pj,pi,mu))*(-DX(l,j,i,nu) - DX(l,pj,pi,nu))* \
-						T_ij)/(2.0*pow(B_ij,3));		
-
-				if (mu==nu)
-					res += + T_imj/pow(B_imj,2) \
-							- T_ij/pow(B_ij,2);
-			}
-			if (k==mj && i!=mj) {
-				res +=  (DX(l,i,pi,nu)*(-DX(l,mj,i,mu) - DX(l,j,pi,mu)))/(2.0*pow(B_imj,2)) \
-						- (DX(l,i,pi,nu)*(DX(l,mj,i,mu) + DX(l,j,pi,mu)))/(2.0*pow(B_imj,2)) \
-						- (DX(l,i,pi,mu)*(-DX(l,mj,i,nu) - DX(l,j,pi,nu)))/pow(B_imj,2) \
-						- ((-DX(l,mj,i,mu) - DX(l,j,pi,mu))*(-DX(l,mj,i,nu) - DX(l,j,pi,nu))*T_imj)/ \
-						(2.0*pow(B_imj,3)) + ((DX(l,mj,i,mu) + DX(l,j,pi,mu))*(-DX(l,mj,i,nu) - DX(l,j,pi,nu))* \
-						T_imj)/(2.0*pow(B_imj,3));
-				if (mu==nu)
-					res += + T_imj/pow(B_imj,2);
-			}
-			if (k==pj && i!=j) {
-				res += 	 - (DX(l,i,pi,nu)*(-DX(l,j,i,mu) - DX(l,pj,pi,mu)))/(2.0*pow(B_ij,2)) \
-						+ (DX(l,i,pi,nu)*(DX(l,j,i,mu) + DX(l,pj,pi,mu)))/(2.0*pow(B_ij,2)) \
-						+ (DX(l,i,pi,mu)*(-DX(l,j,i,nu) - DX(l,pj,pi,nu)))/pow(B_ij,2) \
-						+ ((-DX(l,j,i,mu) - DX(l,pj,pi,mu))*(-DX(l,j,i,nu) - DX(l,pj,pi,nu))*T_ij)/ \
-						(2.0*pow(B_ij,3)) - ((DX(l,j,i,mu) + DX(l,pj,pi,mu))*(-DX(l,j,i,nu) - DX(l,pj,pi,nu))* \
-						T_ij)/(2.0*pow(B_ij,3));
-				if (mu==nu)
-					res += - T_ij/pow(B_ij,2);
-			}
-		}		
-	}
-	
-	//coincident terms
-	if (k==j && mu==nu)
-		res += 2.0/a/a;
-	if (k==mj && mu==nu)
-		res += -1.0/a/a;
-	if (k==pj && mu==nu)
-		res += -1.0/a/a;
-	
-	m(4*j+mu,4*k+nu) += f*res;
-	
-}
-
+template void mdVlr_nr<4>(const uint& j, const uint& mu, const uint& i, const Loop<4>& l, const number& a, const number& f, vec& v);
+template void ddVlr_nr<4>(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<4>& l,\
+						 const number& a, const number& f, mat& m);
