@@ -256,6 +256,12 @@ static void VthGeneric (const uint& j, const uint& k, const Loop<Dim>& l, Therma
 	
 }
 
+// VthrLocal
+template <uint Dim>
+void VthrLocal (const uint& j, const uint& k, const Loop<Dim>& l, const number& beta, const number& a, const number& f, number& result) {
+	VthGeneric(j,k,l,&FThermal,beta,a,f,result);
+}
+
  // mdVthr_nr
 template<uint Dim>
 void mdFth_nr(const uint& j, const uint& mu, const uint& i, const Loop<Dim>& l,\
@@ -578,7 +584,7 @@ for (uint j=0; j<N; j++) {
 		for (uint k=0; k<N; k++) {
 			if (mu==0) {
 				V0Generic(j,k,xLoop,&F0,p.Epsi,g,v);
-				VthGeneric(j,k,xLoop,&FThermal,beta,p.Epsi,g,v);
+				VthrLocal(j,k,xLoop,beta,p.Epsi,g,v);
 			}
 			mdF0_nr(j, mu, k, xLoop, &F0, &DF0DrOnr, p.Epsi, g, mds);
 			mdFth_nr(j, mu, k, xLoop, &FThermal, &DFThermalDrOnr, &DFThermalDt, beta, p.Epsi, g, mds);
