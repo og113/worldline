@@ -52,9 +52,9 @@ static void V0Generic (const uint& j, const uint& k, const Loop<Dim>& l, VacuumF
 	
 }
  
-// mdF0r_nr
+// mdV0Generic
 template<uint Dim>
-void mdF0_nr(const uint& j, const uint& mu, const uint& i, const Loop<Dim>& l,\
+void mdV0Generic(const uint& j, const uint& mu, const uint& i, const Loop<Dim>& l,\
 					VacuumFunction FVacuum, VacuumFunction dFVacuumdronr, const number& a, const number& f, vec& v) {
 	number res = 0.0;
 	
@@ -90,9 +90,9 @@ void mdF0_nr(const uint& j, const uint& mu, const uint& i, const Loop<Dim>& l,\
 	v[j*Dim+mu] += -f*(-pow(2.0*PI,2))*res;
 }
 
-// ddV0r_nr
+// ddV0Generic
 template<uint Dim>
-void ddV0r_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l,\
+void ddV0Generic(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l,\
 						VacuumFunction FVacuum, VacuumFunction dFVacuumdronr,VacuumFunction ddFVacuumdrdr,\
 						 const number& a, const number& f, mat& m) {
 	number res = 0.0;
@@ -262,9 +262,9 @@ void VthrLocal (const uint& j, const uint& k, const Loop<Dim>& l, const number& 
 	VthGeneric(j,k,l,&FThermal,beta,a,f,result);
 }
 
- // mdVthr_nr
+// mdVthGeneric
 template<uint Dim>
-void mdFth_nr(const uint& j, const uint& mu, const uint& i, const Loop<Dim>& l,\
+void mdVthGeneric(const uint& j, const uint& mu, const uint& i, const Loop<Dim>& l,\
 					ThermalFunction Fth, ThermalFunction dFthdronr, ThermalFunction dFthdt, \
 					 	const number& beta, const number& a, const number& f, vec& v) {
 	number res = 0.0;
@@ -307,9 +307,9 @@ void mdFth_nr(const uint& j, const uint& mu, const uint& i, const Loop<Dim>& l,\
 	v[j*Dim+mu] += -f*(-pow(2.0*PI,2))*res;
 }
 
-// ddVthr_nr
+// ddVthGeneric
 template <uint Dim>
-void ddVthr_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l,\
+void ddVthGeneric(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l,\
 	ThermalFunction Fth, ThermalFunction dFthdronr, ThermalFunction dFthdt, ThermalFunction ddFthdrdr, ThermalFunction ddFthdrdtonr, ThermalFunction ddFthdtdt,\
 						 const number& beta, const number& a, const number& f, mat& m) {
 	number res = 0.0;
