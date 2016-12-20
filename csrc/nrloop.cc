@@ -1635,7 +1635,7 @@ void VthrDisjoint (const uint& j, const uint& k, const Loop<Dim>& l, const numbe
 // VthrDisjointLR
 template <uint Dim>
 void VthrDisjointLR (const uint& j, const uint& k, const Loop<Dim>& l, const number& beta, const number& a, const number& f, number& result) {
-	VthDisjointLRGeneric(j,k,l,&FThermal,beta,a,f,result);
+	VthDisjointLR2Generic(j,k,l,&FThermal,beta,a,f,result);
 }
 
 // VnonrelDisjoint
@@ -2470,7 +2470,7 @@ void ddVthrDisjoint_nr(const uint& j, const uint& mu, const uint& k, const uint&
 template<uint Dim>
 void ddVthrDisjointLR_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l,\
 						 const number& beta, const number& a, const number& f, mat& m) {
-	ddVthDisjointLRGeneric(j, mu, k, nu, l, &FThermal, &DFThermalDrOnr,&DFThermalDt,&DDFThermalDrDr,&DDFThermalDtDrOnr,&DDFThermalDtDt, beta, a, f, m);
+	ddVthDisjointLR2Generic(j, mu, k, nu, l, &FThermal, &DFThermalDrOnr,&DFThermalDt,&DDFThermalDrDr,&DDFThermalDtDrOnr,&DDFThermalDtDt, beta, a, f, m);
 }
 
 
