@@ -751,12 +751,6 @@ void printAsLoop(const string& f, const uint& Dim, const vec& v);
 // printAsLoop
 void printAsLoop(const string& f, const uint& Dim, const vec& v, const uint len);
 
-// dimReduce
-void dimReduce(const vec& vin, const uint& dimin, const uint& Nin, vec& vout, const uint& dimout, const uint& zmout);
-
-// dimIncrease
-void dimIncrease(const vec& vin, const uint& dimin, const uint& Nin, vec& vout, const uint& dimout, const uint& zmout);
-
 /*----------------------------------------------------------------------------------------------------------------------------
 	3 - filename functions
 ----------------------------------------------------------------------------------------------------------------------------*/

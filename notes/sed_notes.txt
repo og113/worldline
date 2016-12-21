@@ -47,3 +47,9 @@ for i in {0..9}; do msub "subs/nrmain$i.sub"; done;
 
 for getting a specific number from the last line of results
 tail -n 1 results/nr/nr4.csv | sed -n 's/^\([0-9.+-]\+\),\([0-9.+-]\+\),\([0-9.+-]\+\),\([0-9.+-]\+\),\([0-9.+-]\+\),\([0-9.+-]\+\),\([0-9.+-]\+\),\([0-9.+-]\+\),\([0-9.+-]\+\),\([0-9.+-]\+\),.*/\10/p'
+
+
+got the void functions from a file and renamed them with NEW at the beginning
+sed -n 's/void \([^(\<]\+\).*/\1/p' old/nrloopOld.cc | sed -n '/template/!p' > temp/voidFns.txt
+sort -u temp/voidFns.txt > temp/voidFnsSorted.txt
+for fn in $voidFnsSorted; do sed -i "s/\([^a-zA-Z]\)${fn}\([^a-zA-Z]\)/\1NEW${fn}\2/g" temp/nrloop.cc; done
