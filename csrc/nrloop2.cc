@@ -82,17 +82,17 @@ static number DDFDimDrDr(const number& x, const number& a) {
 
 // G0
 static number G0(const number& x, const number& a) {
-	return  -1.0/(4.0*exp(pow(x,2)/pow(a,2))*pow(PI,2));
+	return  -1.0/(4.0*pow(PI,2)*exp(pow(x,2)/pow(a,2)));
 }
 
 // DG0DrOnr
 static number DG0DrOnr(const number& x, const number& a) {
-	return 1.0/(2.0*pow(a,2)*exp(pow(x,2)/pow(a,2))*pow(PI,2));
+	return 1.0/(2.0*pow(PI,2)*pow(a,2)*exp(pow(x,2)/pow(a,2)));
 }
  
  // DDG0DrDr
 static number DDG0DrDr(const number& x, const number& a) {
-	return (pow(a,2) - 2.0*pow(x,2))/(2.0*pow(a,4)*exp(pow(x,2)/pow(a,2))*pow(PI,2));
+	return (pow(a,2) - 2.0*pow(x,2))/(2.0*pow(PI,2)*pow(a,4)*exp(pow(x,2)/pow(a,2)));
 }
 
 // FThermal
@@ -345,7 +345,6 @@ static void mdV0Generic(const uint& j, const uint& mu, const uint& i, const Loop
 		res += 2.0*F0_ij*DX(l,i,pi,mu) \
  				+ 2.0*DF0DrOnr_ij*DX(l,j,i,mu)*T_ij;
 	}
-	
 	if (i!=mj) {
 		number x_imj = Distance(l[i],l[mj]);
 		number F0_imj = FVacuum(x_imj,a);
@@ -1312,7 +1311,7 @@ static void ddV0DisjointGeneric(const uint& j, const uint& mu, const uint& k, co
 		
 		for (uint i=0; i<l.size(); i++) {
 		
-			pi = (i==(l.size()-1)? 0: i+1);
+			pi = posNeighDisjoint(i,l.size());	
 			x_ij = DistanceDisjoint(l[i],l[j],beta);
 			x_imj = DistanceDisjoint(l[i],l[mj],beta);
 			T_ij = DotDisjoint(l[pi],l[i],l[pj],l[j],beta);
@@ -1410,7 +1409,7 @@ static void ddV0DisjointLRGeneric(const uint& j, const uint& mu, const uint& k, 
 		
 			for (uint i=iMin; i<iMax; i++) {
 		
-				pi = (i==(l.size()-1)? 0: i+1);
+				pi = posNeighDisjoint(i,l.size());	
 				x_ij = DistanceDisjoint(l[i],l[j],beta);
 				x_imj = DistanceDisjoint(l[i],l[mj],beta);
 				T_ij = DotDisjoint(l[pi],l[i],l[pj],l[j],beta);

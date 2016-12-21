@@ -39,7 +39,7 @@ if (p.empty()) {
 	return 1;
 }
 
-bool disjoint = false;
+bool disjoint = true;
 bool gaussian = true;
 
 // some scalar quantities
@@ -138,12 +138,12 @@ for (uint j=0; j<N; j++) {
 					if (gaussian) {
 						NEWddGaussianThermal_nr(j, mu, k, nu, xLoop, beta, p.Epsi, g, dds);
 						NEWddGaussianThermal2_nr(j, mu, k, nu, xLoop, beta, p.Epsi, g, dds);
-						NEWddGaussianDisjoint_nr(j, mu, k, nu, xLoop, beta, p.Epsi, g, dds);
-						NEWddGaussianLRDisjoint_nr(j, mu, k, nu, xLoop, beta, p.Epsi, g, dds);
 						NEWddGaussianThermalDisjoint_nr(j, mu, k, nu, xLoop, beta, p.Epsi, g, dds);
 						NEWddGaussianThermalLRDisjoint_nr(j, mu, k, nu, xLoop, beta, p.Epsi, g, dds);
 						NEWddGaussianThermal2Disjoint_nr(j, mu, k, nu, xLoop, beta, p.Epsi, g, dds);
 						NEWddGaussianThermal2LRDisjoint_nr(j, mu, k, nu, xLoop, beta, p.Epsi, g, dds);
+						NEWddGaussianDisjoint_nr(j, mu, k, nu, xLoop, beta, p.Epsi, g, dds);
+						NEWddGaussianLRDisjoint_nr(j, mu, k, nu, xLoop, beta, p.Epsi, g, dds);
 					}
 				}
 			}
@@ -213,12 +213,12 @@ for (uint j=0; j<N; j++) {
 					if (gaussian) {
 						ddGaussianThermal_nr(j, mu, k, nu, xLoop, beta, p.Epsi, -g, dds);
 						ddGaussianThermal2_nr(j, mu, k, nu, xLoop, beta, p.Epsi, -g, dds);
-						ddGaussianDisjoint_nr(j, mu, k, nu, xLoop, beta, p.Epsi, -g, dds);
-						ddGaussianLRDisjoint_nr(j, mu, k, nu, xLoop, beta, p.Epsi, -g, dds);
 						ddGaussianThermalDisjoint_nr(j, mu, k, nu, xLoop, beta, p.Epsi, -g, dds);
 						ddGaussianThermalLRDisjoint_nr(j, mu, k, nu, xLoop, beta, p.Epsi, -g, dds);
 						ddGaussianThermal2Disjoint_nr(j, mu, k, nu, xLoop, beta, p.Epsi, -g, dds);
 						ddGaussianThermal2LRDisjoint_nr(j, mu, k, nu, xLoop, beta, p.Epsi, -g, dds);
+						ddGaussianDisjoint_nr(j, mu, k, nu, xLoop, beta, p.Epsi, -g, dds);
+						ddGaussianLRDisjoint_nr(j, mu, k, nu, xLoop, beta, p.Epsi, -g, dds);
 					}
 				}
 			}

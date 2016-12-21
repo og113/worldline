@@ -2667,11 +2667,11 @@ template <> void mdVthr_nr<4>(const uint& j, const uint& mu, const uint& i, cons
 	//coincident terms
 	// extra factor of (-1.0/pow(2.0*PI,2)) due to the fact that we are treating the green's function here
 	if (i==j)
-		res += (-1.0/pow(2.0*PI,2))*2.0*(l[j])[mu]/a/a; 
+		res += 2.0*(l[j])[mu]*FThermal(0.0,0.0,beta,a); 
 	if (i==mj)
-		res += (-1.0/pow(2.0*PI,2))*(-(l[mj])[mu]/a/a);
+		res += (-(l[mj])[mu]*FThermal(0.0,0.0,beta,a));
 	if (i==pj)
-		res += (-1.0/pow(2.0*PI,2))*(-(l[pj])[mu]/a/a);
+		res += (-(l[pj])[mu]*FThermal(0.0,0.0,beta,a));
 		
 	v[j*4+mu] += -f*(-pow(2.0*PI,2))*res;
 }
@@ -2711,16 +2711,16 @@ template <> void mdVthrDisjoint_nr<4>(const uint& j, const uint& mu, const uint&
 	// extra factor of (-1.0/pow(2.0*PI,2)) due to the fact that we are treating the green's function here
 	if (mu==3) {
 		if (i==j) { // bit of a fudge in terms of sum over i
-			res += (-1.0/pow(2.0*PI,2))*(DXDisjoint(l,j,mj,mu,beta) + DXDisjoint(l,j,pj,mu,beta))/a/a;
+			res += (DXDisjoint(l,j,mj,mu,beta) + DXDisjoint(l,j,pj,mu,beta))*FThermal(0.0,0.0,beta,a);;
 		}
 	}
 	else {
 		if (i==j)
-			res += (-1.0/pow(2.0*PI,2))*2.0*(l[j])[mu]/a/a;
+			res += 2.0*(l[j])[mu]*FThermal(0.0,0.0,beta,a);
 		if (i==mj)
-			res += (-1.0/pow(2.0*PI,2))*(-(l[mj])[mu]/a/a);
+			res += (-(l[mj])[mu]*FThermal(0.0,0.0,beta,a));
 		if (i==pj)
-			res += (-1.0/pow(2.0*PI,2))*(-(l[pj])[mu]/a/a);
+			res += (-(l[pj])[mu]*FThermal(0.0,0.0,beta,a));
 	}
 		
 	v[j*4+mu] += -f*(-pow(2.0*PI,2))*res;
@@ -3590,11 +3590,11 @@ template <> void ddVthr_nr<4>(const uint& j, const uint& mu, const uint& k, cons
 	//coincident terms
 	// extra factor of (-1.0/pow(2.0*PI,2)) due to the fact that we are treating the green's function here
 	if (k==j && mu==nu)
-		res += (-1.0/pow(2.0*PI,2))*2.0/a/a;
+		res += 2.0*FThermal(0.0,0.0,beta,a);
 	if (k==mj && mu==nu)
-		res += (-1.0/pow(2.0*PI,2))*(-1.0/a/a);
+		res += (-1.0*FThermal(0.0,0.0,beta,a));
 	if (k==pj && mu==nu)
-		res += (-1.0/pow(2.0*PI,2))*(-1.0/a/a);
+		res += (-1.0*FThermal(0.0,0.0,beta,a));
 	
 	m(4*j+mu,4*k+nu) += f*(-pow(2.0*PI,2))*res;
 }
@@ -3749,11 +3749,11 @@ template <> void ddVthrDisjoint_nr<4>(const uint& j, const uint& mu, const uint&
 	//coincident terms
 	// extra factor of (-1.0/pow(2.0*PI,2)) due to the fact that we are treating the green's function here
 	if (k==j && mu==nu)
-		res += (-1.0/pow(2.0*PI,2))*2.0/a/a;
+		res += 2.0*FThermal(0.0,0.0,beta,a);
 	if (k==mj && mu==nu)
-		res += (-1.0/pow(2.0*PI,2))*(-1.0/a/a);
+		res += (-1.0*FThermal(0.0,0.0,beta,a));
 	if (k==pj && mu==nu)
-		res += (-1.0/pow(2.0*PI,2))*(-1.0/a/a);
+		res += (-1.0*FThermal(0.0,0.0,beta,a));
 	
 	m(4*j+mu,4*k+nu) += f*(-pow(2.0*PI,2))*res;
 }
@@ -3915,11 +3915,11 @@ template <> void ddVthrDisjointLR_nr<4>(const uint& j, const uint& mu, const uin
 	//coincident terms
 	// extra factor of (-1.0/pow(2.0*PI,2)) due to the fact that we are treating the green's function here
 	if (k==j && mu==nu)
-		res += (-1.0/pow(2.0*PI,2))*2.0/a/a;
+		res += 2.0*FThermal(0.0,0.0,beta,a);
 	if (k==mj && mu==nu)
-		res += (-1.0/pow(2.0*PI,2))*(-1.0/a/a);
+		res += (-1.0*FThermal(0.0,0.0,beta,a));
 	if (k==pj && mu==nu)
-		res += (-1.0/pow(2.0*PI,2))*(-1.0/a/a);
+		res += (-1.0*FThermal(0.0,0.0,beta,a));
 	
 	m(4*j+mu,4*k+nu) += f*(-pow(2.0*PI,2))*res;
 }
@@ -4132,7 +4132,7 @@ template <> void ddGaussianDisjoint_nr<4> (const uint& j, const uint& mu, const 
 					res +=  - (4.0*E_ij*T_ij)/pow(a,2); //
 			}
 			if (k==mj && i!=mj) 
-				res +=  (4.0*E_imj*(-DXDisjoint(l,i,mu,beta))*DXDisjoint(l,mj,i,nu,beta))/pow(a,2);
+				res +=  (4.0*E_imj*(-DXDisjoint(l,i,mu,beta))*DXDisjoint(l,k,i,nu,beta))/pow(a,2);
 			if (k==pj && i!=j) 
 				res += + (4.0*E_ij*(-DXDisjoint(l,i,nu,beta))*DXDisjoint(l,j,i,mu,beta))/pow(a,2);
 			
