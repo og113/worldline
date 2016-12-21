@@ -1,5 +1,5 @@
 /*
-	definitions for solving classical equations of motion for monopole worldline via ton-raphson method
+	definitions for solving classical equations of motion for monopole worldline via newton-raphson method
 */
 
 #include <string>
@@ -82,17 +82,17 @@ static number DDFDimDrDr(const number& x, const number& a) {
 
 // G0
 static number G0(const number& x, const number& a) {
-	return  -1.0/(4.0*pow(PI,2)*exp(pow(x,2)/pow(a,2)));
+	return  -1.0/(4.0*exp(pow(x,2)/pow(a,2))*pow(PI,2));
 }
 
 // DG0DrOnr
 static number DG0DrOnr(const number& x, const number& a) {
-	return 1.0/(2.0*pow(PI,2)*pow(a,2)*exp(pow(x,2)/pow(a,2)));
+	return 1.0/(2.0*pow(a,2)*exp(pow(x,2)/pow(a,2))*pow(PI,2));
 }
  
  // DDG0DrDr
 static number DDG0DrDr(const number& x, const number& a) {
-	return (pow(a,2) - 2.0*pow(x,2))/(2.0*pow(PI,2)*pow(a,4)*exp(pow(x,2)/pow(a,2)));
+	return (pow(a,2) - 2.0*pow(x,2))/(2.0*pow(a,4)*exp(pow(x,2)/pow(a,2))*pow(PI,2));
 }
 
 // FThermal
@@ -345,6 +345,7 @@ static void mdV0Generic(const uint& j, const uint& mu, const uint& i, const Loop
 		res += 2.0*F0_ij*DX(l,i,pi,mu) \
  				+ 2.0*DF0DrOnr_ij*DX(l,j,i,mu)*T_ij;
 	}
+	
 	if (i!=mj) {
 		number x_imj = Distance(l[i],l[mj]);
 		number F0_imj = FVacuum(x_imj,a);
@@ -354,11 +355,11 @@ static void mdV0Generic(const uint& j, const uint& mu, const uint& i, const Loop
 	//coincident terms
 	// extra factor of (-1.0/pow(2.0*PI,2)) due to the fact that we are treating the green's function here
 	if (i==j)
-		res += 2.0*(l[j])[mu]*FVacuum(0.0,a); 
+		res += (-1.0/pow(2.0*PI,2))*2.0*(l[j])[mu]/a/a; 
 	if (i==mj)
-		res += (-(l[mj])[mu]*FVacuum(0.0,a));
+		res += (-1.0/pow(2.0*PI,2))*(-(l[mj])[mu]/a/a);
 	if (i==pj)
-		res += (-(l[pj])[mu]*FVacuum(0.0,a));
+		res += (-1.0/pow(2.0*PI,2))*(-(l[pj])[mu]/a/a);
 		
 	v[j*Dim+mu] += -f*(-pow(2.0*PI,2))*res;
 }
@@ -436,11 +437,11 @@ static void ddV0Generic(const uint& j, const uint& mu, const uint& k, const uint
 	
 	//coincident terms
 	if (k==j && mu==nu)
-		res += (2.0*FVacuum(0.0,a));
+		res += (-1.0/pow(2.0*PI,2))*(2.0/a/a);
 	if (k==mj && mu==nu)
-		res += (-1.0*FVacuum(0.0,a));
+		res += (-1.0/pow(2.0*PI,2))*(-1.0/a/a);
 	if (k==pj && mu==nu)
-		res += (-1.0*FVacuum(0.0,a));
+		res += (-1.0/pow(2.0*PI,2))*(-1.0/a/a);
 	
 	m(Dim*j+mu,Dim*k+nu) += f*(-pow(2.0*PI,2))*res;
 	
@@ -482,11 +483,11 @@ static void mdVthGeneric(const uint& j, const uint& mu, const uint& i, const Loo
 	//coincident terms
 	// extra factor of (-1.0/pow(2.0*PI,2)) due to the fact that we are treating the green's function here
 	if (i==j)
-		res += 2.0*(l[j])[mu]*Fth(0.0,0.0,beta,a); 
+		res += (-1.0/pow(2.0*PI,2))*2.0*(l[j])[mu]/a/a; 
 	if (i==mj)
-		res += (-(l[mj])[mu]*Fth(0.0,0.0,beta,a));
+		res += (-1.0/pow(2.0*PI,2))*(-(l[mj])[mu]/a/a);
 	if (i==pj)
-		res += (-(l[pj])[mu]*Fth(0.0,0.0,beta,a));
+		res += (-1.0/pow(2.0*PI,2))*(-(l[pj])[mu]/a/a);
 		
 	v[j*Dim+mu] += -f*(-pow(2.0*PI,2))*res;
 }
@@ -643,11 +644,11 @@ static void ddVthGeneric(const uint& j, const uint& mu, const uint& k, const uin
 	//coincident terms
 	// extra factor of (-1.0/pow(2.0*PI,2)) due to the fact that we are treating the green's function here
 	if (k==j && mu==nu)
-		res += 2.0*Fth(0.0,0.0,beta,a);
+		res += (-1.0/pow(2.0*PI,2))*2.0/a/a;
 	if (k==mj && mu==nu)
-		res += (-1.0*Fth(0.0,0.0,beta,a));
+		res += (-1.0/pow(2.0*PI,2))*(-1.0/a/a);
 	if (k==pj && mu==nu)
-		res += (-1.0*Fth(0.0,0.0,beta,a));
+		res += (-1.0/pow(2.0*PI,2))*(-1.0/a/a);
 	
 	m(Dim*j+mu,Dim*k+nu) += f*(-pow(2.0*PI,2))*res;
 }
@@ -689,16 +690,16 @@ static void mdVthDisjointGeneric(const uint& j, const uint& mu, const uint& i, c
 	// extra factor of (-1.0/pow(2.0*PI,2)) due to the fact that we are treating the green's function here
 	if (mu==(Dim-1)) {
 		if (i==j) { // bit of a fudge in terms of sum over i
-			res += (DXDisjoint(l,j,mj,mu,beta) + DXDisjoint(l,j,pj,mu,beta))*Fth(0.0,0.0,beta,a);
+			res += (-1.0/pow(2.0*PI,2))*(DXDisjoint(l,j,mj,mu,beta) + DXDisjoint(l,j,pj,mu,beta))/a/a;
 		}
 	}
 	else {
 		if (i==j)
-			res += 2.0*(l[j])[mu]*Fth(0.0,0.0,beta,a);
+			res += (-1.0/pow(2.0*PI,2))*2.0*(l[j])[mu]/a/a;
 		if (i==mj)
-			res += (-(l[mj])[mu]*Fth(0.0,0.0,beta,a));
+			res += (-1.0/pow(2.0*PI,2))*(-(l[mj])[mu]/a/a);
 		if (i==pj)
-			res += (-(l[pj])[mu]*Fth(0.0,0.0,beta,a));
+			res += (-1.0/pow(2.0*PI,2))*(-(l[pj])[mu]/a/a);
 	}
 		
 	v[j*Dim+mu] += -f*(-pow(2.0*PI,2))*res;
@@ -856,11 +857,11 @@ static void ddVthDisjointGeneric(const uint& j, const uint& mu, const uint& k, c
 	//coincident terms
 	// extra factor of (-1.0/pow(2.0*PI,2)) due to the fact that we are treating the green's function here
 	if (k==j && mu==nu)
-		res += 2.0*Fth(0.0,0.0,beta,a);
+		res += (-1.0/pow(2.0*PI,2))*2.0/a/a;
 	if (k==mj && mu==nu)
-		res += (-1.0*Fth(0.0,0.0,beta,a));
+		res += (-1.0/pow(2.0*PI,2))*(-1.0/a/a);
 	if (k==pj && mu==nu)
-		res += (-1.0*Fth(0.0,0.0,beta,a));
+		res += (-1.0/pow(2.0*PI,2))*(-1.0/a/a);
 	
 	m(Dim*j+mu,Dim*k+nu) += f*(-pow(2.0*PI,2))*res;
 }
@@ -1032,11 +1033,11 @@ static void ddVthDisjointLRGeneric(const uint& j, const uint& mu, const uint& k,
 		//coincident terms
 		// extra factor of (-1.0/pow(2.0*PI,2)) due to the fact that we are treating the green's function here
 		if (k==j && mu==nu)
-			res += 2.0*Fth(0.0,0.0,beta,a);
+			res += (-1.0/pow(2.0*PI,2))*2.0/a/a;
 		if (k==mj && mu==nu)
-			res += (-1.0*Fth(0.0,0.0,beta,a));
+			res += (-1.0/pow(2.0*PI,2))*(-1.0/a/a);
 		if (k==pj && mu==nu)
-			res += (-1.0*Fth(0.0,0.0,beta,a));
+			res += (-1.0/pow(2.0*PI,2))*(-1.0/a/a);
 	
 		m(Dim*j+mu,Dim*k+nu) += f*(-pow(2.0*PI,2))*res;
 	}
@@ -1213,11 +1214,11 @@ static void ddVthDisjointLR2Generic(const uint& j, const uint& mu, const uint& k
 	//coincident terms
 	// extra factor of (-1.0/pow(2.0*PI,2)) due to the fact that we are treating the green's function here
 	if (k==j && mu==nu)
-		res += 2.0*Fth(0.0,0.0,beta,a);
+		res += (-1.0/pow(2.0*PI,2))*2.0/a/a;
 	if (k==mj && mu==nu)
-		res += (-1.0*Fth(0.0,0.0,beta,a));
+		res += (-1.0/pow(2.0*PI,2))*(-1.0/a/a);
 	if (k==pj && mu==nu)
-		res += (-1.0*Fth(0.0,0.0,beta,a));
+		res += (-1.0/pow(2.0*PI,2))*(-1.0/a/a);
 	
 	m(Dim*j+mu,Dim*k+nu) += f*(-pow(2.0*PI,2))*res;
 }
@@ -1251,11 +1252,11 @@ static void mdV0DisjointGeneric(const uint& j, const uint& mu, const uint& i, co
 	//coincident terms
 	// extra factor of (-1.0/pow(2.0*PI,2)) due to the fact that we are treating the green's function here
 	if (i==j)
-		res += 2.0*(l[j])[mu]*FVacuum(0.0,a); 
+		res += (-1.0/pow(2.0*PI,2))*2.0*(l[j])[mu]/a/a; 
 	if (i==mj)
-		res += (-(l[mj])[mu]*FVacuum(0.0,a));
+		res += (-1.0/pow(2.0*PI,2))*(-(l[mj])[mu]/a/a);
 	if (i==pj)
-		res += (-(l[pj])[mu]*FVacuum(0.0,a));
+		res += (-1.0/pow(2.0*PI,2))*(-(l[pj])[mu]/a/a);
 		
 	v[j*Dim+mu] += -f*(-pow(2.0*PI,2))*res;
 
@@ -1311,7 +1312,7 @@ static void ddV0DisjointGeneric(const uint& j, const uint& mu, const uint& k, co
 		
 		for (uint i=0; i<l.size(); i++) {
 		
-			pi = posNeighDisjoint(i,l.size());	
+			pi = (i==(l.size()-1)? 0: i+1);
 			x_ij = DistanceDisjoint(l[i],l[j],beta);
 			x_imj = DistanceDisjoint(l[i],l[mj],beta);
 			T_ij = DotDisjoint(l[pi],l[i],l[pj],l[j],beta);
@@ -1334,11 +1335,11 @@ static void ddV0DisjointGeneric(const uint& j, const uint& mu, const uint& k, co
 	
 	//coincident terms
 	if (k==j && mu==nu)
-		res += (2.0*FVacuum(0.0,a));
+		res += (-1.0/pow(2.0*PI,2))*(2.0/a/a);
 	if (k==mj && mu==nu)
-		res += (-1.0*FVacuum(0.0,a));
+		res += (-1.0/pow(2.0*PI,2))*(-1.0/a/a);
 	if (k==pj && mu==nu)
-		res += (-1.0*FVacuum(0.0,a));
+		res += (-1.0/pow(2.0*PI,2))*(-1.0/a/a);
 	
 	m(Dim*j+mu,Dim*k+nu) += f*(-pow(2.0*PI,2))*res;
 	
@@ -1409,7 +1410,7 @@ static void ddV0DisjointLRGeneric(const uint& j, const uint& mu, const uint& k, 
 		
 			for (uint i=iMin; i<iMax; i++) {
 		
-				pi = posNeighDisjoint(i,l.size());	
+				pi = (i==(l.size()-1)? 0: i+1);
 				x_ij = DistanceDisjoint(l[i],l[j],beta);
 				x_imj = DistanceDisjoint(l[i],l[mj],beta);
 				T_ij = DotDisjoint(l[pi],l[i],l[pj],l[j],beta);
@@ -1432,11 +1433,11 @@ static void ddV0DisjointLRGeneric(const uint& j, const uint& mu, const uint& k, 
 	
 		//coincident terms
 		if (k==j && mu==nu)
-			res += (2.0*FVacuum(0.0,a));
+			res += (-1.0/pow(2.0*PI,2))*(2.0/a/a);
 		if (k==mj && mu==nu)
-			res += (-1.0*FVacuum(0.0,a));
+			res += (-1.0/pow(2.0*PI,2))*(-1.0/a/a);
 		if (k==pj && mu==nu)
-			res += (-1.0*FVacuum(0.0,a));
+			res += (-1.0/pow(2.0*PI,2))*(-1.0/a/a);
 	
 		m(Dim*j+mu,Dim*k+nu) += f*(-pow(2.0*PI,2))*res;
 	}	
