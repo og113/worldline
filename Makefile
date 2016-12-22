@@ -38,7 +38,7 @@ common: $(COMMONOBJS)
 monte: addVectors binaryToAscii circle common floop glmain loop loop2 schwingerRate
 
 .PHONY: nr
-nr: 3dPotentialExtrema addVectors binaryToAscii circle common highTemp highTempParameters nrmain nrmpi perturbativeFiniteTemp
+nr: 3dPotentialExtrema addVectors binaryToAscii circle circle2 common dimReduce highTemp highTempParameters nrmain nrmpi perturbativeFiniteTemp
 
 #------------------------------------------------------------------------------------------------------------------------
 # targets, dependencies and rules for executables
@@ -62,6 +62,10 @@ circle: $(ODIR)/circle.o $(COMMONOBJS)
 circle2: $(ODIR)/circle2.o $(COMMONOBJS) 
 	$(CC) -o $@ $^ $(CFLAGS) $(INCLUDES) $(LIBS)
 	@echo Simple compiler named circle2 has been compiled
+	
+dimReduce: $(ODIR)/dimReduce.o $(COMMONOBJS) 
+	$(CC) -o $@ $^ $(CFLAGS) $(INCLUDES) $(LIBS)
+	@echo Simple compiler named dimReduce has been compiled
 	
 floop: $(MPIODIR)/floop.o $(COMMONOBJS)
 	$(MPICC) -o $@ $^ $(MPICFLAGS) $(INCLUDES) $(MPILIBS)
