@@ -1,5 +1,5 @@
 /*
-	header file for solving classical equations of motion for monopole worldline via newton-raphson method
+	header file for solving classical equations of motion for monopole worldline via ton-raphson method
 */
  
 #ifndef __NRLOOP_H_INCLUDED__
@@ -329,26 +329,6 @@ void mdsqrtS0Disjoint_nr(const uint& j, const uint& mu, const Loop<Dim>& l, cons
 template<uint Dim>
 void ddsqrtS0Disjoint_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, \
 						const Loop<Dim>& l, const number& sqrt4s0, const number& beta, const number& f, mat& m);
-						
-// mdVor_nr
-template<uint Dim>
-void mdVor_nr(const uint& j, const uint& mu, const Loop<Dim>& l, const number& a, const number& f, vec& v);
-
-// mdVlr_nr
-template<uint Dim>
-void mdVlr_nr(const uint& j, const uint& mu, const Loop<Dim>& l, const number& a, const number& f, vec& v);
-
-// mdVer_nr
-template<uint Dim>
-void mdVer_nr(const uint& j, const uint& mu, const Loop<Dim>& l, const number& a, const number& f, vec& v);
-
-// mdVdr_nr
-template<uint Dim>
-void mdVdr_nr(const uint& j, const uint& mu, const Loop<Dim>& l, const number& a, const number& f, vec& v);
-
-// mdVthr_nr
-template<uint Dim>
-void mdVthr_nr(const uint& j, const uint& mu, const Loop<Dim>& l, const number& beta, const number& a, const number& f, vec& v);
 
 // mdVor_nr
 template<uint Dim>
@@ -770,6 +750,12 @@ void printAsLoop(const string& f, const uint& Dim, const vec& v);
 
 // printAsLoop
 void printAsLoop(const string& f, const uint& Dim, const vec& v, const uint len);
+
+// dimReduce
+void dimReduce(const vec& vin, const uint& dimin, const uint& Nin, vec& vout, const uint& dimout, const uint& zmout);
+
+// dimIncrease
+void dimIncrease(const vec& vin, const uint& dimin, const uint& Nin, vec& vout, const uint& dimout, const uint& zmout);
 
 /*----------------------------------------------------------------------------------------------------------------------------
 	3 - filename functions

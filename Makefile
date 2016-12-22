@@ -38,7 +38,7 @@ common: $(COMMONOBJS)
 monte: addVectors binaryToAscii circle common floop glmain loop loop2 schwingerRate
 
 .PHONY: nr
-nr: 3dPotentialExtrema addVectors binaryToAscii circle common highTemp highTempParameters nrmain nrmpi perturbativeFiniteTemp
+nr: 3dPotentialExtrema addVectors binaryToAscii common dimReduce highTemp highTempParameters nrmain nrmpi perturbativeFiniteTemp shape
 
 #------------------------------------------------------------------------------------------------------------------------
 # targets, dependencies and rules for executables
@@ -54,10 +54,10 @@ addVectors: $(ODIR)/addVectors.o $(COMMONOBJS)
 binaryToAscii: $(ODIR)/binaryToAscii.o $(COMMONOBJS) 
 	$(CC) -o $@ $^ $(CFLAGS) $(INCLUDES) $(LIBS)
 	@echo Simple compiler named binaryToAscii has been compiled
-
-circle: $(ODIR)/circle.o $(COMMONOBJS) 
+	
+dimReduce: $(ODIR)/dimReduce.o $(COMMONOBJS) 
 	$(CC) -o $@ $^ $(CFLAGS) $(INCLUDES) $(LIBS)
-	@echo Simple compiler named circle has been compiled
+	@echo Simple compiler named dimReduce has been compiled
 	
 floop: $(MPIODIR)/floop.o $(COMMONOBJS)
 	$(MPICC) -o $@ $^ $(MPICFLAGS) $(INCLUDES) $(MPILIBS)
@@ -102,6 +102,10 @@ perturbativeFiniteTemp: $(ODIR)/perturbativeFiniteTemp.o $(COMMONOBJS)
 schwingerRate: $(ODIR)/schwingerRate.o $(COMMONOBJS) 
 	$(CC) -o $@ $^ $(CFLAGS) $(INCLUDES) $(LIBS)
 	@echo Simple compiler named schwingerRate has been compiled
+
+shape: $(ODIR)/shape.o $(COMMONOBJS) 
+	$(CC) -o $@ $^ $(CFLAGS) $(INCLUDES) $(LIBS)
+	@echo Simple compiler named shape has been compiled
 	
 testMpi: $(MPIODIR)/testMpi.o
 	$(MPICC) -o $@ $^ $(MPICFLAGS) $(INCLUDES) $(MPILIBS)

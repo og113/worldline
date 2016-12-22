@@ -134,7 +134,7 @@ else {
 	is.open(argvList.c_str());
 	if (is.good()) {
 		string line;
-		for (uint j=0; j<(rank+1); j++) {
+		for (int j=0; j<(rank+1); j++) {
 			if (is.eof()) {
 				cerr << "nrmpi error: argvList file " << argvList << " has too few lines for rank " << rank << endl;
 				return 1;
