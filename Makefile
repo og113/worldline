@@ -38,7 +38,7 @@ common: $(COMMONOBJS)
 monte: addVectors binaryToAscii circle common floop glmain loop loop2 schwingerRate
 
 .PHONY: nr
-nr: 3dPotentialExtrema addVectors binaryToAscii circle circle2 common dimReduce highTemp highTempParameters nrmain nrmpi perturbativeFiniteTemp
+nr: 3dPotentialExtrema addVectors binaryToAscii common dimReduce highTemp highTempParameters nrmain nrmpi perturbativeFiniteTemp shape
 
 #------------------------------------------------------------------------------------------------------------------------
 # targets, dependencies and rules for executables
@@ -54,14 +54,6 @@ addVectors: $(ODIR)/addVectors.o $(COMMONOBJS)
 binaryToAscii: $(ODIR)/binaryToAscii.o $(COMMONOBJS) 
 	$(CC) -o $@ $^ $(CFLAGS) $(INCLUDES) $(LIBS)
 	@echo Simple compiler named binaryToAscii has been compiled
-
-circle: $(ODIR)/circle.o $(COMMONOBJS) 
-	$(CC) -o $@ $^ $(CFLAGS) $(INCLUDES) $(LIBS)
-	@echo Simple compiler named circle has been compiled
-	
-circle2: $(ODIR)/circle2.o $(COMMONOBJS) 
-	$(CC) -o $@ $^ $(CFLAGS) $(INCLUDES) $(LIBS)
-	@echo Simple compiler named circle2 has been compiled
 	
 dimReduce: $(ODIR)/dimReduce.o $(COMMONOBJS) 
 	$(CC) -o $@ $^ $(CFLAGS) $(INCLUDES) $(LIBS)
@@ -99,10 +91,6 @@ nrmain: $(ODIR)/nrmain.o $(COMMONOBJS)
 	$(CC) -o $@ $^ $(CFLAGS) $(INCLUDES) $(LIBS)
 	@echo Simple compiler named nrmain has been compiled
 	
-nrmain2: $(ODIR)/nrmain2.o $(COMMONOBJS) 
-	$(CC) -o $@ $^ $(CFLAGS) $(INCLUDES) $(LIBS)
-	@echo Simple compiler named nrmain2 has been compiled
-	
 nrmpi: $(MPIODIR)/nrmpi.o $(COMMONOBJS) 
 	$(MPICC) -o $@ $^ $(MPICFLAGS) $(INCLUDES) $(MPILIBS)
 	@echo Simple compiler named nrmpi has been compiled
@@ -114,6 +102,10 @@ perturbativeFiniteTemp: $(ODIR)/perturbativeFiniteTemp.o $(COMMONOBJS)
 schwingerRate: $(ODIR)/schwingerRate.o $(COMMONOBJS) 
 	$(CC) -o $@ $^ $(CFLAGS) $(INCLUDES) $(LIBS)
 	@echo Simple compiler named schwingerRate has been compiled
+
+shape: $(ODIR)/shape.o $(COMMONOBJS) 
+	$(CC) -o $@ $^ $(CFLAGS) $(INCLUDES) $(LIBS)
+	@echo Simple compiler named shape has been compiled
 	
 testMpi: $(MPIODIR)/testMpi.o
 	$(MPICC) -o $@ $^ $(MPICFLAGS) $(INCLUDES) $(MPILIBS)
