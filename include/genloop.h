@@ -332,6 +332,10 @@ bool atCoordDisjoint(const Loop<Dim>& loop, const uint& mu, const uint& coord, c
 template <uint Dim>
 number L (const Loop<Dim>& l);
 
+// LDisjoint
+template <uint Dim>
+number LDisjoint (const Loop<Dim>& l, const number& beta);
+
 // DL
 template <uint Dim>
 number DL (const Loop<Dim>& l, const Point<Dim>& p, const uint& loc);
