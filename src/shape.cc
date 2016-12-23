@@ -42,6 +42,7 @@ bool lemon = false;
 bool straightDisjoint = false;
 bool cosDisjoint = false;
 string shape = "circle";
+string baseFolder = "";
 
 // getting argv
 if (argc % 2 && argc>1) {
@@ -49,6 +50,7 @@ if (argc % 2 && argc>1) {
 		string id = argv[2*j+1];
 		if (id[0]=='-') id = id.substr(1);
 		if (id.compare("inputs")==0) inputsFile = (string)argv[2*j+2];
+		else if (id.compare("base")==0) baseFolder = (string)argv[2*j+2];
 		else if (id.compare("extend")==0) extend = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("lemon")==0) lemon = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("circle")==0) circle = (stn<uint>(argv[2*j+2])!=0);
@@ -142,7 +144,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	for (uint j=0; j<p.Nl; j++) {
 
 		if (so==ShapeOptions::circle)	{
-			file = "data/"+shape+"/loops/dim_"+nts<uint>(dim)+"/K_"+nts(p.K)+"/loop_R_"+nts(R0)\
+			file = baseFolder+"data/"+shape+"/loops/dim_"+nts<uint>(dim)+"/K_"+nts(p.K)+"/loop_R_"+nts(R0)\
 															+"_rank_"+nts(j)+".dat";
 			number w = 2.0*PI/(number)N, angle;
 			for (uint k=0; k<N; k++) {
@@ -154,7 +156,7 @@ for (uint pl=0; pl<Npl; pl++) {
 			}
 		}
 		else if (so==ShapeOptions::lemon) {
-			file = "data/"+shape+"/loops/dim_"+nts<uint>(dim)+"/K_"+nts(p.K)+"/loop_R_"+nts(R0)\
+			file = baseFolder+"data/"+shape+"/loops/dim_"+nts<uint>(dim)+"/K_"+nts(p.K)+"/loop_R_"+nts(R0)\
 									+"_E_"+nts(p.P4)+"_rank_"+nts<uint>(j)+".dat";
 			number x0 = R*p.P4/2.0;
 			number rho = R*sqrt(1.0-p.P4*p.P4/4.0), angle;
@@ -181,7 +183,7 @@ for (uint pl=0; pl<Npl; pl++) {
 			}
 		}
 		else if (so==ShapeOptions::straightDisjoint) {
-			file = "data/"+shape+"/loops/dim_"+nts<uint>(dim)+"/K_"+nts(p.K)+"/loop_kappa_"+nts(kappa)\
+			file = baseFolder+"data/"+shape+"/loops/dim_"+nts<uint>(dim)+"/K_"+nts(p.K)+"/loop_kappa_"+nts(kappa)\
 					+"_T_"+nts(p.T)+"_rank_"+nts<uint>(j)+".dat";
 			if (extend)	
 				(file.Extras).push_back(StringPair("Lambda",nts(p.Lambda)));
@@ -206,7 +208,7 @@ for (uint pl=0; pl<Npl; pl++) {
 			}
 		}
 		else if (so==ShapeOptions::cosDisjoint) {
-			file = "data/"+shape+"/loops/dim_"+nts<uint>(dim)+"/K_"+nts(p.K)+"/loop_kappa_"+nts(kappa)\
+			file = baseFolder+"data/"+shape+"/loops/dim_"+nts<uint>(dim)+"/K_"+nts(p.K)+"/loop_kappa_"+nts(kappa)\
 					+"_T_"+nts(p.T)+"_mu_"+nts(p.Mu)+"_lambda_"+nts(p.Lambda)+"_rank_"+nts(j)+".dat";	
 			number r = sqrt(kappa/4.0/PI);
 			if (higherOrder)
