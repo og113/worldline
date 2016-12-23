@@ -709,8 +709,8 @@ for (uint pl=0; pl<Npl; pl++) {
 	else if (x.size()>NT)
 		x.conservativeResize(NT);
 		
-	// inverting lhs for disjoint topology, if necessary
 	if (disjoint) {
+		// inverting lhs for disjoint topology, if necessary
 		if (x[(N-1)*dim+dim-1]>x[(N-2)*dim+dim-1]) { // switched again
 			number tempx;
 			for (uint j=0; j<N/4; j++) {
@@ -719,6 +719,12 @@ for (uint pl=0; pl<Npl; pl++) {
 					x[(N/2+j)*dim+mu] = x[(N-1-j)*dim+mu];
 					x[(N-1-j)*dim+mu] = tempx;
 				}
+			}
+		}
+		// stretching if changing and disjoint
+		if (abs(p.T-pold.T)>MIN_NUMBER && pl>0) {
+			for (uint j=0; j<N; j++) {
+				x[N*j+dim-1] *= pold.T/p.T;
 			}
 		}
 	}
