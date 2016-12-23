@@ -1965,7 +1965,7 @@ void AccMax (const uint& j, const Loop<Dim>& l, const number& f, number& result)
 	uint pj = posNeigh(j,l.size());
 	uint nj = negNeigh(j,l.size());
 	Point<Dim> acc = l[pj] + l[nj] - 2.0*l[j];
-	number temp = f*sqrt(Dot(acc,acc));
+	number temp = f*pow((number)l.size(),2)*sqrt(Dot(acc,acc));
 	result = (temp>result? temp: result);
 }
 
@@ -1975,7 +1975,7 @@ void AccMaxDisjoint (const uint& j, const Loop<Dim>& l, const number& beta, cons
 	uint pj = posNeighDisjoint(j,l.size());
 	uint nj = negNeighDisjoint(j,l.size());
 	Point<Dim> acc = l[pj] + l[nj] - 2.0*l[j];
-	number temp = f*sqrt(DotDisjoint(acc,acc,beta));
+	number temp = f*pow((number)l.size(),2)*sqrt(DotDisjoint(acc,acc,beta));
 	result = (temp>result? temp: result);
 }
 
@@ -1986,7 +1986,7 @@ void AccMax (const uint& j, const Loop<Dim>& l, const uint& ex1, const uint& ex2
 		uint pj = posNeigh(j,l.size());
 		uint nj = negNeigh(j,l.size());
 		Point<Dim> acc = l[pj] + l[nj] - 2.0*l[j];
-		number temp = f*sqrt(Dot(acc,acc));
+		number temp = f*pow((number)l.size(),2)*sqrt(Dot(acc,acc));
 		result = (temp>result? temp: result);
 	}
 }
@@ -1998,7 +1998,7 @@ void AccMaxDisjoint (const uint& j, const Loop<Dim>& l, const uint& ex1, const u
 		uint pj = posNeighDisjoint(j,l.size());
 		uint nj = negNeighDisjoint(j,l.size());
 		Point<Dim> acc = l[pj] + l[nj] - 2.0*l[j];
-		number temp = f*sqrt(DotDisjoint(acc,acc,beta));
+		number temp = f*pow((number)l.size(),2)*sqrt(DotDisjoint(acc,acc,beta));
 		result = (temp>result? temp: result);
 	}
 }

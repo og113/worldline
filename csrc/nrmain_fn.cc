@@ -789,7 +789,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		number s0_scale = (abs(p.T)>MIN_NUMBER? 1.0/p.T: 1.0);
 		number beta = ((p.T)>sqrt(MIN_NUMBER)? 1.0/(p.T): 1.0/sqrt(MIN_NUMBER)); // this is 1/eta
 		len = (disjoint? LDisjoint(xLoop,beta): L(xLoop));
-		number acc_scale = pow((number)N/len,2);
+		number acc_scale = pow(len,-2);
 		number sigma = 1.0;
 		if (poto==PotentialOptions::original) {
 			s0 = S0(xLoop);
