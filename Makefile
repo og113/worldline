@@ -35,7 +35,7 @@ all: $(EXE) $(MPIEXE) common
 common: $(COMMONOBJS)
 
 .PHONY: monte
-monte: addVectors binaryToAscii circle common floop glmain loop loop2 schwingerRate
+monte: addVectors binaryToAscii common floop glmain loop loop2 schwingerRate shape
 
 .PHONY: nr
 nr: 3dPotentialExtrema addVectors binaryToAscii common dimReduce highTemp highTempParameters nrmain nrmpi perturbativeFiniteTemp shape
