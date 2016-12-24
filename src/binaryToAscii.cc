@@ -24,7 +24,7 @@ bool loop = false;
 uint K=0;
 
 //dimension
-#define dim 4
+#define dim 2
 
 // getting argv
 if (argc % 2 && argc>1) {

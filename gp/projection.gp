@@ -67,11 +67,11 @@ set xrange [-beta/2.0-0.5:beta/2.0+0.5]; \
 set yrange [-beta/2.0-0.5:beta/2.0+0.5];
 
 if (exists("inFile")) {
-	plot inFile using 3:4 with points ls 1 title inFile noenhanced;
+	plot inFile using 1:2 with points ls 1 title inFile noenhanced;
 }
 else {
 	set for [i=1:words(colours)] lt 1 lc rgb word(colours, i)
-	plot for [file in inFiles] file using 3:4 with points title file noenhanced;
+	plot for [file in inFiles] file using 1:2 with points title file noenhanced;
 }
 
 if (!exists("outFile")) {
