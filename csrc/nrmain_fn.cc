@@ -364,14 +364,14 @@ if (stepperOutputsFile.exists() && stepargv!=StepperArgv::none) {
 }
 
 // results
-string resultsFile = (pass? "results/nr/nr6pass.csv":"results/nr/nr6.csv");
+string resultsFile = (pass? "results/nr/nr7pass.csv":"results/nr/nr7.csv");
 uint idSizeResults = 3, datumSizeResults = 17;
 vector<string> idCheck(idSizeResults);
 idCheck[idSizeResults-1] = potExtras.second;
 NewtonRaphsonData results(resultsFile,idSizeResults,datumSizeResults);
 
 // errors
-string errorsFile = "results/nr/nr6error.csv";
+string errorsFile = "results/nr/nr7error.csv";
 uint idSizeErrors = 4, datumSizeErrors = 13;
 vector<string> idCheckErrors(idSizeErrors);
 idCheckErrors[idSizeErrors-1] = potExtras.second;
@@ -500,6 +500,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	Check checkCCMax("cc_max<<1",5.0e-1);
 	Check checkKgAMax("a*kg_max<<1",5.0e-1);
 	Check checkKgDxMax("dx*kg_max<<1",5.0e-1);
+	Check checkAccAMax("a*acc<<1",5.0e-1);
 	Check checkSym("symmetric",1.0e-16*NT*NT);
 	Check checkSymMax("symmetric max",1.0e-14);
 	Check checkInv("inverse",1.0e-16*NT*NT*NT);
@@ -516,7 +517,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	Check checkEAgree("energies agree",1.0e-3);
 	
 	// defining scalar quantities
-	number len, i0, kinetic = 0.0, s, sm, v = 0.0, vr = 0.0, erg, ergThermal = 0.0, fgamma, gamma, angle_neigh, zmax, zmin, tmax, ic_max, cc_max, kg_max;
+	number len, i0, kinetic = 0.0, s, sm, v = 0.0, vr = 0.0, erg, ergThermal = 0.0, fgamma, gamma, angle_neigh, zmax, zmin, tmax, ic_max, cc_max, kg_max, acc_max;
 	
 	// defining vector and matrix quantities
 	vec x(N*dim);
@@ -760,7 +761,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		Js = Eigen::VectorXd::Zero(N);
 		len = 0.0, kinetic = 0.0, i0 = 0.0, v = 0.0, fgamma = 0.0, gamma = 0.0, angle_neigh = 0.0, zmax = 0.0, tmax = 0.0, erg = 0.0;
 		zmin = 1.0e16;
-		ic_max = 0.0, cc_max = 0.0, kg_max = 0.0;
+		ic_max = 0.0, cc_max = 0.0, kg_max = 0.0, acc_max = 0.0;
 		if (curvature || alltests) {
 			sc_vec = Eigen::VectorXd::Zero(N);
 			kg_vec = Eigen::VectorXd::Zero(N);
@@ -787,6 +788,8 @@ for (uint pl=0; pl<Npl; pl++) {
 		number s0, sqrt4s0; 
 		number s0_scale = (abs(p.T)>MIN_NUMBER? 1.0/p.T: 1.0);
 		number beta = ((p.T)>sqrt(MIN_NUMBER)? 1.0/(p.T): 1.0/sqrt(MIN_NUMBER)); // this is 1/eta
+		len = (disjoint? LDisjoint(xLoop,beta): L(xLoop));
+		number acc_scale = pow(len,-2);
 		number sigma = 1.0;
 		if (poto==PotentialOptions::original) {
 			s0 = S0(xLoop);
@@ -867,14 +870,14 @@ for (uint pl=0; pl<Npl; pl++) {
 			
 			//S0(j, xLoop, s0norm, s0norm);
 			if (!disjoint) {
-				L		(j, xLoop, 1.0, len);
+				//L		(j, xLoop, 1.0, len);
 				I0		(j, xLoop, mgb, i0);
 				S0		(j, xLoop, Js_scale, Js(j));
 				if (poto==PotentialOptions::external)
 					In(j, xLoop, n, g, v);
 			}
 			else {
-				LDisjoint (j, xLoop, beta, 1.0, len);
+				//LDisjoint (j, xLoop, beta, 1.0, len);
 				I0Disjoint(j, xLoop, beta, mgb, i0);
 				S0Disjoint(j, xLoop, beta, Js_scale, Js(j));
 				if (poto==PotentialOptions::externalDisjoint)
@@ -900,11 +903,13 @@ for (uint pl=0; pl<Npl; pl++) {
 					InlineCurvatureMax(j, xLoop, 0, N/2-1, ic_scale, ic_max);
 					CuspCurvatureMax(j, xLoop, 0, N/2-1, cc_scale, ic_max);
 					KGMaxPlane(j, xLoop, 0, N/2-1, kg_scale, kg_max);
+					AccMax(j, xLoop, 0, N/2-1, acc_scale, acc_max);
 				}
 				else {
 					InlineCurvatureMaxDisjoint(j, xLoop, 0, N/2-1, beta, ic_scale, ic_max);
 					CuspCurvatureMaxDisjoint(j, xLoop, 0, N/2-1, beta, cc_scale, ic_max);
 					KGMaxPlaneDisjoint(j, xLoop, 0, N/2-1, beta, kg_scale, kg_max);
+					AccMaxDisjoint(j, xLoop, 0, N/2-1, beta, acc_scale, acc_max);
 				}
 			} 
 			else {
@@ -912,11 +917,13 @@ for (uint pl=0; pl<Npl; pl++) {
 					InlineCurvatureMax(j, xLoop, ic_scale, ic_max);
 					CuspCurvatureMax(j,xLoop,cc_scale,ic_max);
 					KGMaxPlane(j, xLoop, kg_scale, kg_max);
+					AccMax(j, xLoop, acc_scale, acc_max);
 				}
 				else {
 					InlineCurvatureMaxDisjoint(j, xLoop, beta, ic_scale, ic_max);
 					CuspCurvatureMaxDisjoint(j,xLoop, beta,cc_scale,ic_max);
 					KGMaxPlaneDisjoint(j, xLoop, beta, kg_scale, kg_max);
+					AccMaxDisjoint(j, xLoop, beta, acc_scale, acc_max);
 				}
 			}
 		
@@ -1453,6 +1460,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		checkCCMax.add(cc_max);
 		checkKgAMax.add(p.Epsi*kg_max);
 		checkKgDxMax.add(dx*kg_max);
+		checkAccAMax.add(p.Epsi*acc_max);
 		checkStraight.add(angle_neigh);
 		
 		// conservation, Js
@@ -1799,10 +1807,10 @@ for (uint pl=0; pl<Npl; pl++) {
 		//printing tests to see convergence
 		if (verbose) {
 			if (runsCount==1) {
-				printf("%4s%4s%11s%11s%11s%11s%11s%11s%11s%11s%11s%11s%11s\n","pl","run","len","i0","s","E","sol","solM","delta","dx*kg_max","ic_max","cc_max","dx/a");
+				printf("%4s%4s%11s%11s%11s%11s%11s%11s%11s%11s%11s%11s%11s\n","pl","run","len","i0","s","E","sol","solM","delta","a*acc_max","ic_max","cc_max","dx/a");
 			}
 			printf("%4i%4i%11.4g%11.4g%11.4g%11.4g%11.4g%11.4g%11.4g%11.4g%11.4g%11.4g%11.4g\n",pl,runsCount,len,i0,s,erg,\
-			checkSol.back(),checkSolMax.back(),checkDelta.back(),checkKgDxMax.back(),\
+			checkSol.back(),checkSolMax.back(),checkDelta.back(),checkAccAMax.back(),\
 				checkICMax.back(),checkCCMax.back(),checkDX.back());
 		}
 		if (alltests) {
@@ -1939,9 +1947,9 @@ for (uint pl=0; pl<Npl; pl++) {
 	// printing results to terminal
 	printf("\n");
 	printf("%8s%8s%8s%8s%8s%8s%8s%8s%8s%12s%12s%14s%14s%14s%14s%14s\n","pl","runs","time","K","G","B","Ng","a","mu","E","T","len",\
-		"vr","s","kgdx","dxa");
+		"vr","s","acca","dxa");
 	printf("%8i%8i%8.3g%8i%8.4g%8.4g%8i%8.4g%8.4g%12.5g%12.5g%14.5g%14.5g%14.5g%14.5g%14.5g\n",\
-		pl,runsCount,realtime,p.K,p.G,p.B,p.Ng,p.Epsi,p.Mu,erg,p.T,len,vr,s,checkKgDxMax.back(),checkDX.back());
+		pl,runsCount,realtime,p.K,p.G,p.B,p.Ng,p.Epsi,p.Mu,erg,p.T,len,vr,s,checkAccAMax.back(),checkDX.back());
 	printf("\n");
 	
 	if (checkDelta.good() && checkSol.good() && checkSolMax.good()) {		
@@ -1987,7 +1995,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		datumResult[11] = checkSol.back();
 		datumResult[12] = checkDX.back();
 		datumResult[13] = checkICMax.back();
-		datumResult[14] = checkKgAMax.back();
+		datumResult[14] = checkAccAMax.back();
 		datumResult[15] = checkCCMax.back();
 		datumResult[16] = checkStraight.back();
 		
@@ -2018,7 +2026,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		datumError[6] = checkDelta.back();
 		datumError[7] = checkDX.back();
 		datumError[8] = checkICMax.back();
-		datumError[9] = checkKgAMax.back();
+		datumError[9] = checkAccAMax.back();
 		datumError[10] = checkCCMax.back();
 		datumError[11] = checkStraight.back();
 		datumError[12] = checkJs.back();

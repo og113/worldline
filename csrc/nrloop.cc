@@ -1959,6 +1959,50 @@ void KGMaxPlaneDisjoint (const uint& j, const Loop<Dim>& l, const uint& ex1, con
 	}
 }
 
+// AccMax
+template <uint Dim>
+void AccMax (const uint& j, const Loop<Dim>& l, const number& f, number& result) {
+	uint pj = posNeigh(j,l.size());
+	uint nj = negNeigh(j,l.size());
+	Point<Dim> acc = l[pj] + l[nj] - 2.0*l[j];
+	number temp = f*pow((number)l.size(),2)*sqrt(Dot(acc,acc));
+	result = (temp>result? temp: result);
+}
+
+// AccMaxDisjoint
+template <uint Dim>
+void AccMaxDisjoint (const uint& j, const Loop<Dim>& l, const number& beta, const number& f, number& result) {
+	uint pj = posNeighDisjoint(j,l.size());
+	uint nj = negNeighDisjoint(j,l.size());
+	Point<Dim> acc = l[pj] + l[nj] - 2.0*l[j];
+	number temp = f*pow((number)l.size(),2)*sqrt(DotDisjoint(acc,acc,beta));
+	result = (temp>result? temp: result);
+}
+
+// AccMax
+template <uint Dim>
+void AccMax (const uint& j, const Loop<Dim>& l, const uint& ex1, const uint& ex2, const number& f, number& result) {
+	if (j!=ex1 && j!=ex2) {
+		uint pj = posNeigh(j,l.size());
+		uint nj = negNeigh(j,l.size());
+		Point<Dim> acc = l[pj] + l[nj] - 2.0*l[j];
+		number temp = f*pow((number)l.size(),2)*sqrt(Dot(acc,acc));
+		result = (temp>result? temp: result);
+	}
+}
+
+// AccMaxDisjoint
+template <uint Dim>
+void AccMaxDisjoint (const uint& j, const Loop<Dim>& l, const uint& ex1, const uint& ex2, const number& beta, const number& f, number& result) {
+	if (j!=ex1 && j!=ex2) {
+		uint pj = posNeighDisjoint(j,l.size());
+		uint nj = negNeighDisjoint(j,l.size());
+		Point<Dim> acc = l[pj] + l[nj] - 2.0*l[j];
+		number temp = f*pow((number)l.size(),2)*sqrt(DotDisjoint(acc,acc,beta));
+		result = (temp>result? temp: result);
+	}
+}
+
 
 /*----------------------------------------------------------------------------------------------------------------------------
 	1.1 - nr loop vector and matrix functions
@@ -3638,6 +3682,10 @@ template void KGMaxDisjoint<2>(const uint& j, const Loop<2>& l, const number& be
 template void KGMaxDisjoint<2>(const uint& j, const Loop<2>& l, const uint& ex1, const uint& ex2, const number& beta, const number& f, number& result);
 template void KGMaxPlaneDisjoint<2>(const uint& j, const Loop<2>& l, const number& beta, const number& f, number& result);
 template void KGMaxPlaneDisjoint<2>(const uint& j, const Loop<2>& l, const uint& ex1, const uint& ex2, const number& beta, const number& f, number& result);
+template void AccMax<2>(const uint& j, const Loop<2>& l, const number& f, number& result);
+template void AccMax<2>(const uint& j, const Loop<2>& l, const uint& ex1, const uint& ex2, const number& f, number& result);
+template void AccMaxDisjoint<2>(const uint& j, const Loop<2>& l, const number& beta, const number& f, number& result);
+template void AccMaxDisjoint<2>(const uint& j, const Loop<2>& l, const uint& ex1, const uint& ex2, const number& beta, const number& f, number& result);
 template void mdPX_nr<2>(const Loop<2>& l, const uint& loc, const Point<2>& P, const number& f, vec& v);
 template void mdL_nr<2>(const uint& j, const uint& mu, const Loop<2>& l, const number& p, vec& v);
 template void ddL_nr<2>(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<2>& l, const number& p, mat& m);
@@ -3852,6 +3900,10 @@ template void KGMaxDisjoint<4>(const uint& j, const Loop<4>& l, const number& be
 template void KGMaxDisjoint<4>(const uint& j, const Loop<4>& l, const uint& ex1, const uint& ex2, const number& beta, const number& f, number& result);
 template void KGMaxPlaneDisjoint<4>(const uint& j, const Loop<4>& l, const number& beta, const number& f, number& result);
 template void KGMaxPlaneDisjoint<4>(const uint& j, const Loop<4>& l, const uint& ex1, const uint& ex2, const number& beta, const number& f, number& result);
+template void AccMax<4>(const uint& j, const Loop<4>& l, const number& f, number& result);
+template void AccMax<4>(const uint& j, const Loop<4>& l, const uint& ex1, const uint& ex4, const number& f, number& result);
+template void AccMaxDisjoint<4>(const uint& j, const Loop<4>& l, const number& beta, const number& f, number& result);
+template void AccMaxDisjoint<4>(const uint& j, const Loop<4>& l, const uint& ex1, const uint& ex4, const number& beta, const number& f, number& result);
 template void mdPX_nr<4>(const Loop<4>& l, const uint& loc, const Point<4>& P, const number& f, vec& v);
 template void mdL_nr<4>(const uint& j, const uint& mu, const Loop<4>& l, const number& p, vec& v);
 template void ddL_nr<4>(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<4>& l, const number& p, mat& m);

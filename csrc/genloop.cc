@@ -781,6 +781,19 @@ number L (const Loop<Dim>& l) {
 	return Len;
 }
 
+
+// LDisjoint
+template <uint Dim>
+number LDisjoint (const Loop<Dim>& l, const number& beta) {
+	uint j=0, pj = posNeighDisjoint(0,l.size());
+	number Len = DistanceDisjoint(l[j],l[pj],beta);
+	for (j=1; j<l.size(); j++) {
+		pj = posNeighDisjoint(j,l.size());
+		Len += DistanceDisjoint(l[pj],l[j],beta);
+	}
+	return Len;
+}
+
 // DL
 template <uint Dim>
 number DL (const Loop<Dim>& l, const Point<Dim>& p, const uint& loc) {
@@ -1372,6 +1385,7 @@ template bool atCoord<4>(const Loop<4>& loop, const uint& mu, const uint& coord,
 template bool atCoordDisjoint<4>(const Loop<4>& loop, const uint& mu, const uint& coord, const uint& j);
 template class Loop<4>;
 template number L<4> (const Loop<4>& l);
+template number LDisjoint<4> (const Loop<4>& l, const number& beta);
 template number DL<4> (const Loop<4>& l, const Point<4>& p, const uint& loc);
 template number Sm<4> (const Loop<4>& l);
 template number Sm<4> (const Loop<4>& l, const uint& m, const uint& n);
@@ -1583,6 +1597,7 @@ template bool atCoord<2>(const Loop<2>& loop, const uint& mu, const uint& coord,
 template bool atCoordDisjoint<2>(const Loop<2>& loop, const uint& mu, const uint& coord, const uint& j);
 template class Loop<2>;
 template number L<2> (const Loop<2>& l);
+template number LDisjoint<2> (const Loop<2>& l, const number& beta);
 template number DL<2> (const Loop<2>& l, const Point<2>& p, const uint& loc);
 template number Sm<2> (const Loop<2>& l);
 template number Sm<2> (const Loop<2>& l, const uint& m, const uint& n);

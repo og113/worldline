@@ -234,6 +234,22 @@ void KGMaxPlaneDisjoint (const uint& j, const Loop<Dim>& l, const number& beta, 
 template <uint Dim>
 void KGMaxPlaneDisjoint (const uint& j, const Loop<Dim>& l, const uint& ex1, const uint& ex2, const number& beta, const number& f, number& result);
 
+// AccMax
+template <uint Dim>
+void AccMax (const uint& j, const Loop<Dim>& l, const number& f, number& result);
+
+// AccMaxDisjoint
+template <uint Dim>
+void AccMaxDisjoint (const uint& j, const Loop<Dim>& l, const number& beta, const number& f, number& result);
+
+// AccMax
+template <uint Dim>
+void AccMax (const uint& j, const Loop<Dim>& l, const uint& ex1, const uint& ex2, const number& f, number& result);
+
+// AccMaxDisjoint
+template <uint Dim>
+void AccMaxDisjoint (const uint& j, const Loop<Dim>& l, const uint& ex1, const uint& ex2, const number& beta, const number& f, number& result);
+
 // mdPX_nr
 template<uint Dim>
 void mdPX_nr(const Loop<Dim>& l, const uint& loc, const Point<Dim>& P, const number& f, vec& v);
