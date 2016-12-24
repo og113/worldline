@@ -528,6 +528,7 @@ for (uint pl=0; pl<Npl; pl++) {
 	// curvature
 	vec sc_vec;
 	vec kg_vec;
+	vec acc_vec;
 	
 	// conserved quantities
 	vec Js(N);
@@ -722,9 +723,9 @@ for (uint pl=0; pl<Npl; pl++) {
 			}
 		}
 		// stretching if changing and disjoint
-		if (abs(p.T-pold.T)>MIN_NUMBER && pl>0) {
+		if (abs(p.T-pold.T)>MIN_NUMBER && pl>0 && step) {
 			for (uint j=0; j<N; j++) {
-				x[N*j+dim-1] *= pold.T/p.T;
+				x[dim*j+dim-1] *= pold.T/p.T;
 			}
 		}
 	}
@@ -771,6 +772,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		if (curvature || alltests) {
 			sc_vec = Eigen::VectorXd::Zero(N);
 			kg_vec = Eigen::VectorXd::Zero(N);
+			acc_vec = Eigen::VectorXd::Zero(N);
 		}
 				
 		// loading x to xLoop - messier than it should be (should work with either a vec or a Loop really)
@@ -795,7 +797,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		number s0_scale = (abs(p.T)>MIN_NUMBER? 1.0/p.T: 1.0);
 		number beta = ((p.T)>sqrt(MIN_NUMBER)? 1.0/(p.T): 1.0/sqrt(MIN_NUMBER)); // this is 1/eta
 		len = (disjoint? LDisjoint(xLoop,beta): L(xLoop));
-		number acc_scale = pow(len,-2);
+		number acc_scale = 1.0/pow(len,2);
 		number sigma = 1.0;
 		if (poto==PotentialOptions::original) {
 			s0 = S0(xLoop);
@@ -898,10 +900,12 @@ for (uint pl=0; pl<Npl; pl++) {
 				if (!disjoint) {
 					InlineCurvatureMax(j, xLoop, ic_scale, sc_vec[j]);
 					KGMaxPlane(j, xLoop, kg_scale, kg_vec[j]);
+					AccMax(j, xLoop, acc_scale, acc_vec[j]);
 				}
 				else {
 					InlineCurvatureMaxDisjoint(j, xLoop, beta, ic_scale, sc_vec[j]);
 					KGMaxPlaneDisjoint(j, xLoop, beta, kg_scale, kg_vec[j]);
+					AccMaxDisjoint(j, xLoop, beta, acc_scale, acc_vec[j]);
 				}
 			}
 			if (!(P^=P0)) {
@@ -1618,6 +1622,7 @@ for (uint pl=0; pl<Npl; pl++) {
 				printAsLoop(early,dim,x,N*dim);
 				saveVectorAsciiAppend(early,sc_vec);
 				saveVectorAsciiAppend(early,kg_vec);
+				saveVectorAsciiAppend(early,acc_vec);
 				printf("%12s%50s\n","curvature:",((string)early).c_str());
 			}
 		}
@@ -1938,6 +1943,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		printAsLoop(file,dim,x,N*dim);
 		saveVectorAsciiAppend(file,sc_vec);
 		saveVectorAsciiAppend(file,kg_vec);
+		saveVectorAsciiAppend(file,acc_vec);
 		printf("%12s%50s\n","curvature:",((string)file).c_str());
 	}
 

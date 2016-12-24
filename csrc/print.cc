@@ -60,7 +60,8 @@ void saveVectorAsciiAppend(const string& f,  const T& v) {
 		return;
 	}
 	ofstream os;
-	string tempFile = "data/temp/tempAppend";
+	Filename file = f;
+	string tempFile = file.Directory+"tempAppend";
 	os.open(tempFile.c_str(),ios::out); // may be an error here with multiple nodes due to always sending to same temp file
 	if (!os.good()) {
 		cerr << "saveVectorAsciiAppend error: stream not good for " << tempFile << endl;
