@@ -276,6 +276,10 @@ number Dot(const Loop<Dim>& loop, const uint& i, const uint& j, const uint& k, c
 template <uint Dim>
 number Dot(const Loop<Dim>& loop, const uint& i, const uint& j);
 
+// Stretch
+template <uint Dim>
+void Stretch(Loop<Dim>& loop, const Point<Dim>& s);
+
 // MidpointDistance
 template <uint Dim>
 number MidpointDistanceSquared(const Loop<Dim>& loop, const uint& i, const uint& j);

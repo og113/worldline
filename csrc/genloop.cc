@@ -627,6 +627,16 @@ number Dot(const Loop<Dim>& loop, const uint& i, const uint& j) {
 	return Dot(loop[i],loop[ni],loop[j],loop[nj]);
 }
 
+// Stretch
+template <uint Dim>
+void Stretch(Loop<Dim>& loop, const Point<Dim>& s) {
+	for (uint j=0; j<loop.size(); j++) {
+		for (uint mu=0; mu<Dim; mu++) {
+			(loop[j])[mu] *= s[mu];
+		}
+	}
+}
+
 // MidpointDistance
 template <uint Dim>
 number MidpointDistanceSquared(const Loop<Dim>& loop, const uint& i, const uint& j) {
@@ -1370,6 +1380,7 @@ template number Angle<4>(const Point<4>&, const Point<4>&, const Point<4>&);
 template number MidpointDistanceSquared<4>(const Point<4>&, const Point<4>&, const Point<4>&, const Point<4>&);
 template number Dot<4>(const Loop<4>&, const uint&, const uint&, const uint&, const uint&);
 template number Dot<4>(const Loop<4>&, const uint&, const uint&);
+template void Stretch<4>(Loop<4>&, const Point<4>& s);
 template number MidpointDistanceSquared<4>(const Loop<4>&, const uint&, const uint&);
 template number DX<4>(const Loop<4>&, const uint&, const uint&);
 template number DX<4>(const Loop<4>&, const uint&, const uint&, const uint&);
@@ -1582,6 +1593,7 @@ template number Angle<2>(const Point<2>&, const Point<2>&, const Point<2>&);
 template number MidpointDistanceSquared<2>(const Point<2>&, const Point<2>&, const Point<2>&, const Point<2>&);
 template number Dot<2>(const Loop<2>&, const uint&, const uint&, const uint&, const uint&);
 template number Dot<2>(const Loop<2>&, const uint&, const uint&);
+template void Stretch<2>(Loop<2>&, const Point<2>& s);
 template number MidpointDistanceSquared<2>(const Loop<2>&, const uint&, const uint&);
 template number DX<2>(const Loop<2>&, const uint&, const uint&);
 template number DX<2>(const Loop<2>&, const uint&, const uint&, const uint&);
