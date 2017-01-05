@@ -580,9 +580,15 @@ for (uint pl=0; pl<Npl; pl++) {
 			if (!loadFile.exists() && poto==PotentialOptions::thermal && !thermal2) {
 				loadFile = filenameThermalNR<dim>(p,baseFolder);
 				StringPair potExtrasAlt("pot","");
-				int offset = (gaussian? -1: 1);
-				potExtrasAlt.second = nts((int)(stn<int>(potExtras.second)+offset));
+				potExtrasAlt.second = nts(13);
 				(loadFile.Extras).push_back(potExtrasAlt);
+				if (!loadFile.exists()) {
+					loadFile = filenameThermalNR<dim>(p,baseFolder);
+					StringPair potExtrasAlt("pot","");
+					int offset = (gaussian? -1: 1);
+					potExtrasAlt.second = nts((int)(stn<int>(potExtras.second)+offset));
+					(loadFile.Extras).push_back(potExtrasAlt);
+				}
 			}
 			else if (!loadFile.exists() && poto==PotentialOptions::thermalDisjoint && !thermal2) {
 				loadFile = filenameThermalNR<dim>(p,baseFolder);
