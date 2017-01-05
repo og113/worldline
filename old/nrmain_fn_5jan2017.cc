@@ -1079,7 +1079,7 @@ for (uint pl=0; pl<Npl; pl++) {
 								if (thermal2)
 									GaussianThermal2(j, k, xLoop, beta, p.Epsi, repulsion_scale, repulsion);
 								else
-									Gaussian(j, k, xLoop, beta, p.Epsi, repulsion_scale, repulsion);
+									GaussianThermal(j, k, xLoop, beta, p.Epsi, repulsion_scale, repulsion);
 							}
 							else if (poto==PotentialOptions::thermalDisjoint || poto==PotentialOptions::thermalDisjointLR) {
 								if (gaussianLR) {
@@ -1168,13 +1168,13 @@ for (uint pl=0; pl<Npl; pl++) {
 								if (thermal2)
 									mdGaussianThermal2_nr(j, mu, k, xLoop, beta, p.Epsi, repulsion_scale, mds);
 								else 
-									mdGaussian_nr(j, mu, k, xLoop, beta, p.Epsi, repulsion_scale, mds);
+									mdGaussianThermal_nr(j, mu, k, xLoop, beta, p.Epsi, repulsion_scale, mds);
 								if (mu==(dim-1) && atCoord(xLoop,mu,0.0,j)) {
 									sigma = sign((xLoop[j])[dim-2]);
 									if (thermal2)
 										ErgGaussianThermal2_nr(xLoop, j, mu, k, beta, p.Epsi, sigma*repulsion_scale, erg);
 									else
-										ErgGaussian_nr(xLoop, j, mu, k, beta, p.Epsi, sigma*repulsion_scale, erg);
+										ErgGaussianThermal_nr(xLoop, j, mu, k, beta, p.Epsi, sigma*repulsion_scale, erg);
 								}
 							}
 							else if (poto==PotentialOptions::thermalDisjoint || poto==PotentialOptions::thermalDisjointLR) {
@@ -1277,7 +1277,7 @@ for (uint pl=0; pl<Npl; pl++) {
 									if (thermal2)
 										ddGaussianThermal2_nr(j, mu, k, nu, xLoop, beta, p.Epsi, repulsion_scale, dds);
 									else
-										ddGaussian_nr(j, mu, k, nu, xLoop, beta, p.Epsi, repulsion_scale, dds);
+										ddGaussianThermal_nr(j, mu, k, nu, xLoop, beta, p.Epsi, repulsion_scale, dds);
 									//ddGaussian_nr(j, mu, k, nu, xLoop, p.Epsi, repulsion_scale, dds);
 								}
 								else if (poto!=PotentialOptions::dimreg)
