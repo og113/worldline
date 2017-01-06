@@ -162,6 +162,82 @@ static number DDFThermalDtDt(const number& r, const number& t, const number& bet
  (ra*pow(beta,3)*pow(cos((2.0*PI*t)/beta) - cosh((2.0*PI*ra)/beta),3));
 }
 
+// cthr
+static number cthr(const number& x) {
+	if (abs(x)<MIN_NUMBER)
+		return 1.0/3.0;
+	else
+		return 1.0/x*(1.0/tanh(x) - 1.0/x);
+}
+
+/*// cshr
+static number cshr(const number& x) {
+	if (abs(x)<MIN_NUMBER)
+		return -1.0/3.0;
+	else
+		return 1.0/pow(sinh(x),2) - 1.0/pow(x,2);
+}*/
+
+// newr
+static number newr(const number& x) {
+	if (abs(x)<MIN_NUMBER)
+		return 2.0/45.0;
+	else
+		return  (1.0/x*(1.0/tanh(x) - 1.0/x) + (1.0/pow(sinh(x),2) - 1.0/pow(x,2)))/pow(x,2);
+}
+
+// newr2
+static number newr2(const number& x) {
+	if (abs(x)<MIN_NUMBER)
+		return 2.0/315.0;
+	else
+		return pow(cthr(x),2)/pow(x,2) - (5.0*newr(x))/(2.0*pow(x,2));
+}
+
+// FThermal2
+static number FThermal2(const number& r, const number& t, const number& beta, const number& a) {
+	number rt = sqrt(pow(r,2) + pow(t,2));
+	return - 1.0/(4.0*pow(PI,2)*(pow(a,2) + pow(rt,2))) - cthr((PI*sqrt(pow(rt,2)))/beta)/(4.0*pow(beta,2));
+}
+
+// DFThermal2DrOnr
+static number DFThermal2DrOnr(const number& r, const number& t, const number& beta, const number& a) {
+	number rt = sqrt(pow(r,2) + pow(t,2));
+	return  1.0/(2.0*pow(PI,2)*pow(pow(a,2) + pow(rt,2),2)) + (pow(PI,2)*newr((PI*sqrt(pow(rt,2)))/beta))/(4.0*pow(beta,4));
+ }
+
+// DFThermal2Dt
+static number DFThermal2Dt(const number& r, const number& t, const number& beta, const number& a) {
+	number rt = sqrt(pow(r,2) + pow(t,2));
+	return t/(2.0*pow(PI,2)*pow(pow(a,2) + pow(rt,2),2)) + (pow(PI,2)*t*newr((PI*sqrt(pow(rt,2)))/beta))/(4.0*pow(beta,4));
+}
+
+// DDFThermal2DrDr
+static number DDFThermal2DrDr(const number& r, const number& t, const number& beta, const number& a) {
+	number rt = sqrt(pow(r,2) + pow(t,2));
+	return  (-2.0*pow(r,2))/(pow(PI,2)*pow(pow(a,2) + pow(rt,2),3)) + 1.0/(2.0*pow(PI,2)*pow(pow(a,2) + pow(rt,2),2)) \
+ + (pow(PI,2)*newr((PI*sqrt(pow(rt,2)))/beta))/(4.0*pow(beta,4)) \
+ - (pow(PI,4)*pow(r,2)*cthr((PI*sqrt(pow(rt,2)))/beta)*newr((PI*sqrt(pow(rt,2)))/beta))/(2.0*pow(beta,6)) \
+ + (pow(PI,4)*pow(r,2)*newr2((PI*sqrt(pow(rt,2)))/beta))/(2.0*pow(beta,6));
+}
+
+ // DDFThermal2DtDrOnr
+static number DDFThermal2DtDrOnr(const number& r, const number& t, const number& beta, const number& a) {
+	number rt = sqrt(pow(r,2) + pow(t,2));
+	return (-2.0*t)/(pow(PI,2)*pow(pow(a,2) + pow(rt,2),3)) - (pow(PI,4)*t*cthr((PI*sqrt(pow(rt,2)))/beta)*newr((PI*sqrt(pow(rt,2)))/beta))/\
+ 			(2.0*pow(beta,6)) + (pow(PI,4)*t*newr2((PI*sqrt(pow(rt,2)))/beta))/(2.0*pow(beta,6));
+}
+
+// DDFThermal2DtDt
+static number DDFThermal2DtDt(const number& r, const number& t, const number& beta, const number& a) {
+	number rt = sqrt(pow(r,2) + pow(t,2));
+	return pow(a,2)/(2.0*pow(PI,2)*pow(pow(a,2) + pow(rt,2),3)) + (2.0*pow(r,2))/(pow(PI,2)*pow(pow(a,2) + pow(rt,2),3)) \
+ - (3.0*pow(rt,2))/(2.0*pow(PI,2)*pow(pow(a,2) + pow(rt,2),3)) + (pow(PI,2)*newr((PI*sqrt(pow(rt,2)))/beta))/(4.0*pow(beta,4)) \
+ + (pow(PI,4)*pow(r,2)*cthr((PI*sqrt(pow(rt,2)))/beta)*newr((PI*sqrt(pow(rt,2)))/beta))/(2.0*pow(beta,6)) \
+ - (pow(PI,4)*pow(rt,2)*cthr((PI*sqrt(pow(rt,2)))/beta)*newr((PI*sqrt(pow(rt,2)))/beta))/(2.0*pow(beta,6)) \
+ - (pow(PI,4)*pow(r,2)*newr2((PI*sqrt(pow(rt,2)))/beta))/(2.0*pow(beta,6)) + (pow(PI,4)*pow(rt,2)*newr2((PI*sqrt(pow(rt,2)))/beta))/(2.0*pow(beta,6));
+}
+
 // GThermal
 static number GThermal(const number& r, const number& t, const number& beta, const number& a) {
 	return (a*sqrt(PI)*jbdtheta3(t/beta,exp(-(pow(a,2)*pow(PI,2))/pow(beta,2))))/(exp(pow(r,2)/pow(a,2))*beta)/(-pow(2.0*PI,2));
@@ -1625,6 +1701,12 @@ void Vthr (const uint& j, const uint& k, const Loop<Dim>& l, const number& beta,
 	VthGeneric(j,k,l,&FThermal,beta,a,f,result);
 }
 
+// Vth2r
+template <uint Dim>
+void Vth2r (const uint& j, const uint& k, const Loop<Dim>& l, const number& beta, const number& a, const number& f, number& result) {
+	VthGeneric(j,k,l,&FThermal2,beta,a,f,result);
+}
+
 // VthrDisjoint
 template <uint Dim>
 void VthrDisjoint (const uint& j, const uint& k, const Loop<Dim>& l, const number& beta, const number& a, const number& f, number& result) {
@@ -2653,6 +2735,20 @@ void ddVthr_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, con
 	ddVthGeneric(j, mu, k, nu, l, &FThermal, &DFThermalDrOnr,&DFThermalDt,&DDFThermalDrDr,&DDFThermalDtDrOnr,&DDFThermalDtDt, beta, a, f, m);
 }
 
+// mdVth2r_nr
+template<uint Dim>
+void mdVth2r_nr(const uint& j, const uint& mu, const uint& i, const Loop<Dim>& l,\
+					 	const number& beta, const number& a, const number& f, vec& v) {
+	mdVthGeneric(j, mu, i, l, &FThermal2, &DFThermal2DrOnr,&DFThermal2Dt, beta, a, f, v);
+}
+
+// ddVth2r_nr
+template<uint Dim>
+void ddVth2r_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l,\
+						 const number& beta, const number& a, const number& f, mat& m) {
+	ddVthGeneric(j, mu, k, nu, l, &FThermal2, &DFThermal2DrOnr,&DFThermal2Dt,&DDFThermal2DrDr,&DDFThermal2DtDrOnr,&DDFThermal2DtDt, beta, a, f, m);
+}
+
 // mdVthrDisjoint_nr
 template<uint Dim>
 void mdVthrDisjoint_nr(const uint& j, const uint& mu, const uint& i, const Loop<Dim>& l,\
@@ -3095,6 +3191,15 @@ void ErgVthr_nr(const Loop<Dim>& l, const uint& j, const uint& mu, const uint& k
 	erg += f*(-pow(2.0*PI,2))*DX(l,k,mu)*FThermal(r,t,beta,a);
 }
 
+// ErgVth2r_nr
+template<uint Dim>
+void ErgVth2r_nr(const Loop<Dim>& l, const uint& j, const uint& mu, const uint& k, const number& beta, const number& a, const number& f, number& erg) {
+	number r = SpatialDistance(l[j],l[k]);
+	number t = DX(l,k,j,Dim-1);
+
+	erg += f*(-pow(2.0*PI,2))*DX(l,k,mu)*FThermal2(r,t,beta,a);
+}
+
 // ErgVthrDisjoint_nr
 template<uint Dim>
 void ErgVthrDisjoint_nr(const Loop<Dim>& l, const uint& j, const uint& mu, const uint& k, const number& beta, const number& a, const number& f, number& erg) {
@@ -3263,6 +3368,12 @@ void PRVor_nr(const Loop<Dim>& l, const uint& j, const uint& mu, const uint& k, 
 template<uint Dim>
 void PVthr_nr(const Loop<Dim>& l, const uint& j, const uint& mu, const uint& k, const number& beta, const number& a, const number& f, vec& v) {	
 	ErgVthr_nr(l,j,mu,k,beta,a,2.0*f,v[Dim*j+mu]);
+}
+
+// PVth2r_nr
+template<uint Dim>
+void PVth2r_nr(const Loop<Dim>& l, const uint& j, const uint& mu, const uint& k, const number& beta, const number& a, const number& f, vec& v) {	
+	ErgVth2r_nr(l,j,mu,k,beta,a,2.0*f,v[Dim*j+mu]);
 }
 
 // PRVthr_nr
@@ -3732,6 +3843,7 @@ template void ErgIn_nr<2>(const Loop<2>& l, const uint& loc, const uint& mu, con
 template void ErgInDisjoint_nr<2>(const Loop<2>& l, const uint& loc, const uint& mu, const number& n, const number& beta, const number& f, number& erg);
 template void ErgVor_nr<2>(const Loop<2>& l, const uint& j, const uint& mu, const uint& k, const number& a, const number& f, number& erg);
 template void ErgVthr_nr<2>(const Loop<2>& l, const uint& j, const uint& mu, const uint& k, const number& beta, const number& a, const number& f, number& erg);
+template void ErgVth2r_nr<2>(const Loop<2>& l, const uint& j, const uint& mu, const uint& k, const number& beta, const number& a, const number& f, number& erg);
 template void ErgVthrDisjoint_nr<2>(const Loop<2>& l, const uint& j, const uint& mu, const uint& k, const number& beta, const number& a, const number& f, number& erg);
 template void ErgVthrDisjointLR_nr<2>(const Loop<2>& l, const uint& j, const uint& mu, const uint& k, const number& beta, const number& a, const number& f, number& erg);
 template void ErgGaussian_nr<2>(const Loop<2>& l, const uint& loc, const uint& mu, const uint& k, const number& a, const number& f, number& erg);
@@ -3756,6 +3868,7 @@ template void PInDisjoint_nr<2>(const Loop<2>& l, const uint& loc, const uint& m
 template void PVor_nr<2>(const Loop<2>& l, const uint& j, const uint& mu, const uint& k, const number& a, const number& f, vec& v);
 template void PRVor_nr<2>(const Loop<2>& l, const uint& j, const uint& mu, const uint& k, const uint& nu, const number& a, const number& f, vec& v);
 template void PVthr_nr<2>(const Loop<2>& l, const uint& j, const uint& mu, const uint& k, const number& beta, const number& a, const number& f, vec& v);
+template void PVth2r_nr<2>(const Loop<2>& l, const uint& j, const uint& mu, const uint& k, const number& beta, const number& a, const number& f, vec& v);
 template void PRVthr_nr<2>(const Loop<2>& l, const uint& j, const uint& mu, const uint& k, const uint& nu, const number& beta, const number& a, const number& f, vec& v);
 template void PVthrDisjoint_nr<2>(const Loop<2>& l, const uint& j, const uint& mu, const uint& k, const number& beta, const number& a, const number& f, vec& v);
 template void PRVthrDisjoint_nr<2>(const Loop<2>& l, const uint& j, const uint& mu, const uint& k, const uint& nu, const number& beta, const number& a, const number& f, vec& v);
@@ -3787,6 +3900,7 @@ template void Vlr<2>(const uint& j, const uint& k, const Loop<2>& l, const numbe
 template void Ver<2>(const uint& j, const uint& k, const Loop<2>& l, const number& a, const number& f, number& result);
 template void Vdr<2>(const uint& j, const uint& k, const Loop<2>& l, const number& a, const number& f, number& result);
 template void Vthr<2>(const uint& j, const uint& k, const Loop<2>& l, const number& beta, const number& a, const number& f, number& result);
+template void Vth2r<2>(const uint& j, const uint& k, const Loop<2>& l, const number& beta, const number& a, const number& f, number& result);
 template void VthrDisjoint<2> (const uint& j, const uint& k, const Loop<2>& l, const number& beta, const number& a, const number& f, number& result);
 template void VthrDisjointLR<2> (const uint& j, const uint& k, const Loop<2>& l, const number& beta, const number& a, const number& f, number& result);
 template void VnonrelDisjoint<2> (const uint& j, const Loop<2>& l, const number& beta, const number& f, number& result);
@@ -3795,6 +3909,8 @@ template void mdVor_nr<2>(const uint& j, const uint& mu, const uint& i, const Lo
 template void mdVer_nr<2>(const uint& j, const uint& mu, const uint& i, const Loop<2>& l, const number& a, const number& f, vec& v);
 template void mdVdr_nr<2>(const uint& j, const uint& mu, const uint& i, const Loop<2>& l, const number& a, const number& f, vec& v);
 template void mdVthr_nr<2>(const uint& j, const uint& mu, const uint& i, const Loop<2>& l, \
+			const number& beta, const number& a, const number& f, vec& v);
+template void mdVth2r_nr<2>(const uint& j, const uint& mu, const uint& i, const Loop<2>& l, \
 			const number& beta, const number& a, const number& f, vec& v);
 template void mdVnonrelDisjoint_nr<2> (const uint& j, const uint& mu, const Loop<2>& l, const number& beta, const number& f, vec& v);
 template void mdVnonrelrDisjoint_nr<2> (const uint& j, const uint& mu, const Loop<2>& l, const number& beta, const number& a, const number& f, vec& v);
@@ -3822,6 +3938,8 @@ template void ddVer_nr<2>(const uint& j, const uint& mu, const uint& k, const ui
 template void ddVdr_nr<2>(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<2>& l,\
 						 const number& a, const number& f, mat& m);
 template void ddVthr_nr<2>(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<2>& l,\
+						 const number& beta, const number& a, const number& f, mat& m);
+template void ddVth2r_nr<2>(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<2>& l,\
 						 const number& beta, const number& a, const number& f, mat& m);
 template void ddVthrDisjoint_nr<2>(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<2>& l,\
 						 const number& beta, const number& a, const number& f, mat& m);
@@ -3860,7 +3978,7 @@ template void ddVlr_nr<2>(const uint& j, const uint& mu, const uint& k, const ui
 
 
 
-// dim 4
+// dim 2
 template void L<4>(const uint& j, const Loop<4>& l, const number& f, number& result);
 template void LDisjoint<4>(const uint& j, const Loop<4>& l, const number& beta, const number& f, number& result);
 template void DistPow<4>(const uint& j, const Loop<4>& l, const number& w, const number& f, number& result);
@@ -3901,9 +4019,9 @@ template void KGMaxDisjoint<4>(const uint& j, const Loop<4>& l, const uint& ex1,
 template void KGMaxPlaneDisjoint<4>(const uint& j, const Loop<4>& l, const number& beta, const number& f, number& result);
 template void KGMaxPlaneDisjoint<4>(const uint& j, const Loop<4>& l, const uint& ex1, const uint& ex2, const number& beta, const number& f, number& result);
 template void AccMax<4>(const uint& j, const Loop<4>& l, const number& f, number& result);
-template void AccMax<4>(const uint& j, const Loop<4>& l, const uint& ex1, const uint& ex4, const number& f, number& result);
+template void AccMax<4>(const uint& j, const Loop<4>& l, const uint& ex1, const uint& ex2, const number& f, number& result);
 template void AccMaxDisjoint<4>(const uint& j, const Loop<4>& l, const number& beta, const number& f, number& result);
-template void AccMaxDisjoint<4>(const uint& j, const Loop<4>& l, const uint& ex1, const uint& ex4, const number& beta, const number& f, number& result);
+template void AccMaxDisjoint<4>(const uint& j, const Loop<4>& l, const uint& ex1, const uint& ex2, const number& beta, const number& f, number& result);
 template void mdPX_nr<4>(const Loop<4>& l, const uint& loc, const Point<4>& P, const number& f, vec& v);
 template void mdL_nr<4>(const uint& j, const uint& mu, const Loop<4>& l, const number& p, vec& v);
 template void ddL_nr<4>(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<4>& l, const number& p, mat& m);
@@ -3917,13 +4035,13 @@ template void ddS0_nr<4>(const uint& j, const uint& mu, const uint& k, const uin
 template void mdS0Disjoint_nr<4>(const uint& j, const uint& mu, const Loop<4>& l, const number& beta, const number& p, vec& v);
 template void ddS0Disjoint_nr<4>(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<4>& l,\
 			const number& p, mat& m);
-template void mdsqrtS0_nr<4>(const uint& j, const uint& mu, const Loop<4>& l, const number& sqrt4s0, const number& p, vec& v);
+template void mdsqrtS0_nr<4>(const uint& j, const uint& mu, const Loop<4>& l, const number& sqrt2s0, const number& p, vec& v);
 template void ddsqrtS0_nr<4>(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<4>& l,\
-								 const number& sqrt4s0, const number& p, mat& m);
-template void mdsqrtS0Disjoint_nr<4>(const uint& j, const uint& mu, const Loop<4>& l, const number& sqrt4s0,\
+								 const number& sqrt2s0, const number& p, mat& m);
+template void mdsqrtS0Disjoint_nr<4>(const uint& j, const uint& mu, const Loop<4>& l, const number& sqrt2s0,\
 			 const number& beta, const number& p, vec& v);
 template void ddsqrtS0Disjoint_nr<4>(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<4>& l,\
-								 const number& sqrt4s0, const number& beta, const number& p, mat& m);
+								 const number& sqrt2s0, const number& beta, const number& p, mat& m);
 template void mdI0_nr<4>(const uint& j, const uint& mu, const Loop<4>& l, const number& f, vec& v);
 template void ddI0_nr<4>(const uint& j, const uint& mu, const uint& k, const uint& nu, \
 							const Loop<4>& l, const number& f, mat& m);	
@@ -3942,14 +4060,15 @@ template void ErgS0_nr<4>(const Loop<4>& l, const uint& loc, const uint& mu, con
 template void ErgS0Disjoint_nr<4>(const Loop<4>& l, const uint& loc, const uint& mu, const number& beta, const number& f, number& erg);
 template void ErgL_nr<4>(const Loop<4>& l, const uint& loc, const uint& mu, const number& f, number& erg);
 template void ErgLDisjoint_nr<4>(const Loop<4>& l, const uint& loc, const uint& mu, const number& beta, const number& f, number& erg);
-template void ErgsqrtS0_nr<4>(const Loop<4>& l, const uint& loc, const uint& mu, const number& sqrt4s0, const number& f, number& erg);
-template void ErgsqrtS0Disjoint_nr<4>(const Loop<4>& l, const uint& loc, const uint& mu, const number& sqrt4s0, const number& beta, const number& f, number& erg);
+template void ErgsqrtS0_nr<4>(const Loop<4>& l, const uint& loc, const uint& mu, const number& sqrt2s0, const number& f, number& erg);
+template void ErgsqrtS0Disjoint_nr<4>(const Loop<4>& l, const uint& loc, const uint& mu, const number& sqrt2s0, const number& beta, const number& f, number& erg);
 template void ErgI0_nr<4>(const Loop<4>& l, const uint& loc, const uint& mu, const number& f, number& erg);
 template void ErgI0Disjoint_nr<4>(const Loop<4>& l, const uint& loc, const uint& mu, const number& beta, const number& f, number& erg);
 template void ErgIn_nr<4>(const Loop<4>& l, const uint& loc, const uint& mu, const number& n, const number& f, number& erg);
 template void ErgInDisjoint_nr<4>(const Loop<4>& l, const uint& loc, const uint& mu, const number& n, const number& beta, const number& f, number& erg);
 template void ErgVor_nr<4>(const Loop<4>& l, const uint& j, const uint& mu, const uint& k, const number& a, const number& f, number& erg);
 template void ErgVthr_nr<4>(const Loop<4>& l, const uint& j, const uint& mu, const uint& k, const number& beta, const number& a, const number& f, number& erg);
+template void ErgVth2r_nr<4>(const Loop<4>& l, const uint& j, const uint& mu, const uint& k, const number& beta, const number& a, const number& f, number& erg);
 template void ErgVthrDisjoint_nr<4>(const Loop<4>& l, const uint& j, const uint& mu, const uint& k, const number& beta, const number& a, const number& f, number& erg);
 template void ErgVthrDisjointLR_nr<4>(const Loop<4>& l, const uint& j, const uint& mu, const uint& k, const number& beta, const number& a, const number& f, number& erg);
 template void ErgGaussian_nr<4>(const Loop<4>& l, const uint& loc, const uint& mu, const uint& k, const number& a, const number& f, number& erg);
@@ -3965,8 +4084,8 @@ template void PS0_nr<4>(const Loop<4>& l, const uint& loc, const uint& mu, const
 template void PS0Disjoint_nr<4>(const Loop<4>& l, const uint& loc, const uint& mu, const number& beta, const number& f, vec& v);
 template void PL_nr<4>(const Loop<4>& l, const uint& loc, const uint& mu, const number& f, vec& v);
 template void PLDisjoint_nr<4>(const Loop<4>& l, const uint& loc, const uint& mu, const number& beta, const number& f, vec& v);
-template void PsqrtS0_nr<4>(const Loop<4>& l, const uint& loc, const uint& mu, const number& sqrt4s0, const number& f, vec& v);
-template void PsqrtS0Disjoint_nr<4>(const Loop<4>& l, const uint& loc, const uint& mu, const number& sqrt4s0, const number& beta, const number& f, vec& v);
+template void PsqrtS0_nr<4>(const Loop<4>& l, const uint& loc, const uint& mu, const number& sqrt2s0, const number& f, vec& v);
+template void PsqrtS0Disjoint_nr<4>(const Loop<4>& l, const uint& loc, const uint& mu, const number& sqrt2s0, const number& beta, const number& f, vec& v);
 template void PI0_nr<4>(const Loop<4>& l, const uint& loc, const uint& mu, const number& f, vec& v);
 template void PI0Disjoint_nr<4>(const Loop<4>& l, const uint& loc, const uint& mu, const number& beta, const number& f, vec& v);
 template void PIn_nr<4>(const Loop<4>& l, const uint& loc, const uint& mu, const number& n, const number& f, vec& v);
@@ -3974,6 +4093,7 @@ template void PInDisjoint_nr<4>(const Loop<4>& l, const uint& loc, const uint& m
 template void PVor_nr<4>(const Loop<4>& l, const uint& j, const uint& mu, const uint& k, const number& a, const number& f, vec& v);
 template void PRVor_nr<4>(const Loop<4>& l, const uint& j, const uint& mu, const uint& k, const uint& nu, const number& a, const number& f, vec& v);
 template void PVthr_nr<4>(const Loop<4>& l, const uint& j, const uint& mu, const uint& k, const number& beta, const number& a, const number& f, vec& v);
+template void PVth2r_nr<4>(const Loop<4>& l, const uint& j, const uint& mu, const uint& k, const number& beta, const number& a, const number& f, vec& v);
 template void PRVthr_nr<4>(const Loop<4>& l, const uint& j, const uint& mu, const uint& k, const uint& nu, const number& beta, const number& a, const number& f, vec& v);
 template void PVthrDisjoint_nr<4>(const Loop<4>& l, const uint& j, const uint& mu, const uint& k, const number& beta, const number& a, const number& f, vec& v);
 template void PRVthrDisjoint_nr<4>(const Loop<4>& l, const uint& j, const uint& mu, const uint& k, const uint& nu, const number& beta, const number& a, const number& f, vec& v);
@@ -4005,6 +4125,7 @@ template void Vlr<4>(const uint& j, const uint& k, const Loop<4>& l, const numbe
 template void Ver<4>(const uint& j, const uint& k, const Loop<4>& l, const number& a, const number& f, number& result);
 template void Vdr<4>(const uint& j, const uint& k, const Loop<4>& l, const number& a, const number& f, number& result);
 template void Vthr<4>(const uint& j, const uint& k, const Loop<4>& l, const number& beta, const number& a, const number& f, number& result);
+template void Vth2r<4>(const uint& j, const uint& k, const Loop<4>& l, const number& beta, const number& a, const number& f, number& result);
 template void VthrDisjoint<4> (const uint& j, const uint& k, const Loop<4>& l, const number& beta, const number& a, const number& f, number& result);
 template void VthrDisjointLR<4> (const uint& j, const uint& k, const Loop<4>& l, const number& beta, const number& a, const number& f, number& result);
 template void VnonrelDisjoint<4> (const uint& j, const Loop<4>& l, const number& beta, const number& f, number& result);
@@ -4013,6 +4134,8 @@ template void mdVor_nr<4>(const uint& j, const uint& mu, const uint& i, const Lo
 template void mdVer_nr<4>(const uint& j, const uint& mu, const uint& i, const Loop<4>& l, const number& a, const number& f, vec& v);
 template void mdVdr_nr<4>(const uint& j, const uint& mu, const uint& i, const Loop<4>& l, const number& a, const number& f, vec& v);
 template void mdVthr_nr<4>(const uint& j, const uint& mu, const uint& i, const Loop<4>& l, \
+			const number& beta, const number& a, const number& f, vec& v);
+template void mdVth2r_nr<4>(const uint& j, const uint& mu, const uint& i, const Loop<4>& l, \
 			const number& beta, const number& a, const number& f, vec& v);
 template void mdVnonrelDisjoint_nr<4> (const uint& j, const uint& mu, const Loop<4>& l, const number& beta, const number& f, vec& v);
 template void mdVnonrelrDisjoint_nr<4> (const uint& j, const uint& mu, const Loop<4>& l, const number& beta, const number& a, const number& f, vec& v);
@@ -4040,6 +4163,8 @@ template void ddVer_nr<4>(const uint& j, const uint& mu, const uint& k, const ui
 template void ddVdr_nr<4>(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<4>& l,\
 						 const number& a, const number& f, mat& m);
 template void ddVthr_nr<4>(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<4>& l,\
+						 const number& beta, const number& a, const number& f, mat& m);
+template void ddVth2r_nr<4>(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<4>& l,\
 						 const number& beta, const number& a, const number& f, mat& m);
 template void ddVthrDisjoint_nr<4>(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<4>& l,\
 						 const number& beta, const number& a, const number& f, mat& m);
@@ -4073,4 +4198,5 @@ template void ddGaussianLRDisjoint_nr<4> (const uint& j, const uint& mu, const u
 						 const number& beta, const number& a, const number& f, mat& m);
 template void mdVlr_nr<4>(const uint& j, const uint& mu, const uint& i, const Loop<4>& l, const number& a, const number& f, vec& v);
 template void ddVlr_nr<4>(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<4>& l,\
-						 const number& a, const number& f, mat& m);
+						 const number& a, const number& f, mat& m);					 
+
