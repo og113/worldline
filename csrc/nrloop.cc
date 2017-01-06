@@ -170,13 +170,13 @@ static number cthr(const number& x) {
 		return 1.0/x*(1.0/tanh(x) - 1.0/x);
 }
 
-// cshr
+/*// cshr
 static number cshr(const number& x) {
 	if (abs(x)<MIN_NUMBER)
 		return -1.0/3.0;
 	else
 		return 1.0/pow(sinh(x),2) - 1.0/pow(x,2);
-}
+}*/
 
 // newr
 static number newr(const number& x) {
@@ -186,61 +186,56 @@ static number newr(const number& x) {
 		return  (1.0/x*(1.0/tanh(x) - 1.0/x) + (1.0/pow(sinh(x),2) - 1.0/pow(x,2)))/pow(x,2);
 }
 
+// newr2
+static number newr2(const number& x) {
+	if (abs(x)<MIN_NUMBER)
+		return 2.0/315.0;
+	else
+		return pow(cthr(x),2)/pow(x,2) - (5.0*newr(x))/(2.0*pow(x,2));
+}
+
 // FThermal2
 static number FThermal2(const number& r, const number& t, const number& beta, const number& a) {
-	number result = - 1.0/(4.0*pow(PI,2)*(pow(a,2) + pow(r,2) + pow(t,2)));
-	if (abs(t)>MIN_NUMBER)
-		result += - cthr((PI*r)/t)/(4.0*pow(t,2));
-	return result;
+	number rt = sqrt(pow(r,2) + pow(t,2));
+	return - 1.0/(4.0*pow(PI,2)*(pow(a,2) + pow(rt,2))) - cthr((PI*sqrt(pow(rt,2)))/beta)/(4.0*pow(beta,2));
 }
 
 // DFThermal2DrOnr
 static number DFThermal2DrOnr(const number& r, const number& t, const number& beta, const number& a) {
-	number result =  1.0/(2.0*pow(PI,2)*pow(pow(a,2) + pow(r,2) + pow(t,2),2)) ;
-	if (abs(t)>MIN_NUMBER)
-		result += + (pow(PI,2)*newr((PI*r)/t))/(4.0*pow(t,4));
-	return result;
+	number rt = sqrt(pow(r,2) + pow(t,2));
+	return  1.0/(2.0*pow(PI,2)*pow(pow(a,2) + pow(rt,2),2)) + (pow(PI,2)*newr((PI*sqrt(pow(rt,2)))/beta))/(4.0*pow(beta,4));
  }
 
 // DFThermal2Dt
 static number DFThermal2Dt(const number& r, const number& t, const number& beta, const number& a) {
-	number result =  t/(2.0*pow(PI,2)*pow(pow(a,2) + pow(r,2) + pow(t,2),2)) ;
-	if (abs(t)>MIN_NUMBER)
-		result += - cshr((PI*r)/t)/(4.0*pow(t,3)) + cthr((PI*r)/t)/(4.0*pow(t,3));
-	return result;
+	number rt = sqrt(pow(r,2) + pow(t,2));
+	return t/(2.0*pow(PI,2)*pow(pow(a,2) + pow(rt,2),2)) + (pow(PI,2)*t*newr((PI*sqrt(pow(rt,2)))/beta))/(4.0*pow(beta,4));
 }
 
 // DDFThermal2DrDr
 static number DDFThermal2DrDr(const number& r, const number& t, const number& beta, const number& a) {
-	number result =  (-2.0*pow(r,2))/(pow(PI,2)*pow(pow(a,2) + pow(r,2) + pow(t,2),3)) \
-			+ 1.0/(2.0*pow(PI,2)*pow(pow(a,2) + pow(r,2) + pow(t,2),2));
-	if (abs(t)>MIN_NUMBER)
-		result += + (pow(PI,2)*pow(cthr((PI*r)/t),2))/(2.0*pow(t,4)) \
- 			- (pow(PI,2)*newr((PI*r)/t))/pow(t,4) \
- 			- (pow(PI,4)*pow(r,2)*cthr((PI*r)/t)*newr((PI*r)/t))/(2.0*pow(t,6));
-	return result;
+	number rt = sqrt(pow(r,2) + pow(t,2));
+	return  (-2.0*pow(r,2))/(pow(PI,2)*pow(pow(a,2) + pow(rt,2),3)) + 1.0/(2.0*pow(PI,2)*pow(pow(a,2) + pow(rt,2),2)) \
+ + (pow(PI,2)*newr((PI*sqrt(pow(rt,2)))/beta))/(4.0*pow(beta,4)) \
+ - (pow(PI,4)*pow(r,2)*cthr((PI*sqrt(pow(rt,2)))/beta)*newr((PI*sqrt(pow(rt,2)))/beta))/(2.0*pow(beta,6)) \
+ + (pow(PI,4)*pow(r,2)*newr2((PI*sqrt(pow(rt,2)))/beta))/(2.0*pow(beta,6));
 }
 
  // DDFThermal2DtDrOnr
 static number DDFThermal2DtDrOnr(const number& r, const number& t, const number& beta, const number& a) {
-	number result =  (-2.0*t)/(pow(PI,2)*pow(pow(a,2) + pow(r,2) + pow(t,2),3));
-	if (abs(t)>MIN_NUMBER)
-		result += - (pow(PI,2)*pow(cthr((PI*r)/t),2))/(2.0*pow(t,5)) \
- 				+ (pow(PI,2)*newr((PI*r)/t))/(4.0*pow(t,5)) \
- 				+ (pow(PI,4)*pow(r,2)*cthr((PI*r)/t)*newr((PI*r)/t))/(2.0*pow(t,7));
-	return result;
+	number rt = sqrt(pow(r,2) + pow(t,2));
+	return (-2.0*t)/(pow(PI,2)*pow(pow(a,2) + pow(rt,2),3)) - (pow(PI,4)*t*cthr((PI*sqrt(pow(rt,2)))/beta)*newr((PI*sqrt(pow(rt,2)))/beta))/\
+ 			(2.0*pow(beta,6)) + (pow(PI,4)*t*newr2((PI*sqrt(pow(rt,2)))/beta))/(2.0*pow(beta,6));
 }
 
 // DDFThermal2DtDt
 static number DDFThermal2DtDt(const number& r, const number& t, const number& beta, const number& a) {
-	number result =  pow(a,2)/(2.0*pow(PI,2)*pow(pow(a,2) + pow(r,2) + pow(t,2),3)) \
-				+ pow(r,2)/(2.0*pow(PI,2)*pow(pow(a,2) + pow(r,2) + pow(t,2),3)) \
- 				- (3.0*pow(t,2))/(2.0*pow(PI,2)*pow(pow(a,2) + pow(r,2) + pow(t,2),3)) ;
-	if (abs(t)>MIN_NUMBER)
-		result += + cshr((PI*r)/t)/(2.0*pow(t,4)) \
-				- cthr((PI*r)/t)/pow(t,4) \
- 				- (pow(PI,2)*pow(r,2)*cshr((PI*r)/t)*cthr((PI*r)/t))/(2.0*pow(t,6));
-	return result;
+	number rt = sqrt(pow(r,2) + pow(t,2));
+	return pow(a,2)/(2.0*pow(PI,2)*pow(pow(a,2) + pow(rt,2),3)) + (2.0*pow(r,2))/(pow(PI,2)*pow(pow(a,2) + pow(rt,2),3)) \
+ - (3.0*pow(rt,2))/(2.0*pow(PI,2)*pow(pow(a,2) + pow(rt,2),3)) + (pow(PI,2)*newr((PI*sqrt(pow(rt,2)))/beta))/(4.0*pow(beta,4)) \
+ + (pow(PI,4)*pow(r,2)*cthr((PI*sqrt(pow(rt,2)))/beta)*newr((PI*sqrt(pow(rt,2)))/beta))/(2.0*pow(beta,6)) \
+ - (pow(PI,4)*pow(rt,2)*cthr((PI*sqrt(pow(rt,2)))/beta)*newr((PI*sqrt(pow(rt,2)))/beta))/(2.0*pow(beta,6)) \
+ - (pow(PI,4)*pow(r,2)*newr2((PI*sqrt(pow(rt,2)))/beta))/(2.0*pow(beta,6)) + (pow(PI,4)*pow(rt,2)*newr2((PI*sqrt(pow(rt,2)))/beta))/(2.0*pow(beta,6));
 }
 
 // GThermal

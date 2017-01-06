@@ -96,6 +96,7 @@ bool alltests = false; // doing alltests
 bool redo = true;
 bool redoErrors = true;
 bool thermal2 = true;
+bool onlyselfreg = true;
 string baseFolder = "";
 string printOpts = "";
 string potOpts = "";
@@ -150,6 +151,7 @@ if (argc % 2 && argc>1) {
 		else if (id.compare("redo")==0) redo = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("redoErrors")==0) redoErrors = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("thermal2")==0) thermal2 = (stn<uint>(argv[2*j+2])!=0);
+		else if (id.compare("onlyselfreg")==0) onlyselfreg = (stn<uint>(argv[2*j+2])!=0);
 		else {
 			cerr << "argv id " << id << " not understood" << endl;
 			return 1;
@@ -244,6 +246,8 @@ if (!disjoint)
 	gaussianLR = false;
 if (gaussianLR)
 	gaussian = true;
+if (onlyselfreg)
+	thermal2 = false;
 if (thermal2)
 	gaussian = true;
 
@@ -254,12 +258,14 @@ if (disjoint) { // some defaults to save time typing, not necessary, feel free t
 }
 
 StringPair potExtras("pot",nts((int)poto));
-if ((int)poto<5 && !thermal2)
+if ((int)poto<5 && !thermal2 && !onlyselfreg)
 	potExtras.second = nts(2*(int)poto + (int)gaussian);
-else if (!thermal2)
+else if (!thermal2 && !onlyselfreg)
 	potExtras.second = nts(10 + 3*((int)poto-5) + (int)gaussian + (int)gaussianLR);
-else if (!disjoint)
+else if (!disjoint && !onlyselfreg)
 	potExtras.second = nts(13);
+else if (!disjoint && onlyselfreg)
+	potExtras.second = nts(16);
 else if (poto == PotentialOptions::thermalDisjoint)
 	potExtras.second = nts(14); // this is all a bit messy now but whatever
 else if (poto == PotentialOptions::thermalDisjointLR)
@@ -579,14 +585,11 @@ for (uint pl=0; pl<Npl; pl++) {
 			}
 			if (!loadFile.exists() && poto==PotentialOptions::thermal && !thermal2) {
 				loadFile = filenameThermalNR<dim>(p,baseFolder);
-				StringPair potExtrasAlt("pot","");
-				potExtrasAlt.second = nts(13);
+				StringPair potExtrasAlt("pot","13");
 				(loadFile.Extras).push_back(potExtrasAlt);
 				if (!loadFile.exists()) {
 					loadFile = filenameThermalNR<dim>(p,baseFolder);
-					StringPair potExtrasAlt("pot","");
-					int offset = (gaussian? -1: 1);
-					potExtrasAlt.second = nts((int)(stn<int>(potExtras.second)+offset));
+					StringPair potExtrasAlt("pot","8");
 					(loadFile.Extras).push_back(potExtrasAlt);
 				}
 			}
@@ -1059,8 +1062,12 @@ for (uint pl=0; pl<Npl; pl++) {
 							Ver(j, k, xLoop, p.Epsi, g, v);
 						else if (poto==PotentialOptions::dimreg)
 							Vdr(j, k, xLoop, p.Epsi, g, v);
-						else if (poto==PotentialOptions::thermal)
-							Vthr(j, k, xLoop, beta, p.Epsi, g, v);
+						else if (poto==PotentialOptions::thermal) {
+							if (onlyselfreg)
+								Vth2r(j, k, xLoop, beta, p.Epsi, g, v);
+							else
+								Vthr(j, k, xLoop, beta, p.Epsi, g, v);
+						}
 						else if (poto==PotentialOptions::thermalDisjoint)
 							VthrDisjoint(j, k, xLoop, beta, p.Epsi, g, v);
 						else if (poto==PotentialOptions::thermalDisjointLR)
@@ -1118,10 +1125,19 @@ for (uint pl=0; pl<Npl; pl++) {
 						else if (poto==PotentialOptions::dimreg)
 							mdVdr_nr(j, mu, k, xLoop, p.Epsi, g, mds);
 						else if (poto==PotentialOptions::thermal) {
-							mdVthr_nr(j, mu, k, xLoop, beta, p.Epsi, g, mds);
-							if (mu==(dim-1) && atCoord(xLoop,mu,0.0,j)) {
-								sigma = sign((xLoop[j])[dim-2]);
-								ErgVthr_nr(xLoop, j, mu, k, beta, p.Epsi, sigma*g, erg);
+							if (onlyselfreg) {
+								mdVth2r_nr(j, mu, k, xLoop, beta, p.Epsi, g, mds);
+								if (mu==(dim-1) && atCoord(xLoop,mu,0.0,j)) {
+									sigma = sign((xLoop[j])[dim-2]);
+									ErgVth2r_nr(xLoop, j, mu, k, beta, p.Epsi, sigma*g, erg);
+								}
+							}
+							else {
+								mdVthr_nr(j, mu, k, xLoop, beta, p.Epsi, g, mds);
+								if (mu==(dim-1) && atCoord(xLoop,mu,0.0,j)) {
+									sigma = sign((xLoop[j])[dim-2]);
+									ErgVthr_nr(xLoop, j, mu, k, beta, p.Epsi, sigma*g, erg);
+								}
 							}
 						}
 						else if (poto==PotentialOptions::thermalDisjoint) {
@@ -1256,7 +1272,10 @@ for (uint pl=0; pl<Npl; pl++) {
 								ddVdr_nr(j, mu, k, nu, xLoop, p.Epsi, g, dds);	
 							}
 							else if (poto==PotentialOptions::thermal) {
-								ddVthr_nr(j, mu, k, nu, xLoop, beta, p.Epsi, g, dds);
+								if (onlyselfreg)
+									ddVth2r_nr(j, mu, k, nu, xLoop, beta, p.Epsi, g, dds);
+								else
+									ddVthr_nr(j, mu, k, nu, xLoop, beta, p.Epsi, g, dds);
 							}
 							else if (poto==PotentialOptions::thermalDisjoint) {
 								ddVthrDisjoint_nr(j, mu, k, nu, xLoop, beta, p.Epsi, g, dds);
