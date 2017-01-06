@@ -36,6 +36,7 @@ else
 	sed -i 's/Cos(/cos(/g' $1
 	sed -i 's/Sin(/sin(/g' $1
 	sed -i 's/Cosh(/cosh(/g' $1
+	sed -i 's/Coth(/coth(/g' $1
 	sed -i 's/Sinh(/sinh(/g' $1
 	sed -i 's/\\\[Mu\]/mu/g' $1
 	sed -i 's/\\\[Nu\]/nu/g' $1

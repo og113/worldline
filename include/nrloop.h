@@ -116,6 +116,10 @@ void Vdr (const uint& j, const uint& k, const Loop<Dim>& l, const number& a, con
 template <uint Dim>
 void Vthr (const uint& j, const uint& k, const Loop<Dim>& l, const number& beta, const number& a, const number& f, number& result);
 
+// Vth2r
+template <uint Dim>
+void Vth2r (const uint& j, const uint& k, const Loop<Dim>& l, const number& beta, const number& a, const number& f, number& result);
+
 // VthrDisjoint
 template <uint Dim>
 void VthrDisjoint (const uint& j, const uint& k, const Loop<Dim>& l, const number& beta, const number& a, const number& f, number& result);
@@ -367,6 +371,11 @@ template<uint Dim>
 void mdVthr_nr(const uint& j, const uint& mu, const uint& i, const Loop<Dim>& l,\
 					 	const number& beta, const number& a, const number& f, vec& v);
 					 	
+// mdVth2r_nr
+template<uint Dim>
+void mdVth2r_nr(const uint& j, const uint& mu, const uint& i, const Loop<Dim>& l,\
+					 	const number& beta, const number& a, const number& f, vec& v);
+					 	
 // mdVthrDisjoint_nr
 template<uint Dim>
 void mdVthrDisjoint_nr(const uint& j, const uint& mu, const uint& i, const Loop<Dim>& l,\
@@ -450,6 +459,11 @@ void ddVdr_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, cons
 // ddVthr_nr
 template<uint Dim>
 void ddVthr_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l,\
+						 const number& beta, const number& a, const number& f, mat& m);
+						 
+// ddVth2r_nr
+template<uint Dim>
+void ddVth2r_nr(const uint& j, const uint& mu, const uint& k, const uint& nu, const Loop<Dim>& l,\
 						 const number& beta, const number& a, const number& f, mat& m);
 						 
 // ddVthrDisjoint_nr
@@ -572,6 +586,10 @@ void ErgVor_nr(const Loop<Dim>& l, const uint& j, const uint& mu, const uint& k,
 // ErgVthr_nr
 template<uint Dim>
 void ErgVthr_nr(const Loop<Dim>& l, const uint& j, const uint& mu, const uint& k, const number& beta, const number& a, const number& f, number& erg);
+
+// ErgVth2r_nr
+template<uint Dim>
+void ErgVth2r_nr(const Loop<Dim>& l, const uint& j, const uint& mu, const uint& k, const number& beta, const number& a, const number& f, number& erg);
 
 // ErgVthrDisjoint_nr
 template<uint Dim>
