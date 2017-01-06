@@ -687,6 +687,10 @@ void PRVor_nr(const Loop<Dim>& l, const uint& j, const uint& mu, const uint& k, 
 template<uint Dim>
 void PVthr_nr(const Loop<Dim>& l, const uint& j, const uint& mu, const uint& k, const number& beta, const number& a, const number& f, vec& v);
 
+// PVth2r_nr
+template<uint Dim>
+void PVth2r_nr(const Loop<Dim>& l, const uint& j, const uint& mu, const uint& k, const number& beta, const number& a, const number& f, vec& v);
+
 // PRVthr_nr
 template<uint Dim>
 void PRVthr_nr(const Loop<Dim>& l, const uint& j, const uint& mu, const uint& k, const uint& nu, const number& beta, const number& a, const number& f, vec& v);
