@@ -244,6 +244,8 @@ if (!potOpts.empty()) {
 }
 if (!disjoint)
 	gaussianLR = false;
+else
+	onlyselfreg = false;
 if (gaussianLR)
 	gaussian = true;
 if (onlyselfreg)
