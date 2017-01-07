@@ -96,7 +96,7 @@ bool alltests = false; // doing alltests
 bool redo = true;
 bool redoErrors = true;
 bool thermal2 = true;
-bool onlyselfreg = true;
+bool onlyselfreg = false;
 string baseFolder = "";
 string printOpts = "";
 string potOpts = "";
@@ -385,7 +385,7 @@ NewtonRaphsonData errors(errorsFile,idSizeErrors,datumSizeErrors);
 
 // timenumber
 string timenumber = currentDateTime();
-cout << "timenumber: " << timenumber << endl;
+cout << "timenumber: " << timenumber << ", pot: " << potExtras.second << endl;
 
 /*----------------------------------------------------------------------------------------------------------------------------
 	2 - beginning parameter loop
