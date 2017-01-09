@@ -9,10 +9,11 @@ if (outFile ne 'gui') \
 set term png size 1600,800; \
 set output outFile; \
 
-file1="data/temp/loop_kappa_0.4_E_0_a_0.02_T_0.5_pot_13.dat"
-file2="data/temp/loop_kappa_0.4_E_0_a_0.02_T_0.62_pot_15.dat"
-file3="data/temp/loop_kappa_0.4_E_0_a_0.02_T_0.7_pot_15.dat"
-file4="data/temp/loop_kappa_0.5_E_0_a_0.02_T_0.71_pot_15.dat"
+file1="data/temp/loop_kappa_0.5_E_0_a_0.02_T_0.5_pot_13.dat"
+file2a="data/temp/loop_kappa_0.5_E_0_a_0.02_T_0.66_pot_15_a.dat"
+file2b="data/temp/loop_kappa_0.5_E_0_a_0.02_T_0.66_pot_15_b.dat"
+file3a="data/temp/loop_kappa_0.5_E_0_a_0.02_T_0.71_pot_15_a.dat"
+file3b="data/temp/loop_kappa_0.5_E_0_a_0.02_T_0.71_pot_15_b.dat"
 
 #if you want to choose which file to load
 if (exists("inFile")) \
@@ -35,7 +36,7 @@ set xlabel font "Arial,20"
 set ylabel font "Arial,20" 
 
 
-set multiplot layout 1,4 rowsfirst
+set multiplot layout 1,3 rowsfirst
 
 set xlabel "x^3"
 set ylabel "x^4" rotate by 0
@@ -48,13 +49,13 @@ set bmargin 5
 plot file1 using 1:2 with lines lt 1 lc rgb "black"
 
 set label 11 "b)"
-plot file2 using 1:2 with lines lt 1 lc rgb "black"
+plot file2a using 1:2 with lines lt 1 lc rgb "black", \
+	file2b using 1:2 with lines lt 1 lc rgb "black"
+
 
 set label 11 "c)"
-plot file3 using 1:2 with lines lt 1 lc rgb "black"
-
-set label 11 "d)"
-plot file4 using 1:2 with lines lt 1 lc rgb "black"
+plot file3a using 1:2 with lines lt 1 lc rgb "black", \
+	file3b using 1:2 with lines lt 1 lc rgb "black"
 
 unset multiplot
 
