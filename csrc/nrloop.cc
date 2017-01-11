@@ -167,26 +167,26 @@ static number FThermal2(const number& r, const number& t, const number& beta, co
 	if (pow(r,2)<MIN_NUMBER && pow(t,2)<MIN_NUMBER)
 		return  - 1.0/(4.0*pow(a,2)*pow(PI,2)) - 1.0/(12.0*pow(beta,2));
 	else if (pow(r,2)<MIN_NUMBER && pow(t,2)>MIN_NUMBER)
-		 return  (pow(a,2)/(pow(PI,2)*pow(t,2)*(pow(a,2) + pow(t,2))) - pow(1.0/sin((PI*t)/beta),2)/pow(beta,2))/4.00;
+		 return  (pow(a,2)/(pow(PI,2)*pow(t,2)*(pow(a,2) + pow(t,2))) - pow(1.0/sin((PI*t)/beta),2)/pow(beta,2))/4.0;
 	else if (pow(r,2)>MIN_NUMBER && pow(t,2)<MIN_NUMBER)
 		return  (pow(a,2)*beta - PI*r*(pow(a,2) + pow(r,2))*1.00/tanh((PI*r)/beta))/(4.0*pow(PI,2)*pow(r,2)*(pow(a,2) + pow(r,2))*beta);
 	else
-		return  1.0/(4.0*pow(PI,2)*(pow(r,2) + pow(t,2))) - 1.0/(4.0*pow(PI,2)*(pow(a,2) + pow(r,2) + pow(t,2))) \
+		return   1.0/(4.0*pow(PI,2)*(pow(r,2) + pow(t,2))) - 1.0/(4.0*pow(PI,2)*(pow(a,2) + pow(r,2) + pow(t,2))) \
  			+ sinh((2.0*PI*r)/beta)/(4.0*PI*(r*beta*cos((2.0*PI*t)/beta) - r*beta*cosh((2.0*PI*r)/beta)));
 }
 
 // DFThermal2DrOnr
 static number DFThermal2DrOnr(const number& r, const number& t, const number& beta, const number& a) {
 	if (pow(r,2)<MIN_NUMBER && pow(t,2)<MIN_NUMBER)
-		return 1.0/(2.0*pow(a,4)*pow(PI,2)) + pow(PI,2)/(90.*pow(beta,4));
+		return 1.0/(2.0*pow(a,4)*pow(PI,2)) + pow(PI,2)/(90.0*pow(beta,4));
 	else if (pow(r,2)<MIN_NUMBER && pow(t,2)>MIN_NUMBER)
-		 return  (-3.0/pow(t,4) + 3.0/pow(pow(a,2) + pow(t,2),2) + (pow(PI,4)*(2 + cos((2.0*PI*t)/beta))*pow(1.0/sin((PI*t)/beta),4))/pow(beta,4))/(6.0*pow(PI,2));
+		 return (-3.0/pow(t,4) + 3.0/pow(pow(a,2) + pow(t,2),2) + (pow(PI,4)*(2 + cos((2.0*PI*t)/beta))*pow(1.0/sin((PI*t)/beta),4))/pow(beta,4))/(6.0*pow(PI,2));
 	else if (pow(r,2)>MIN_NUMBER && pow(t,2)<MIN_NUMBER)
-		return   (pow(1.0/sinh((PI*r)/beta),2)*(2.0*(pow(PI,2)*pow(r,6) + pow(a,4)*(pow(PI,2)*pow(r,2) + pow(beta,2)) \
-				 + 2.0*pow(a,2)*pow(r,2)*(pow(PI,2)*pow(r,2) + pow(beta,2))) - 2.0*pow(a,2)*(pow(a,2) + 2.0*pow(r,2))*pow(beta,2)*cosh((2.0*PI*r)/beta) \
-				 + PI*r*pow(pow(a,2) + pow(r,2),2)*beta*sinh((2.0*PI*r)/beta)))/(8.0*pow(PI,2)*pow(r,4)*pow(pow(a,2) + pow(r,2),2)*pow(beta,2));
+		return (pow(1.0/sinh((PI*r)/beta),2)*(2.0*(pow(PI,2)*pow(r,6) + pow(a,4)*(pow(PI,2)*pow(r,2) + pow(beta,2)) \
+ 				 + 2.0*pow(a,2)*pow(r,2)*(pow(PI,2)*pow(r,2) + pow(beta,2))) - 2.0*pow(a,2)*(pow(a,2) + 2.0*pow(r,2))*pow(beta,2)*cosh((2.0*PI*r)/beta) \
+ 				 + PI*r*pow(pow(a,2) + pow(r,2),2)*beta*sinh((2.0*PI*r)/beta)))/(8.0*pow(PI,2)*pow(r,4)*pow(pow(a,2) + pow(r,2),2)*pow(beta,2));
 	else
-		return  - 1.0/(2.0*pow(PI,2)*pow(pow(r,2) + pow(t,2),2)) + 1.0/(2.0*pow(PI,2)*pow(pow(a,2) + pow(r,2) + pow(t,2),2)) \
+		return - 1.0/(2.0*pow(PI,2)*pow(pow(r,2) + pow(t,2),2)) + 1.0/(2.0*pow(PI,2)*pow(pow(a,2) + pow(r,2) + pow(t,2),2)) \
 			 + cosh((2.0*PI*r)/beta)/(2.0*pow(r,2)*pow(beta,2)*(cos((2.0*PI*t)/beta) - cosh((2.0*PI*r)/beta))) \
 			 - (cos((2.0*PI*t)/beta)*sinh((2.0*PI*r)/beta))/(4.0*PI*pow(r,3)*beta*pow(cos((2.0*PI*t)/beta) - cosh((2.0*PI*r)/beta),2)) \
 			 + (cosh((2.0*PI*r)/beta)*sinh((2.0*PI*r)/beta))/(4.0*PI*pow(r,3)*beta*pow(cos((2.0*PI*t)/beta) - cosh((2.0*PI*r)/beta),2)) \
@@ -198,18 +198,18 @@ static number DFThermal2Dt(const number& r, const number& t, const number& beta,
 	if (pow(r,2)<MIN_NUMBER && abs(t)<MIN_NUMBER)
 		return  0.0;
 	else if (pow(r,2)<MIN_NUMBER && abs(t)>MIN_NUMBER)
-		 return  (-pow(t,-3) + t/pow(pow(a,2) + pow(t,2),2) + (pow(PI,3)*pow(1.0/sin((PI*t)/beta),2)*1.00/tan((PI*t)/beta))/pow(beta,3))/(2.0*pow(PI,2));
+		 return (-pow(t,-3) + t/pow(pow(a,2) + pow(t,2),2) + (pow(PI,3)*pow(1.0/sin((PI*t)/beta),2)*1.0/tan((PI*t)/beta))/pow(beta,3))/(2.0*pow(PI,2));
 	else if (pow(r,2)>MIN_NUMBER && abs(t)<MIN_NUMBER)
 		return 0.0;
 	else
-		return  - t/(2.0*pow(PI,2)*pow(pow(r,2) + pow(t,2),2)) + t/(2.0*pow(PI,2)*pow(pow(a,2) + pow(r,2) + pow(t,2),2)) \
- 		+ (r*sin((2.0*PI*t)/beta)*sinh((2.0*PI*r)/beta))/(2.0*pow(r*beta*cos((2.0*PI*t)/beta) - r*beta*cosh((2.0*PI*r)/beta),2));
+		return - t/(2.0*pow(PI,2)*pow(pow(r,2) + pow(t,2),2)) + t/(2.0*pow(PI,2)*pow(pow(a,2) + pow(r,2) + pow(t,2),2)) \
+ 				+ (r*sin((2.0*PI*t)/beta)*sinh((2.0*PI*r)/beta))/(2.0*pow(r*beta*cos((2.0*PI*t)/beta) - r*beta*cosh((2.0*PI*r)/beta),2));
 }
 
 // DDFThermal2DrDr
 static number DDFThermal2DrDr(const number& r, const number& t, const number& beta, const number& a) {
 	if (pow(r,2)<MIN_NUMBER && pow(t,2)<MIN_NUMBER)
-		return 1.0/(2.0*pow(a,4)*pow(PI,2)) + pow(PI,2)/(90.*pow(beta,4));
+		return 1.0/(2.0*pow(a,4)*pow(PI,2)) + pow(PI,2)/(90.0*pow(beta,4));
 	else if (pow(r,2)<MIN_NUMBER && pow(t,2)>MIN_NUMBER)
 		 return ((16.0*pow(a,4)*pow(PI,4)*pow(t,4) + 32.0*pow(a,2)*pow(PI,4)*pow(t,6) + 16.0*pow(PI,4)*pow(t,8) - 9.0*pow(a,4)*pow(beta,4) \
 			 - 18.0*pow(a,2)*pow(t,2)*pow(beta,4) + 4.0*(2.0*pow(PI,4)*pow(t,8) + pow(a,4)*(2.0*pow(PI,4)*pow(t,4) + 3.0*pow(beta,4)) \
@@ -244,10 +244,10 @@ static number DDFThermal2DtDrOnr(const number& r, const number& t, const number&
 	if (pow(r,2)<MIN_NUMBER && abs(t)<MIN_NUMBER)
 		return  0.0;
 	else if (pow(r,2)<MIN_NUMBER && abs(t)>MIN_NUMBER)
-		 return   (48.0/pow(t,5) - (48.0*t)/pow(pow(a,2) + pow(t,2),3) \
-		 			+ (pow(PI,5)*(-13 + 48.0*cos((2.0*PI*t)/beta) + cos((4.0*PI*t)/beta))*pow(1.0/sin((PI*t)/beta),6)*\
- 					1.0/tan((PI*t)/beta))/pow(beta,5) - (24.0*pow(PI,5)*pow(1.0/sin((PI*t)/beta),2)*pow(1.0/tan((PI*t)/beta),3))/pow(beta,5) \
- 					- (pow(PI,5)*(8 + cos((2.0*PI*t)/beta))*pow(1.0/sin((PI*t)/beta),8)*sin((4.0*PI*t)/beta))/pow(beta,5))/(24.0*pow(PI,2));
+		 return (48.0/pow(t,5) - (48.0*t)/pow(pow(a,2) + pow(t,2),3) \
+			 + (pow(PI,5)*(-13 + 48.0*cos((2.0*PI*t)/beta) + cos((4.0*PI*t)/beta))*pow(1.0/sin((PI*t)/beta),6)*\
+			 1.0/tan((PI*t)/beta))/pow(beta,5) - (24.0*pow(PI,5)*pow(1.0/sin((PI*t)/beta),2)*pow(1.0/tan((PI*t)/beta),3))/pow(beta,5) \
+			 - (pow(PI,5)*(8 + cos((2.0*PI*t)/beta))*pow(1.0/sin((PI*t)/beta),8)*sin((4.0*PI*t)/beta))/pow(beta,5))/(24.0*pow(PI,2));
 	else if (pow(r,2)>MIN_NUMBER && abs(t)<MIN_NUMBER)
 		return 0.0;
 	else
@@ -257,18 +257,19 @@ static number DDFThermal2DtDrOnr(const number& r, const number& t, const number&
 		 + (cosh((2.0*PI*r)/beta)*sin((2.0*PI*t)/beta)*sinh((2.0*PI*r)/beta))/(pow(r,3)*pow(beta,2)*pow(cos((2.0*PI*t)/beta) - cosh((2.0*PI*r)/beta),3)) \
 		 + (sin((2.0*PI*t)/beta)*sinh((2.0*PI*r)/beta))/(2.0*r*pow(r*beta*cos((2.0*PI*t)/beta) - r*beta*cosh((2.0*PI*r)/beta),2)) \
 		 + (2.0*PI*sin((2.0*PI*t)/beta)*pow(sinh((2.0*PI*r)/beta),2))/(pow(r,2)*pow(beta,3)*pow(cos((2.0*PI*t)/beta) - cosh((2.0*PI*r)/beta),3));
+		 
 }
 
 // DDFThermal2DtDt
 static number DDFThermal2DtDt(const number& r, const number& t, const number& beta, const number& a) {
 	if (pow(r,2)<MIN_NUMBER && pow(t,2)<MIN_NUMBER)
-		return 1.0/(2.0*pow(a,4)*pow(PI,2)) - pow(PI,2)/(30.*pow(beta,4));
+		return 1.0/(2.0*pow(a,4)*pow(PI,2)) - pow(PI,2)/(30.0*pow(beta,4));
 	else if (pow(r,2)<MIN_NUMBER && pow(t,2)>MIN_NUMBER)
 		 return (3.0/pow(t,4) - (4.0*pow(t,2))/pow(pow(a,2) + pow(t,2),3) + pow(pow(a,2) + pow(t,2),-2) \
- 			- (pow(PI,4)*(2 + cos((2.0*PI*t)/beta))*pow(1.0/sin((PI*t)/beta),4))/pow(beta,4))/(2.0*pow(PI,2));
+			 - (pow(PI,4)*(2 + cos((2.0*PI*t)/beta))*pow(1.0/sin((PI*t)/beta),4))/pow(beta,4))/(2.0*pow(PI,2));
 	else if (pow(r,2)>MIN_NUMBER && pow(t,2)<MIN_NUMBER)
-		return  (-pow(r,-4) + pow(pow(a,2) + pow(r,2),-2) - (pow(PI,3)*pow(1.0/sinh((PI*r)/beta),4)*1.00/tanh((PI*r)/beta))/(2.0*r*pow(beta,3)) \
- 			+ (pow(PI,3)*pow(1.0/sinh((PI*r)/beta),6)*sinh((4.0*PI*r)/beta))/(8.0*r*pow(beta,3)))/(2.0*pow(PI,2));
+		return (-pow(r,-4) + pow(pow(a,2) + pow(r,2),-2) - (pow(PI,3)*pow(1.0/sinh((PI*r)/beta),4)*1.00/tanh((PI*r)/beta))/(2.0*r*pow(beta,3)) \
+			 + (pow(PI,3)*pow(1.0/sinh((PI*r)/beta),6)*sinh((4.0*PI*r)/beta))/(8.0*r*pow(beta,3)))/(2.0*pow(PI,2));
 	else
 		return (2.0*pow(t,2))/(pow(PI,2)*pow(pow(r,2) + pow(t,2),3)) - 1.0/(2.0*pow(PI,2)*pow(pow(r,2) + pow(t,2),2)) \
 			 - (2.0*pow(t,2))/(pow(PI,2)*pow(pow(a,2) + pow(r,2) + pow(t,2),3)) + 1.0/(2.0*pow(PI,2)*pow(pow(a,2) + pow(r,2) + pow(t,2),2)) \
