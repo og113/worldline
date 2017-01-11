@@ -35,9 +35,10 @@ else
 	sed -i 's/Sqrt(/sqrt(/g' $1
 	sed -i 's/Cos(/cos(/g' $1
 	sed -i 's/Sin(/sin(/g' $1
+	sed -i 's/Tan(/tan(/g' $1
 	sed -i 's/Cosh(/cosh(/g' $1
-	sed -i 's/Coth(/coth(/g' $1
 	sed -i 's/Sinh(/sinh(/g' $1
+	sed -i 's/Tanh(/tanh(/g' $1
 	sed -i 's/\\\[Mu\]/mu/g' $1
 	sed -i 's/\\\[Nu\]/nu/g' $1
 	sed -i 's/\\\[Rho\]/rho/g' $1
@@ -52,8 +53,8 @@ else
 	sed -i 's/^\(\s*\)/ /g' $1
 	sed -i 's/\/$/\/\\/g' $1
 	sed -i 's/\*$/\*\\/g' $1
-	sed -i 's/sqrt(pow(a,2) + pow(r,2))/ra/g' $1
-	sed -i 's/pow(pow(a,2) + pow(r,2),\([0-9.-]\+\))/pow(ra,2*\1)/g' $1
+	#sed -i 's/sqrt(pow(a,2) + pow(r,2))/ra/g' $1
+	#sed -i 's/pow(pow(a,2) + pow(r,2),\([0-9.-]\+\))/pow(ra,2*\1)/g' $1
 	# specific changes, for worldline n-r calculations
 	if $wflag
 	then echo "making specific changes, for worldline n-r calculations"
