@@ -832,7 +832,7 @@ for (uint pl=0; pl<Npl; pl++) {
 			g = pow(p.G,3)*p.B/8.0/PI/PI;
 			dm = -g*sqrt(PI)/p.Epsi;
 			cusp_scale = -g*2.0*log(p.Mu/p.Epsi);
-			repulsion_scale = -g/p.Epsi/p.Epsi;
+			repulsion_scale = -g*sqrt(PI)/p.Epsi/p.Epsi; // just added *sqrt(PI) to this line
 		}
 		else if (poto==PotentialOptions::dimreg) {
 			s0 = S0(xLoop);
