@@ -25,7 +25,7 @@ CONTENTS
 void printErrorInformation(const vec& v, const string& name) {
 	uint minCoeff1 = 0, maxCoeff1 = 0, largeCounter = 0;
 	number max = v.maxCoeff(&maxCoeff1);
-	number min = v.minCoeff(&maxCoeff1);
+	number min = v.minCoeff(&minCoeff1);
 	number absMax = (-min>max? -min: max);
 	for (uint j=0; j<v.size(); j++) {
 		if (abs(v(j))>absMax/2.0)
