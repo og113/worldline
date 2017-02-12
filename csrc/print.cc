@@ -136,7 +136,7 @@ void saveVectorBinaryAppend(const string& f,  const T& v) {
 	if (os.good()) {
 		for (uint j=0; j<v.size(); j++) {
 			r = &v[j];
-			os.write(reinterpret_cast<const char*>(r),sizeof(T));
+			os.write(reinterpret_cast<const char*>(r),sizeof(number));
 		}
 		os.close();
 	}

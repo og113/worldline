@@ -247,21 +247,29 @@ istream& operator>>(istream& is, FxyPair& p) {
 
 // <<
 ostream& operator<<(ostream& os, const StepperOptions& s) {
-	os << s.epsi_x << endl;
-	os << s.epsi_y << endl;
-	os << s.angle0 << endl;
-	os << s.tol << endl;
-	os << s.aim << endl;
-	os << s.fixedAim << endl;
-	os << s.stepType << endl;
-	os << s.directed << endl;
+	os << "epsi_x          " << s.epsi_x << endl;
+	os << "epsi_y          " << s.epsi_y << endl;
+	os << "angle0          " << s.angle0 << endl;
+	os << "tol             " << s.tol << endl;
+	os << "aim             " << s.aim << endl;
+	os << "fixedAim        " << s.fixedAim << endl;
+	os << "stepType        " << s.stepType << endl;
+	os << "directed        " << s.directed << endl;
 	return os;
 }
 
 // >>
 istream& operator>>(istream& is, StepperOptions& s) {
 	int temp1, temp2;
-	is >> s.epsi_x >> s.epsi_y >> s.angle0 >> s.tol >> s.aim >> s.fixedAim >> temp1 >> temp2;
+	string dross;
+	is >> dross >> s.epsi_x;
+	is >> dross >> s.epsi_y;
+	is >> dross >> s.angle0;
+	is >> dross >> s.tol;
+	is >> dross >> s.aim;
+	is >> dross >> s.fixedAim;
+	is >> dross >> temp1;
+	is >> dross >> temp2;
 	s.stepType = (StepperOptions::stepTypeList)temp1;
 	s.directed = (StepperOptions::directedList)temp2;
 	return is;

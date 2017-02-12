@@ -733,7 +733,7 @@ for (uint pl=0; pl<Npl; pl++) {
 				}
 			}
 		}
-		// stretching if changing and disjoint
+		// stretching if changing T and disjoint
 		if (abs(p.T-pold.T)>MIN_NUMBER && pl>0 && step) {
 			for (uint j=0; j<N; j++) {
 				x[dim*j+dim-1] *= pold.T/p.T;
