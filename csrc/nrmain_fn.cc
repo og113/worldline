@@ -1932,31 +1932,36 @@ for (uint pl=0; pl<Npl; pl++) {
 		cout << zeroEigs << " zero eigenvalues found, with absolute value less than " << eigenTol << endl;
 		printf("%12s%50s\n","eigenvectors:",((string)eigenFile).c_str());
 		
-		// printing some eigenvalue information to a file
-		string eigSummaryFile = "results/nr/nr_eigs.csv";
-		#define numEigSummary 18
-		vector<string> eigSummary(numEigSummary);
-		string eigSummary_array[numEigSummary] = {timenumber,\
-									nts(pl),\
-									potExtras.second,\
-									nts(p.K),\
-									nts(pow(p.G,3)*p.B,16),\
-									nts(p.Epsi,16),\
-									nts(p.Mu,16),\
-									nts(p.Lambda,16),\
-									nts(E,16),\
-									nts(p.T,16),\
-									nts(s,16),\
-									nts(zmax,16),\
-									nts(negEigs),\
-									nts(zeroEigs),\
-									nts(checkSol.back(),16),\
-									nts(checkDX.back(),16),\
-									nts(checkDelta.back(),16),\
-									nts(checkInv.back(),16)};								
-		eigSummary.assign(eigSummary_array,eigSummary_array+numEigSummary);							
-		saveVectorCsvAppend(eigSummaryFile,eigSummary);
-		printf("%12s%50s\n","eigenvalues summary:",eigSummaryFile.c_str());
+		// printing eigenvalues to file
+		// id
+		vector<string> idEigs(idSizeResults);
+		idEigs[0] = timenumber;
+		idEigs[1] = nts(pl);
+		idEigs[2] = potExtras.second;
+		
+		// actual results
+		vector<number> datumEigs(11+numEigs);
+		datumEigs[0] = s;
+		datumEigs[1] = ergThermal;
+		datumEigs[2] = zmax;
+		datumEigs[3] = zmin;
+		datumEigs[4] = tmax;
+		datumEigs[5] = checkSol.back();
+		datumEigs[6] = checkDX.back();
+		datumEigs[7] = checkICMax.back();
+		datumEigs[8] = checkAccAMax.back();
+		datumEigs[9] = checkCCMax.back();
+		datumEigs[10] = checkStraight.back();
+		
+		for (uint j=0; j<numEigs; j++)
+			datumEigs[10+j] = (eigensolver.eigenvalues())[j];
+		
+		// saving
+		string eigsFile = "results/nr/nr_eigs7.csv";
+		NewtonRaphsonDatum eigs(idEigs,p,datumEigs);
+		eigs.save(eigsFile);
+		if (verbose)
+			printf("%12s%24s\n","eigenvalues:",eigsFile.c_str());
 	}
 	
 	// curvature, if required
