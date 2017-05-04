@@ -3,11 +3,15 @@
 		mpi wrapper for nrmain
 ----------------------------------------------------------------------------------------------------------------------------*/
 
-#include <cstdlib>
+#include <ctime>
 #include <iostream>
 #include <iomanip>
-#include <string>
-#include <vector>
+#include <fstream>
+#include <mpi.h>
+#include <unistd.h>
+#include "simple.h"
+#include "folder.h"
+#include "parameters.h"
 #include "nrmain_fn.h"
 
 /*-------------------------------------------------------------------------------------------------------------------------
