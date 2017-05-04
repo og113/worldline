@@ -78,6 +78,9 @@ then
 elif [ "$table" == "nr7" ];
 then
 	views="s_sigma_B_T_a_E_K_12_pot_13_nr7 s_sigma_B_T_a_E_K_12_pot_15_nr7 s_sigma_B_T_a_E_K_12_pot_16_nr7 kta_pot_13_K_12 kta_pot_15_K_12 s_T_a_B_0.1_K_12_pot_13 s_T_a_B_0.1_K_12_pot_15  s_T_a_B_0.5_K_12_pot_13 s_T_a_B_0.5_K_12_pot_15 s_B_a_K_12_pot_1 s_B_a_K_12_pot_0"
+elif [ "$table" == "eigs7" ];
+then
+	views="eigs7straight_pot_15"
 fi
 	
 echo "updating views:"
