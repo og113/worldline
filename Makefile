@@ -59,6 +59,10 @@ dimReduce: $(ODIR)/dimReduce.o $(COMMONOBJS)
 	$(CC) -o $@ $^ $(CFLAGS) $(INCLUDES) $(LIBS)
 	@echo Simple compiler named dimReduce has been compiled
 	
+dotVectors: $(ODIR)/addVectors.o $(COMMONOBJS) 
+	$(CC) -o $@ $^ $(CFLAGS) $(INCLUDES) $(LIBS)
+	@echo Simple compiler named dotVectors has been compiled
+	
 floop: $(MPIODIR)/floop.o $(COMMONOBJS)
 	$(MPICC) -o $@ $^ $(MPICFLAGS) $(INCLUDES) $(MPILIBS)
 	@echo Simple compiler named floop has been compiled

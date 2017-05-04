@@ -24,7 +24,7 @@
 -------------------------------------------------------------------------------------------------------------------------*/
 
 struct ShapeOptions {
-	enum Option { circle, lemon, straightDisjoint, cosDisjoint};
+	enum Option { circle, lemon, straightDisjoint, cosDisjoint, justCosDisjoint};
 };
 
 int main(int argc, char** argv) {
@@ -41,6 +41,7 @@ bool circle = false;
 bool lemon = false;
 bool straightDisjoint = false;
 bool cosDisjoint = false;
+bool justCosDisjoint = false;
 string shape = "circle";
 string baseFolder = "";
 
@@ -57,6 +58,7 @@ if (argc % 2 && argc>1) {
 		else if (id.compare("higherOrder")==0) higherOrder = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("straightDisjoint")==0) straightDisjoint = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("cosDisjoint")==0) cosDisjoint = (stn<uint>(argv[2*j+2])!=0);
+		else if (id.compare("justCosDisjoint")==0) justCosDisjoint = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("shape")==0) shape = (string)argv[2*j+2];
 		else {
 			cerr << "argv id " << id << " not understood" << endl;
@@ -82,6 +84,10 @@ if (!shape.empty() || circle || lemon || straightDisjoint || cosDisjoint) {
 	else if (shape.compare("cosDisjoint")==0 || cosDisjoint) {
 		so = ShapeOptions::cosDisjoint;
 		shape = "cosDisjoint";
+	}
+	else if (shape.compare("justCosDisjoint")==0 || justCosDisjoint) {
+		so = ShapeOptions::justCosDisjoint;
+		shape = "justCosDisjoint";
 	}
 	else {
 		cerr << "shape options not understood: " << shape << endl;
@@ -214,6 +220,25 @@ for (uint pl=0; pl<Npl; pl++) {
 			if (higherOrder)
 				r += - 3.0*sqrt(PI/4.0/kappa)*pow(p.Epsi,2)\
 						- 15.0*pow(PI/kappa,3.0/2.0)*pow(p.Epsi,4)/4.0;
+			number dt = 2.0*beta/(number)N;
+			number w = 4.0*PI/(number)N;
+			for (uint k=0; k<N; k++) {
+				point = p0;
+				if (k<N/2) {
+					point[dim-2] += (r/2.0)*(1.0 + p.Mu*cos(w*(k+0.5)) + p.Lambda*cos(2.0*w*(k+0.5)));
+					point[dim-1] += -beta/2.0 + dt/2.0 + dt*k;
+				}
+				else {
+					point[dim-2] += -(r/2.0)*(1.0 + p.Mu*cos(w*(k+0.5)) + p.Lambda*cos(2.0*w*(k+0.5)));
+					point[dim-1] += beta/2.0 - dt/2.0 - dt*(k-N/2);
+				}
+				loop[k] = point;
+			}
+		}
+		else if (so==ShapeOptions::justCosDisjoint) {
+			file = baseFolder+"data/"+shape+"/loops/dim_"+nts<uint>(dim)+"/K_"+nts(p.K)+"/loop_kappa_"+nts(kappa)\
+					+"_T_"+nts(p.T)+"_mu_"+nts(p.Mu)+"_lambda_"+nts(p.Lambda)+"_rank_"+nts(j)+".dat";	
+			number r = 0.0;
 			number dt = 2.0*beta/(number)N;
 			number w = 4.0*PI/(number)N;
 			for (uint k=0; k<N; k++) {
