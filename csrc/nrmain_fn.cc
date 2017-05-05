@@ -1916,9 +1916,9 @@ for (uint pl=0; pl<Npl; pl++) {
 		printf("%12s%50s\n","eigenvalues:",((string)eigenFile).c_str());
 		cout << "first " << numEigs << " eigenvalues and their dot products with mds are: " << endl;
 		/////////////////////////////////////////
-		cout << "quick eigs test:" << endl;
+		/*cout << "quick eigs test:" << endl;
 		cout << "<v0|v0> = " << ((eigensolver.eigenvectors()).col(0)).norm() << endl;
-		cout << "<v0|DDS|v0> = " << ((eigensolver.eigenvectors()).col(0)).dot(dds_wlm*((eigensolver.eigenvectors()).col(0))) << endl;
+		cout << "<v0|DDS|v0> = " << ((eigensolver.eigenvectors()).col(0)).dot(dds_wlm*((eigensolver.eigenvectors()).col(0))) << endl;*/
 		////////////////////////////////////////
 		for (uint j=0; j<numEigs; j++) {
 			if ((eigensolver.eigenvalues())[j]<-eigenTol)
