@@ -59,7 +59,7 @@ dimReduce: $(ODIR)/dimReduce.o $(COMMONOBJS)
 	$(CC) -o $@ $^ $(CFLAGS) $(INCLUDES) $(LIBS)
 	@echo Simple compiler named dimReduce has been compiled
 	
-dotVectors: $(ODIR)/addVectors.o $(COMMONOBJS) 
+dotVectors: $(ODIR)/dotVectors.o $(COMMONOBJS) 
 	$(CC) -o $@ $^ $(CFLAGS) $(INCLUDES) $(LIBS)
 	@echo Simple compiler named dotVectors has been compiled
 	

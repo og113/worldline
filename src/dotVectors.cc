@@ -99,12 +99,14 @@ else if (ft==FileType::binary) {
 	vector<number> v1, v2;
 	loadVectorBinary< vector<number> >(f1,v1);
 	loadVectorBinary< vector<number> >(f2,v2);
+	cout << "v1.size() = " << v1.size() << endl;
+	cout << "v2.size() = " << v2.size() << endl;
 	if (v1.size()>pow(2,K) && K!=0)
 		v1.resize(pow(2,K));
 	if (v2.size()>pow(2,K) && K!=0)
 		v2.resize(pow(2,K));
 	number result = 0.0;
-	for (uint j=0; j<pow(2,K); j++)
+	for (uint j=0; j<v1.size(); j++)
 		result += v1[j]*v2[j];
 	cout << "inner product = " << result << endl;
 }
@@ -112,12 +114,14 @@ else if (ft==FileType::ascii) {
 	vector<number> v1, v2;
 	loadVectorAscii< vector<number> >(f1,v1);
 	loadVectorAscii< vector<number> >(f2,v2);
+	cout << "v1.size() = " << v1.size() << endl;
+	cout << "v2.size() = " << v2.size() << endl;
 	if (v1.size()>pow(2,K) && K!=0)
 		v1.resize(pow(2,K));
 	if (v2.size()>pow(2,K) && K!=0)
 		v2.resize(pow(2,K));
 	number result = 0.0;
-	for (uint j=0; j<pow(2,K); j++)
+	for (uint j=0; j<v1.size(); j++)
 		result += v1[j]*v2[j];
 	cout << "inner product = " << result << endl;
 }

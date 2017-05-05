@@ -238,18 +238,16 @@ for (uint pl=0; pl<Npl; pl++) {
 		else if (so==ShapeOptions::justCosDisjoint) {
 			file = baseFolder+"data/"+shape+"/loops/dim_"+nts<uint>(dim)+"/K_"+nts(p.K)+"/loop_kappa_"+nts(kappa)\
 					+"_T_"+nts(p.T)+"_mu_"+nts(p.Mu)+"_lambda_"+nts(p.Lambda)+"_rank_"+nts(j)+".dat";	
-			number r = 0.0;
-			number dt = 2.0*beta/(number)N;
 			number w = 4.0*PI/(number)N;
 			for (uint k=0; k<N; k++) {
 				point = p0;
 				if (k<N/2) {
-					point[dim-2] += (r/2.0)*(1.0 + p.Mu*cos(w*(k+0.5)) + p.Lambda*cos(2.0*w*(k+0.5)));
-					point[dim-1] += -beta/2.0 + dt/2.0 + dt*k;
+					point[dim-2] += 2.0*(p.Mu*cos(w*(k+0.5)) + p.Lambda*cos(2.0*w*(k+0.5)))/sqrt(pow(2,p.K));
+					point[dim-1] += 0.0;
 				}
 				else {
-					point[dim-2] += -(r/2.0)*(1.0 + p.Mu*cos(w*(k+0.5)) + p.Lambda*cos(2.0*w*(k+0.5)));
-					point[dim-1] += beta/2.0 - dt/2.0 - dt*(k-N/2);
+					point[dim-2] += -2.0*(p.Mu*cos(w*(k+0.5)) + p.Lambda*cos(2.0*w*(k+0.5)))/sqrt(pow(2,p.K));
+					point[dim-1] += 0.0;
 				}
 				loop[k] = point;
 			}

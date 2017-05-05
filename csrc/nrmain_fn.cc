@@ -1902,7 +1902,7 @@ for (uint pl=0; pl<Npl; pl++) {
 			dds_wlm = dds;
 		else
 			dds_wlm = dds.block(0,0,dim*N,dim*N); // dds without Lagrange multipliers
-		number eigenTol = 1.0e-16*pow(dim*N,2);
+		number eigenTol = MIN_NUMBER*pow(dim*N,2);
 		number cos = 0.0;
 		uint negEigs = 0;
 		uint zeroEigs = 0;
@@ -1915,6 +1915,11 @@ for (uint pl=0; pl<Npl; pl++) {
 		saveVectorBinary(eigenFile,eigensolver.eigenvalues());
 		printf("%12s%50s\n","eigenvalues:",((string)eigenFile).c_str());
 		cout << "first " << numEigs << " eigenvalues and their dot products with mds are: " << endl;
+		/////////////////////////////////////////
+		cout << "quick eigs test:" << endl;
+		cout << "<v0|v0> = " << ((eigensolver.eigenvectors()).col(0)).norm() << endl;
+		cout << "<v0|DDS|v0> = " << ((eigensolver.eigenvectors()).col(0)).dot(dds_wlm*((eigensolver.eigenvectors()).col(0))) << endl;
+		////////////////////////////////////////
 		for (uint j=0; j<numEigs; j++) {
 			if ((eigensolver.eigenvalues())[j]<-eigenTol)
 				negEigs++;
