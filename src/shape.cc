@@ -36,6 +36,7 @@ int main(int argc, char** argv) {
 // data to print
 string inputsFile = "inputs4";
 bool extend = false;
+bool shift = false;
 bool higherOrder = false;
 bool circle = false;
 bool lemon = false;
@@ -56,6 +57,7 @@ if (argc % 2 && argc>1) {
 		else if (id.compare("lemon")==0) lemon = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("circle")==0) circle = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("higherOrder")==0) higherOrder = (stn<uint>(argv[2*j+2])!=0);
+		else if (id.compare("shift")==0) shift = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("straightDisjoint")==0) straightDisjoint = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("cosDisjoint")==0) cosDisjoint = (stn<uint>(argv[2*j+2])!=0);
 		else if (id.compare("justCosDisjoint")==0) justCosDisjoint = (stn<uint>(argv[2*j+2])!=0);
@@ -200,15 +202,16 @@ for (uint pl=0; pl<Npl; pl++) {
 			if (extend)
 				r *= (1.0 + p.Lambda);
 			number dt = 2.0*beta/(number)N;
+			number shiftAmount = ((int)shift)*(p.Mu-0.5) + 0.5;
 			for (uint k=0; k<N; k++) {
 				point = p0;
 				if (k<N/2) {
 					point[dim-2] += r/2.0;
-					point[dim-1] += -beta/2.0 + dt/2.0 + dt*k;
+					point[dim-1] += -beta/2.0 + shiftAmount*dt + dt*k;
 				}
 				else {
 					point[dim-2] += -r/2.0;
-					point[dim-1] += beta/2.0 - dt/2.0 - dt*(k-N/2);
+					point[dim-1] += beta/2.0 - shiftAmount*dt - dt*(k-N/2);
 				}
 				loop[k] = point;
 			}
