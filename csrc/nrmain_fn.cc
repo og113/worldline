@@ -268,10 +268,19 @@ else if (!disjoint && !onlyselfreg)
 	potExtras.second = nts(13);
 else if (!disjoint && onlyselfreg)
 	potExtras.second = nts(16);
-else if (poto == PotentialOptions::thermalDisjoint)
-	potExtras.second = nts(14); // this is all a bit messy now but whatever
-else if (poto == PotentialOptions::thermalDisjointLR)
-	potExtras.second = nts(15);
+else if (poto == PotentialOptions::thermalDisjoint) {
+	if (gaussian)
+		potExtras.second = nts(14); // this is all a bit messy now but whatever
+	else
+		potExtras.second = nts(17);
+}
+else if (poto == PotentialOptions::thermalDisjointLR) {
+	if (gaussianLR)
+		potExtras.second = nts(15);
+	else 
+		potExtras.second = nts(18);
+}
+		
 	
 KineticOptions::Option kino = KineticOptions::saddle;
 StringPair kinExtras("kin",nts((int)kino));
@@ -1962,7 +1971,7 @@ for (uint pl=0; pl<Npl; pl++) {
 			datumEigs[11+j] = (eigensolver.eigenvalues())[j];
 		
 		// saving
-		string eigsFile = "results/nr/nr_eigs7.csv";
+		string eigsFile = "results/nr/nr_eigs8.csv";
 		NewtonRaphsonDatum eigs(idEigs,p,datumEigs);
 		eigs.save(eigsFile);
 		if (verbose)
