@@ -1915,7 +1915,7 @@ for (uint pl=0; pl<Npl; pl++) {
 		number cos = 0.0;
 		uint negEigs = 0;
 		uint zeroEigs = 0;
-		uint numEigs = 4*dim;
+		uint numEigs = 8*dim;
 		cout << "calculating eigendecomposition of dds..." << endl;
 		Eigen::SelfAdjointEigenSolver<mat> eigensolver(dds_wlm);
 		if (eigensolver.info()!=Eigen::Success) abort();
