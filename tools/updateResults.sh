@@ -84,6 +84,9 @@ then
 elif [ "$table" == "eigs7temp" ];
 then
 	views="eigs7tempstraight_pot_15"
+elif [ "$table" == "eigs8" ];
+then
+	views="eigs7tempstraight_pot_15"
 fi
 	
 echo "updating views:"
