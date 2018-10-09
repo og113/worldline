@@ -1,0 +1,4 @@
+# to set NULL entries in pot to 0
+UPDATE nr
+SET pot=0
+WHERE pot IS NULL

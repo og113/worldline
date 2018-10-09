@@ -115,6 +115,10 @@ testMpi: $(MPIODIR)/testMpi.o
 	$(MPICC) -o $@ $^ $(MPICFLAGS) $(INCLUDES) $(MPILIBS)
 	@echo Simple compiler named testMpi has been compiled
 	
+testMpi2: $(MPIODIR)/testMpi2.o
+	$(MPICC) -o $@ $^ $(MPICFLAGS) $(INCLUDES) $(MPILIBS)
+	@echo Simple compiler named testMpi2 has been compiled
+	
 #------------------------------------------------------------------------------------------------------------------------
 # generic rules
 	

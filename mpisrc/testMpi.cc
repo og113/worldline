@@ -30,8 +30,10 @@ MPI_Init(&argc, &argv);
 MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 MPI_Comm_size(MPI_COMM_WORLD, &Nw);
 
-if (rank==root)
-	cout << "starting glmain with " << Nw << " nodes" << endl;	
+if (rank==root) {
+	cout << "starting testMpi with " << Nw << " nodes" << endl;
+}
+MPI_Barrier(MPI_COMM_WORLD);
 	
 cout << "node " << rank << endl;
 
