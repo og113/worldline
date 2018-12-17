@@ -1,6 +1,5 @@
 #!/bin/bash
 # update the sqlite database with new results
-## to do: should get it to take databaseFile and table as inputs (with the given defaults if not input)
 
 if [ -z "$1" ]
 then
@@ -10,12 +9,12 @@ elif [ "$#" -eq 1 ]
 then
 	echo "must supply table in database";
 	exit 1;
-	databaseFile="db/nr/nr.sqlite";
+	databaseFile="db/nr.sqlite";
 elif [ "$#" -eq 2 ]
 then
 	resultsFile=$1;	
 	table=$2;
-	databaseFile="db/nr/nr.sqlite";
+	databaseFile="db/nr.sqlite";
 elif [ "$#" -eq 3 ]
 then
 	resultsFile=$1;	
@@ -27,8 +26,8 @@ else
 fi
 
 # filenames generated from input
-tempResultsFile=$(echo "$resultsFile" | sed 's/results\/nr/temp/');
-databaseResultsFile=$(echo "$resultsFile" | sed 's/results/db/');
+tempResultsFile=$(echo "$resultsFile" | sed 's/results/temp/');
+databaseResultsFile=$(echo "$resultsFile" | sed 's/data\/results/db/');
 deltaResultsFile=$(echo "$databaseResultsFile" | sed 's/\([^\/]\+\)$/delta_\1/');
 
 echo "input      : $resultsFile";

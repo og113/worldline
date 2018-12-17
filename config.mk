@@ -13,7 +13,7 @@ MPIODIR			= mpiobjs
 CC 				= g++
 MPICC			= mpic++ # other options include mpicxx, mpicxx.mpich
 OPTIM 			= 
-CFLAGS 			= -Wall -g -O0
+CFLAGS 			= -Wall -g -O3
 MPICFLAGS		= -Wall -g -O3
 #CFLAGS EXPLAINED:
 #-std=c++0x 		: added so that auto lambda functions can be used

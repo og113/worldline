@@ -45,79 +45,79 @@ nr: 3dPotentialExtrema addVectors binaryToAscii common dimReduce highTemp highTe
 
 3dPotentialExtrema: $(ODIR)/3dPotentialExtrema.o $(COMMONOBJS) 
 	$(CC) -o $@ $^ $(CFLAGS) $(INCLUDES) $(LIBS)
-	@echo Simple compiler named 3dPotentialExtrema has been compiled
+	@echo  3dPotentialExtrema has been compiled
 
 addVectors: $(ODIR)/addVectors.o $(COMMONOBJS) 
 	$(CC) -o $@ $^ $(CFLAGS) $(INCLUDES) $(LIBS)
-	@echo Simple compiler named addVectors has been compiled
+	@echo  addVectors has been compiled
 
 binaryToAscii: $(ODIR)/binaryToAscii.o $(COMMONOBJS) 
 	$(CC) -o $@ $^ $(CFLAGS) $(INCLUDES) $(LIBS)
-	@echo Simple compiler named binaryToAscii has been compiled
+	@echo  binaryToAscii has been compiled
 	
 dimReduce: $(ODIR)/dimReduce.o $(COMMONOBJS) 
 	$(CC) -o $@ $^ $(CFLAGS) $(INCLUDES) $(LIBS)
-	@echo Simple compiler named dimReduce has been compiled
+	@echo  dimReduce has been compiled
 	
 dotVectors: $(ODIR)/dotVectors.o $(COMMONOBJS) 
 	$(CC) -o $@ $^ $(CFLAGS) $(INCLUDES) $(LIBS)
-	@echo Simple compiler named dotVectors has been compiled
+	@echo  dotVectors has been compiled
 	
 floop: $(MPIODIR)/floop.o $(COMMONOBJS)
 	$(MPICC) -o $@ $^ $(MPICFLAGS) $(INCLUDES) $(MPILIBS)
-	@echo Simple compiler named floop has been compiled
+	@echo  floop has been compiled
 	
 gflmain: $(ODIR)/gflmain.o $(COMMONOBJS) 
 	$(CC) -o $@ $^ $(CFLAGS) $(INCLUDES) $(LIBS)
-	@echo Simple compiler named gflmain has been compiled
+	@echo  gflmain has been compiled
 	
 glmain: $(MPIODIR)/glmain.o $(COMMONOBJS)
 	$(MPICC) -o $@ $^ $(MPICFLAGS) $(INCLUDES) $(MPILIBS)
-	@echo Simple compiler named glmain has been compiled
+	@echo  glmain has been compiled
 	
 highTemp: $(ODIR)/highTemp.o $(COMMONOBJS) 
 	$(CC) -o $@ $^ $(CFLAGS) $(INCLUDES) $(LIBS)
-	@echo Simple compiler named highTemp has been compiled
+	@echo  highTemp has been compiled
 	
 highTempParameters: $(ODIR)/highTempParameters.o $(COMMONOBJS) 
 	$(CC) -o $@ $^ $(CFLAGS) $(INCLUDES) $(LIBS)
-	@echo Simple compiler named highTempParameters has been compiled
+	@echo  highTempParameters has been compiled
 	
 loop: $(MPIODIR)/loop.o $(COMMONOBJS)
 	$(MPICC) -o $@ $^ $(MPICFLAGS) $(INCLUDES) $(MPILIBS)
-	@echo Simple compiler named loop has been compiled
+	@echo  loop has been compiled
 	
 loop2: $(MPIODIR)/loop2.o $(COMMONOBJS)
 	$(MPICC) -o $@ $^ $(MPICFLAGS) $(INCLUDES) $(MPILIBS)
-	@echo Simple compiler named loop2 has been compiled
+	@echo  loop2 has been compiled
 	
 nrmain: $(ODIR)/nrmain.o $(COMMONOBJS) 
 	$(CC) -o $@ $^ $(CFLAGS) $(INCLUDES) $(LIBS)
-	@echo Simple compiler named nrmain has been compiled
+	@echo  nrmain has been compiled
 	
 nrmpi: $(MPIODIR)/nrmpi.o $(COMMONOBJS) 
 	$(MPICC) -o $@ $^ $(MPICFLAGS) $(INCLUDES) $(MPILIBS)
-	@echo Simple compiler named nrmpi has been compiled
+	@echo  nrmpi has been compiled
 	
 perturbativeFiniteTemp: $(ODIR)/perturbativeFiniteTemp.o $(COMMONOBJS) 
 	$(CC) -o $@ $^ $(CFLAGS) $(INCLUDES) $(LIBS)
-	@echo Simple compiler named perturbativeFiniteTemp has been compiled
+	@echo  perturbativeFiniteTemp has been compiled
 	
 schwingerRate: $(ODIR)/schwingerRate.o $(COMMONOBJS) 
 	$(CC) -o $@ $^ $(CFLAGS) $(INCLUDES) $(LIBS)
-	@echo Simple compiler named schwingerRate has been compiled
+	@echo  schwingerRate has been compiled
 
 shape: $(ODIR)/shape.o $(COMMONOBJS) 
 	$(CC) -o $@ $^ $(CFLAGS) $(INCLUDES) $(LIBS)
-	@echo Simple compiler named shape has been compiled
+	@echo  shape has been compiled
 	
 testMpi: $(MPIODIR)/testMpi.o
 	$(MPICC) -o $@ $^ $(MPICFLAGS) $(INCLUDES) $(MPILIBS)
-	@echo Simple compiler named testMpi has been compiled
+	@echo  testMpi has been compiled
 	
 testMpi2: $(MPIODIR)/testMpi2.o
 	$(MPICC) -o $@ $^ $(MPICFLAGS) $(INCLUDES) $(MPILIBS)
-	@echo Simple compiler named testMpi2 has been compiled
+	@echo  testMpi2 has been compiled
 	
 #------------------------------------------------------------------------------------------------------------------------
 # generic rules

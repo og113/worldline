@@ -24,8 +24,8 @@ else {
 	x = stn<number>(argv[1]);
 }
 
-argument = -gsl_sf_exp(-pi/x);
-result = pow(x,2)/(16.0*pow(pi,3));
+argument = -gsl_sf_exp(-M_PI/x);
+result = pow(x,2)/(16.0*pow(M_PI,3));
 result *= gsl_sf_dilog(argument);
 
 cout << result << endl;

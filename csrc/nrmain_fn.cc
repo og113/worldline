@@ -95,7 +95,7 @@ bool sometests = false;
 bool alltests = false; // doing alltests
 bool redo = true;
 bool redoErrors = true;
-bool thermal2 = true;
+bool thermal2 = false;
 bool onlyselfreg = false;
 string baseFolder = "";
 string printOpts = "";
@@ -667,10 +667,10 @@ for (uint pl=0; pl<Npl; pl++) {
 			if (!loadFile.exists()) {
 				if (pl>0)
 					loadFile = stepFile;
-					if (!loadFile.exists() && (poto==PotentialOptions::thermal || disjoint))
-						loadFile = filenameLoopNR<dim>(pold,baseFolder);
-					else if (!loadFile.exists())
-						loadFile = filenameThermalNR<dim>(pold,baseFolder);
+				if (!loadFile.exists() && (poto==PotentialOptions::thermal || disjoint))
+					loadFile = filenameLoopNR<dim>(pold,baseFolder);
+				else if (!loadFile.exists())
+					loadFile = filenameThermalNR<dim>(pold,baseFolder);
 				if (!loadFile.exists() && old)
 					loadFile = baseFolder+"data/nr/loops/dim_"+nts(dim)+"/K_"+nts(p.K)+"/loop_kappa_"+nts(pow(p.G,3)*p.B)+"_E_"+nts(p.P4)\
 		+"_a_"+nts(p.Epsi)+".dat";

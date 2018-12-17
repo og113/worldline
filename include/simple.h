@@ -8,7 +8,6 @@ declarations of some very simple functions and classes
 #include <string>
 #include <vector>
 #include <complex>
-#include "simple.h"
 
 using namespace std;
 
